@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp"
+    android:orientation="horizontal">
+
+    <!--<LinearLayout
+        android:id="@+id/li"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_county"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_medium_500"
+            android:padding="@dimen/_10sdp"
+            android:text="@string/country"
+            android:textColor="#303065"
+            android:textSize="@dimen/_12sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#4D5367FC" />
+
+
+    </LinearLayout>-->
+
+
+    <TextView
+        android:id="@+id/tv_county"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
+        android:fontFamily="@font/inter_medium_500"
+        android:gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textColor="#303065"
+        android:textSize="@dimen/_12sdp" />
+
+    <ImageView
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_checked"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tv_county"
+        android:background="#4D5367FC" />
+
+
+    <!--<androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/check"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:layout_margin="@dimen/size_12"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_ischekd"
+        android:visibility="visible" />-->
+
+</RelativeLayout>
+
+

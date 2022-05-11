@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/mAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/size_12">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/back"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_16"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semibold_600"
+                android:text="@string/rovinieta"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/text_size_18"
+                app:layout_constraintBottom_toBottomOf="@+id/back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/back" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/size_16"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_account"
+                app:layout_constraintBottom_toBottomOf="@+id/back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/back" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/size_16"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/check"
+        app:layout_constraintTop_toBottomOf="@+id/mAppBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_24"
+                android:fontFamily="@font/inter_semibold_600"
+                android:text="@string/service"
+                android:textColor="@color/appPrimary"
+                android:textSize="@dimen/text_size_16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/vignetteCategoryLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_16"
+                android:fontFamily="@font/inter_medium_500"
+                android:text="@string/vignette_category"
+                android:textColor="@color/textOnWhiteAccentGray"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/service" />
+
+
+            <TextView
+                android:id="@+id/mVignette"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_6"
+                android:background="@drawable/auth_text_input_background"
+                android:fontFamily="@font/inter_medium_500"
+                android:hint="@string/select_from_list"
+                android:paddingHorizontal="@dimen/size_16"
+                android:paddingVertical="@dimen/size_14"
+                android:textColor="@color/textOnWhite"
+                android:textColorHint="@color/hintOnWhite"
+                android:textCursorDrawable="@drawable/cursor"
+                android:textSize="@dimen/text_size_14"
+                android:visibility="visible"
+                app:drawableRightCompat="@drawable/ic_spinner_item"
+                app:layout_constraintTop_toBottomOf="@+id/vignetteCategoryLabel" />
+
+            <TextView
+                android:id="@+id/durationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_14"
+                android:layout_marginTop="@dimen/size_12"
+                android:fontFamily="@font/inter_medium_500"
+                android:text="@string/duration"
+                android:textColor="@color/textOnWhiteAccentGray"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mVignette" />
+
+            <RelativeLayout
+                android:id="@+id/mRelative2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_4"
+                android:background="@drawable/auth_text_input_background"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/durationLabel">
+
+                <Spinner
+                    android:id="@+id/duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:paddingHorizontal="@dimen/size_16"
+                    android:paddingVertical="@dimen/size_14"
+                    android:textColor="@color/textOnWhite"
+                    android:textColorHint="@color/hintOnWhite"
+                    android:textSize="@dimen/text_size_16" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/mDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_5"
+                android:background="@drawable/auth_text_input_background"
+                android:fontFamily="@font/inter_medium_500"
+                android:hint="@string/select_from_list"
+                android:paddingHorizontal="@dimen/size_16"
+                android:paddingVertical="@dimen/size_14"
+                android:textColor="@color/textOnWhite"
+                android:textColorHint="@color/hintOnWhite"
+                android:textCursorDrawable="@drawable/cursor"
+                android:textSize="@dimen/text_size_14"
+                android:visibility="visible"
+                app:drawableRightCompat="@drawable/ic_spinner_item"
+                app:layout_constraintTop_toBottomOf="@+id/durationLabel" />
+
+            <TextView
+                android:id="@+id/startDateLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_14"
+                android:fontFamily="@font/inter_medium_500"
+                android:text="@string/start_date"
+                android:textColor="@color/textOnWhiteAccentGray"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mDuration" />
+
+            <TextView
+                android:id="@+id/startDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_5"
+                android:background="@drawable/auth_text_input_background"
+                android:fontFamily="@font/inter_medium_500"
+                android:hint="@string/enter_start_date"
+                android:paddingHorizontal="@dimen/size_16"
+                android:paddingVertical="@dimen/size_14"
+                android:textColor="@color/textOnWhite"
+                android:textColorHint="@color/hintOnWhite"
+                android:textCursorDrawable="@drawable/cursor"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintTop_toBottomOf="@+id/startDateLabel" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/startDateCal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/size_16"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_calendar_items"
+                app:layout_constraintBottom_toBottomOf="@+id/startDate"
+                app:layout_constraintEnd_toEndOf="@+id/startDate"
+                app:layout_constraintTop_toTopOf="@+id/startDate" />
+
+            <TextView
+                android:id="@+id/startDateError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_5"
+                android:background="@drawable/ic_error_bg"
+                android:drawableLeft="@drawable/ic_info_circle"
+                android:drawablePadding="@dimen/_10sdp"
+                android:fontFamily="@font/inter_medium_500"
+                android:gravity="center_vertical"
+                android:padding="@dimen/_10sdp"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/text_size_14"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/startDate" />
+
+
+            <TextView
+                android:id="@+id/carInformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_24"
+                android:fontFamily="@font/inter_semibold_600"
+                android:text="@string/car_info"
+                android:textColor="@color/appPrimary"
+                android:textSize="@dimen/text_size_16"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/startDateError" />
+
+            <TextView
+                android:id="@+id/regCountryLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_16"
+                android:layout_marginTop="@dimen/size_16"
+                android:fontFamily="@font/inter_medium_500"
+                android:text="@string/country_reg"
+                android:textColor="@color/textOnWhiteAccentGray"
+                android:textSize="@dimen/text_size_14"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/carInformation" />
+
+            <RelativeLayout
+                android:id="@+id/mRelative"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="@dimen/size_16"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/auth_text_input_background"
+                app:layout_constraintTop_toBottomOf="@+id/regCountryLabel">
+
+                <Spinner
+                    android:id="@+id/regCountry"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/inter_semibold_600"
+                    android:padding="@dimen/_5sdp"
+                    android:textColor="@color/textOnWhite"
+                    android:textColorHint="@color/textOnWhite"
+                    android:textSize="@dimen/text_size_14"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/mLicence"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mRelative">
+
+                <TextView
+                    android:id="@+id/licensePlateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/size_16"
+                    android:layout_marginTop="@dimen/size_16"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/buy_vignette_license"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/text_size_14"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <EditText
+                    android:id="@+id/licensePlate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/licensePlateLabel"
+                    android:layout_marginHorizontal="@dimen/size_16"
+                    android:layout_marginTop="@dimen/size_5"
+                    android:background="@drawable/auth_text_input_background"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:hint="@string/license_hint"
+                    android:paddingHorizontal="@dimen/size_16"
+                    android:paddingVertical="@dimen/size_14"
+                    android:textColor="@color/textOnWhite"
+                    android:textColorHint="@color/hintOnWhite"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textSize="@dimen/text_size_14" />
+
+                <TextView
+                    android:id="@+id/licenseEnter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/licensePlate"
+                    android:layout_marginStart="@dimen/size_16"
+                    android:layout_marginTop="@dimen/size_5"
+                    android:layout_marginBottom="@dimen/_15sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/license_error"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/text_size_11.5"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/mVin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mLicence">
+
+                <TextView
+                    android:id="@+id/vinLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/size_16"
+                    android:layout_marginTop="@dimen/size_14"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/vin_number"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/text_size_14" />
+
+                <EditText
+                    android:id="@+id/vin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/vinLabel"
+                    android:layout_marginHorizontal="@dimen/size_16"
+                    android:layout_marginTop="@dimen/size_5"
+                    android:background="@drawable/auth_text_input_background"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:hint="@string/buy_vignette_vin_hint"
+                    android:maxLength="17"
+                    android:paddingHorizontal="@dimen/size_16"
+                    android:paddingVertical="@dimen/size_14"
+                    android:textColor="@color/textOnWhite"
+                    android:textColorHint="@color/hintOnWhite"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textSize="@dimen/text_size_14" />
+
+                <TextView
+                    android:id="@+id/mEnter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/vin"
+                    android:layout_marginStart="@dimen/size_16"
+                    android:layout_marginTop="@dimen/size_5"
+                    android:layout_marginBottom="@dimen/_15sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/enter_vin_num"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/text_size_11.5" />
+
+            </RelativeLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check"
+        android:layout_width="30dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="@dimen/size_16"
+        android:checked="false"
+        app:buttonTint="@color/appPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/confirmation" />
+
+    <TextView
+        android:id="@+id/confirmation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_8"
+        android:layout_marginEnd="@dimen/size_16"
+        android:layout_marginBottom="@dimen/size_12"
+        android:fontFamily="@font/inter_regular_400"
+        android:text="@string/i_hereby_confirm"
+        android:textColor="@color/textOnWhiteAccentGray"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintBottom_toTopOf="@+id/cta"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/check" />
+
+    <TextView
+        android:id="@+id/cta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size_24"
+        android:layout_marginBottom="@dimen/size_40"
+        android:background="@drawable/cta_background"
+        android:fontFamily="@font/manrope_semibold_600"
+        android:gravity="center"
+        android:paddingVertical="@dimen/size_16"
+        android:text="@string/continue_txt"
+        android:textColor="@color/textOnSolid"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintBottom_toTopOf="@+id/indicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/indicator"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:layout_marginBottom="@dimen/size_8"
+        android:background="@drawable/rounded_rect_100_black"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

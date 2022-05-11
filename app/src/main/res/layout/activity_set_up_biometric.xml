@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".presentation.screens.signup_methods.biometric_setup.SetUpBiometricActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/back"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_16"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_back" />
+
+    <RelativeLayout
+        android:id="@+id/touchRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/indicator"
+        android:layout_below="@id/back"
+        android:layout_marginBottom="@dimen/_20sdp">
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semibold_600"
+            android:gravity="center"
+            android:text="@string/setup_touch"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/_13sdp" />
+
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottomLL"
+            android:layout_below="@id/header"
+            android:layout_gravity="center"
+            android:padding="@dimen/_30sdp"
+            android:src="@drawable/ic_fingerprint" />
+
+        <LinearLayout
+            android:id="@+id/bottomLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/setupTouch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_32"
+                android:layout_marginTop="@dimen/size_32"
+                android:layout_marginEnd="@dimen/size_32"
+                android:layout_marginBottom="@dimen/size_32"
+                android:background="@drawable/cta_background"
+                android:fontFamily="@font/manrope_semibold_600"
+                android:gravity="center"
+                android:paddingVertical="@dimen/size_16"
+                android:text="@string/setup_touchID"
+                android:textColor="@color/textOnSolid"
+                android:textSize="@dimen/text_size_16" />
+
+            <TextView
+                android:id="@+id/skipTouch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/inter_semibold_600"
+                android:gravity="center"
+                android:padding="@dimen/_10sdp"
+                android:text="@string/skip_now"
+                android:textColor="@color/textOnWhiteAccentGray"
+                android:textSize="@dimen/text_size_12" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/faceRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/indicator"
+        android:layout_below="@id/back"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semibold_600"
+            android:gravity="center"
+            android:text="@string/setup_face"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/_13sdp" />
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottomLL1"
+            android:layout_gravity="center"
+            android:padding="@dimen/_30sdp"
+            android:src="@drawable/ic_face" />
+
+        <LinearLayout
+            android:id="@+id/bottomLL1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/setupFace"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_32"
+                android:layout_marginTop="@dimen/size_32"
+                android:layout_marginEnd="@dimen/size_32"
+                android:layout_marginBottom="@dimen/size_32"
+                android:background="@drawable/cta_background"
+                android:fontFamily="@font/manrope_semibold_600"
+                android:gravity="center"
+                android:paddingVertical="@dimen/size_16"
+                android:text="@string/setup_faceID"
+                android:textColor="@color/textOnSolid"
+                android:textSize="@dimen/text_size_16" />
+
+            <TextView
+                android:id="@+id/skipFace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/inter_semibold_600"
+                android:gravity="center"
+                android:padding="@dimen/_10sdp"
+                android:text="@string/skip_now"
+                android:textColor="@color/textOnWhiteAccentGray"
+                android:textSize="@dimen/text_size_12" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/indicator"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/size_8"
+        android:background="@drawable/rounded_rect_100_black"
+        android:visibility="gone" />
+</RelativeLayout>

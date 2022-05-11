@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <FrameLayout
+        android:id="@+id/childContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:itemBackground="@color/white"
+        app:itemIconSize="24dp"
+        app:itemTextAppearanceActive="@style/BottomNavigationViewActive"
+        app:itemTextAppearanceInactive="@style/BottomNavigationView"
+        app:itemTextColor="@drawable/bottom_nav_text_color"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/servicesExpandedGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="servicesOverlay,fakeLabel,collapseServices,insuranceIc,insuranceLabel,roadTaxIc,roadTaxLabel,bridgeTaxIc,bridgeTaxLabel,documents,documentsLabel,user_details,user_detailsLabel,purchases,purchasesLabel" />
+
+    <View
+        android:id="@+id/servicesOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white80"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/fakeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_regular_400"
+        android:text="@string/services"
+        android:textColor="@color/textcolor"
+        android:textSize="@dimen/text_size_12"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/collapseServices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/size_6"
+        android:src="@drawable/ic_services_expanded"
+        android:translationZ="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/fakeLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/insuranceIc"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginBottom="@dimen/_35sdp"
+        android:src="@drawable/ic_insuarance_img"
+        app:layout_constraintBottom_toTopOf="@+id/documents"
+        app:layout_constraintEnd_toStartOf="@id/bridgeTaxIc"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/insuranceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:fontFamily="@font/inter_regular_400"
+        android:text="@string/insurance"
+        android:textColor="@color/home_bottomtab_text_unselected"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintEnd_toEndOf="@+id/insuranceIc"
+        app:layout_constraintStart_toStartOf="@+id/insuranceIc"
+        app:layout_constraintTop_toBottomOf="@+id/insuranceIc" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/bridgeTaxIc"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginBottom="@dimen/_35sdp"
+        android:src="@drawable/ic_bridge_img"
+        app:layout_constraintBottom_toTopOf="@+id/user_details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/bridgeTaxLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:fontFamily="@font/inter_regular_400"
+        android:text="@string/bridge_tax"
+        android:textColor="@color/home_bottomtab_text_unselected"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintEnd_toEndOf="@+id/bridgeTaxIc"
+        app:layout_constraintStart_toStartOf="@+id/bridgeTaxIc"
+        app:layout_constraintTop_toBottomOf="@+id/bridgeTaxIc" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/roadTaxIc"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginBottom="@dimen/_35sdp"
+        android:src="@drawable/ic_rovinieta_img"
+        app:layout_constraintBottom_toTopOf="@+id/purchases"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bridgeTaxIc" />
+
+    <TextView
+        android:id="@+id/roadTaxLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:fontFamily="@font/inter_regular_400"
+        android:text="@string/rovinieta"
+        android:textColor="@color/home_bottomtab_text_unselected"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintEnd_toEndOf="@+id/roadTaxIc"
+        app:layout_constraintStart_toStartOf="@+id/roadTaxIc"
+        app:layout_constraintTop_toBottomOf="@+id/roadTaxIc" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/documents"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginBottom="@dimen/_35sdp"
+        android:src="@drawable/ic_document_img"
+        app:layout_constraintBottom_toTopOf="@+id/collapseServices"
+        app:layout_constraintEnd_toStartOf="@id/user_details"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/documentsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:fontFamily="@font/inter_regular_400"
+        android:text="@string/documents"
+        android:textColor="@color/home_bottomtab_text_unselected"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintEnd_toEndOf="@+id/documents"
+        app:layout_constraintStart_toStartOf="@+id/documents"
+        app:layout_constraintTop_toBottomOf="@+id/documents" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/user_details"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginBottom="@dimen/_35sdp"
+        android:src="@drawable/ic_user_details_img"
+        app:layout_constraintBottom_toTopOf="@+id/collapseServices"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/user_detailsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:fontFamily="@font/inter_regular_400"
+        android:text="@string/user_details"
+        android:textColor="@color/home_bottomtab_text_unselected"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintEnd_toEndOf="@+id/user_details"
+        app:layout_constraintStart_toStartOf="@+id/user_details"
+        app:layout_constraintTop_toBottomOf="@+id/user_details" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/purchases"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginBottom="@dimen/_35sdp"
+        android:src="@drawable/ic_purchases_img"
+        app:layout_constraintBottom_toTopOf="@+id/collapseServices"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/user_details" />
+
+    <TextView
+        android:id="@+id/purchasesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:fontFamily="@font/inter_regular_400"
+        android:text="@string/user_purchases"
+        android:textColor="@color/home_bottomtab_text_unselected"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintEnd_toEndOf="@+id/purchases"
+        app:layout_constraintStart_toStartOf="@+id/purchases"
+        app:layout_constraintTop_toBottomOf="@+id/purchases" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

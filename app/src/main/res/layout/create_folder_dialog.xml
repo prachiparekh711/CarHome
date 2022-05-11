@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/_15sdp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:fontFamily="@font/inter_semibold_600"
+        android:text="@string/create_new_category"
+        android:textColor="@color/secondaryTextOnWhite"
+        android:textSize="@dimen/text_size_12" />
+
+    <EditText
+        android:id="@+id/catName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_toLeftOf="@id/done"
+        android:background="@drawable/auth_text_input_background"
+        android:focusable="true"
+        android:fontFamily="@font/inter_semibold_600"
+        android:hint="@string/type_here"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/size_16"
+        android:paddingVertical="@dimen/size_12"
+        android:textColor="@color/textcolor"
+        android:textColorHint="@color/hintOnWhite"
+        android:textSize="@dimen/text_size_14" />
+
+
+    <ImageView
+        android:id="@+id/cancel"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/catName"
+        android:layout_alignEnd="@id/catName"
+        android:layout_alignBottom="@id/catName"
+        android:padding="@dimen/_5sdp"
+        android:src="@drawable/ic_close"
+        app:tint="@color/hintOnWhite" />
+
+    <ImageView
+        android:id="@+id/done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/catName"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_5sdp"
+        android:src="@drawable/ic_fab_done" />
+
+</RelativeLayout>

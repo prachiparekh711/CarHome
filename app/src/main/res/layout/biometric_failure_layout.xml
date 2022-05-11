@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/_20sdp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semibold_600"
+        android:text="@string/biometric_login"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/_13sdp" />
+
+    <ImageView
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_gravity="center"
+        android:layout_marginVertical="@dimen/_10sdp"
+        android:src="@drawable/ic_fingerprint" />
+
+    <TextView
+        android:id="@+id/mErrorText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/incorrect_attempt"
+        android:textAlignment="center"
+        android:textColor="@color/textOnWhiteAccentGray"
+        android:textSize="@dimen/_10sdp" />
+
+</LinearLayout>

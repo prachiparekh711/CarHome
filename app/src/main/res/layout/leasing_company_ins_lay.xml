@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFB"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:id="@+id/mainRL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_15sdp"
+            android:paddingVertical="@dimen/_10sdp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/raleway_bold_700"
+                android:gravity="center"
+                android:text="@string/select_leasing"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/text_size_20" />
+
+            <TextView
+                android:id="@+id/sub_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title"
+                android:fontFamily="@font/inter_medium_500"
+                android:gravity="center"
+                android:text="@string/choose_the_option_that_fits_for_you"
+                android:textColor="@color/text_colore_leasing"
+                android:textSize="@dimen/_8sdp" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/size_16"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_dismiss_x" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/searchbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_below="@id/mainRL"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/_8sdp">
+
+
+            <EditText
+                android:id="@+id/etSearchTrain"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:drawablePadding="@dimen/_12sdp"
+                android:fontFamily="@font/inter_medium_500"
+                android:hint="search.."
+                android:imeOptions="actionDone"
+                android:importantForAutofill="auto"
+                android:includeFontPadding="false"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="#303065"
+                android:textColorHint="#868383"
+                android:textCursorDrawable="@color/ctaBackground"
+                android:textSize="@dimen/_12sdp" />
+
+            <ImageView
+                android:id="@+id/ivsearch"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_search_normal"
+                android:visibility="visible"
+                app:tint="#5B5B7E" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/searchbarLayout"
+            android:background="#FAFAFB" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categories"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/searchbarLayout"
+            tools:listitem="@layout/item_leasing_ins_company" />
+
+    </LinearLayout>
+
+</RelativeLayout>

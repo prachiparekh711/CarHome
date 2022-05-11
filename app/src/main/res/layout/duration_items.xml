@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:id="@+id/mLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size_15"
+        android:layout_marginVertical="@dimen/size_8"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--        <androidx.appcompat.widget.AppCompatRadioButton-->
+        <!--            android:id="@+id/mImage"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:theme="@style/MyRadioButton"/>-->
+
+        <ImageView
+            android:id="@+id/mImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_7sdp"
+            android:src="@drawable/radio_unchecked" />
+
+        <TextView
+            android:id="@+id/mText"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/inter_medium_500"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/_7sdp"
+            android:paddingEnd="@dimen/_10sdp"
+            android:text="30 de zile"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_14" />
+
+        <TextView
+            android:id="@+id/mMoney"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter_medium_500"
+            android:gravity="end"
+            android:text="14.85 ron (3.00 EUR)"
+            android:textColor="@color/unselected"
+            android:textSize="@dimen/text_size_14" />
+
+        <TextView
+            android:id="@+id/mNull"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter_semibold_600"
+            android:gravity="end"
+            android:text="14.85 ron (3.00 EUR)"
+            android:textColor="@color/unselected"
+            android:textSize="@dimen/text_size_14"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/mView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/input_field_stroke_width"
+        android:layout_below="@+id/mLinear"
+        android:background="@color/view_line" />
+
+</RelativeLayout>

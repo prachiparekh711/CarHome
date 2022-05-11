@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/back"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_16"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semibold_600"
+        android:text="@string/add_new_car"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/text_size_18"
+        app:layout_constraintBottom_toBottomOf="@+id/back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/back" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size_16"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_account"
+        app:layout_constraintBottom_toBottomOf="@+id/back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/back" />
+
+    <TextView
+        android:id="@+id/titleStep1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_32"
+        android:fontFamily="@font/inter_bold_700"
+        android:gravity="start"
+        android:text="@string/enter_vin"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/text_size_24"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+    <TextView
+        android:id="@+id/subtitleStep1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_8"
+        android:fontFamily="@font/inter_semibold_600"
+        android:gravity="start"
+        android:text="@string/please_provide_details"
+        android:textColor="@color/textOnWhiteAccentGray"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintTop_toBottomOf="@+id/titleStep1" />
+
+    <TextView
+        android:id="@+id/registrationCountryLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_32"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/reg_country"
+        android:textColor="@color/textOnWhiteAccentGray"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subtitleStep1" />
+
+
+    <LinearLayout
+        android:id="@+id/li_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_8"
+        android:background="@drawable/auth_text_input_background"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/registrationCountryLabel">
+
+        <Spinner
+            android:id="@+id/registrationCountry"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:fontFamily="@font/inter_medium_500"
+            android:inputType="text"
+            android:spinnerMode="dropdown"
+            android:textColor="@color/textOnWhite"
+            android:textColorHint="@color/hintOnWhite"
+            android:textCursorDrawable="@drawable/cursor"
+            android:textSize="@dimen/text_size_16"
+            app:layout_constraintTop_toBottomOf="@+id/registrationCountryLabel" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/_7sdp"
+            android:src="@drawable/ic_arrow_down_id" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/vinLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_16"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/vin_number"
+        android:textColor="@color/textOnWhiteAccentGray"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/li_spinner" />
+
+    <EditText
+        android:id="@+id/vin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_8"
+        android:background="@drawable/auth_text_input_background"
+        android:fontFamily="@font/inter_medium_500"
+        android:hint="@string/vin_number"
+        android:inputType="textCapCharacters"
+        android:maxLength="17"
+        android:paddingHorizontal="@dimen/size_16"
+        android:paddingVertical="@dimen/size_12"
+        android:textAllCaps="true"
+        android:textColor="@color/textOnWhite"
+        android:textColorHint="@color/hintOnWhite"
+        android:textCursorDrawable="@drawable/cursor"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintTop_toBottomOf="@+id/vinLabel" />
+
+    <TextView
+        android:id="@+id/registrationNumberLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_16"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/reg_number"
+        android:textColor="@color/textOnWhiteAccentGray"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vin" />
+
+    <EditText
+        android:id="@+id/registrationNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_8"
+        android:background="@drawable/auth_text_input_background"
+        android:fontFamily="@font/inter_medium_500"
+        android:hint="@string/reg_number"
+        android:inputType="textCapCharacters"
+        android:paddingHorizontal="@dimen/size_16"
+        android:paddingVertical="@dimen/size_12"
+        android:textAllCaps="true"
+        android:textColor="@color/textOnWhite"
+        android:textColorHint="@color/hintOnWhite"
+        android:textCursorDrawable="@drawable/cursor"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintTop_toBottomOf="@+id/registrationNumberLabel"
+        tools:ignore="TextFields" />
+
+    <TextView
+        android:id="@+id/cta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_24"
+        android:background="@drawable/cta_background"
+        android:fontFamily="@font/manrope_semibold_600"
+        android:gravity="center"
+        android:paddingVertical="@dimen/size_16"
+        android:text="@string/submit"
+        android:textColor="@color/textOnSolid"
+        android:textSize="@dimen/text_size_16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registrationNumber" />
+
+    <View
+        android:id="@+id/indicator"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:layout_marginBottom="@dimen/size_8"
+        android:background="@drawable/rounded_rect_100_black"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_background_alfa"
+    android:orientation="vertical"
+    android:tag="HomeFragment">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/size_16"
+            android:layout_marginTop="@dimen/size_32"
+            android:src="@drawable/ic_carhome_by_omv" />
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/size_16"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_circle_avatar"
+            android:contentDescription="@null"
+            android:padding="@dimen/size_2"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_avatar" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/dmImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:src="@drawable/ic_dm_img1" />
+
+    <TextView
+        android:id="@+id/exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="@dimen/_15sdp"
+        android:fontFamily="@font/inter_semibold_600"
+        android:text="@string/exit_carmode"
+        android:textColor="@color/orangeExpired"
+        android:textSize="@dimen/_12sdp" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp" />
+
+</LinearLayout>

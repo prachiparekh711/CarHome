@@ -1,0 +1,6 @@
+<resources>
+
+    <style name="Theme.CarHome" parent="BaseTheme">
+        <!-- To replace DefaultDayNightTheme with individual Day and Night Themes -->
+    </style>
+</resources>

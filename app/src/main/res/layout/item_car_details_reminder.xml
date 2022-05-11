@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:background="@drawable/item_ring_box"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/nextDueDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:textColor="@color/secondaryTextOnWhite"
+                android:textSize="@dimen/_12sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <!--<ro.westaco.carhome.utils.SwitchButton
+                android:id="@+id/switch_button"
+                android:layout_width="@dimen/_38sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_gravity="right"
+                app:sb_background="@color/unselected"
+                app:sb_border_width="@dimen/_2sdp"
+                app:sb_checked_color="@color/ctaBackground"
+                app:sb_checkline_width="0dp"
+                app:sb_show_indicator="false"
+                app:sb_uncheck_color="@color/unselected" />-->
+
+
+            <Switch
+                android:id="@+id/switch_button"
+                android:layout_width="@dimen/_38sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:checked="true"
+                android:enabled="false"
+                android:thumb="@drawable/ic_switch_oval"
+                android:track="@drawable/custom_track"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/secondaryTextOnWhite"
+                android:textSize="@dimen/_11sdp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

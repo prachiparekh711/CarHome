@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/_3sdp">
+
+    <ImageView
+        android:id="@+id/mImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/bg_card_item_nostroke"
+        android:scaleType="centerCrop"
+        android:src="@drawable/insta1" />
+
+    <ImageView
+        android:id="@+id/mRemove"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_alignRight="@id/mImage"
+        android:layout_alignParentEnd="@id/mImage"
+        android:background="@drawable/ic_history_bg"
+        android:padding="@dimen/_3sdp"
+        android:src="@drawable/ic_close" />
+
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mImage"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/address_number"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/_10sdp" />
+</RelativeLayout>

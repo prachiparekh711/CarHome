@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mBottomsheetRL"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:background="@color/appPrimary" />
+
+    <RelativeLayout
+        android:id="@+id/mTopRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/size_14"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:layout_toLeftOf="@id/mBack"
+            android:fontFamily="@font/manrope_semibold_600"
+            android:gravity="center"
+            android:text="@string/new_reminder_repeat"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/_15sdp" />
+
+        <ImageView
+            android:id="@+id/mBack"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mRepeatRec"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mTopRL"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/linear_item" />
+
+    <TextView
+        android:id="@+id/mContinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mRepeatRec"
+        android:layout_marginStart="@dimen/size_32"
+        android:layout_marginTop="@dimen/size_32"
+        android:layout_marginEnd="@dimen/size_32"
+        android:layout_marginBottom="@dimen/size_32"
+        android:background="@drawable/cta_background"
+        android:fontFamily="@font/manrope_semibold_600"
+        android:gravity="center"
+        android:paddingVertical="@dimen/size_16"
+        android:text="@string/continue_txt"
+        android:textColor="@color/textOnSolid"
+        android:textSize="@dimen/text_size_16" />
+</RelativeLayout>

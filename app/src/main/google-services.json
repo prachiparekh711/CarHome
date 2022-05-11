@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "235194408249",
+    "project_id": "carhome-test-329809",
+    "storage_bucket": "carhome-test-329809.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235194408249:android:294b1b9c4251561e45dce8",
+        "android_client_info": {
+          "package_name": "ro.westaco.carhome"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235194408249-1mskhq4lo78acdh0ia5ido094r4r5l2p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLOyG0Bxf8GXIKu9iFReD51FT5eBhBZbA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235194408249-1mskhq4lo78acdh0ia5ido094r4r5l2p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "235194408249-f2vvrj9lovq8bf9gh9okjrn9e9hca0rv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ro.westaco.carhome"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

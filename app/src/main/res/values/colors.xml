@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="appPrimary">#5367FC</color>
+    <color name="appPrimary40">#405367FC</color>
+    <color name="appPrimary6">#0C5367FC</color>
+    <color name="gray">#B5B5B5</color>
+    <color name="orangeExpired">#FF7575</color>
+    <color name="yellow">#FFA000</color>
+    <color name="vignette_bottom_view">#E2E2EA</color>
+    <color name="vignette_back_line">#D5D5DC</color>
+    <color name="offer_color">#0B3468</color>
+
+    <color name="splashScreenBgColor">@color/appPrimary</color>
+    <color name="textOnSolid">#fff</color>
+    <color name="textOnWhite">#303065</color>
+    <color name="textcolor">#0D173A</color>
+    <color name="textcolor_profile">#566E91</color>
+    <color name="avatarBgStroke">#C7C8DA</color>
+    <color name="secondaryTextOnWhite">#8384A1</color>
+    <color name="hintOnWhite">#C6C6C6</color>
+    <color name="bigHeaderOnSurface">#303065</color>
+    <color name="ctaBackground">@color/appPrimary</color>
+    <color name="cta_invisibleBackground">#4D5367FC</color>
+    <color name="ctaEditProfileBackground">#5367FC</color>
+    <color name="ctaEditProfileStroke">#808FFD</color>
+    <color name="skip">#768DA9</color>
+    <color name="bottom_view">#7376AA</color>
+    <color name="pager_dot_selected">@color/appPrimary</color>
+    <color name="pager_dot_unselected">#CAD1FE</color>
+    <color name="clickable_subtext">@color/appPrimary</color>
+    <color name="textOnWhiteAccentBlue">#14105F</color>
+    <color name="textOnWhiteAccentGray">#768DA9</color>
+    <color name="textInputBorder">#5266fc</color>
+    <color name="textInputBorderGray">#8384A1</color>
+    <color name="textInputBorderGray_border">#665367FC</color>
+
+    <color name="settingsHeaderBg">#F4FAFF</color>
+    <color name="deleteRed">#FF7575</color>
+    <color name="deleteDisabledRed">#CCFF7575</color>
+    <color name="errorRed">#17FF7575</color>
+
+    <color name="tabSelected">@color/white</color>
+    <color name="tabUnselected">#99F1F1F5</color>
+    <color name="itemBgStroke">#665367FC</color>
+    <color name="activeGreen">#00D09C</color>
+    <color name="home_bottomtab_text_selected">@color/appPrimary</color>
+    <color name="home_bottomtab_text_unselected">@color/textOnWhiteAccentGray</color>
+    <color name="white80">#E6FFFFFF</color>
+
+    <color name="tag_orange">#FFB65A</color>
+    <color name="tag_pink">#FB4079</color>
+    <color name="tag_lightblue">#3BB9FF</color>
+    <color name="tag_blue">#5165F7</color>
+    <color name="tag_green">#02D09C</color>
+    <color name="tag_purple">#6443FF</color>
+    <color name="tag_black">#000</color>
+
+    <color name="redExpired">#FB4079</color>
+    <color name="redExpiredRovii">#B3FF0000</color>
+    <color name="orangeWarning">#FFB65A</color>
+    <color name="greenActive">#02D09C</color>
+    <color name="no_data">#8384A1</color>
+    <color name="services">#696974</color>
+    <color name="selected">#5367FC</color>
+    <color name="unselected">#768DA9</color>
+    <color name="view_line">#80696974</color>
+    <color name="text_color">#303065</color>
+    <color name="screen_background">#E5E5E5</color>
+    <color name="screen_background_alfa">#5EE5E5E5</color>
+    <color name="screen_background_alfa28">#28E5E5E5</color>
+    <color name="search_background">#5367FC</color>
+    <color name="query_background">#255367FC</color>
+    <color name="button_background">#F0F8FF</color>
+    <color name="fragment_background">#E5E5E5</color>
+    <color name="Map_button">#303065</color>
+    <color name="list_time">#00D09C</color>
+    <color name="list_color">#171725</color>
+    <color name="map_color">#007AFF</color>
+    <color name="white_back">#1AFFFFFF</color>
+    <color name="closed">#FF7575</color>
+    <color name="location_ser">#92929D</color>
+    <color name="tint">#335367FC</color>
+    <color name="mtrl_textinput_default_box_stroke_color">#665367FC</color>
+    <color name="box_selected_color">#5367FC</color>
+    <color name="expande_colore">#FAFAFB</color>
+    <color name="items_color">#162651</color>
+    <color name="information_details">#991A1341</color>
+    <color name="delete_dialog_background">#80696974</color>
+    <color name="delete_dialog_color">#FC5A5A</color>
+
+    <color name="colore_maroon">#B9342B</color>
+    <color name="text_colore_leasing">#9DB4CB</color>
+    <color name="view_color">#E4E8EE</color>
+
+</resources>

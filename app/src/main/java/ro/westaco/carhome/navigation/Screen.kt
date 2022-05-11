@@ -1,0 +1,235 @@
+package ro.westaco.carhome.navigation
+
+import androidx.fragment.app.Fragment
+import ro.westaco.carhome.presentation.screens.auth.ForgotPasswordFragment
+import ro.westaco.carhome.presentation.screens.dashboard.DashboardFragment
+import ro.westaco.carhome.presentation.screens.dashboard.profile.ProfileFragment
+import ro.westaco.carhome.presentation.screens.dashboard.profile.close.CloseAccountFragment
+import ro.westaco.carhome.presentation.screens.dashboard.profile.edit.EditProfileFragment
+import ro.westaco.carhome.presentation.screens.home.documents.DocumentsFragment
+import ro.westaco.carhome.presentation.screens.reminder.add_new.AddNewReminderFragment
+import ro.westaco.carhome.presentation.screens.service.bridgetax.init.BridgeTaxInitFragment
+import ro.westaco.carhome.presentation.screens.service.bridgetax.select_bridge_tax.BridgeTaxSelectFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.InsuranceFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.InsuranceStep2Fragment
+import ro.westaco.carhome.presentation.screens.service.insurance.offers.FetchScreenFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.offers.InsOfferDetailsFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.offers.InsOffersFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.summary.SummaryFragment
+import ro.westaco.carhome.presentation.screens.service.payment_methods.SavedCardsFragment
+import ro.westaco.carhome.presentation.screens.service.payment_methods.add_new.AddNewCardFragment
+import ro.westaco.carhome.presentation.screens.service.person.BillingInformationFragment
+import ro.westaco.carhome.presentation.screens.service.person.legal.addlegal.AddBillLegalFragment
+import ro.westaco.carhome.presentation.screens.service.person.natural.addnatural.AddBillNaturalFragment
+import ro.westaco.carhome.presentation.screens.service.transaction_details.TransactionDetailsFragment
+import ro.westaco.carhome.presentation.screens.service.vignette.buy.BuyVignetteFragment
+import ro.westaco.carhome.presentation.screens.service.vignette.select_car.VignetteSelectCarFragment
+import ro.westaco.carhome.presentation.screens.settings.contact_us.ContactUsFragment
+import ro.westaco.carhome.presentation.screens.settings.data.DataFragment
+import ro.westaco.carhome.presentation.screens.settings.data.cars.add_new.AddNewCar2Fragment
+import ro.westaco.carhome.presentation.screens.settings.data.cars.add_new.AddNewCarFragment
+import ro.westaco.carhome.presentation.screens.settings.data.cars.details.CarDetailsFragment
+import ro.westaco.carhome.presentation.screens.settings.data.cars.query_details.QueryCarDetailsFragment
+import ro.westaco.carhome.presentation.screens.settings.data.person_legal.add_new.AddNewLegalPersonFragment
+import ro.westaco.carhome.presentation.screens.settings.data.person_legal.details.LegalPersonDetailsFragment
+import ro.westaco.carhome.presentation.screens.settings.data.person_natural.add_new.AddNewNaturalPersonFragment
+import ro.westaco.carhome.presentation.screens.settings.data.person_natural.details.NaturalPersonDetailsFragment
+import ro.westaco.carhome.presentation.screens.settings.extras.*
+import ro.westaco.carhome.presentation.screens.settings.history.HistoryFragment
+import ro.westaco.carhome.presentation.screens.settings.notifications.AllNotificationSettingFragment
+import ro.westaco.carhome.presentation.screens.settings.notifications.NotificationFragment
+import ro.westaco.carhome.presentation.screens.settings.notifications.NotificationSettingFragment
+import ro.westaco.carhome.presentation.screens.settings.security.ChangePasswordFragment
+import ro.westaco.carhome.presentation.screens.settings.security.PasswordChangeSuccessFragment
+import ro.westaco.carhome.presentation.screens.settings.security.SecurityFragment
+
+
+enum class Screen(fragmentClass: Class<out Fragment?>) {
+    /*
+    ** App Screens
+    */
+
+    ForgotPassword(
+        ForgotPasswordFragment::class.java
+    ),
+    Dashboard(
+        DashboardFragment::class.java
+    ),
+    Document(
+        DocumentsFragment::class.java
+    ),
+    VignetteSelectCar(
+        VignetteSelectCarFragment::class.java
+    ),
+    BuyVignette(
+        BuyVignetteFragment::class.java
+    ),
+    TransactionDetails(
+        TransactionDetailsFragment::class.java
+    ),
+    AddReminder(
+        AddNewReminderFragment::class.java
+    ),
+    Profile(
+        ProfileFragment::class.java
+    ),
+    EditAccount(
+        EditProfileFragment::class.java
+    ),
+    ChangePassword(
+        ChangePasswordFragment::class.java
+    ),
+    PasswordChangeSuccess(
+        PasswordChangeSuccessFragment::class.java
+    ),
+    CloseAccount(
+        CloseAccountFragment::class.java
+    ),
+    PaymentMethods(
+        SavedCardsFragment::class.java
+    ),
+    AddPaymentMethod(
+        AddNewCardFragment::class.java
+    ),
+    Security(
+        SecurityFragment::class.java
+    ),
+    History(
+        HistoryFragment::class.java
+    ),
+    Data(
+        DataFragment::class.java
+    ),
+    Notifications(
+        NotificationFragment::class.java
+    ),
+    NotificationSetting(
+        NotificationSettingFragment::class.java
+    ),
+    AllNotificationSetting(
+        AllNotificationSettingFragment::class.java
+    ),
+    QueryCar(
+        QueryCarDetailsFragment::class.java
+    ),
+    AddCar(
+        AddNewCarFragment::class.java
+    ),
+    AddCar2(
+        AddNewCar2Fragment::class.java
+    ),
+    CarDetails(
+        CarDetailsFragment::class.java
+    ),
+    AddNaturalPerson(
+        AddNewNaturalPersonFragment::class.java
+    ),
+    NaturalPersonDetails(
+        NaturalPersonDetailsFragment::class.java
+    ),
+    AddLegalPerson(
+        AddNewLegalPersonFragment::class.java
+    ),
+    LegalPersonDetails(
+        LegalPersonDetailsFragment::class.java
+    ),
+
+    //  C-  Setting Screen
+    AboutUs(
+        AboutUsFragment::class.java
+    ),
+    TermsAndCond(
+        TermsAndConFragment::class.java
+    ),
+    GDPR(
+        GDPRFragment::class.java
+    ),
+    Share(
+        ShareTheAppFragment::class.java
+    ),
+    Faq(
+        FAQFragment::class.java
+    ),
+    ContactUs(
+        ContactUsFragment::class.java
+    ),
+    Social(
+        SocialFragment::class.java
+    ),
+    Language(
+        LanguageFragment::class.java
+    ),
+    BridgeTax(
+        BridgeTaxSelectFragment::class.java
+    ),
+    BridgeTaxInit(
+        BridgeTaxInitFragment::class.java
+    ),
+    BridgeTaxBillingInfo(
+        BillingInformationFragment::class.java
+    ),
+
+    AddBillNaturalPerson(
+        AddBillNaturalFragment::class.java
+    ),
+
+    AddBillLegalPerson(
+        AddBillLegalFragment::class.java
+    ),
+
+    Insurance(
+        InsuranceFragment::class.java
+    ),
+
+    InsuranceStep2(
+        InsuranceStep2Fragment::class.java
+    ),
+
+    FetchOfferScreen(
+        FetchScreenFragment::class.java
+    ),
+
+    InsuranceOffers(
+        InsOffersFragment::class.java
+    ),
+
+    InsuranceOfferDetail(
+        InsOfferDetailsFragment::class.java
+    ),
+
+    InsuranceSummary(
+        SummaryFragment::class.java
+    ),
+
+    ;
+
+
+    /*
+    ** Implementation
+    */
+    val fragmentClass: Class<*>
+
+    init {
+        this.fragmentClass = fragmentClass
+    }
+
+    companion object {
+        var screenLayerHashMap: HashMap<Class<*>, Screen>? = null
+
+        init {
+            screenLayerHashMap = HashMap()
+            for (screen in values()) {
+                screenLayerHashMap?.let { it[screen.fragmentClass] = screen }
+            }
+        }
+
+        fun getScreenForFragment(fragment: Fragment?): Screen? {
+            return try {
+                if (fragment == null) null else screenLayerHashMap?.get(fragment.javaClass)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+}

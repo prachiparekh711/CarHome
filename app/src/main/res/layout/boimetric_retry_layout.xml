@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="@dimen/_20sdp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semibold_600"
+        android:text="@string/biometric_login"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/_13sdp" />
+
+    <TextView
+        android:id="@+id/mErrorText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_10sdp"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/retry"
+        android:textAlignment="center"
+        android:textColor="@color/textOnWhiteAccentGray"
+        android:textSize="@dimen/_10sdp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mTryagain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_toLeftOf="@id/mClose"
+            android:fontFamily="@font/inter_medium_500"
+            android:text="@string/try_again1"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/_11sdp" />
+
+        <TextView
+            android:id="@+id/mClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginVertical="@dimen/_10sdp"
+            android:fontFamily="@font/inter_medium_500"
+            android:text="@string/close1"
+            android:textColor="@color/textOnWhiteAccentGray"
+            android:textSize="@dimen/_11sdp" />
+    </RelativeLayout>
+
+</LinearLayout>

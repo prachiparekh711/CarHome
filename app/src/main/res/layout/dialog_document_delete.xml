@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp"
+    android:paddingStart="@dimen/size_24">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_16"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_delete_dialog" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_16"
+        android:fontFamily="@font/raleway_bold_700"
+        android:gravity="center"
+        android:text="@string/delete"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/text_size_18" />
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_8"
+        android:fontFamily="@font/inter_regular_400"
+        android:text="@string/delete_doc_subtitle"
+        android:textColor="@color/textOnWhiteAccentGray"
+        android:textSize="@dimen/text_size_14" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_32"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/neg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:background="@drawable/cta_background"
+            android:fontFamily="@font/inter_bold_700"
+            android:gravity="center"
+            android:paddingVertical="@dimen/size_16"
+            android:text="@string/go_back"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_16" />
+
+        <TextView
+            android:id="@+id/pos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:background="@drawable/cta_background"
+            android:backgroundTint="#FFECEC"
+            android:fontFamily="@font/inter_bold_700"
+            android:gravity="center"
+            android:paddingVertical="@dimen/size_16"
+            android:text="@string/yes_delete"
+            android:textColor="@color/deleteRed"
+            android:textSize="@dimen/text_size_16" />
+    </LinearLayout>
+</LinearLayout>

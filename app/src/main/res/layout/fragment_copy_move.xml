@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".presentation.screens.home.documents.CopyMoveFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/screen_background_alfa28">
+
+        <RelativeLayout
+            android:id="@+id/topRL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingVertical="@dimen/_10sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/back"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_16"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_back" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/inter_semibold_600"
+                android:text="@string/documents"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/text_size_18" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/mPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topRL"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginVertical="@dimen/_15sdp"
+            android:fontFamily="@font/raleway_bold_700"
+            android:text="@string/empty_directory"
+            android:textColor="@color/secondaryTextOnWhite"
+            android:textSize="@dimen/text_size_14"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/catLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/cta"
+            android:layout_below="@id/mPath"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/mTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/size_12"
+                android:fontFamily="@font/raleway_bold_700"
+                android:text="@string/categories"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/text_size_16" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="@dimen/size_24"
+            android:layout_marginVertical="@dimen/_10sdp"
+            android:background="@drawable/cta_background"
+            android:fontFamily="@font/manrope_semibold_600"
+            android:gravity="center"
+            android:paddingVertical="@dimen/size_16"
+            android:text="@string/copy_here"
+            android:textColor="@color/textOnSolid"
+            android:textSize="@dimen/text_size_16"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>

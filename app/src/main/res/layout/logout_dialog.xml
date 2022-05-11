@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/appPrimary" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:src="@drawable/ic_logout_icon" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/raleway_bold_700"
+        android:gravity="center_horizontal"
+        android:text="@string/logout_carhome"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/_13sdp" />
+
+
+    <TextView
+        android:id="@+id/mErrorText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/logout_content"
+        android:textAlignment="center"
+        android:textColor="@color/textOnWhiteAccentGray"
+        android:textSize="@dimen/_10sdp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/size_32">
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_24"
+            android:background="@drawable/cta_background"
+            android:fontFamily="@font/inter_bold_700"
+            android:gravity="center"
+            android:paddingVertical="@dimen/size_16"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_16"
+            app:layout_constraintEnd_toStartOf="@+id/logout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/logout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/size_24"
+            android:background="@drawable/cta_background"
+            android:backgroundTint="#FFECEC"
+            android:fontFamily="@font/inter_bold_700"
+            android:gravity="center"
+            android:paddingVertical="@dimen/size_16"
+            android:text="@string/logout"
+            android:textColor="@color/deleteRed"
+            android:textSize="@dimen/text_size_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cancel"
+            app:layout_constraintTop_toTopOf="@+id/cancel" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

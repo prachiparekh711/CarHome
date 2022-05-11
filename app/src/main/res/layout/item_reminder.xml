@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zerobranch.layout.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mSwiper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/size_12"
+    app:draggedItem="@id/drag_item"
+    app:isFreeHorizontalDrag="true"
+    app:isTogether="true"
+    app:leftDragViewPadding="0dp"
+    app:leftItem="@id/left_view"
+    app:rightDragViewPadding="0dp"
+    app:rightItem="@id/right_view"
+    app:swipeDirection="left|right">
+
+    <ImageView
+        android:id="@+id/left_view"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/activeGreen"
+        android:gravity="center"
+        android:padding="24dp"
+        android:src="@drawable/ic_update_vector" />
+
+    <ImageView
+        android:id="@+id/right_view"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/closed"
+        android:gravity="center"
+        android:padding="24dp"
+        android:src="@drawable/ic_delete_reminder" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/drag_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/size_16">
+
+        <ImageView
+            android:id="@+id/tagIndicator"
+            android:layout_width="5dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/size_8"
+            android:src="@color/appPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/title" />
+
+        <TextView
+            android:id="@+id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold_700"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/text_size_18"
+            app:layout_constraintBottom_toTopOf="@+id/monthAndYearGroup"
+            app:layout_constraintEnd_toEndOf="@+id/monthAndYearGroup"
+            app:layout_constraintStart_toStartOf="@+id/monthAndYearGroup"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="02" />
+
+        <LinearLayout
+            android:id="@+id/monthAndYearGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_12"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tagIndicator"
+            app:layout_constraintTop_toBottomOf="@+id/day"
+            app:layout_constraintVertical_chainStyle="packed">
+
+            <TextView
+                android:id="@+id/month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold_700"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/text_size_12"
+                tools:text="Sep" />
+
+            <TextView
+                android:id="@+id/year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_2"
+                android:fontFamily="@font/inter_regular_400"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/text_size_12"
+                tools:text="'21'" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/size_12"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter_semibold_600"
+            android:gravity="start"
+            android:maxLines="1"
+            android:paddingTop="@dimen/size_8"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/text_size_14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/monthAndYearGroup"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Oil change reminder" />
+
+        <TextView
+            android:id="@+id/notes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter_regular_400"
+            android:gravity="start"
+            android:maxLines="1"
+            android:textColor="@color/secondaryTextOnWhite"
+            android:textSize="@dimen/text_size_12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/tagCL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_12"
+            app:layout_constraintStart_toStartOf="@+id/notes"
+            app:layout_constraintTop_toBottomOf="@+id/notes">
+
+            <ImageView
+                android:id="@+id/tagCircle"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/circle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_4"
+                android:fontFamily="@font/inter_regular_400"
+                android:textColor="@color/secondaryTextOnWhite"
+                android:textSize="@dimen/text_size_12"
+                app:layout_constraintBottom_toBottomOf="@+id/tagCircle"
+                app:layout_constraintStart_toEndOf="@+id/tagCircle"
+                app:layout_constraintTop_toTopOf="@+id/tagCircle"
+                tools:text="Bridge Tax" />
+
+            <View
+                android:id="@+id/_separator"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginStart="@dimen/size_12"
+                android:background="@drawable/circle"
+                android:backgroundTint="@color/itemBgStroke"
+                app:layout_constraintBottom_toBottomOf="@+id/tagCircle"
+                app:layout_constraintStart_toEndOf="@+id/tag"
+                app:layout_constraintTop_toTopOf="@+id/tagCircle" />
+
+            <TextView
+                android:id="@+id/timeLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_12"
+                android:fontFamily="@font/inter_medium_500"
+                android:textColor="@color/tag_orange"
+                android:textSize="@dimen/text_size_12"
+                app:layout_constraintBottom_toBottomOf="@+id/tagCircle"
+                app:layout_constraintStart_toEndOf="@+id/_separator"
+                app:layout_constraintTop_toTopOf="@+id/tagCircle"
+                tools:text="17 days left" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/size_16"
+            android:background="@color/itemBgStroke"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tagCL"
+            app:layout_constraintTop_toBottomOf="@+id/tagCL" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.zerobranch.layout.SwipeLayout>

@@ -1,0 +1,7 @@
+{
+  "publicToken": "nAd3KD66At66dbNN",
+  "enableOnFirstRun": true,
+  "debug": true,
+  "showOnGoingNotification": "during_network_request",
+  "enableCombinedMonitoring": "false"
+}

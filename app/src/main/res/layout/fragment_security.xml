@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/back"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_16"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semibold_600"
+        android:text="@string/security"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/text_size_18"
+        app:layout_constraintBottom_toBottomOf="@+id/back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/back" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/size_16"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_account"
+        app:layout_constraintBottom_toBottomOf="@+id/back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/back" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/changePinIc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_24"
+        android:layout_marginTop="@dimen/size_32"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_settings_gdpr"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/changePinTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_8"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/change_pin"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/changePinIc"
+        app:layout_constraintTop_toTopOf="@+id/changePinIc" />
+
+    <TextView
+        android:id="@+id/changePinSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:layout_marginEnd="@dimen/size_24"
+        android:fontFamily="@font/inter_medium_500"
+        android:gravity="start"
+        android:text="@string/change_pin_title"
+        android:textColor="@color/secondaryTextOnWhite"
+        android:textSize="@dimen/text_size_12"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/changePinTitle"
+        app:layout_constraintTop_toBottomOf="@+id/changePinTitle" />
+
+    <View
+        android:id="@+id/changePin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/changePinSubtitle"
+        app:layout_constraintTop_toTopOf="@+id/changePinIc" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/changePasswordIc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_24"
+        android:layout_marginTop="@dimen/size_24"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_security_password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changePin" />
+
+    <TextView
+        android:id="@+id/changePasswordTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_8"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/change_pswd"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintStart_toEndOf="@+id/changePasswordIc"
+        app:layout_constraintTop_toTopOf="@+id/changePasswordIc" />
+
+    <TextView
+        android:id="@+id/changePasswordSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:layout_marginEnd="@dimen/size_24"
+        android:fontFamily="@font/inter_medium_500"
+        android:gravity="start"
+        android:text="@string/change_pswd_title"
+        android:textColor="@color/secondaryTextOnWhite"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/changePasswordTitle"
+        app:layout_constraintTop_toBottomOf="@+id/changePasswordTitle" />
+
+    <View
+        android:id="@+id/changePassword"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/changePasswordSubtitle"
+        app:layout_constraintTop_toTopOf="@+id/changePasswordIc" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/changeBiometricIc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_24"
+        android:layout_marginTop="@dimen/size_24"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_security_biometric"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changePassword" />
+
+    <TextView
+        android:id="@+id/changeBiometricTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_8"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/enable_biometric"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/text_size_14"
+        app:layout_constraintStart_toEndOf="@+id/changeBiometricIc"
+        app:layout_constraintTop_toTopOf="@+id/changeBiometricIc" />
+
+    <TextView
+        android:id="@+id/changeBiometricSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:layout_marginEnd="@dimen/size_24"
+        android:fontFamily="@font/inter_medium_500"
+        android:gravity="start"
+        android:text="@string/biometric_title"
+        android:textColor="@color/secondaryTextOnWhite"
+        android:textSize="@dimen/text_size_12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/changeBiometricTitle"
+        app:layout_constraintTop_toBottomOf="@+id/changeBiometricTitle" />
+
+    <View
+        android:id="@+id/changeBiometric"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/changeBiometricSubtitle"
+        app:layout_constraintTop_toTopOf="@+id/changeBiometricIc" />
+
+    <ro.westaco.carhome.utils.SwitchButton
+        android:id="@+id/biometricCheck"
+        android:layout_width="@dimen/_33sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/changeBiometric"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/changeBiometric"
+        app:sb_background="@color/unselected"
+        app:sb_border_width="@dimen/_2sdp"
+        app:sb_checked_color="@color/ctaBackground"
+        app:sb_checkline_width="0dp"
+        app:sb_show_indicator="false"
+        app:sb_uncheck_color="@color/unselected" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/changeFaceIdIc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_24"
+        android:layout_marginTop="@dimen/size_24"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_security_face_id"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changeBiometric" />
+
+    <TextView
+        android:id="@+id/changeFaceIdTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/size_8"
+        android:fontFamily="@font/inter_medium_500"
+        android:text="@string/change_faceid"
+        android:textColor="@color/textOnWhite"
+        android:textSize="@dimen/text_size_14"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/changeFaceIdIc"
+        app:layout_constraintTop_toTopOf="@+id/changeFaceIdIc" />
+
+    <TextView
+        android:id="@+id/changeFaceIdSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_6"
+        android:layout_marginEnd="@dimen/size_24"
+        android:fontFamily="@font/inter_medium_500"
+        android:gravity="start"
+        android:text="@string/change_faceid_title"
+        android:textColor="@color/secondaryTextOnWhite"
+        android:textSize="@dimen/text_size_12"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/changeFaceIdTitle"
+        app:layout_constraintTop_toBottomOf="@+id/changeFaceIdTitle" />
+
+    <View
+        android:id="@+id/changeFaceId"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/changeFaceIdSubtitle"
+        app:layout_constraintTop_toTopOf="@+id/changeFaceIdIc" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_frame_security"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/indicator" />
+
+    <View
+        android:id="@+id/indicator"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:layout_marginBottom="@dimen/size_8"
+        android:background="@drawable/rounded_rect_100_black"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.3" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

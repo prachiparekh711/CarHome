@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/bottombar_home"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/reminder"
+        android:icon="@drawable/bottombar_reminders"
+        android:menuCategory="secondary"
+        android:title="@string/reminder" />
+    <item
+        android:id="@+id/services"
+        android:icon="@drawable/bottombar_services"
+        android:menuCategory="secondary"
+        android:title="@string/services" />
+    <item
+        android:id="@+id/maps"
+        android:icon="@drawable/bottombar_maps"
+        android:menuCategory="secondary"
+        android:title="@string/maps" />
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/bottombar_settings"
+        android:menuCategory="secondary"
+        android:title="@string/bottombar_settings" />
+</menu>

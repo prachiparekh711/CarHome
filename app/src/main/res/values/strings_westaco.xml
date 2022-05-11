@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bugsee_token" translatable="false">268187b3-f3b4-4b29-a07d-92ef6f4a9d18</string>
+
+    <string name="facebook_app_id" translatable="false">1463185817391279</string>
+    <string name="facebook_client_token" translatable="false">247d713a4a8c6f6cf1697eb6e1840a2c</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb1463185817391279</string>
+    <string name="fb_photo_url_template" translatable="false">https://graph.facebook.com/%s/picture?type=large&amp;width=500&amp;height=500</string>
+
+    <string name="gcp_web_client_id" translatable="false">235194408249-1mskhq4lo78acdh0ia5ido094r4r5l2p.apps.googleusercontent.com</string>
+    <string name="google_app_key" translatable="false">AIzaSyCwzwfkclq67JHqjc-pqIHMhRUMXf4N-0A</string>
+
+    <string name="play_store_app_template" translatable="false">https://play.google.com/store/apps/details?id=%s</string>
+
+    <string name="date_format_template" translatable="false">dd/MM/yyyy</string>
+    <string name="time_format_template" translatable="false">HH:mm</string>
+    <string name="server_date_format_template" translatable="false">yyyy-MM-dd</string>
+    <string name="server_datetime_format_template" translatable="false">yyyy-MM-dd HH:mm:ss</string>
+    <string name="server_standard_datetime_format_template" translatable="false">yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'</string>
+    <string name="server_standard_datetime_format_template2" translatable="false">yyyy-MM-dd\'T\'HH:mm:ss\'Z\'</string>
+    <string name="notification_datetime_format" translatable="false">dd MM,HH:mm a</string>
+
+    <string name="BASE_URL_PRODUCTION" translatable="false">https://build3.westaco.com:8443/</string>
+    <string name="BASE_URL_RESOURCES" translatable="false">https://carhome-build.westaco.com</string>
+    <string name="TEST_URL_PRODUCTION" translatable="false">https://carhome-test.westaco.com/</string>
+    <string name="TEST_URL_RESOURCES" translatable="false">https://carhome-test.westaco.com</string>
+
+</resources>

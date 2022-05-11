@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Admin/.gradle/caches/transforms-3/be770f97e206126c41d23e7bd095fc6f/transformed/jetified-countrycodepicker-2.4.2/res/layout/country_code_picker_item_country.xml" value="0.3125" />
+        <entry key="..\:/Users/Admin/.gradle/caches/transforms-3/be770f97e206126c41d23e7bd095fc6f/transformed/jetified-countrycodepicker-2.4.2/res/layout/country_code_picker_layout_code_picker.xml" value="0.3125" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/active_status_back.xml" value="0.318" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/attech_upload_background.xml" value="0.3355" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/bottombar_home.xml" value="0.2955" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/checkbox_selector.xml" value="0.2245" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/circle.xml" value="0.2245" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/cta_background.xml" value="0.2955" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/cta_invisible_background.xml" value="0.223" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/custom_switch_off.xml" value="0.212" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/custom_switch_on.xml" value="0.212" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/custom_thumb.xml" value="0.212" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/custom_track.xml" value="0.212" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/ic_account.xml" value="0.3505" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/ic_calendar_visible.xml" value="0.258" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/ic_home_insurance.xml" value="0.3485" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/ic_switch_back.xml" value="0.212" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/icon_state.xml" value="0.258" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/inactive_status_back.xml" value="0.3055" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/oval_shape.xml" value="0.307" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/save_background.xml" value="0.2955" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/search_background.xml" value="0.2245" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/search_background_selected.xml" value="0.2245" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/drawable/spinner_background.xml" value="0.247" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/activity_auth.xml" value="0.2" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/activity_main.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/activity_pdf.xml" value="0.24780701754385964" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/activity_splash.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/address_item_layout.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/address_layout.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/biometric_failure_layout.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/bottom_sheet_number_passes.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/bottom_sheet_vignette.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/bridgetax_category_item.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/car_detail_home_item.xml" value="0.2754385964912281" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/car_progress_item.xml" value="0.28541666666666665" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/country_code.xml" value="0.31354166666666666" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/country_code_picker.xml" value="0.2875" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/country_code_picker_layout_picker_dialog.xml" value="0.3125" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/county_item_list.xml" value="0.2864583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/county_layout.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/duration_items.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_add_bill_legal.xml" value="0.22" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_add_bill_natural.xml" value="0.18" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_add_new_car.xml" value="0.27324561403508774" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_add_new_legal_person.xml" value="0.3435897435897436" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_add_new_natural_person.xml" value="0.33" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_add_new_reminder.xml" value="0.22" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_bill_natural.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_billing_information.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_billlegal.xml" value="0.22" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_bottom_map.xml" value="0.27350427350427353" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_bridge_tax_init.xml" value="0.2" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_bridge_tax_result.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_bridge_tax_select.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_buy_vignette.xml" value="0.2" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_car_details.xml" value="0.29004329004329005" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_d_m_car.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_data.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_data_cars.xml" value="0.29004329004329005" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_documents.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_language.xml" value="0.27324561403508774" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_legal_person_details.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_legal_persons.xml" value="0.3234375" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_maps.xml" value="0.2013888888888889" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_natural_person_details.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_natural_persons.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_profile.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_query_car_details.xml" value="0.27350427350427353" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_reminder.xml" value="0.2" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_settings.xml" value="0.27324561403508774" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/fragment_vignette_select_car.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_add_natural_person.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_bill_legal.xml" value="0.3234375" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_bill_natural.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_bridge_taxt.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_car.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_car_details_reminder.xml" value="0.33" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_data_car.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_document_category.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_leasing_company.xml" value="0.27324561403508774" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_legal_person.xml" value="0.3234375" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_natural_person.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_number_of_passes.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_objective.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_purchase.xml" value="0.16480263157894737" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_reminder.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/item_reminder_tag.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/layout_add_car_enter_vin.xml" value="0.27324561403508774" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/layout_add_car_error.xml" value="0.27350427350427353" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/layout_add_car_generate_profile.xml" value="0.27350427350427353" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/layout_add_car_success.xml" value="0.27350427350427353" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/layout_progressbar.xml" value="0.23640350877192984" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/leasing_company_layout.xml" value="0.27324561403508774" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/linear_item.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/linear_item1.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/locality_layout.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/location_bottomsheet.xml" value="0.27350427350427353" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/reminder_date_item.xml" value="0.21052631578947367" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/repeat_bottomsheet.xml" value="0.27350427350427353" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/layout/support_simple_spinner_dropdown_item.xml" value="0.3125" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/menu/icon_menu.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/menu/toolbar_menu.xml" value="0.3489583333333333" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.223" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/NewCarHome/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.223" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/CarHome_Beta/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1635" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/CarHome_Beta/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1635" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable-nodpi/bg_rovinirta_category.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable-nodpi/rounded_rect_100_vignette_full.xml" value="0.2555" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable-xhdpi/delete_background.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable-xhdpi/delete_dialog_back.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable-xhdpi/ic_more_new_done.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/attech_upload_background.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/auth_text_input_background.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bg_card_item.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bg_card_item_nostroke.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bg_card_yellow.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bg_circle_avatar.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bg_dm.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bg_document_category.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bg_history_item.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bg_rounded_rect_logo.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bg_rovinirta_category.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bottom_nav_text_color.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bottombar_home.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bottombar_maps.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bottombar_more.xml" value="0.2645" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bottombar_reminders.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bottombar_services.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bottombar_settings.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/bridge_tax_categories_list.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/buy_background.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/cta_invisible_background.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/delete_dialog_back.xml" value="0.291" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_arrow_down_id.xml" value="0.281" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_back.xml" value="0.281" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_calendar.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_carhome_test.xml" value="0.31" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_close_icon.xml" value="0.2575" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_delete_action.xml" value="0.1835" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_demo_truck.xml" value="0.2" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_ischekd.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_right_arrow.xml" value="0.281" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_select_car_icon.xml" value="0.281" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/ic_upload_doc.xml" value="0.1" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/logo_with_text_purple.xml" value="0.3365" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/map_popup_back.xml" value="0.2555" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/onboarding1.xml" value="0.2365" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/radio_checked.xml" value="0.2555" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/radio_unchecked.xml" value="0.2555" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/radiobutton_drawable.xml" value="0.2555" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/rounded_rect_100_black.xml" value="0.3365" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/rounded_rect_100_gray.xml" value="0.31" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/rounded_rect_100_greyscale.xml" value="0.2555" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/rounded_rect_100_purple.xml" value="0.2555" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/rounded_rect_100_vignette_back.xml" value="0.2555" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/rounded_rect_100_vignette_full.xml" value="0.2555" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/rounded_rect_100_white.xml" value="0.31" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/spinner_background.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/spinner_background_view.xml" value="0.2665" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/drawable/white_toolbar_background.xml" value="0.158" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/activity_auth.xml" value="0.19" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/activity_email_verification.xml" value="0.16114864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/activity_main.xml" value="0.10982083609820836" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/activity_map.xml" value="0.21" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/activity_onboarding.xml" value="0.19" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/activity_profile_progress.xml" value="0.19603825136612021" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/activity_set_up_biometric.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/activity_splash.xml" value="0.21413934426229508" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/address_item_layout.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/address_layout.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/biometric_failure_layout.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/boimetric_retry_layout.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/bottom_sheet_duration.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/bottom_sheet_number_passes.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/bottom_sheet_purchase.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/bottom_sheet_vignette.xml" value="0.22" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/bridgetax_category_item.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/caen_layout.xml" value="0.15405405405405406" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/car_detail_home_item.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/car_progress_item.xml" value="0.10982083609820836" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/county_item_list.xml" value="0.1" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/create_folder_dialog.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/create_new_document_dialog.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/custom_menu_dialog.xml" value="0.21351351351351353" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/dialog_delete_car.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/dialog_delete_legal_person.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/dialog_delete_natural_person.xml" value="0.22" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/dialog_delete_reminder.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/dialog_doc_info.xml" value="0.2070945945945946" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/dialog_document_delete.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/dialog_driving_license_categories.xml" value="0.2070945945945946" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/dialog_select_owner.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/duration_items.xml" value="0.25" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/faq_item.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_about_us.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_add_bill_natural.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_add_new_car2.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_add_new_legal_person.xml" value="0.18" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_add_new_natural_person.xml" value="0.25" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_add_new_reminder.xml" value="0.12027027027027028" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_auth.xml" value="0.21413934426229508" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_bill_natural.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_billing_information.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_bridge_tax_init.xml" value="0.19375" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_bridge_tax_select.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_buy_vignette.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_car_details.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_change_password.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_dashboard.xml" value="0.10982083609820836" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_data_cars.xml" value="0.21351351351351353" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_edit_profile.xml" value="0.2" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_f_a_q.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_forgot_password.xml" value="0.18" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_home.xml" value="0.17" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_insurance.xml" value="0.5" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_language.xml" value="0.14549180327868852" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_legal_person_details.xml" value="0.16" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_legal_persons.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_maps.xml" value="0.18" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_natural_person_details.xml" value="0.18" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_natural_persons.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_new_document.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_notification.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_notification_setting.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_password_change_success.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_profile.xml" value="0.10982083609820836" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_purchases.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_query_car_details.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_reminder.xml" value="0.10982083609820836" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_saved_cards.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_security.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_settings.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_share_app.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_social.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_terms_cond.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_transaction_details.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/fragment_vignette_select_car.xml" value="0.25" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/item_bridge_taxt.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/item_car.xml" value="0.33" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/item_document_category.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/item_objective.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/item_onboarding_pager.xml" value="0.1" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/linear_item.xml" value="0.21351351351351353" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/nace_items_layout.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/repeat_bottomsheet.xml" value="0.16495901639344263" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/spinner_item.xml" value="0.15881147540983606" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/layout/vignette_items.xml" value="0.22364864864864864" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/menu/bottom_nav_menu.xml" value="0.21351351351351353" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.31" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudio/CarHomeClient/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.14" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/active_status_back.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/attech_upload_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/auth_text_error_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/auth_text_input_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bg_card_item.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bg_card_yellow.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bg_circle_avatar.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bg_dm.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bg_document_category.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bg_history_item.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bg_rounded_rect_logo.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bg_rovinirta_category.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bottom_nav_text_color.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bottombar_home.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/bridge_tax_categories_list.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/buy_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/certificate_upload_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/checkbox_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/checkbox_selector.xml" value="0.2265" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/checkbox_toggle.xml" value="0.2175" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/circle_white_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/cta_edit_person_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/cta_edit_profile_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/cta_neg_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/custom_progress.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/custom_switch_off.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/custom_thumb.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/custom_track.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/dashed_line.xml" value="0.2175" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/delete_dialog_back.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/direction_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/disagree_button_background.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/ic_error_bg.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/ic_profile_picture.xml" value="0.2175" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/ic_tick_circle.xml" value="0.2175" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/inactive_status_back.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/line_frame.xml" value="0.2175" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/radiobutton_drawable.xml" value="0.2175" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/search_lay.xml" value="0.2225" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/uncheckbox_background.xml" value="0.2175" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/drawable/view_offer_bg.xml" value="0.2175" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/activity_auth.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/activity_email_verification.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/activity_onboarding.xml" value="0.1935185185185185" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/activity_pdf.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/activity_profile_progress.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/address_layout.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/biometric_failure_layout.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/bottom_sheet_duration.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/bridgetax_category_item.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/car_detail_home_item.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/county_item_list.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/dialog_select_owner.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/document_option_layout.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/driver_list_items.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/driver_summary_items.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_add_bill_legal.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_add_bill_natural.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_add_new_car.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_add_new_car2.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_add_new_legal_person.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_add_new_natural_person.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_add_new_reminder.xml" value="0.25" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_auth.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_bill_natural.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_billing_information.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_billlegal.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_bridge_tax_init.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_bridge_tax_select.xml" value="0.20185185185185187" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_buy_vignette.xml" value="0.33" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_car_details.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_dashboard.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_data_cars.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_documents.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_edit_profile.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_fetch_screen.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_home.xml" value="0.34543670264965654" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_ins_offer_details.xml" value="0.33" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_ins_offers.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_insurance.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_insurance_step2.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_legal_person_details.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_natural_person_details.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_pdf_viewer.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_profile.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_query_car_details.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_select_cars.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_select_user.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_summary.xml" value="0.33" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/fragment_transaction_details.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/id_type_bottomsheet.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/info_layout.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/item_bill_natural.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/item_car.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/item_data_car.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/item_driving_license_category.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/item_in_cars.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/item_ins_offers.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/item_objective.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/item_reminder_tag.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/layout_add_car_enter_vin.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/layout_add_car_error.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/layout_add_car_generate_profile.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/layout_add_car_success.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/layout_bottom_sheet.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/linear_item.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/rca_duration_layout.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/rca_person_layout.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/repeat_bottomsheet.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/select_driver_items.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/CarHome/app/src/main/res/layout/vignette_items.xml" value="0.36102564102564105" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/activity_auth.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/activity_splash.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/dialog_delete_car.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/dialog_document_delete.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/fragment_auth.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/fragment_car_details.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/fragment_dashboard.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/fragment_home.xml" value="0.36018518518518516" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/fragment_language.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/layout/fragment_purchases.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Cubezytech/AndroidStudioProjects/Client Projects/New_Changes/CarHome/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+</project>
