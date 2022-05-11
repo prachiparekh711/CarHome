@@ -1,4 +1,5 @@
-* A client application.
+
+          * A client application.
             * Runs for basically Romania Country
             * Built upon Kotlin language
             * Architecture: MVVM
@@ -8,3 +9,5 @@
             * Firebase Integration: Login, SignUp, Analytics, Crashalytics, Messenging , Email verification, Reset Password
             * Facebook & Google for access
             * Others: RxJava, Retrofit, Dagger Implementation, Data Binding, Flavors for build & Beta, Rest API, Deep linking, Bugsee
+            *
+         
