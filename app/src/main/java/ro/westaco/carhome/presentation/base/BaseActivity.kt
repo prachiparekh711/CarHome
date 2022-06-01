@@ -1,11 +1,13 @@
 package ro.westaco.carhome.presentation.base
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.navigation.Screen
@@ -26,6 +29,7 @@ import ro.westaco.carhome.presentation.screens.dashboard.DashboardFragment.Compa
 import ro.westaco.carhome.presentation.screens.dashboard.DashboardViewModel.Companion.selectedMenuItem
 import ro.westaco.carhome.presentation.screens.home.HomeFragment
 import ro.westaco.carhome.utils.DeviceUtils
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
 import ro.westaco.carhome.utils.ViewUtils
 import java.lang.reflect.ParameterizedType
@@ -33,13 +37,22 @@ import java.lang.reflect.ParameterizedType
 
 abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
 
+    companion object {
+        var instance: Context? = null
+        var profileLogoListner: OnProfileLogoChangeListner? = null
+    }
 
     lateinit var viewModel: VM
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
 
+    interface OnProfileLogoChangeListner {
+        fun onChangeLogo(uri: Uri)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getContentView())
+
 
         viewModel = ViewModelProvider(this).get(getViewModelClass())
 
@@ -49,11 +62,18 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
         setupObservers()
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@BaseActivity)
         viewModel.onActivityCreated()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        instance = this
     }
 
     abstract fun getContentView(): Int
     abstract fun setupUi()
     abstract fun setupObservers()
+
 
     private fun getViewModelClass(): Class<VM> {
         val type = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0]
@@ -61,7 +81,9 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
     }
 
     fun processUiEvent(uiEvent: UiEvent) {
+
         when (uiEvent) {
+
             is UiEvent.Navigation -> {
                 onNavigationEvent(uiEvent.navAttribs)
             }
@@ -100,17 +122,8 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
         }
     }
 
-//    fun updateConfig(wrapper: ContextThemeWrapper) {
-//        if(dLocale==Locale("") )
-//            return
-//        Locale.setDefault(dLocale)
-//        val configuration = Configuration()
-//        configuration.setLocale(dLocale)
-//        wrapper.applyOverrideConfiguration(configuration)
-//    }
-
     private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        showErrorInfo(this, message)
     }
 
     private fun showBottomSheetDialog(
@@ -133,7 +146,6 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
         bottomSheetDialog.findViewById<View>(R.id.dismiss)?.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
-
 
         bottomSheetDialog.bottomLL.isVisible = !linkClicked
 
@@ -171,6 +183,10 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
 
                 supportFragmentManager.beginTransaction().apply {
                     replace(R.id.content, newFragment, screen.name)
+                    val fragments = supportFragmentManager.fragments
+                    fragments.forEach {
+                        hide(it)
+                    }
                     if (navAttribs.addToBackStack) {
                         addToBackStack(screen.name)
                     }
@@ -188,15 +204,20 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
         val f = getVisibleFragment()
         when {
             fragmentsNumber == 0 -> {
-                val params = Bundle()
-                mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.APP_LEAVES_ANDROID, params)
                 selectedMenuItem = null
-                finishAffinity()
+                if (f is DashboardFragment) {
+                    val params = Bundle()
+                    mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.APP_LEAVES_ANDROID, params)
+                    finishAffinity()
+                } else {
+                    finish()
+                }
             }
             fragmentsNumber > 0 -> {
+
                 if (f is DashboardFragment) {
                     val c = getChildVisibleFragment(f)
-                    Log.e("c:", c.toString())
+
                     if (c is HomeFragment) {
                         val params = Bundle()
                         mFirebaseAnalytics.logEvent(
@@ -212,50 +233,14 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
                 } else {
                     supportFragmentManager.popBackStack()
                 }
-
-
-                /*if (!f?.tag.equals(DashboardFragment.TAG)) {
-                    supportFragmentManager.popBackStack()
-                } else {
-                    if (f?.isVisible == true) {
-                        val childFm = f.childFragmentManager
-                        if (childFm.backStackEntryCount > 0) {
-                            if (bottomNavigationView.selectedItemId != R.id.home) {
-                                changeMenu()
-                                childFm.popBackStack(HomeFragment.TAG, 0)
-                                return
-                            } else {
-                                finish()
-                                val params = Bundle()
-                                mFirebaseAnalytics.logEvent("App_Leaves_AND", params)
-                            }
-                        } else {
-                            finish()
-                            val params = Bundle()
-                            mFirebaseAnalytics.logEvent("App_Leaves_AND", params)
-                        }
-                    }
-                }*/
             }
         }
     }
 
-    /* override fun onBackPressed() {
-         DeviceUtils.hideKeyboard(this)
-
-         val fragmentsNumber = supportFragmentManager.backStackEntryCount
-
-         when {
-             fragmentsNumber == 1 -> finish()
-             supportFragmentManager.backStackEntryCount > 1 -> supportFragmentManager.popBackStack()
-             else -> super.onBackPressed()
-         }
-     }*/
-
     open fun getVisibleFragment(): Fragment? {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragments: List<Fragment> = fragmentManager.fragments
-        for (fragment in fragments) {
+        fragments.reversed().forEach { fragment ->
             if (fragment.isVisible) return fragment
         }
         return null
@@ -268,6 +253,19 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
             if (fragment.isVisible) return fragment
         }
         return null
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == Activity.RESULT_OK) {
+                val resultUri = result.uri
+
+                profileLogoListner?.onChangeLogo(resultUri)
+            }
+        }
     }
 
 }

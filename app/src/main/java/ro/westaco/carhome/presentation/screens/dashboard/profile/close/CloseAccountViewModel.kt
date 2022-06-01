@@ -28,7 +28,7 @@ class CloseAccountViewModel @Inject constructor(
     val isDeletionConfirmedLiveData = MutableLiveData(false)
 
     sealed class ACTION {
-        class CloseAccount : ACTION()
+        object CloseAccount : ACTION()
     }
 
     val actionStream: SingleLiveEvent<ACTION> = SingleLiveEvent()
@@ -72,7 +72,7 @@ class CloseAccountViewModel @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    actionStream.value = ACTION.CloseAccount()
+                    actionStream.value = ACTION.CloseAccount
                     appPreferences.token = ""
                     firebaseAuth.signOut()
                     DeviceUtils.restartApp(app)

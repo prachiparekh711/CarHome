@@ -34,13 +34,14 @@
                 android:gravity="center"
                 android:text="@string/purchases"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_18" />
+                android:textSize="@dimen/_15sdp" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/home"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:adjustViewBounds="true"
+                android:visibility="invisible"
                 android:padding="@dimen/_5sdp"
                 android:src="@drawable/ic_account" />
         </LinearLayout>

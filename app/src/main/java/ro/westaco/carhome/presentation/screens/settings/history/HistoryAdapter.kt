@@ -50,7 +50,6 @@ class HistoryAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var logo: ImageView = itemView.findViewById(R.id.logo)
         private var name: TextView = itemView.findViewById(R.id.name)
-        private var carBrand: TextView = itemView.findViewById(R.id.carBrand)
         private var carLpn: TextView = itemView.findViewById(R.id.carLpn)
         private var amount: TextView = itemView.findViewById(R.id.amount)
         private var time: TextView = itemView.findViewById(R.id.time)
@@ -59,7 +58,6 @@ class HistoryAdapter(
         fun bind(position: Int) {
             val item = historyList[position]
             name.text = "${item.serviceName ?: ""}"
-            carBrand.text = "${item.vehicleBrandName ?: ""}"
             carLpn.text = "${item.vehicleLpn ?: ""}"
             amount.text = "${item.amount ?: ""} ${item.currency ?: ""}"
 
@@ -75,12 +73,11 @@ class HistoryAdapter(
                 time.text = "${spf.format(newDate) ?: ""}"
             }
 
-            var dr = R.drawable.logo_small
-            when (item.service) {
-                "RO_VIGNETTE" -> dr = R.drawable.ic_rovinieta_dm
-                "RO_PASS_TAX" -> dr = R.drawable.ic_bridge_tax_dm
-                "RO_RCA" -> dr = R.drawable.ic_insurance_dm
-                else -> dr = R.drawable.logo_small
+            val dr = when (item.service) {
+                "RO_VIGNETTE" -> R.drawable.ic_rovinieta_dm
+                "RO_PASS_TAX" -> R.drawable.ic_bridge_tax_dm
+                "RO_RCA" -> R.drawable.ic_insurance_dm
+                else -> R.drawable.logo_small
             }
 
             val options = RequestOptions()

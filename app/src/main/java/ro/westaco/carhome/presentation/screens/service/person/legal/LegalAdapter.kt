@@ -21,7 +21,6 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.responses.models.LegalPerson
 import ro.westaco.carhome.di.ApiModule
-import ro.westaco.carhome.presentation.screens.service.person.BillingInfoViewModel.Companion.personID
 import ro.westaco.carhome.utils.CountryCityUtils
 import java.util.*
 
@@ -33,19 +32,15 @@ class LegalAdapter(
 ) : RecyclerView.Adapter<LegalAdapter.ViewHolder>() {
 
     private var selectedPos = -1
-
     private val appPreferences = AppPreferencesDelegates.get()
-
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-
     override fun getItemCount(): Int {
-
         return legalPersons.size
     }
 
     interface OnItemSelectListViewUser {
-        fun onListenerUsers(newItems: LegalPerson)
+        fun onListenerUsers(newItems: LegalPerson, imageView: ImageView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -61,25 +56,23 @@ class LegalAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private var legal_avatar: ImageView = itemView.findViewById(R.id.legal_avatar)
-        private var tick_circle_legal: ImageView = itemView.findViewById(R.id.tick_circle_legal)
-        private var tv_l_f_l: TextView = itemView.findViewById(R.id.tv_l_f_l)
-        private var legal_tv_name: TextView = itemView.findViewById(R.id.legal_tv_name)
-        private var tv_legal_address: TextView = itemView.findViewById(R.id.tv_legal_address)
-        private var li_legal_address_missing: LinearLayout =
+        private var legalAvatar: ImageView = itemView.findViewById(R.id.legal_avatar)
+        private var tvLetter: TextView = itemView.findViewById(R.id.tv_l_f_l)
+        private var legalName: TextView = itemView.findViewById(R.id.legal_tv_name)
+        private var legalAddress: TextView = itemView.findViewById(R.id.tv_legal_address)
+        private var addressMissing: LinearLayout =
             itemView.findViewById(R.id.li_legal_address_missing)
         private var check: AppCompatImageView = itemView.findViewById(R.id.tick_circle_legal)
 
-        @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n", "LogNotTimber")
         fun bind(item: LegalPerson, position: Int) {
 
-            legal_tv_name.text = "${item.companyName}"
-            val singlechar = "${item.companyName}"
+            legalName.text = "${item.companyName}"
+            val singleChar = "${item.companyName}"
 
             if (item.logoHref != null) {
 
-                tv_l_f_l.visibility = View.INVISIBLE
-                legal_avatar.visibility = View.VISIBLE
+                tvLetter.visibility = View.INVISIBLE
+                legalAvatar.visibility = View.VISIBLE
 
                 val url = "${ApiModule.BASE_URL_RESOURCES}${item.logoHref}"
                 val glideUrl = GlideUrl(
@@ -89,9 +82,7 @@ class LegalAdapter(
                         .build()
                 )
 
-
-                val options = RequestOptions()
-                legal_avatar.clipToOutline = true
+                legalAvatar.clipToOutline = true
 
                 var requestOptions = RequestOptions()
                 requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(90))
@@ -99,24 +90,22 @@ class LegalAdapter(
                 Glide.with(context)
                     .load(glideUrl)
                     .apply(requestOptions)
-                    .into(legal_avatar)
+                    .into(legalAvatar)
+
             } else {
-
-
-                tv_l_f_l.visibility = View.VISIBLE
-                legal_avatar.visibility = View.INVISIBLE
-                tv_l_f_l.text = CountryCityUtils.firstTwo(singlechar.uppercase(Locale.getDefault()))
+                tvLetter.visibility = View.VISIBLE
+                legalAvatar.visibility = View.INVISIBLE
+                tvLetter.text = CountryCityUtils.firstTwo(singleChar.uppercase(Locale.getDefault()))
             }
 
 
             if (item.fullAddress.isNullOrEmpty()) {
-
-                li_legal_address_missing.visibility = View.VISIBLE
-
+                addressMissing.visibility = View.VISIBLE
+                legalAddress.visibility = View.GONE
             } else {
-
-                tv_legal_address.text = item.fullAddress
-
+                addressMissing.visibility = View.GONE
+                legalAddress.visibility = View.VISIBLE
+                legalAddress.text = item.fullAddress
             }
 
             check.isVisible = selectedPos == position
@@ -124,17 +113,15 @@ class LegalAdapter(
             itemView.setOnClickListener {
                 val prevSelectedPos = selectedPos
                 selectedPos = position
-                personID = legalPersons[selectedPos].guid
-                onListenerUsers.onListenerUsers(item)
+                onListenerUsers.onListenerUsers(item, check)
                 notifyItemChanged(prevSelectedPos)
                 notifyItemChanged(selectedPos)
             }
-
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun Items(naturalPersons: List<LegalPerson>?) {
+    fun setItems(naturalPersons: List<LegalPerson>?) {
         this.legalPersons = ArrayList(naturalPersons ?: listOf())
         notifyDataSetChanged()
     }

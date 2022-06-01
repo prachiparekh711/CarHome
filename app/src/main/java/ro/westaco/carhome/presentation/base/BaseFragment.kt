@@ -19,6 +19,7 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
 
         viewModel = ViewModelProvider(this).get(getViewModelClass())
         viewModel.uiEventStream.observe(this) { uiEvent -> processUiEvent(uiEvent) }
+
     }
 
 

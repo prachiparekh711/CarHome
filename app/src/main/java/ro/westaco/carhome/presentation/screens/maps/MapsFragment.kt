@@ -20,10 +20,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.DecodeFormat
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.api.GoogleApiClient
@@ -45,12 +41,13 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_maps.*
 import ro.westaco.carhome.R
-import ro.westaco.carhome.data.sources.remote.responses.models.LocationFilterItem
 import ro.westaco.carhome.data.sources.remote.responses.models.LocationV2Item
+import ro.westaco.carhome.data.sources.remote.responses.models.SectionModel
 import ro.westaco.carhome.databinding.DirectionPopupBinding
 import ro.westaco.carhome.databinding.LocationSelectorBinding
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.main.MainActivity
+import ro.westaco.carhome.utils.Progressbar
 import java.io.IOException
 import java.util.*
 
@@ -64,20 +61,29 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
     private var dialog2: Dialog? = null
     private var adapter: LocationAdapter? = null
     protected val REQUEST_CHECK_SETTINGS = 0x1
-
-    //    lateinit var selectBinding: DialogLocationBinding
+    var progressbar: Progressbar? = null
     private var client: FusedLocationProviderClient? = null
     private var latitude = 0.0
     private var longitude: Double = 0.0
     var nearbyLocationList: ArrayList<LocationV2Item> = ArrayList()
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
+    private lateinit var fragment: MapFiltersBottomSheetDialog
+    private var mapFilters: ArrayList<SectionModel> = ArrayList()
+    private lateinit var mapFilterAdapter: MapFilterAdapter
+    private var allFiltersNumber: Int = 0
+    private var currentLocation = ClientLocation()
+    private var searchViewText: String = ""
+
+    inner class ClientLocation {
+        var lat: Double = 0.0
+        var lon: Double = 0.0
+    }
 
     companion object {
         const val TAG = "MapsFragment"
     }
 
     override fun getContentView() = R.layout.fragment_maps
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -97,20 +103,30 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
     override fun initUi() {
         dialog = Dialog(requireActivity())
         dialog2 = Dialog(requireActivity())
+        progressbar = Progressbar(requireContext())
+        mapFilterAdapter = MapFilterAdapter(requireContext(), mapFilters)
+        recycler.adapter = mapFilterAdapter
+        recycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         client = LocationServices.getFusedLocationProviderClient(requireActivity())
         displayLocationSettingsRequest(requireActivity())
-//        displayLocationSettingsRequest(requireActivity())
         startLocation()
 
         if (MainActivity.activeUser != null) {
-            mText.text = resources.getString(R.string.hello_name, MainActivity.activeUser)
+            mText.text = resources.getString(R.string.your_location)
         }
         placeAutoComplete()
-
+        setFilterButton()
     }
 
-    fun placeAutoComplete() {
+    private fun setFilterButton() {
+        openFiltersImageView.setOnClickListener {
+            fragment.show(childFragmentManager, "map_filters")
+        }
+    }
+
+    private fun placeAutoComplete() {
 
         if (!Places.isInitialized()) {
             Places.initialize(
@@ -158,35 +174,46 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
     }
 
     override fun setObservers() {
-        viewModel.filterData.observe(viewLifecycleOwner) { filterList ->
-            if (filterList != null) {
-                recycler.layoutManager = LinearLayoutManager(
-                    requireActivity(),
-                    LinearLayoutManager.HORIZONTAL,
-                    false
-                )
-                val allFilterList = filterList as ArrayList<LocationFilterItem>
-                allFilterList.add(0, LocationFilterItem(0, "All"))
-                recycler.adapter = LocationFilterAdapter(
-                    requireActivity(),
-                    allFilterList
-                ) { pos ->
-                    val serviceID = allFilterList[pos].nomLSId
-                    val filterLocationList: ArrayList<LocationV2Item> = ArrayList()
-                    for (i in nearbyLocationList.indices) {
-                        val serviceIDList = nearbyLocationList[i].serviceIds
-                        if (serviceIDList != null) {
-                            if (serviceIDList.contains(serviceID.toString(), false)) {
-                                filterLocationList.add(nearbyLocationList[i])
-                            }
-                        }
-                    }
-
-                    setAdapter(filterLocationList)
-                    mNoData.visibility = View.GONE
-                }
+        fragment = MapFiltersBottomSheetDialog(viewModel)
+        viewModel.nearbyLocationsFiltered.observe(viewLifecycleOwner) { filteredLocations ->
+            if (filteredLocations != null) {
+                setAdapter(filteredLocations)
+                mNoData.visibility = View.GONE
+            }
+        }
+        viewModel.getSelectedItems().observe(viewLifecycleOwner) { filters ->
+            mapFilters = filters
+            var isFiltered = false
+            filters.forEach {
+                if (it.filters.size != 0)
+                    isFiltered = true
+            }
+            if (isFiltered) {
+                mTab.visibility = View.VISIBLE
+                appliedFiltersTextView.text =
+                    getMapFiltersSize().toString() + "/" + allFiltersNumber
             } else {
-                mNoData.visibility = View.VISIBLE
+                mTab.visibility = View.GONE
+            }
+            mapFilterAdapter.data = mapFilters
+            getFilteredLocations()
+            mapFilterAdapter.notifyDataSetChanged()
+        }
+
+        mapFilterAdapter.getRemoveFromListEvent().observe(viewLifecycleOwner) { removedPosition ->
+            removeItemAtPositionInMapFilters(removedPosition)
+            appliedFiltersTextView.text = getMapFiltersSize().toString() + "/" + allFiltersNumber
+            if (getMapFiltersSize() == 0) {
+                mTab.visibility = View.GONE
+            }
+            getFilteredLocations()
+            mapFilterAdapter.notifyDataSetChanged()
+        }
+
+        viewModel.filterDataMaps.observe(viewLifecycleOwner) {
+            allFiltersNumber = 0
+            it?.forEach { sectionModel ->
+                allFiltersNumber += sectionModel.filters.size
             }
         }
 
@@ -205,32 +232,50 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
             } else {
                 frame.visibility = View.GONE
                 mNoData.visibility = View.VISIBLE
-//                Toast.makeText(
-//                    requireActivity(),
-//                    resources.getString(R.string.data_not_available),
-//                    Toast.LENGTH_SHORT
-//                ).show()
+
             }
             frame.visibility = View.VISIBLE
             mNoData.visibility = View.GONE
-            mRelative.visibility = View.INVISIBLE
+            progressbar?.dismissPopup()
+//            mRelative.visibility = View.INVISIBLE
         }
+    }
 
-        viewModel.profileLogoData?.observe(viewLifecycleOwner) { profileLogo ->
-            if (profileLogo != null) {
-                val options = RequestOptions()
-                mProfile.clipToOutline = true
-                Glide.with(requireActivity())
-                    .load(profileLogo)
-                    .apply(
-                        options.centerCrop()
-                            .skipMemoryCache(true)
-                            .priority(Priority.HIGH)
-                            .format(DecodeFormat.PREFER_ARGB_8888)
-                    )
-                    .into(mProfile)
+    private fun removeItemAtPositionInMapFilters(position: Int) {
+        var itemCount = 0
+        var newPosition = 0
+        mapFilters.forEach {
+            if (position < it.filters.size) {
+                it.filters.removeAt(position)
+                return
             }
+            if (itemCount + it.filters.size > position) {
+                newPosition = position % itemCount
+                it.filters.removeAt(newPosition)
+                return
+            } else {
+                itemCount += it.filters.size
+            }
+
         }
+    }
+
+    private fun getMapFiltersSize(): Int {
+        var itemsCount = 0
+        mapFilters.forEach {
+            itemsCount += it.filters.size
+        }
+        return itemsCount
+    }
+
+    private fun getFilteredLocations() {
+        val arrayOfIds = getFiltersArrayList()
+        viewModel.getLocationDataFiltered(
+            currentLocation.lat.toString(),
+            currentLocation.lon.toString(),
+            searchViewText,
+            arrayOfIds
+        )
     }
 
     private fun setAdapter(nearbyLocationList: ArrayList<LocationV2Item>) {
@@ -310,10 +355,31 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                adapter?.filter?.filter(newText)
+                searchViewText = newText
+                if (newText.isEmpty())
+                    searchImageView.visibility = View.VISIBLE
+                else
+                    searchImageView.visibility = View.INVISIBLE
+                val arrayOfIds = getFiltersArrayList()
+                viewModel.getLocationDataFiltered(
+                    currentLocation.lat.toString(),
+                    currentLocation.lon.toString(),
+                    searchViewText,
+                    arrayOfIds
+                )
                 return true
             }
         })
+    }
+
+    private fun getFiltersArrayList(): java.util.ArrayList<Int> {
+        val arrayOfIds = java.util.ArrayList<Int>()
+        mapFilters.forEach { sectionModel ->
+            sectionModel.filters.forEach {
+                arrayOfIds.add(it.nomLSId)
+            }
+        }
+        return arrayOfIds
     }
 
     fun openMapDialog() {
@@ -369,8 +435,8 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
         selectorBinding.Cancel.setOnClickListener { bottomSheetDialog.dismiss() }
     }
 
-
     private fun startLocation() {
+
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -382,6 +448,7 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
         ) {
 
             mLinear.visibility = View.VISIBLE
+
             location.setOnClickListener {
                 Dexter.withContext(requireActivity())
                     .withPermissions(
@@ -396,7 +463,6 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
                                     map_button.visibility = View.VISIBLE
                                     list_location.visibility = View.VISIBLE
                                     locationFilter()
-                                    viewModel.accessLocation()
                                 }
                             }
                         }
@@ -432,17 +498,16 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
                     requireActivity(),
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
+
     }
 
     override fun onResume() {
         super.onResume()
         mSearch.setOnSearchClickListener {
-            mRelative_location.visibility = View.GONE
-            back.visibility = View.VISIBLE
+            searchImageView.visibility = View.VISIBLE
         }
         mSearch.setOnCloseListener {
-            mRelative_location.visibility = View.VISIBLE
-            back.visibility = View.INVISIBLE
+            searchImageView.visibility = View.INVISIBLE
             false
         }
         map_button.setOnClickListener {
@@ -450,24 +515,16 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
             i.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             requireActivity().startActivity(i)
         }
-        mProfile.setOnClickListener {
-            viewModel.onProfileClicked()
-        }
         mText.setOnClickListener {
             viewModel.onProfileClicked()
         }
 
     }
 
-    private fun requestPermissions() {
-
-
-    }
-
-
     private fun locationFilter() {
-        mRelative.visibility = View.VISIBLE
-        mTab.visibility = View.VISIBLE
+
+        progressbar?.showPopup()
+//        mRelative.visibility = View.VISIBLE
         if (ActivityCompat.checkSelfPermission(
                 requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -486,22 +543,17 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
                     val geocoder = Geocoder(requireActivity(), Locale.getDefault())
                     val addresses =
                         geocoder.getFromLocation(location.latitude, location.longitude, 1)
-
+                    currentLocation.lat = location.latitude
+                    currentLocation.lon = location.longitude
 
                     if (mLiveLocation != null) {
-
                         mLiveLocation.text = addresses[0].getAddressLine(0)
-
                     }
-
-//                    Toast.makeText(requireActivity(), "" + addresses[0].getAddressLine(0), Toast.LENGTH_SHORT).show()
-//                    Log.i(TAG, "locationFilter: " + )
-
                     viewModel.getLocationFilter()
 //                    viewModel.getLocationData(location.latitude.toString(), location.longitude.toString())
 //                    Static data for location
                     viewModel.getLocationData(
-                        "27.57", "44.01"
+                        currentLocation.lat.toString(), currentLocation.lon.toString()
                     )
                 } catch (e: IOException) {
                     e.printStackTrace()
@@ -538,8 +590,6 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
         }
     }
 
-
-    @SuppressLint("LogNotTimber")
     private fun displayLocationSettingsRequest(context: Context) {
         val googleApiClient = GoogleApiClient.Builder(context)
             .addApi(LocationServices.API).build()
@@ -572,7 +622,6 @@ class MapsFragment : BaseFragment<LocationViewModel>(), PlaceSelectionListener {
                             requireActivity(),
                             REQUEST_CHECK_SETTINGS
                         )
-//                        Toast.makeText(requireActivity(), "All location settings are satisfied.", Toast.LENGTH_SHORT).show()
                     } catch (e: SendIntentException) {
                         Log.i(ContentValues.TAG, "PendingIntent unable to execute request.")
                     }

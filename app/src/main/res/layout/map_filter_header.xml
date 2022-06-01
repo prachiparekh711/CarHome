@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/filterLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/search_background">
+
+        <TextView
+            android:id="@+id/filterTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="11dp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:fontFamily="@font/inter_medium_500"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:textColor="@color/skip"
+            android:textSize="11sp" />
+
+        <ImageView
+            android:id="@+id/deleteFilterImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:layout_marginBottom="9dp"
+            android:src="@drawable/ic_close" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

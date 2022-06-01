@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">CarHome Build</string>
-
+    <string name="app_name">CarHome</string>
+    <string name="car_home">Car Home</string>
     <string name="int_not_connect">You don\'t have an active internet connection</string>
     <string name="general_server_error">Server error</string>
     <string name="server_saving_error">Error! Please check the info you submitted and retry</string>
@@ -17,9 +17,6 @@
     <string name="duetime_in_future">%s left</string>
     <string name="duetime_in_past">%s ago</string>
     <string name="progress">%d\%% Finished</string>
-    <string name="not_implemented">Not implemented</string>
-    <string name="address_template">%s ,</string>
-    <string name="address_template1">%s -</string>
 
     <!-- Onboarding -->
     <string name="onb_skip">Skip</string>
@@ -63,8 +60,6 @@
     <string name="rem_pass">Remember Password? Login</string>
     <string name="forgotpass_login">Login</string>
     <string name="reset_failed">Resetting password failed</string>
-    <string name="resetpass_suc">Password\nReset Successfully</string>
-    <string name="resetpass_des">Please check your inbox and click in the received link to reset your password</string>
     <string name="back_to_login">Back to login</string>
     <string name="resetpass">Reset your password</string>
     <string name="resetpass_email">Use your email address to verify and \n start enjoying Carhome services</string>
@@ -88,23 +83,17 @@
     <string name="documents">Documents</string>
     <string name="aboutus">About Us</string>
     <string name="change_lang">Change Language</string>
-    <string name="about_title">About Us</string>
     <string name="faq">FAQs/ Help</string>
-    <string name="faq_title">Lorem Ipsum dolor sit amet</string>
     <string name="t_c">Terms and conditions</string>
-    <string name="terms_title">Terms and conditions</string>
     <string name="gdpr_title">GDPR</string>
     <string name="socials">Socials</string>
-    <string name="socials_title">Lorem Ipsum dolor sit amet</string>
     <string name="share_app">Share the app</string>
-    <string name="share_title">Lorem Ipsum dolor sit amet</string>
     <string name="settings_invite">Invite</string>
     <string name="purchases">My Purchases</string>
     <string name="make_purchases">Make a purchases</string>
     <string name="title_purchases">Lorem Ipsum dolor sit amet</string>
     <string name="contact_us">Contact Us</string>
     <string name="select_method">Select Payment Method</string>
-    <string name="contact_us_title">Lorem Ipsum dolor sit amet</string>
     <string name="reason">Reason/ Issue</string>
     <string name="subreason">Sub Reason/ Issue  </string>
     <string name="message">Message</string>
@@ -149,12 +138,10 @@
     <string name="first_name">First name</string>
     <string name="last_name_c">Last name<font color='#FB4079'>*</font></string>
     <string name="last_name">Last name</string>
-    <string name="phone_number">Mobile number</string>
     <string name="dob">Date Of Birth</string>
     <string name="address">Address</string>
-    <string name="street">Street</string>
-    <string name="mendetory">*</string>
     <string name="address_number">Number<font color='#FB4079'>*</font></string>
+    <string name="address_street_name">Street Name</string>
     <string name="address_block">Block</string>
     <string name="address_entrance">Entrance</string>
     <string name="address_floor">Floor</string>
@@ -164,41 +151,26 @@
     <string name="address_county_c">County<font color='#FB4079'>*</font></string>
     <string name="address_county">County</string>
     <string name="address_zipcode">Zipcode</string>
-    <string name="details_address">Enter your details below</string>
     <string name="id_type">ID Type</string>
     <string name="select_idtype">Select your id type</string>
     <string name="profile_series">Series</string>
-    <string name="profile_series_hint">IF</string>
     <string name="profile_number">Number</string>
-    <string name="profile_number_hint">1266768</string>
     <string name="profile_cnp">CNP</string>
-    <string name="profile_cnp_hint">1930502192332</string>
     <string name="profile_exp_date">ID Expiration Date</string>
     <string name="d_license_id">Driving License ID</string>
-    <string name="d_license_hint">ABC 123456789</string>
     <string name="d_license_cat">Driving License Categories</string>
     <string name="d_license_issue">Driving License Issue Date</string>
     <string name="d_license_exp">Driving License Expiration Date</string>
     <string name="occupation">Occupation</string>
-    <string name="occupation_hint">Your occupation here</string>
-    <string name="employer">Employer</string>
-    <string name="employer_hint">Your employer here</string>
     <string name="upload_license">Upload Your Driving License</string>
     <string name="upload_id">Upload Your ID</string>
     <string name="upload">Upload</string>
-    <string name="profile_cta">Complete Your Profile</string>
     <string name="attchment_dl">DRIVING_LICENSE</string>
     <string name="attchment_id">IDENTITY_DOCUMENT</string>
-    <string name="dwld_success">Document Download successfully !</string>
-    <string name="dwld_error">Download error !</string>
     <string name="address_require">Address fields are required !</string>
     <!-- Edit Profile -->
-    <string name="edit_profile">Edit Profile</string>
     <string name="complete_profile_title">Complete Profile</string>
-    <string name="username">Username</string>
-    <string name="full_name">Full name</string>
     <string name="id_doc">Identity Document</string>
-    <string name="delete_ac_title">Click to delete your account</string>
     <string name="save_changes">Save Changes</string>
     <string name="continue_txt">Continue</string>
     <!-- Close Account -->
@@ -220,20 +192,18 @@
 
     <!-- Cars -->
     <string name="car_number">Car Number</string>
-    <string name="policy_expiry">Policy Exp On</string>
     <string name="car_status">Status</string>
-    <string name="template_months">%d Months</string>
     <string name="status_active">Active</string>
     <string name="cars_empty_state">Seems like you didn\'t\nadd any vehicles yet!</string>
     <string name="no_cars_state_title">Please click on the button and follow\nthe steps to add one</string>
     <string name="add_new_vehicle">Add New Vehicle</string>
     <!-- Car Details -->
     <string name="car_details">Car Details</string>
-    <string name="add_more_rem">+Add More Reminders</string>
     <string name="edit_car">Edit Car Details</string>
     <string name="delete_car">Remove Car</string>
     <string name="vin_number">VIN Number</string>
     <string name="license_plate">License Plate</string>
+    <string name="license_no">License Number</string>
     <string name="manufacturer">Manufacturer</string>
     <string name="model">Model</string>
     <string name="vehicle_category">Vehicle Category</string>
@@ -246,14 +216,12 @@
     <string name="civ">CIV</string>
     <!-- Car - Delete -->
     <string name="car_delete_title">Hey, do you really\nwant to delete this car?</string>
-    <string name="car_delete_subtitle">Lorem Ipsum is simply dummy\ntext of the printing</string>
     <string name="go_back">Go Back</string>
     <string name="yes_delete">Yes, delete</string>
     <!-- Car - Add New -->
     <!-- Car - Add New - Step 1 -->
     <string name="add_new_car">Add New Car</string>
     <string name="enter_vin">Enter VIN and\nRegistration Number</string>
-    <string name="vin_subtitle">Lorem ipsum is simply dummy text of the printing and typesetting industry</string>
     <string name="reg_country">Registration Country</string>
     <string name="reg_number">Registration Number</string>
     <string name="fill_all_fields">Please fill all fields to continue</string>
@@ -284,9 +252,7 @@
 
     <string name="add_car_manually">Add Car Details Manually</string>
     <string name="car_try_again">Try again with different VIN</string>
-    <string name="car_try_again_lp">Try again with different License Plate</string>
     <!-- Car - Add New Manually -->
-    <string name="add_car_details">Add Car Details</string>
     <string name="add_car_11">Add Car (1/2)</string>
     <string name="add_car_12">Add Car (2/2)</string>
     <string name="vehicle_subcategory">Vehicle Sub Category</string>
@@ -299,7 +265,6 @@
     <string name="confirmation">I confirm that the information provided here is correct</string>
     <string name="save">Save</string>
     <string name="next">Next</string>
-    <string name="fields_not_filled">Please fill in al the info to continue</string>
     <string name="confirm_details">Please confirm that the info you provide is correct</string>
     <string name="status_expires">Expires</string>
 
@@ -307,23 +272,14 @@
     <!-- Natural Persons -->
     <string name="pers_empty_state">Seems like you don\'t\nhave persons yet!</string>
     <string name="pers_empty_state_sub">Please click on the button and follow\nthe steps to add a person</string>
-    <string name="add_new_person">Add New Person</string>
-    <string name="email_address">Email Address</string>
     <!-- Natural Person - Add New -->
     <string name="add_natural_pers">Add Natural Person</string>
-    <string name="firstname">First Name</string>
-    <string name="lastname">Last Name</string>
-    <string name="mo_phone">Mobile Number</string>
-    <string name="phone_hint">+407…</string>
-    <string name="email_ex">email@domain.com</string>
     <string name="country_c">Country<font color='#FB4079'>*</font></string>
     <string name="country">Country</string>
     <string name="zip_code">Zip Code</string>
-    <string name="select_categ">Select Categories</string>
     <!-- Legal Person - Details -->
     <string name="pers_details">Person Details</string>
     <string name="natural_pers_details">Edit Person Details</string>
-    <string name="pers_details_delete">Delete Person Details</string>
 
     <string name="pers_delete_ques">Hey, do you really\nwant to delete this person?</string>
     <string name="pers_delete_subtitle">Lorem Ipsum is simply dummy\ntext of the printing </string>
@@ -334,24 +290,16 @@
 
     <!-- Legal Persons -->
     <string name="legal_empty_state">Seems like you didn\'t\nadd any companies yet!</string>
-    <string name="legal_add_new">Add New Company</string>
     <!-- Legal Person - Add New -->
-    <string name="new_legal_pers">Add Company Details</string>
-    <string name="company_name">Company Name</string>
     <string name="cui">CUI</string>
-    <string name="legal_no_reg">No. Registration Of Com.</string>
-    <string name="caen_code">CAEN Code</string>
     <string name="act_type">Activity Type</string>
-    <string name="act_type_hint">Consulting</string>
+
     <string name="street_name">Street Name<font color='#FB4079'>*</font></string>
     <!-- Legal Person - Edit -->
     <string name="edit_legal_pers">Edit Company Details</string>
     <!-- Legal Person - Details -->
     <string name="legal_pers_details">Company Details</string>
-    <string name="legal_pers_delete">Delete Company Details</string>
     <!-- Legal Person - Delete -->
-    <string name="legal_pers_delete_title">Hey, do you really\nwant to delete this company?</string>
-    <string name="legal_delete_subtitle">Lorem Ipsum is simply dummy\ntext of the printing</string>
 
     <!-- Saved Cards -->
     <string name="saved_cards">Saved Cards</string>
@@ -366,13 +314,11 @@
 
     <!-- Dashboard -->
     <string name="home">Home</string>
-    <string name="reminder">Reminder</string>
+    <string name="reminder">Reminders</string>
     <string name="services">Services</string>
     <string name="maps">Maps</string>
-    <string name="more">More</string>
     <string name="bottombar_settings">Settings</string>
     <string name="insurance">Insurance</string>
-    <string name="road_tax">Road Tax</string>
     <string name="bridge_tax">Bridge Tax</string>
     <string name="rovinieta">Rovinieta</string>
     <string name="user_details">User Details</string>
@@ -384,7 +330,6 @@
     <string name="purchases_exp_inactive">Expired</string>
 
     <!-- Reminders -->
-    <string name="reminders_empty_state">Please click on the button and follow \n the steps to add one</string>
     <!-- Reminder - Add New -->
     <string name="new_reminder">Add New Reminders</string>
     <string name="new_reminder_title">Reminder title</string>
@@ -399,46 +344,29 @@
     <string name="new_reminder_location">Location</string>
     <string name="err_no_title">Please input a title to continue</string>
     <string name="err_no_duedatetime">Please input the due date and time to continue</string>
-    <string name="err_no_repeat">Please select repeat option to continue</string>
     <!-- Reminder - Delete -->
-    <string name="reminder_delete_title">Hey, do you really\nwant to delete this reminder?</string>
-    <string name="reminder_delete_subtitle">Lorem Ipsum is simply dummy\ntext of the printing</string>
-    <string name="never">Never</string>
-    <string name="hourly">Hourly</string>
-    <string name="daily">Daily</string>
-    <string name="weekdays">Weekdays</string>
-    <string name="weekly">Weekly</string>
-    <string name="fortnightly">Fortnightly</string>
-    <string name="monthly">Monthly</string>
-    <string name="months3">Every 3 Months</string>
-    <string name="months6">Every 6 Months</string>
-    <string name="yearly">Yearly</string>
     <!-- Reminder - Add New -->
     <string name="edit_reminder">Edit Reminders</string>
 
     <!-- Vignette -->
-    <string name="vignette">Rovignette</string>
-    <string name="vignetee">vignette</string>
+    <string name="vignetee">Vignette</string>
     <string name="start_with_new">Start With New Car</string>
-    <string name="vignette_select_car">Please select a car to continue</string>
     <!-- Vignette - Buy new -->
     <string name="service">Service</string>
     <string name="vignette_category">Vignette Category</string>
+    <string name="vignette_category_">Vignette Category<font color='#FB4079'>*</font></string>
     <string name="duration">Duration</string>
     <string name="start_date">Start Date</string>
-    <string name="enter_start_date">Choose date</string>
     <string name="car_info">Car Information</string>
     <string name="country_reg">Country of Registration</string>
-    <string name="buy_vignette_license">License Plate Number</string>
     <string name="license_hint">Enter License Plate Number</string>
-    <string name="buy_vignette_vin_hint">Enter VIN Number</string>
     <string name="buy_vignette_cta">Buy</string>
-    <string name="price_template">Buy - %s</string>
-    <string name="pair_not_available">The vehicle type - vignette period combination is not available</string>
     <string name="purchase">Purchase</string>
 
     <!-- Transaction details -->
     <string name="transaction_details">Transaction Details</string>
+    <string name="need_help">Need help?</string>
+    <string name="get_help">Get Help</string>
 
     <string name="transaction_id">Transaction ID</string>
     <string name="end_date">End Date</string>
@@ -447,40 +375,29 @@
     <string name="payment_success">Paid Successfully</string>
     <string name="payment_pending">Payment Processing</string>
     <string name="payment_error">Payment failed</string>
-    <string name="go_back_home">Go back home</string>
     <string name="roadtax_doc">Road tax Doc</string>
     <string name="view_doc">View Doc</string>
-    <string name="pdf">PDF</string>
 
     <!-- Locations -->
-    <string name="location_access">Grant us location access</string>
-    <string name="why_location_access">Why we need location access:</string>
     <string name="to_find_places">• To help you find great places</string>
-    <string name="i_m_okay">I’m okay with sharing my location</string>
     <string name="give_you_locations">• Give you real-time information based on your \n \u00A0 locations</string>
     <string name="need_location">We need you location…</string>
     <string name="location_required">Location Required</string>
     <string name="allow_location_permissions">Allow Location Permissions</string>
-    <string name="_10km_away">• 10km away</string>
     <string name="open_24_hours">Open</string>
     <string name="closed">Closed</string>
-    <string name="service_centre">Car Washing, Rest room, Fuel Filling, Service Centre</string>
-    <string name="petrom">PETROM</string>
-    <string name="romania_hint">Strada Tudor Arghezi 2 Sector 2,nr. 3A, Sect, București 020941, Romania</string>
-    <string name="direction">Direction</string>
-    <string name="no_internet_connection">No internet connection found. \n Check your connection</string>
-    <string name="ooops">Ooops !</string>
-    <string name="try_again">Try Again</string>
-    <string name="fuel_stations">Fuel Stations to visit</string>
-    <string name="open_location">Where would you like to open location?</string>
-    <string name="google_maps">Google Maps</string>
-    <string name="waze">Waze</string>
     <string name="cancel">Cancel</string>
-    <string name="car_home">Car Home</string>
+    <string name="apply">Apply</string>
+
     <string name="by_ovm_petrom">by OVM Petrom</string>
     <string name="empty_directory">Empty Directory</string>
     <string name="add_cat_or_doc">Add Categories or Documents \n using plus icon blow</string>
     <string name="data_not_available">Data not available</string>
+    <string name="your_location">Your Location</string>
+    <string name="location_filters">Location Filters</string>
+    <string name="applied_filters">Applied filters:</string>
+    <string name="search_here">Search here...</string>
+    <string name="choose_filter">Choose filter to find precise location</string>
 
     <!--    Notification-->
     <string name="rem_of_rca">Expiry of RCA</string>
@@ -505,12 +422,12 @@
     <string name="document">Document</string>
     <string name="view">View</string>
     <string name="map">Map</string>
+    <string name="list">List</string>
     <string name="car_certi">Car Registration Certificate</string>
     <string name="invite">Invite your Friends to CarHome</string>
     <string name="invite_link">Invite via Link</string>
     <string name="share">Share</string>
     <string name="rca_ins">RCA Insurance</string>
-    <string name="no_active">No Active</string>
     <string name="verify_email">Verify your email</string>
     <string name="confirm_here">Confirm here</string>
     <string name="already_verified">Already verified?</string>
@@ -553,15 +470,13 @@
     <string name="upload_doc">Upload Document</string>
     <string name="create_reminder">Create Reminder</string>
     <string name="make_purchase">Make a purchase</string>
-    <string name="feature_info">These feature is in Construction !</string>
     <string name="car_no_str">Car No - %s</string>
-    <string name="car_no">Car No - </string>
+    <string name="car_no">Car No -</string>
 
     <string name="persons">Persons</string>
     <string name="companies">Companies</string>
     <string name="exit_carmode">Exit Car Mode</string>
 
-    <string name="no_reminder">You don’t have any reminders today</string>
     <string name="dm_no_reminder">No Reminders</string>
     <string name="dm_no_documents">No Documents</string>
     <string name="dm_no_history">No History</string>
@@ -569,7 +484,6 @@
 
     <!--    Car MODE-->
     <string name="normal">NORMAL</string>
-    <string name="driving">DRIVING</string>
 
 
     <string name="categories">Categories</string>
@@ -610,19 +524,12 @@
     <string name="path">Path</string>
 
     <string name="bridge_select_text_title">Bridge Tax</string>
-    <string name="license_plate_number">License Plate Number</string>
-    <string name="autotourisme_mfmtma_3_5t">MfMTMA</string>
+    <string name="license_plate_number">License Plate<font color='#FB4079'>*</font></string>
 
     <string name="info">Info</string>
     <string name="doc_selected">%d/%d Selected</string>
     <string name="upload_img">Upload image</string>
 
-
-    <string-array name="city">
-        <item>Romania</item>
-        <item>Qatar</item>
-        <item>Poland</item>
-    </string-array>
 
     <string name="err_email_restart">Already reset? Login here</string>
     <string name="forgotpass_login_reset">Login here</string>
@@ -644,9 +551,6 @@
 
     <string name="add_folder">Add New Folder</string>
     <string name="new_car_details_cta_next">Next</string>
-    <string name="streets">streets</string>
-    <string name="select_from_list">Select from list</string>
-    <string name="select_vignette_category">Select Vignette Category</string>
     <string name="select_duration">Select Duration</string>
     <string name="mark_all_read">Mark all as read</string>
     <string name="no_notification">You don’t have any notification today</string>
@@ -660,22 +564,25 @@
     <string name="email_sett_note">(Note : All receipts will be sent on email for legal purpose even if you disable this mode)</string>
     <string name="geo_hint">You will receive notification for our nearby locations and services for better assist</string>
 
-    <string name="bridge_tax_cat">Bridge Tax Categories</string>
+    <string name="bridge_tax_cat_">Vignette Tax Category<font color='#FB4079'>*</font></string>
+    <string name="bridge_tax_cat">Vignette Tax Category</string>
     <string name="your_document">Your Document</string>
     <string name="address_info">Address Information</string>
     <string name="identity_info">Identity Information</string>
     <string name="edit">Edit</string>
-    <string name="street_type">Street Type<font color='#FB4079'>*</font></string>
+    <string name="street_type_c">Street Type<font color='#FB4079'>*</font></string>
+    <string name="street_type">Street Type</string>
     <string name="block_building">Block/Building</string>
     <string name="driving_License_">Driving License…</string>
     <string name="uploading_">Uploading…</string>
     <string name="cnp_id">CNP ID</string>
     <string name="locality">Locality</string>
+    <string name="romania_flag">🇷🇴</string>
 
 
     <string name="objective">Objective</string>
     <string name="fetesti">Fetesti</string>
-    <string name="no_of_pass">Number of passes</string>
+    <string name="no_of_pass">Number of passes<font color='#FB4079'>*</font></string>
 
     <string name="add_legal_person">Add Legal Person</string>
     <string name="reg_of_company">Registration of Company</string>
@@ -686,7 +593,6 @@
     <string name="cui_c">CUI<font color='#FB4079'>*</font></string>
 
 
-    <string name="name_filled_required">Name Filled Required</string>
     <string name="first_name_len">First name length between 2 to 50</string>
     <string name="last_name_len">Last name length between 2 to 50</string>
 
@@ -697,8 +603,6 @@
     <string name="locality_area">Locality/Area<font color='#FB4079'>*</font></string>
 
     <string name="company_info">Company Information</string>
-    <string name="company_name_require">Company name must not be blank !!</string>
-    <string name="cui_require">CUI must not be blank !!</string>
 
     <string name="delete_name">Delete %s ?</string>
     <string name="delete_hint_n">All associated details with this person \n will be deleted</string>
@@ -727,6 +631,8 @@
 
 
     <string name="license_error">The license plate number is not valid</string>
+    <string name="license_error2">Invalid LPN Number</string>
+
     <string name="diff_cat_title">Different Category selected</string>
     <string name="diff_cat_subtitle">You have selected different vehicle category than our record, Please specify your reason below..</string>
 
@@ -736,10 +642,7 @@
 
     <string name="select_person">Select any one person</string>
 
-    <string name="enter_vin_num">Enter VIN Number</string>
-    <string name="error_lia">license needs to have 10 characters</string>
-
-    <string name="switch_languages_between_eng_room">Switch languages between Eng and Room</string>
+    <string name="switch_languages_between_eng_room">Switch languages between Eng and Rom</string>
     <string name="learn_more_about_who_we_are">Learn more about who we are</string>
     <string name="view_information_on_frequently_asked_questions">View information on frequently asked questions</string>
     <string name="we_abide_by_this_policy">We abide by this policy</string>
@@ -747,7 +650,7 @@
     <string name="find_us_on_your_favorite_social_media">Find us on your favorite social media</string>
     <string name="invite_your_friends_and_family">Invite your friends and family</string>
     <string name="need_help_please_reach_out_to_us">Need help? Please reach out to us</string>
-    <string name="no_info">No Information</string>
+    <string name="no_info">No Information added</string>
 
     <string name="purchases_expin_template">Expires in %s</string>
     <string name="expires_on">Expires on</string>
@@ -760,14 +663,11 @@
 
     <string name="i_hereby_confirm">I hereby confirm that the information provided here is accurate, correct and complete</string>
 
-    <string name="add_to_doc">Add to Doc</string>
     <string name="duration_required">Please select Duration Category</string>
     <string name="doc_not_found">Document not found!</string>
     <string name="ok">Ok</string>
 
-    <string name="insurance_info">Hello, %s We are happy to know that you are eager to use this feature we are perfecting it just for you hold tight!</string>
-    <string name="email_cred">You can not change email since it is used for your login credentials.</string>
-    <string name="pdf_exception">File not in PDF format or corrupted.</string>
+    <string name="insurance_info">Hello, %s We are happy to know that you are eager to use this feature.\nWe are perfecting it just for you.\nHold tight!</string>
 
     <string name="select_rca_details">Select RCA Details</string>
     <string name="car_registered">Car Registered</string>
@@ -798,7 +698,6 @@
     <string name="complete_payment">Complete Payment</string>
     <string name="purchase_summary">Purchase Summary</string>
     <string name="service_information">Service Information</string>
-    <string name="usage_type">Usage type</string>
     <string name="insurance_details">Insurance Details</string>
     <string name="summary">Summary</string>
     <string name="offer_validity">Offer Validity</string>
@@ -808,11 +707,11 @@
     <string name="error">Error</string>
     <string name="buy">Buy</string>
     <string name="ds">Direct Settlement</string>
+    <string name="rca_ds">RCA + Direct Settlement</string>
     <string name="msg_provider">Message from Provider</string>
     <string name="view_offer">View Offer</string>
     <string name="see_pid"><u>See PID</u></string>
     <string name="ins_policy_info">Payment upon the issuance of insurance policy</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="fetch_title1">Fetching insurance \n offers for you</string>
     <string name="fetch_title2">Getting the Insurance Companies \n offers for you and your car</string>
     <string name="claim_insurance_policy">Direct Claim is an optional service and its price is calculated separately from the insurance policy</string>
@@ -843,7 +742,70 @@
     <string name="netopia_secure">Netopia Secure Payment</string>
     <string name="start_date_info">Start date is required !</string>
     <string name="add_driver_">Add another driver..</string>
+    <string name="buy_rovinieta">Buy Rovinieta</string>
+    <string name="saved_cars">Saved Cars</string>
+    <string name="buy_for_another_car">Buy for another car</string>
+    <string name="data_missing_">Data Missing</string>
+    <string name="no_message_insurer">No message from insurer </string>
+    <string name="offer_in_">Offer</string>
+    <string name="no_offer_in_">No offer available from insurance at the moment</string>
     <string name="taken_note">I have taken note that additional details regarding the processing of personal data by can be found on the T&amp;C and GDPR page or on WBA broker website (www.wba.ro).</string>
+    <string name="country_info">Country is required !</string>
+    <string name="number_passes_info">Number of passes is required !</string>
+    <string name="vin_required">Unable to locate car data, please provide VIN no.</string>
+    <string name="vehicle_cats">Vehicle Categories</string>
+    <string name="ins_date_error">You can only purchase from Tomorrow to 30 days in advance. </string>
+    <string name="reg_invalid_cnp">Invalid CNP Number !</string>
+    <string name="reg_invalid_cui">Invalid CUI Number !</string>
+    <string name="reg_invalid_reg_company">Invalid registration of company !</string>
+    <string name="selected_car_">Selected Car</string>
+    <string name="state_provinces_">State/Provinces</string>
+    <string name="locality_area_">Locality/Area</string>
+    <string name="information_items_">Information</string>
+
+    <string name="bridge_tax_active_dialog">The selected car has Active Bridge Tax. Do you still want to purchase?</string>
+
+    <string name="selected_country_code_">Select Country Code</string>
+    <string name="selected_country_">Select Country</string>
+    <string name="car_model">Car Model</string>
+    <string name="car_plate_">Car Plate</string>
+    <string name="add_new_">Add new..</string>
+    <string name="act_type_">Activity Type<font color='#FB4079'>*</font></string>
+    <string name="reg_of_company_">Registration of Company<font color='#FB4079'>*</font></string>
+    <string name="need_help_">Need Help</string>
+    <string name="validation_and_control_centre">CVC \nValidation and Control Centre</string>
+    <string name="feel_free_to_reach_out_to_">Feel free to reach out to our executives on mentioned \nchannels below. We will be happy to assist you</string>
+    <string name="customer_support_">Customer Support</string>
+    <string name="phone_number_demo_">+4 0372 72 7277</string>
+    <string name="phone_number_second_demo_">+4 0372 72 7777</string>
+    <string name="demo_email_">cvc@westaco.com</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="return_to_home">Return to Home</string>
+    <string name="about_us">The app that digitalizes your driving experience!</string>
+    <string name="direct_claim_url">https://carhome-beta.netlify.app/directclaim_eng</string>
+    <string name="my_data">My Data</string>
+    <string name="location_access">Grant us location access</string>
+    <string name="why_location_access">Why we need location access:</string>
+    <string name="petrom">PETROM</string>
+    <string name="i_m_okay">I’m okay with sharing my location</string>
+    <string name="romania_hint">Strada Tudor Arghezi 2 Sector 2,nr. 3A, Sect, București 020941, Romania</string>
+    <string name="direction">Direction</string>
+    <string name="_10km_away">• 10km away</string>
+    <string name="service_centre">Car Washing, Rest room, Fuel Filling, Service Centre</string>
+    <string name="open_location">Where would you like to open location?</string>
+    <string name="google_maps">Google Maps</string>
+    <string name="waze">Waze</string>
+    <string name="edit_profile_img">Edit Profile Image</string>
+    <string name="upload_profile_picture">Upload Profile Picture</string>
+    <string name="delete_profile_pictures">Delete Profile Picture</string>
+    <string name="choose_img_from">Choose Image from</string>
+    <string name="purchase_history">Purchase history</string>
+    <string name="versionName">Version %s</string>
+    <string name="edit_profile">Edit Your Profile</string>
+    <string name="added_cars">Added cars</string>
+    <string name="ins_expires">Insurance Expires</string>
+    <string name="last_purchased">Last Purchased</string>
+    <string name="ro_expires">Rovinieta Expires</string>
 
 
 </resources>

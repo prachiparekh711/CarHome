@@ -3,10 +3,10 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainRL"
     style="@style/MaterialCardViewStroke"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/mainRL"
     app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,8 +19,8 @@
             android:id="@+id/companycard"
             android:layout_width="@dimen/_45sdp"
             android:layout_height="@dimen/_45sdp"
-            app:cardBackgroundColor="@color/ctaBackground"
             app:cardCornerRadius="9dp"
+            app:cardBackgroundColor="@color/ctaBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -33,7 +33,7 @@
                 android:layout_centerVertical="true"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/flag_peru"
+                android:src="@drawable/carhome_icon"
                 android:visibility="gone" />
 
             <TextView
@@ -42,8 +42,8 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/inter_bold_700"
                 android:gravity="center"
-                android:textColor="@color/white"
                 android:textSize="16sp"
+                android:textColor="@color/white"
                 android:visibility="visible" />
 
 
@@ -53,41 +53,41 @@
             android:id="@+id/companyName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold_700"
+            android:text="@string/occupation"
+            android:textColor="@color/textOnWhite"
             android:ellipsize="marquee"
+            app:layout_constraintBottom_toTopOf="@id/address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/companycard"
+            app:layout_constraintTop_toTopOf="@+id/companycard"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:fontFamily="@font/inter_bold_700"
             android:freezesText="true"
             android:marqueeRepeatLimit="marquee_forever"
             android:paddingStart="@dimen/_10sdp"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:text="@string/occupation"
-            android:textColor="@color/textOnWhite"
-            app:layout_constraintBottom_toTopOf="@id/address"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/companycard"
-            app:layout_constraintTop_toTopOf="@+id/companycard"
             tools:ignore="RtlSymmetry" />
 
         <TextView
             android:id="@+id/address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:fontFamily="@font/inter_medium_500"
-            android:freezesText="true"
-            android:marqueeRepeatLimit="marquee_forever"
             android:paddingStart="@dimen/_10sdp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
             android:textColor="@color/textOnWhiteAccentGray"
             app:layout_constraintBottom_toBottomOf="@+id/companycard"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/companycard"
             app:layout_constraintTop_toBottomOf="@+id/companyName"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:freezesText="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             tools:ignore="RtlSymmetry" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

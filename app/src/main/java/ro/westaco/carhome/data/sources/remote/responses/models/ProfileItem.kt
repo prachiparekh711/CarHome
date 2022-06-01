@@ -1,6 +1,5 @@
 package ro.westaco.carhome.data.sources.remote.responses.models
 
-import android.graphics.Bitmap
 import com.google.gson.annotations.SerializedName
 import ro.westaco.carhome.data.sources.remote.requests.Address
 import ro.westaco.carhome.data.sources.remote.requests.DrivingLicense
@@ -19,16 +18,18 @@ data class ProfileItem(
     @SerializedName("firstName") val firstName: String? = null,
     @SerializedName("occupationCorIsco08") val occupationCorIsco08: CatalogItem? = null,
     @SerializedName("phone") val phone: String? = null,
+    @SerializedName("phoneCountryCode") val phoneCountryCode: String? = null,
     @SerializedName("drivingLicense") val drivingLicense: DrivingLicense? = null,
     @SerializedName("id") val id: Int? = null,
     @SerializedName("email") val email: String? = null,
-    @SerializedName("logo") var logo: Bitmap? = null,
     @SerializedName("progressStepsDone") val stepDone: Int? = null,
     @SerializedName("progressStepsTotal") val stepTotal: Int? = null,
+    @SerializedName("guid") val guid: String? = null,
+    @SerializedName("logoHref") val logoHref: String? = null,
 
     ) : Serializable {
     override fun toString(): String {
-        return "ProfileItem(lastName=$lastName, address=$address, identityDocument=$identityDocument, cnp=$cnp, identityDocumentAttachment=$identityDocumentAttachment, employerName=$employerName, dateOfBirth=$dateOfBirth, drivingLicenseAttachment=$drivingLicenseAttachment, firstName=$firstName, occupationCorIsco08=$occupationCorIsco08, phone=$phone, drivingLicense=$drivingLicense, id=$id, email=$email, logo=$logo, stepDone=$stepDone, stepTotal=$stepTotal)"
+        return "ProfileItem(lastName=$lastName, address=$address, identityDocument=$identityDocument, cnp=$cnp, identityDocumentAttachment=$identityDocumentAttachment, employerName=$employerName, dateOfBirth=$dateOfBirth, drivingLicenseAttachment=$drivingLicenseAttachment, firstName=$firstName, occupationCorIsco08=$occupationCorIsco08, phone=$phone, drivingLicense=$drivingLicense, id=$id, email=$email,  stepDone=$stepDone, stepTotal=$stepTotal)"
     }
 }
 

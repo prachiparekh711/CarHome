@@ -7,13 +7,13 @@ import android.net.Uri
 import android.os.Build
 import android.provider.DocumentsContract
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_contact_us.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.presentation.base.BaseFragment
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.FileUtil
 import java.io.File
 
@@ -59,18 +59,12 @@ class ContactUsFragment : BaseFragment<ContactViewModel>() {
                             )
                         }
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            requireContext().resources.getString(R.string.msg_max_msg),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showErrorInfo(requireContext(), getString(R.string.msg_max_msg))
+
                     }
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().resources.getString(R.string.msg_min_msg),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showErrorInfo(requireContext(), getString(R.string.msg_min_msg))
+
                 }
             }
 
@@ -80,11 +74,9 @@ class ContactUsFragment : BaseFragment<ContactViewModel>() {
                     if (attachmentList.size < 5)
                         openGallery()
                     else {
-                        Toast.makeText(
-                            requireContext(),
-                            requireContext().resources.getString(R.string.attachment_max_msg),
-                            Toast.LENGTH_SHORT
-                        ).show()
+
+                        showErrorInfo(requireContext(), getString(R.string.attachment_max_msg))
+
                     }
                 } else {
                     FileUtil.requestPermission(requireActivity())
@@ -94,7 +86,7 @@ class ContactUsFragment : BaseFragment<ContactViewModel>() {
     }
 
 
-    fun openGallery() {
+    private fun openGallery() {
         val imageUri: Uri? = null
         val intent = Intent()
         intent.action = Intent.ACTION_PICK
@@ -104,24 +96,22 @@ class ContactUsFragment : BaseFragment<ContactViewModel>() {
     }
 
 
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
         grantResults: IntArray
     ) {
         when (requestCode) {
-            200 -> if (grantResults.size > 0) {
-                val READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                val WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED
-                if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
+            200 -> if (grantResults.isNotEmpty()) {
+                val readExternalStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                val writeExternalStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED
+                if (readExternalStorage && writeExternalStorage) {
                     // perform action when allow permission success
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().resources.getString(R.string.allow_permission),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+
+                    showErrorInfo(requireContext(), getString(R.string.allow_permission))
+
                 }
             }
         }
@@ -149,12 +139,9 @@ class ContactUsFragment : BaseFragment<ContactViewModel>() {
                         attachmentList.add(mFile)
                         attachmentList.let { attachment.text = it.joinToString(", ") }
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            requireContext().resources.getString(R.string.size_msg),
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
+
+                        showErrorInfo(requireContext(), getString(R.string.size_msg))
+
                     }
                 }
             }

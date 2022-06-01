@@ -13,9 +13,9 @@
             android:id="@+id/mSelectDriverImage"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/_12sdp"
             android:background="@drawable/oval_shape"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_profile_picture" />
 
         <LinearLayout
@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/inter_regular_400"
             android:orientation="vertical"
-            android:textSize="@dimen/text_size_14">
+            android:textSize="@dimen/_11sdp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                     android:longClickable="false"
                     android:singleLine="true"
                     android:textColor="#303065"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/_11sdp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

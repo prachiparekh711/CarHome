@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
 import ro.westaco.carhome.R
 
@@ -19,14 +18,9 @@ class DeleteDialogFragment : DialogFragment() {
         fun onPosClicked()
     }
 
-    interface OnDialogtextInteractionListener {
-        fun onTextClicked()
-    }
 
-    @LayoutRes
-    var layoutResId: Int? = null
+    var layoutResId: Int = 0
     var listener: OnDialogInteractionListener? = null
-    var listener1: OnDialogtextInteractionListener? = null
 
     override fun onStart() {
         super.onStart()
@@ -41,7 +35,7 @@ class DeleteDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view: View = inflater.inflate(layoutResId!!, container, false)
+        val view: View = inflater.inflate(layoutResId, container, false)
 
         if (showsDialog) {
             dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)

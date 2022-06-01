@@ -79,6 +79,7 @@ class DriverAdapter(
             mSelectUserEmail.text = "${item.email}"
 
             remove.setOnClickListener {
+
                 listener?.onRemoveClick(position)
                 list.removeAt(position)
                 notifyItemRemoved(position)

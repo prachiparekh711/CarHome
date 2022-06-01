@@ -66,12 +66,16 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        arguments?.let { it ->
             isEdit = it.getBoolean(ARG_IS_EDIT)
             reminder = it.getSerializable(ARG_REMINDER) as Reminder
-            if (reminder?.id != null) {
-                viewModel.fetchRemoteData(reminder?.id!!)
+
+            reminder?.id.let {
+                if (it != null) {
+                    viewModel.fetchRemoteData(it)
+                }
             }
+
         }
     }
 
@@ -122,10 +126,6 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
             notificationRL.isVisible = reminder?.notifications?.isEmpty() == false
         }
 
-//
-
-
-//      *Location in BottomSheet(R6)
 
         locationReceiver = LocationReceiver()
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
@@ -136,7 +136,6 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
 
         sheetDialog?.setCancelable(false)
         sheetDialog?.setContentView(view)
-        /*mRelative.isVisible = mSwitch.isChecked*/
 
         mSwitch.setOnCheckedChangeListener { _, isChecked ->
 
@@ -151,7 +150,6 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
         image.setOnClickListener {
             sheetDialog?.show()
         }
-//      *Location in BottomSheet(R6)
 
 
         cta.setOnClickListener {
@@ -185,10 +183,10 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
     private var dpd: DatePickerDialog? = null
     private fun showDatePicker(dateInMillis: Long) {
         val c = Calendar.getInstance().apply {
-            if (isEdit && reminder != null)
-                timeInMillis = reminder?.dueDate?.let { dateToMilis(it) }!!
+            timeInMillis = if (isEdit && reminder != null)
+                reminder?.dueDate?.let { dateToMilis(it) }!!
             else
-                timeInMillis = dateInMillis
+                dateInMillis
         }
 
         dpd?.cancel()
@@ -210,10 +208,10 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
     private var tpd: TimePickerDialog? = null
     private fun showTimePicker(dateTimeInMillis: Long) {
         val c = Calendar.getInstance().apply {
-            if (isEdit && reminder != null)
-                timeInMillis = timeToMilis(reminder?.dueTime!!)
+            timeInMillis = if (isEdit && reminder != null)
+                reminder?.dueTime?.let { timeToMilis(it) }!!
             else
-                timeInMillis = dateTimeInMillis
+                dateTimeInMillis
         }
 
         tpd?.cancel()
@@ -258,20 +256,26 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
         }
 
         viewModel.remindersTabData.observe(viewLifecycleOwner) { tagsList ->
-            allFilterList = tagsList
-            tags.layoutManager = GridLayoutManager(context, ReminderTagsAdapter.COLUMNS)
+            if (tagsList != null) {
+                allFilterList = tagsList
 
-            if (isEdit && reminder != null) {
-                for (i in allFilterList.indices) {
-                    if (reminder?.tags?.contains(allFilterList[i].id) == true)
-                        tagPos = i
+                tags.layoutManager = GridLayoutManager(context, ReminderTagsAdapter.COLUMNS)
+
+                if (isEdit && reminder != null) {
+                    for (i in allFilterList.indices) {
+                        if (reminder?.tags?.contains(allFilterList[i].id) == true)
+                            tagPos = i
+                    }
+                } else {
+                    tagPos = allFilterList.size - 1
                 }
-            } else {
-                tagPos = allFilterList.size - 1
+                tagsAdapter = ReminderTagsAdapter(requireContext())
+                tagsAdapter?.setItems(allFilterList)
+                if (reminder != null) {
+                    reminder?.tags?.let { tagsAdapter?.setSelected(it) }
+                }
+                tags.adapter = tagsAdapter
             }
-            tagsAdapter = ReminderTagsAdapter(requireContext(), tagPos)
-            tagsAdapter?.setItems(allFilterList)
-            tags.adapter = tagsAdapter
         }
 
         viewModel.remindersLiveData.observe(viewLifecycleOwner) { reminderItem ->
@@ -306,51 +310,53 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
         }
 
         viewModel.repeatLiveData.observe(viewLifecycleOwner) { repeatList ->
-            this.repeatList = repeatList
-            if (repeatList.isNotEmpty())
-                repeat.text = repeatList[0].toString()
+            if (repeatList != null) {
+                this.repeatList = repeatList
 
-            if (isEdit && reminder != null) {
-                if (reminder?.repeat != null) {
-                    for (i in repeatList.indices) {
-                        if (repeatList[i].id.toInt() == reminder?.repeat)
-                            repeatPos = i
-                    }
+                if (repeatList.isNotEmpty())
+                    repeat.text = repeatList[0].toString()
 
-                    try {
-                        repeat.text = repeatList[repeatPos].toString()
-                    } catch (e: Exception) {
-                        repeat.text = repeatList[0].toString()
+                if (isEdit && reminder != null) {
+                    if (reminder?.repeat != null) {
+                        for (i in repeatList.indices) {
+                            if (repeatList[i].id.toInt() == reminder?.repeat)
+                                repeatPos = i
+                        }
+
+                        try {
+                            repeat.text = repeatList[repeatPos].toString()
+                        } catch (e: Exception) {
+                            repeat.text = repeatList[0].toString()
+                        }
                     }
                 }
-            }
 
 
 //        *Repeat Recycler in Bottomsheet(R5)
-            val dialog = BottomSheetDialog(requireContext())
+                val dialog = BottomSheetDialog(requireContext())
 
-            val repeatInterface = object : Repeatadapter.RepeatInterface {
-                override fun OnSelection(model: Int) {
-                    repeatPos = model
+                val repeatInterface = object : RepeatAdapter.RepeatInterface {
+                    override fun onSelection(model: Int) {
+                        repeatPos = model
+                    }
                 }
-            }
 
-            repeat.setOnClickListener {
-                if (repeatList.isNotEmpty()) {
-                    val adapter = Repeatadapter(requireContext(), repeatInterface, repeatPos)
-                    adapter.arrayList.clear()
-                    val view = layoutInflater.inflate(R.layout.repeat_bottomsheet, null)
-                    val mRecycler = view.findViewById<RecyclerView>(R.id.mRepeatRec)
-                    val mBack = view.findViewById<ImageView>(R.id.mBack)
-                    val mContinue = view.findViewById<TextView>(R.id.mContinue)
-                    mRecycler.layoutManager =
-                        LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-                    mRecycler.layoutAnimation = null
-                    mRecycler.adapter = adapter
-                    adapter.addAll(repeatList)
+                repeat.setOnClickListener {
+                    if (repeatList.isNotEmpty()) {
+                        val adapter = RepeatAdapter(requireContext(), repeatInterface, repeatPos)
+                        adapter.arrayList.clear()
+                        val view = layoutInflater.inflate(R.layout.repeat_bottomsheet, null)
+                        val mRecycler = view.findViewById<RecyclerView>(R.id.mRepeatRec)
+                        val mBack = view.findViewById<ImageView>(R.id.mBack)
+                        val mContinue = view.findViewById<TextView>(R.id.mContinue)
+                        mRecycler.layoutManager =
+                            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+                        mRecycler.layoutAnimation = null
+                        mRecycler.adapter = adapter
+                        adapter.addAll(repeatList)
 
-                    mContinue.setOnClickListener {
-                        repeat.text = repeatList[repeatPos].toString()
+                        mContinue.setOnClickListener {
+                            repeat.text = repeatList[repeatPos].toString()
                         dialog.dismiss()
                     }
                     dialog.setCancelable(false)
@@ -369,23 +375,27 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
                 }
             }
 //      *Repeat Recycler in Bottomsheet(R5)
+            }
         }
 
         viewModel.durationData.observe(viewLifecycleOwner) { durationList ->
-            this.durationList = durationList
-            var typeList: Array<String> = arrayOf()
-            durationList.forEach {
-                typeList += it.name
-            }
+            if (durationList != null) {
+                this.durationList = durationList
+                var typeList: Array<String> = arrayOf()
+                durationList.forEach {
+                    typeList += it.name
+                }
 
-            mDurationPicker.minValue = 0
-            mDurationPicker.maxValue = durationList.size - 1
-            mDurationPicker.displayedValues = typeList
-            mDurationPicker.wrapSelectorWheel = false
-            mDurationPicker.setOnValueChangedListener { picker, oldVal, newVal ->
-                durationUnit = newVal
+                mDurationPicker.minValue = 0
+                mDurationPicker.maxValue = durationList.size - 1
+                mDurationPicker.displayedValues = typeList
+                mDurationPicker.wrapSelectorWheel = false
+                mDurationPicker.setOnValueChangedListener { picker, oldVal, newVal ->
+                    durationUnit = newVal
+                }
             }
         }
+
     }
 
     private fun openBottomMapFragment(fragment: MapBottomsheetDialog) {
@@ -395,10 +405,10 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
     private class LocationReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
-            locationItem = intent?.getSerializableExtra("locationData") as LocationV2Item
-            currentLocation = intent.getSerializableExtra("currentLocation") as LocationV2Item
-            setLocationData(locationItem!!)
-            setLocationDialog(locationItem!!, currentLocation!!)
+            locationItem = intent?.getSerializableExtra("locationData") as? LocationV2Item?
+            currentLocation = intent?.getSerializableExtra("currentLocation") as? LocationV2Item?
+            locationItem?.let { setLocationData(it) }
+            locationItem?.let { currentLocation?.let { it1 -> setLocationDialog(it, it1) } }
         }
     }
 
@@ -549,7 +559,7 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
         }
     }
 
-    fun dateToMilis(str: String): Long {
+    private fun dateToMilis(str: String): Long {
         val sdf = SimpleDateFormat(getString(R.string.server_date_format_template))
 
         val mDate = sdf.parse(str)

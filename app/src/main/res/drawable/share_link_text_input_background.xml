@@ -3,7 +3,7 @@
     android:shape="rectangle">
     <solid android:color="@color/white" />
     <stroke
-        android:width="@dimen/input_field_stroke_width"
+        android:width="@dimen/_1sdp"
         android:color="@color/textInputBorderGray_border" />
     <corners
         android:bottomLeftRadius="@dimen/_5sdp"

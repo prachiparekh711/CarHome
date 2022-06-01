@@ -23,7 +23,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_12"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -46,15 +46,16 @@
                     android:gravity="center"
                     android:text="@string/data"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_18" />
+                    android:textSize="@dimen/_15sdp" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/size_16"
+                    android:layout_marginEnd="@dimen/_12sdp"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_account"
+                    android:visibility="invisible"
                     android:tint="@color/appPrimary" />
 
             </LinearLayout>
@@ -63,11 +64,11 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_16"
+                android:layout_marginTop="@dimen/_12sdp"
                 android:background="@color/white"
                 app:tabBackground="@color/white"
                 app:tabIndicatorColor="@color/appPrimary"
-                app:tabIndicatorHeight="@dimen/size_2"
+                app:tabIndicatorHeight="@dimen/_1sdp"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@color/appPrimary"
                 app:tabTextAppearance="@style/TabLayoutTheme"
@@ -82,7 +83,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/text_size_20"
+                android:layout_height="@dimen/_16sdp"
                 android:background="@drawable/white_toolbar_background" />
 
             <androidx.viewpager.widget.ViewPager

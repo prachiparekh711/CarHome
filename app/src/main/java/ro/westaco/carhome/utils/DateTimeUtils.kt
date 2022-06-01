@@ -15,7 +15,7 @@ object DateTimeUtils {
         val targetFormat =
             SimpleDateFormat(context.getString(R.string.server_date_format_template), Locale.US)
         val date = originalFormat.parse(dateStr)
-        return targetFormat.format(date!!)
+        return targetFormat.format(date)
     }
 
     fun convertFromServerDate(context: Context, dateStr: String?): String? {
@@ -25,7 +25,7 @@ object DateTimeUtils {
         val targetFormat =
             SimpleDateFormat(context.getString(R.string.date_format_template), Locale.US)
         val date = originalFormat.parse(dateStr)
-        return targetFormat.format(date!!)
+        return targetFormat.format(date)
     }
 
     fun convertDate(
@@ -35,7 +35,7 @@ object DateTimeUtils {
     ): String? {
         if (dateStr == null) return null
         val date = originalFormat.parse(dateStr)
-        return targetFormat.format(date!!)
+        return targetFormat.format(date)
     }
 
     fun isSameDay(date1: Date?, date2: Date?): Boolean {
@@ -54,19 +54,19 @@ object DateTimeUtils {
 
     fun getNowSeconds() = System.currentTimeMillis() / 1000L
 
-    fun getTitleDate(neededTimeMilis: Long, context: Context): String {
+    fun getTitleDate(neededTimeMilis: Long, context: Context, needsToday: Boolean): String {
         val nowTime = Calendar.getInstance()
         val neededTime = Calendar.getInstance()
         neededTime.timeInMillis = neededTimeMilis
         return if (neededTime[Calendar.YEAR] === nowTime[Calendar.YEAR]) {
             if (neededTime[Calendar.MONTH] === nowTime[Calendar.MONTH]) {
-                if (neededTime[Calendar.DATE] - nowTime[Calendar.DATE] === 1) {
+                if (neededTime[Calendar.DATE] - nowTime[Calendar.DATE] === 1 && needsToday) {
                     //here return like "Tomorrow at 12:00"
                     context.resources.getString(R.string.tomorrow)
-                } else if (nowTime[Calendar.DATE] === neededTime[Calendar.DATE]) {
+                } else if (nowTime[Calendar.DATE] === neededTime[Calendar.DATE] && needsToday) {
                     //here return like "Today at 12:00"
                     context.resources.getString(R.string.today)
-                } else if (nowTime[Calendar.DATE] - neededTime[Calendar.DATE] === 1) {
+                } else if (nowTime[Calendar.DATE] - neededTime[Calendar.DATE] === 1 && needsToday) {
                     //here return like "Yesterday at 12:00"
                     context.resources.getString(R.string.yesterday)
                 } else {
@@ -83,6 +83,5 @@ object DateTimeUtils {
             DateFormat.format("MMMM yyyy", neededTime).toString()
         }
     }
-
 
 }

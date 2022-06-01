@@ -29,7 +29,7 @@
                 android:gravity="center"
                 android:text="@string/select_leasing"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_20" />
+                android:textSize="@dimen/_16sdp" />
 
             <TextView
                 android:id="@+id/sub_title"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/size_16"
+                android:layout_marginEnd="@dimen/_12sdp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_dismiss_x" />
 
@@ -75,7 +75,7 @@
                 android:background="@null"
                 android:drawablePadding="@dimen/_12sdp"
                 android:fontFamily="@font/inter_medium_500"
-                android:hint="search.."
+                android:hint="@string/search_here"
                 android:imeOptions="actionDone"
                 android:importantForAutofill="auto"
                 android:includeFontPadding="false"

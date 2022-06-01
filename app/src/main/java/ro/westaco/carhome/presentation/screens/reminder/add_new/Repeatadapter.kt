@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 
-class Repeatadapter(
+class RepeatAdapter(
     context: Context,
     repeatInterface1: RepeatInterface,
     repeatPos: Int
@@ -34,7 +34,7 @@ class Repeatadapter(
     }
 
     interface RepeatInterface {
-        fun OnSelection(model: Int)
+        fun onSelection(model: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -58,7 +58,7 @@ class Repeatadapter(
 
         holder.mTitle?.setOnClickListener {
             selectedPos = position
-            repeatInterface?.OnSelection(position)
+            repeatInterface?.onSelection(position)
             notifyDataSetChanged()
         }
 

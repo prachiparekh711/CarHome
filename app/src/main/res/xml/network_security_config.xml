@@ -3,6 +3,6 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">mobilpay.ro</domain>
         <domain includeSubdomains="true">carhome.page.link</domain>
-        <!--        <domain includeSubdomains="true">westaco.page.link</domain>-->
+<!--        <domain includeSubdomains="true">westaco.page.link</domain>-->
     </domain-config>
 </network-security-config>

@@ -16,6 +16,7 @@ import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragm
 import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.ownerNaturalItem
 import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.userNaturalItem
 import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.verifyNaturalList
+import ro.westaco.carhome.presentation.screens.service.person.BillingInformationFragment
 import ro.westaco.carhome.utils.Progressbar
 
 
@@ -23,6 +24,8 @@ import ro.westaco.carhome.utils.Progressbar
 class BillNaturalFragment(
     var type: String?,
     var addNewListner: SelectUserFragment.AddNewUserView?,
+    var servicePersonListner: BillingInformationFragment.OnServicePersonListener?,
+    var newListener: BillingInformationFragment.AddNewPersonList?,
 ) : BaseFragment<BillingNaturalViewModel>(),
     NaturalAdapter.OnItemSelectListView {
 
@@ -36,6 +39,7 @@ class BillNaturalFragment(
         li_add.setOnClickListener {
             if (type != null)
                 addNewListner?.openNewUser(type)
+            newListener?.openNewPerson(type)
             viewModel.onAddNew()
         }
 
@@ -55,32 +59,45 @@ class BillNaturalFragment(
             progressbar?.dismissPopup()
         }
 
+        viewModel.naturalPersonsDetailLiveData.observe(viewLifecycleOwner) { naturalPerson ->
+            naturalPerson?.let { viewModel.onEdit(it) }
+            addNewListner?.openNewUser(type)
+        }
+
     }
 
     override fun onItemListUsers(newItems: NaturalPerson) {
-        viewModel.onNaturalPerson(newItems.id?.toInt())
-        if (type != null) {
-            if (verifyNaturalList?.isNullOrEmpty() == false) {
-                verifyNaturalList?.indices?.forEach { i ->
-                    val verifyItem = verifyNaturalList!![i]
-                    if (verifyItem.id?.toLong() == newItems.id) {
 
-                        if (verifyItem.validationResult?.warnings?.size == 0) {
-                            when (type) {
-                                "OWNER" -> ownerNaturalItem = newItems
-                                "USER" -> userNaturalItem = newItems
-                                "DRIVER" -> driverNaturalItem = newItems
-                                "DRIVER_NEW" -> driverNewNaturalItem = newItems
+        if (type != null) {
+
+            if (!verifyNaturalList.isNullOrEmpty()) {
+                verifyNaturalList?.indices?.forEach { i ->
+                    val verifyItem = verifyNaturalList?.get(i)
+                    if (verifyItem != null) {
+                        if (verifyItem.id?.toLong() == newItems.id) {
+
+                            if (verifyItem.validationResult?.warnings?.size == 0) {
+                                when (type) {
+                                    "OWNER" -> ownerNaturalItem = newItems
+                                    "USER" -> userNaturalItem = newItems
+                                    "DRIVER" -> driverNaturalItem = newItems
+                                    "DRIVER_NEW" -> driverNewNaturalItem = newItems
+                                }
+
+                            } else {
+                                newItems.id?.let { viewModel.fetchPersonData(it) }
+//                            showDialog(verifyItem.validationResult?.warnings as ArrayList<WarningsItem>)
                             }
-                        } else {
-                            showDialog(verifyItem.validationResult?.warnings as ArrayList<WarningsItem>)
                         }
                     }
                 }
             }
-        }
 
+            servicePersonListner?.onPersonChange(newItems, null)
+
+        }
     }
+
 
     private fun showDialog(warningList: ArrayList<WarningsItem>) {
         val dialog = Dialog(requireActivity())
@@ -101,7 +118,7 @@ class BillNaturalFragment(
             dialog.dismiss()
         }
         mEdit.setOnClickListener {
-            viewModel.onEdit()
+//            viewModel.onEdit()
             if (type != null)
                 addNewListner?.openNewUser(type)
             dialog.dismiss()
@@ -110,5 +127,6 @@ class BillNaturalFragment(
         dialog.show()
 
     }
+
 
 }

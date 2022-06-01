@@ -5,9 +5,9 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/logo"
-        android:layout_width="@dimen/size_48"
-        android:layout_height="@dimen/size_48"
-        android:layout_margin="@dimen/size_12"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_margin="@dimen/_10sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_notification_item_logo" />
 
@@ -31,7 +31,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/inter_bold_700"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/_11sdp" />
 
             <TextView
                 android:id="@+id/schedule"
@@ -41,7 +41,7 @@
                 android:fontFamily="@font/inter_medium_500"
                 android:gravity="end"
                 android:textColor="@color/appPrimary"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/_10sdp" />
         </LinearLayout>
 
         <TextView
@@ -51,7 +51,7 @@
             android:layout_below="@id/mainLL"
             android:fontFamily="@font/inter_medium_500"
             android:textColor="@color/secondaryTextOnWhite"
-            android:textSize="@dimen/text_size_12" />
+            android:textSize="@dimen/_10sdp" />
     </RelativeLayout>
 
     <View

@@ -3,54 +3,52 @@
     android:id="@+id/item_country_rly"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/flag_holder_lly"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="@dimen/google_1x"
-        android:layout_marginRight="@dimen/google_1x"
-        android:gravity="center">
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:orientation="horizontal">
 
-        <!--<de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/flag_imv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:src="@drawable/flag_indonesia" />-->
+        <TextView
+            android:id="@+id/code_tv"
+            android:layout_width="@dimen/_55sdp"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/inter_medium_500"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_10sdp"
+            android:text="+9188"
+            android:textColor="@color/text_color" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <TextView
             android:id="@+id/flag_imv"
-            android:layout_width="@dimen/_15sdp"
-            android:layout_height="@dimen/_15sdp"
-            android:src="@drawable/flag_indonesia" />
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginHorizontal="@dimen/_3sdp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp" />
+
+        <TextView
+            android:id="@+id/country_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/inter_medium_500"
+            android:gravity="center_vertical"
+            android:text="@string/romania"
+            android:textColor="@color/text_color" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/country_name_tv"
+    <View
+        android:id="@+id/mView"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/flag_holder_lly"
-        android:gravity="center_vertical"
-        android:text="Indonesia (ID)"
-        android:textColor="@android:color/secondary_text_light" />
-
-    <TextView
-        android:id="@+id/code_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:gravity="center_vertical"
-        android:paddingStart="10dp"
-        android:paddingLeft="10dp"
-        android:paddingEnd="10dp"
-        android:paddingRight="10dp"
-        android:text="+91"
-        android:textColor="@android:color/secondary_text_light" />
+        android:layout_height="0.5dp"
+        android:layout_below="@id/linear"
+        android:layout_marginHorizontal="10dp"
+        android:background="@color/textInputBorderGray" />
 
 
 </RelativeLayout>

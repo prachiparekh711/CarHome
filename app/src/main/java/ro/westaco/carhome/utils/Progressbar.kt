@@ -34,5 +34,4 @@ open class Progressbar constructor(context: Context) : Dialog(context) {
         dialog?.dismiss()
     }
 
-
 }

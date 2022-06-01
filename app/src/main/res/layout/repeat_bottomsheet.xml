@@ -16,7 +16,7 @@
         android:id="@+id/mTopRL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/size_14"
+        android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:gravity="center_vertical">
 
@@ -24,10 +24,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="10dp"
-            android:layout_toLeftOf="@id/mBack"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
             android:text="@string/new_reminder_repeat"
+            android:layout_toLeftOf="@id/mBack"
             android:textColor="@color/textOnWhite"
             android:textSize="@dimen/_15sdp" />
 
@@ -35,8 +35,8 @@
             android:id="@+id/mBack"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_35sdp"
-            android:layout_alignParentRight="true"
             android:padding="@dimen/_8sdp"
+            android:layout_alignParentRight="true"
             android:src="@drawable/ic_close" />
     </RelativeLayout>
 
@@ -53,15 +53,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/mRepeatRec"
-        android:layout_marginStart="@dimen/size_32"
-        android:layout_marginTop="@dimen/size_32"
-        android:layout_marginEnd="@dimen/size_32"
-        android:layout_marginBottom="@dimen/size_32"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
         android:background="@drawable/cta_background"
         android:fontFamily="@font/manrope_semibold_600"
         android:gravity="center"
-        android:paddingVertical="@dimen/size_16"
+        android:paddingVertical="@dimen/_12sdp"
         android:text="@string/continue_txt"
         android:textColor="@color/textOnSolid"
-        android:textSize="@dimen/text_size_16" />
+        android:textSize="@dimen/_11sdp" />
 </RelativeLayout>

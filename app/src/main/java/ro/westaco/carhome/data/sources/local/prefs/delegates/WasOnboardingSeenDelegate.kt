@@ -6,6 +6,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 class WasOnboardingSeenDelegate : ReadWriteProperty<AppPreferencesDelegates, Boolean> {
+
     companion object {
         const val PREF_KEY_WAS_ONBOARDING_SEEN = "was_onboarding_seen"
     }

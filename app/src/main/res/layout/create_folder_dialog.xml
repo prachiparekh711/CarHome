@@ -13,14 +13,14 @@
         android:fontFamily="@font/inter_semibold_600"
         android:text="@string/create_new_category"
         android:textColor="@color/secondaryTextOnWhite"
-        android:textSize="@dimen/text_size_12" />
+        android:textSize="@dimen/_10sdp" />
 
     <EditText
         android:id="@+id/catName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
-        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_toLeftOf="@id/done"
         android:background="@drawable/auth_text_input_background"
@@ -28,11 +28,11 @@
         android:fontFamily="@font/inter_semibold_600"
         android:hint="@string/type_here"
         android:inputType="text"
-        android:paddingHorizontal="@dimen/size_16"
-        android:paddingVertical="@dimen/size_12"
+        android:paddingHorizontal="@dimen/_12sdp"
+        android:paddingVertical="@dimen/_10sdp"
         android:textColor="@color/textcolor"
         android:textColorHint="@color/hintOnWhite"
-        android:textSize="@dimen/text_size_14" />
+        android:textSize="@dimen/_11sdp" />
 
 
     <ImageView

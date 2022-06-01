@@ -8,14 +8,14 @@ import kotlinx.android.synthetic.main.fragment_d_m_car.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.Vehicle
 import ro.westaco.carhome.presentation.base.BaseFragment
+import ro.westaco.carhome.presentation.screens.data.cars.DataCarAdapter
 import ro.westaco.carhome.presentation.screens.home.HomeViewModel
-import ro.westaco.carhome.presentation.screens.settings.data.cars.CarsAdapter
 import ro.westaco.carhome.utils.Progressbar
 
 @AndroidEntryPoint
 class DMCarFragment : BaseFragment<HomeViewModel>(),
-    CarsAdapter.OnItemInteractionListener {
-    private lateinit var carAdapter: CarsAdapter
+    DataCarAdapter.OnItemInteractionListener {
+    private lateinit var carAdapter: DataCarAdapter
     var progressbar: Progressbar? = null
 
     companion object {
@@ -31,9 +31,9 @@ class DMCarFragment : BaseFragment<HomeViewModel>(),
 
     override fun initUi() {
         progressbar = Progressbar(requireContext())
-        progressbar!!.showPopup()
+        progressbar?.showPopup()
         carRV.layoutManager = LinearLayoutManager(context)
-        carAdapter = CarsAdapter(requireContext(), arrayListOf(), this)
+        carAdapter = DataCarAdapter(requireContext(), arrayListOf(), this, "HOME")
         carRV.adapter = carAdapter
     }
 
@@ -57,6 +57,14 @@ class DMCarFragment : BaseFragment<HomeViewModel>(),
                 viewModel.onEditCar(it)
             }
         }
+    }
+
+    override fun onBuyClick(item: Vehicle, service: String) {
+
+    }
+
+    override fun onDocClick(item: Vehicle, service: String) {
+
     }
 
 }

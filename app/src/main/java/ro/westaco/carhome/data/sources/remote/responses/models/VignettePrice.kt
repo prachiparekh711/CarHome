@@ -11,4 +11,9 @@ data class VignettePrice(
     @SerializedName("originalCurrency") val originalCurrency: String?,
     @SerializedName("paymentValue") val paymentValue: Double?,
     @SerializedName("paymentCurrency") val paymentCurrency: String?,
-) : Serializable
+) : Serializable {
+    override fun toString(): String {
+        return " $paymentValue"
+    }
+
+}

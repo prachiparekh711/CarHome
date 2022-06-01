@@ -22,7 +22,7 @@
                 android:id="@+id/back"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginStart="@dimen/size_16"
+                android:layout_marginStart="@dimen/_12sdp"
                 android:adjustViewBounds="true"
                 android:padding="@dimen/_5sdp"
                 android:src="@drawable/ic_back" />
@@ -35,14 +35,15 @@
                 android:fontFamily="@font/inter_semibold_600"
                 android:text="@string/documents"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_18" />
+                android:textSize="@dimen/_15sdp" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/home"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_alignParentRight="true"
-                android:layout_marginEnd="@dimen/size_16"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:visibility="invisible"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_account" />
 
@@ -58,7 +59,7 @@
                 android:id="@+id/close"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginStart="@dimen/size_16"
+                android:layout_marginStart="@dimen/_12sdp"
                 android:adjustViewBounds="true"
                 android:padding="@dimen/_5sdp"
                 android:src="@drawable/ic_close"
@@ -72,19 +73,20 @@
                 android:fontFamily="@font/inter_semibold_600"
                 android:text="@string/documents"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_18" />
+                android:textSize="@dimen/_15sdp" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/delete"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_alignParentRight="true"
-                android:layout_marginEnd="@dimen/size_16"
+                android:layout_marginEnd="@dimen/_12sdp"
                 android:adjustViewBounds="true"
                 android:padding="@dimen/_5sdp"
                 android:src="@drawable/ic_trash" />
 
         </RelativeLayout>
+
     </RelativeLayout>
 
     <TextView
@@ -97,7 +99,7 @@
         android:fontFamily="@font/raleway_bold_700"
         android:text="@string/empty_directory"
         android:textColor="@color/secondaryTextOnWhite"
-        android:textSize="@dimen/text_size_14"
+        android:textSize="@dimen/_11sdp"
         android:visibility="visible" />
 
     <LinearLayout
@@ -112,11 +114,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/size_12"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/raleway_bold_700"
             android:text="@string/categories"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mRecycler"
@@ -142,11 +144,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/size_12"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/raleway_bold_700"
             android:text="@string/documents"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mDocRecycler"
@@ -163,10 +165,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/size_16"
-        android:layout_marginTop="@dimen/size_16"
-        android:layout_marginEnd="@dimen/size_16"
-        android:layout_marginBottom="@dimen/size_16"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
         android:src="@drawable/ic_add_category" />
 
     <ImageView
@@ -175,7 +177,7 @@
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/size_16"
+        android:layout_margin="@dimen/_12sdp"
         android:background="@drawable/ic_history_bg"
         android:backgroundTint="@color/appPrimary"
         android:padding="@dimen/_10sdp"
@@ -201,23 +203,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginHorizontal="@dimen/size_32"
-            android:layout_marginTop="@dimen/size_16"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_12sdp"
             android:fontFamily="@font/raleway_bold_700"
             android:text="@string/empty_directory"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_32"
-            android:layout_marginTop="@dimen/size_12"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/raleway_bold_700"
             android:gravity="center_horizontal"
             android:text="@string/add_cat_or_doc"
             android:textColor="@color/secondaryTextOnWhite"
-            android:textSize="@dimen/text_size_12" />
+            android:textSize="@dimen/_10sdp" />
 
     </LinearLayout>
 

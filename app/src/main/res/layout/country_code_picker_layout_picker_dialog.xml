@@ -1,29 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dialog_rly"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="@string/select_country"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/secondary_text_light" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/country_dialog_lv"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/title_tv"
-        android:dividerHeight="2dp"
-        tools:listitem="@layout/country_code_picker" />
+        android:background="@color/white"
+        android:orientation="vertical">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/appPrimary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/textItems"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter_semibold_600"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/_5sdp"
+                android:paddingVertical="@dimen/_8sdp"
+                android:text="@string/selected_country_"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/_16sdp" />
+
+            <ImageView
+                android:id="@+id/mClose"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:gravity="center_vertical"
+                android:padding="@dimen/_8sdp"
+                android:src="@drawable/ic_close" />
+
+        </LinearLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/country_dialog_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_4sdp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

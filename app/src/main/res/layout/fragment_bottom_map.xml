@@ -19,15 +19,82 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="0dp"
             android:layout_marginTop="7dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="0dp"
             android:layout_marginBottom="7dp">
+
+            <RelativeLayout
+                android:id="@+id/mRelative_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:id="@+id/mText3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/manrope_semibold_600"
+                        android:textColor="@color/unselected"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <ImageView
+                        android:id="@+id/openFiltersImageView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="false"
+                        android:layout_alignParentBottom="false"
+                        app:srcCompat="@drawable/ic_filter" />
+
+                    <LinearLayout
+                        android:id="@+id/placeLL2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mText3"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginEnd="55dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_location_sym" />
+
+                        <TextView
+                            android:id="@+id/mLiveLocationBottomMap"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="3dp"
+                            android:fontFamily="@font/manrope_extrabold_800"
+                            android:singleLine="true"
+                            android:text="@string/no_location"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/_12sdp" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/mSearchRL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/mRelative_location"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/search_background">
 
                 <androidx.appcompat.widget.SearchView
@@ -48,22 +115,47 @@
             <RelativeLayout
                 android:id="@+id/mTab"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="52dp"
                 android:layout_below="@+id/mSearchRL"
-                android:layout_marginTop="7dp"
-                android:visibility="visible">
+                android:layout_marginTop="11dp"
+                android:background="#FAFAFB"
+                android:visibility="gone">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/appliedFiltersTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/textView"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toEndOf="@+id/textView"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="TextView"
+                    android:textColor="#3B5179"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/applied_filters"
+                    android:textColor="#3B5179"
+                    android:textSize="11sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_filters"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </LinearLayout>
+                    android:layout_below="@+id/textView"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="10dp" />
 
             </RelativeLayout>
 
@@ -79,7 +171,7 @@
         android:layout_below="@+id/mAppBar"
         android:background="@drawable/location_item_back">
 
-        <ro.westaco.carhome.presentation.screens.reminder.add_new.TouchEventInterceptorLayout
+        <ro.westaco.carhome.utils.TouchEventInterceptorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -87,7 +179,7 @@
                 android:id="@+id/recycler_item"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </ro.westaco.carhome.presentation.screens.reminder.add_new.TouchEventInterceptorLayout>
+        </ro.westaco.carhome.utils.TouchEventInterceptorLayout>
 
     </RelativeLayout>
 

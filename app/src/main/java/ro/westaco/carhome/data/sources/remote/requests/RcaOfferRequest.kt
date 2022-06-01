@@ -3,7 +3,7 @@ package ro.westaco.carhome.data.sources.remote.requests
 import com.google.gson.annotations.SerializedName
 import ro.westaco.carhome.data.sources.remote.responses.models.LegalPersonDetails
 import ro.westaco.carhome.data.sources.remote.responses.models.NaturalPersonForOffer
-import ro.westaco.carhome.data.sources.remote.responses.models.VehicleDetails
+import ro.westaco.carhome.data.sources.remote.responses.models.VehicleDetailsForOffer
 import java.io.Serializable
 
 data class RcaOfferRequest(
@@ -42,7 +42,7 @@ data class RcaOfferRequest(
     val driverSameAsOwner: Boolean? = null,
 
     @field:SerializedName("vehicle")
-    val vehicle: VehicleDetails? = null
+    val vehicle: VehicleDetailsForOffer? = null
 
 ) : Serializable {
 

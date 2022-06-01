@@ -13,8 +13,8 @@
         android:buttonTint="@color/ctaBackground"
         android:fontFamily="@font/inter_medium_500"
         android:paddingStart="@dimen/_10sdp"
-        android:textColor="@color/textOnWhiteAccentGray"
         android:textSize="@dimen/_11sdp"
+        android:textColor="@color/textOnWhiteAccentGray"
         tools:ignore="RtlSymmetry" />
 
 

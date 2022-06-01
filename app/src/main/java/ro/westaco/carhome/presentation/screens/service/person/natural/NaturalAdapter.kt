@@ -21,7 +21,6 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.responses.models.NaturalPerson
 import ro.westaco.carhome.di.ApiModule
-import ro.westaco.carhome.presentation.screens.service.person.BillingInfoViewModel.Companion.personID
 import java.util.*
 
 
@@ -58,7 +57,6 @@ class NaturalAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private var avatar: ImageView = itemView.findViewById(R.id.avatar)
-        private var tick_circle: ImageView = itemView.findViewById(R.id.tick_circle)
         private var tv_name: TextView = itemView.findViewById(R.id.tv_name)
         private var tv_f_l: TextView = itemView.findViewById(R.id.tv_f_l)
         private var li_address_missing: LinearLayout =
@@ -66,10 +64,11 @@ class NaturalAdapter(
         private var tv_address: TextView = itemView.findViewById(R.id.tv_address)
         private var check: AppCompatImageView = itemView.findViewById(R.id.tick_circle)
 
+        @SuppressLint("SetTextI18n")
         fun bind(item: NaturalPerson, position: Int) {
 
-            tv_name.text = "${item.firstName} ${item.lastName}"
-            val singlechar = "${item.firstName} ${item.lastName}"
+            tv_name.text = "${item.firstName ?: ""} ${item.lastName ?: ""}"
+            val singleChar = "${item.firstName} ${item.lastName}"
 
             if (item.logoHref != null) {
 
@@ -83,8 +82,6 @@ class NaturalAdapter(
                         .addHeader("Authorization", "Bearer ${appPreferences.token}").build()
                 )
 
-
-                val options = RequestOptions()
                 avatar.clipToOutline = true
 
                 var requestOptions = RequestOptions()
@@ -94,19 +91,19 @@ class NaturalAdapter(
                     .load(glideUrl)
                     .apply(requestOptions)
                     .into(avatar)
-            } else {
 
+            } else {
 
                 tv_f_l.visibility = View.VISIBLE
                 avatar.visibility = View.INVISIBLE
-                tv_f_l.text = singlechar.replace(
+                tv_f_l.text = singleChar.replace(
                     "^\\s*([a-zA-Z]).*\\s+([a-zA-Z])\\S+$".toRegex(),
                     "$1$2"
                 ).uppercase(Locale.getDefault())
             }
 
 
-            if (item.fullAddress.isNullOrEmpty()) {
+            if (item.email.isNullOrEmpty()) {
 
                 li_address_missing.visibility = View.VISIBLE
                 tv_address.visibility = View.GONE
@@ -115,7 +112,7 @@ class NaturalAdapter(
 
                 li_address_missing.visibility = View.GONE
                 tv_address.visibility = View.VISIBLE
-                tv_address.text = item.fullAddress
+                tv_address.text = item.email
 
             }
 
@@ -124,11 +121,11 @@ class NaturalAdapter(
             itemView.setOnClickListener {
                 val prevSelectedPos = selectedPos
                 selectedPos = position
-                personID = naturalPersons[selectedPos].guid
                 onListener.onItemListUsers(item)
                 notifyItemChanged(prevSelectedPos)
                 notifyItemChanged(selectedPos)
             }
+
         }
     }
 

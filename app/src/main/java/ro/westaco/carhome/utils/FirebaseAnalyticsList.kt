@@ -10,7 +10,6 @@ class FirebaseAnalyticsList {
         const val LOGIN_ANDROID = "login_And"
         const val NEW_CAR_ADDED_ANDROID = "new_car_added_And"
         const val LOGOUT_ANDROID = "logout_And"
-        const val ACCESS_LOCATION_ANDROID = "access_location_And"
         const val APP_LEAVES_ANDROID = "app_leaves_And"
         const val ACCESS_ROVINIETA_ANDROID = "access_rovinieta_And"
         const val ACCESS_BRIDGE_TAX_ANDROID = "access_bridge_tax_And"
@@ -42,13 +41,13 @@ class FirebaseAnalyticsList {
         const val ACCESS_PROFILE_COMPLETE_CARD = "access_complete_profile_home_And"
         const val ACCESS_CAR_COMPLETE_CARD = "access_complete_car_home_And"
         const val ACCESS_EXCITINGOFFERS_HOME = "access_exciting_offers_home_And"
-        const val ACCESS_BRIDGE_TAX_HOME = "access_bridge_tax_home_And"
         const val ACCESS_ROVINIETA_HOME = "access_rovinieta_home_And"
         const val ACCESS_INSURANCE_HOME = "access_insurance_home_And"
         const val ACCESS_CAR_HOME = "access_carlist_home_And"
         const val ACCESS_PERSON_HOME = "access_companies_home_And"
         const val ACCESS_DOCUMENT_HOME = "access_document_home_And"
         const val ACCESS_HISTORY_HOME = "access_history_home_And"
+        const val ACCESS_OFFER_HOME = "access_exciting_offers_home_And"
 
         /**
          * Insurance

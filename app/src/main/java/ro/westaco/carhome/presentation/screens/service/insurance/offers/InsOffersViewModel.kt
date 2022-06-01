@@ -1,13 +1,11 @@
 package ro.westaco.carhome.presentation.screens.service.insurance.offers
 
+import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
-import okhttp3.ResponseBody
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.RcaOfferRequest
 import ro.westaco.carhome.data.sources.remote.responses.models.RcaDurationItem
@@ -17,13 +15,11 @@ import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
 import ro.westaco.carhome.presentation.screens.service.insurance.offers.InsOfferDetailsFragment.Companion.ARG_OFFERDETAIL
 import ro.westaco.carhome.presentation.screens.service.insurance.summary.SummaryFragment
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,9 +31,9 @@ class InsOffersViewModel @Inject constructor(
     /*
    ** User Interaction
    */
+
     var durationData = MutableLiveData<ArrayList<RcaDurationItem>>()
     var rcaOfferResponseData = MutableLiveData<RcaOfferResponse>()
-    var rcaOfferPID: MutableLiveData<ResponseBody> = MutableLiveData()
     var mFirebaseAnalytics = FirebaseAnalytics.getInstance(app)
 
     override fun onFragmentCreated() {
@@ -57,6 +53,7 @@ class InsOffersViewModel @Inject constructor(
         uiEventStream.value = UiEvent.HideKeyboard
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     fun fetchDefaultData() {
         api.getRcaDuration()
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -70,13 +67,12 @@ class InsOffersViewModel @Inject constructor(
             )
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     internal fun onChangeDuration(request: RcaOfferRequest) {
 
-        Log.e("request", request.toString())
         api.getRcaOffers(request)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
-                Log.e("response", resp.data.toString())
                 rcaOfferResponseData.value = resp.data
             }, {
                 //   it.printStackTrace()
@@ -91,7 +87,8 @@ class InsOffersViewModel @Inject constructor(
             .subscribe({ resp ->
                 uiEventStream.value =
                     UiEvent.Navigation(
-                        NavAttribs(Screen.InsuranceOfferDetail,
+                        NavAttribs(
+                            Screen.InsuranceOfferDetail,
                             object : BundleProvider() {
                                 override fun onAddArgs(bundle: Bundle?): Bundle {
                                     return Bundle().apply {
@@ -130,37 +127,6 @@ class InsOffersViewModel @Inject constructor(
             }, {
                 //   it.printStackTrace()
             })
-    }
-
-    internal fun onViewPID(insurer: String, type: String) {
-        api.getInsurancePID(insurer, type)
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe { new ->
-                rcaOfferPID.value = new
-                if (rcaOfferPID.value != null) {
-                    val buffer = ByteArray(8192)
-                    var bytesRead: Int? = null
-                    val output = ByteArrayOutputStream()
-                    while (rcaOfferPID.value?.byteStream()?.read(buffer).also {
-                            if (it != null) {
-                                bytesRead = it
-                            }
-                        } != -1) {
-                        bytesRead?.let { it1 -> output.write(buffer, 0, it1) }
-                    }
-                    openPDF(output.toByteArray())
-                }
-            }
-    }
-
-    internal fun openPDF(data: ByteArray) {
-
-        val intent = Intent(app, PdfActivity::class.java)
-        intent.putExtra(PdfActivity.ARG_DATA, data)
-        intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
-        uiEventStream.postValue(
-            UiEvent.OpenIntent(intent, false)
-        )
     }
 
 

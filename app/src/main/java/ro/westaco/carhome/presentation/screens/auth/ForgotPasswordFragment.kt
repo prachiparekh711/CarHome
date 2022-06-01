@@ -6,7 +6,6 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
@@ -14,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_forgot_password.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.presentation.base.BaseFragment
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 
 @AndroidEntryPoint
 class ForgotPasswordFragment : BaseFragment<ForgotPasswordViewModel>() {
@@ -65,27 +65,6 @@ class ForgotPasswordFragment : BaseFragment<ForgotPasswordViewModel>() {
 
             viewModel.onResend(email.text.toString())
 
-//            if (firebaseAuth.currentUser?.isEmailVerified == true) {
-//                Toast.makeText(
-//                    requireContext(),
-//                    resources.getString(R.string.email_verified),
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//
-//                viewModel.login()
-//            } else {
-//                user?.sendEmailVerification(actionCodeSettings)
-//                    ?.addOnCompleteListener { task ->
-//                        if (task.isSuccessful) {
-//                            Toast.makeText(
-//                                requireContext(),
-//                                resources.getString(R.string.email_sent),
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-//                    }
-//            }
-
         }
 
         rememberPassword.setOnClickListener {
@@ -102,11 +81,7 @@ class ForgotPasswordFragment : BaseFragment<ForgotPasswordViewModel>() {
                 this.startActivity(intent)
 
             } catch (e: ActivityNotFoundException) {
-                Toast.makeText(
-                    requireActivity(),
-                    resources.getString(R.string.no_email_app),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorInfo(requireContext(), getString(R.string.no_email_app))
             }
 
 //            viewModel.onBack()
@@ -170,10 +145,8 @@ class ForgotPasswordFragment : BaseFragment<ForgotPasswordViewModel>() {
 
     override fun setObservers() {
         viewModel.actionStream.observe(viewLifecycleOwner) {
-            when (it) {
-                ForgotPasswordViewModel.ACTION.ShowSuccessState -> succcessState.visibility =
-                    View.VISIBLE
-            }
+            if (it == ForgotPasswordViewModel.ACTION.ShowSuccessState) succcessState.visibility =
+                View.VISIBLE
         }
 
     }

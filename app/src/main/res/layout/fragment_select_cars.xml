@@ -13,14 +13,14 @@
         android:id="@+id/mAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/size_18">
+        android:layout_marginBottom="@dimen/_12sdp">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/back"
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
-            android:layout_marginStart="@dimen/size_16"
-            android:layout_marginTop="@dimen/size_16"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
             android:adjustViewBounds="true"
             android:padding="@dimen/_2sdp"
             android:src="@drawable/ic_back"
@@ -34,7 +34,7 @@
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/data_tab_cars"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_18"
+            android:textSize="@dimen/_15sdp"
             app:layout_constraintBottom_toBottomOf="@+id/back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,9 +55,9 @@
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:fontFamily="@font/inter_semibold_600"
-            android:text="Added cars"
+            android:text="@string/added_cars"
             android:textColor="#1A1341"
-            android:textSize="@dimen/text_size_14" />
+            android:textSize="@dimen/_11sdp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_cars_list"

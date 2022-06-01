@@ -12,7 +12,7 @@
             android:layout_width="@dimen/_50sdp"
             android:layout_height="5dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/size_10"
+            android:layout_marginTop="@dimen/_10sdp"
             android:background="@drawable/rounded_rect_100_greyscale"
             android:visibility="visible" />
 
@@ -20,22 +20,22 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_16"
-            android:layout_marginTop="@dimen/size_18"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/diff_cat_title"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_16"
-            android:layout_marginTop="@dimen/size_10"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/diff_cat_subtitle"
             android:textColor="@color/textOnWhiteAccentGray"
-            android:textSize="@dimen/text_size_13"
+            android:textSize="@dimen/_10sdp"
 
             />
 
@@ -47,7 +47,7 @@
                 android:id="@+id/categoryET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_10"
+                android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginVertical="@dimen/_8sdp"
                 android:background="@drawable/auth_text_input_background"
                 android:fontFamily="@font/inter_medium_500"
@@ -69,10 +69,10 @@
             android:background="@drawable/cta_background"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/submit"
             android:textColor="@color/textOnSolid"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
     </LinearLayout>
 
 

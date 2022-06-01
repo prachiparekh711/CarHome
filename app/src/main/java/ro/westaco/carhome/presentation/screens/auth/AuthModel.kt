@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.AuthResult
@@ -12,10 +13,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.json.JSONObject
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
+import ro.westaco.carhome.data.sources.remote.requests.DeviceTokenRequest
 import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
@@ -111,7 +112,6 @@ class AuthModel @Inject constructor(
                 actionStream.value = ACTION.UserSuccess
 //                Do not uncomment
 //                uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Dashboard))
-
                 uiEventStream.postValue(
                     UiEvent.OpenIntent(
                         Intent(app, MainActivity::class.java),
@@ -254,20 +254,23 @@ class AuthModel @Inject constructor(
 
     }
 
-    internal fun registerDevice() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener {
-            if (!it.isSuccessful) {
-                return@addOnCompleteListener
+    private fun registerDevice() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("TAG", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
             }
-            val token = it.result //this is the token retrieved
-            val paramObject = JSONObject()
-            paramObject.put("deviceToken", token)
-            api.registerDevice(paramObject.toString())
+
+            // Get new FCM registration token
+            val token = task.result
+            val request = DeviceTokenRequest(token)
+            api.registerDevice(request)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                 }, {
                 })
-        }
+            // Log and toast
+        })
 
     }
 
@@ -300,12 +303,10 @@ class AuthModel @Inject constructor(
 
 //            uiEventStream.value = UiEvent.ShowToast(R.string.new_car_error)
 
-            firebaseAuth.currentUser?.getIdToken(true)?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+            firebaseAuth.currentUser?.getIdToken(true)?.addOnCompleteListener { taskResult ->
+                if (taskResult.isSuccessful) {
                     // save Firebase token
-                    appPreferences.token = task.result.token.toString()
-//                    Log.e("token1", appPreferences.token)
-
+                    appPreferences.token = taskResult.result.token.toString()
                     uiEventStream.postValue(
                         UiEvent.OpenIntent(
                             Intent(app, EmailVerificationActivity::class.java), false

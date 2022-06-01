@@ -27,10 +27,10 @@ class ApiModule {
     /*
     ** Api
     */
+
     @Provides
     @Singleton
     internal fun providePostcardApi(retrofit: Retrofit) = retrofit.create(CarHomeApi::class.java)
-
 
     @Provides
     @Singleton

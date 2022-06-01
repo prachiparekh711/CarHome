@@ -7,6 +7,7 @@
         android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mConstraint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white">
@@ -14,38 +15,112 @@
 
             <View
                 android:id="@+id/indicator"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="5dp"
-                android:layout_marginTop="@dimen/size_10"
-                android:background="@drawable/rounded_rect_100_greyscale"
+                android:background="@color/appPrimary"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="0.2" />
 
-            <TextView
-                android:id="@+id/title"
+            <LinearLayout
+                android:id="@+id/mLinearNew"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_18"
-                android:fontFamily="@font/inter_semibold_600"
-                android:text="@string/select_duration"
-                android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_16"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:gravity="center"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/indicator" />
+                app:layout_constraintTop_toBottomOf="@+id/indicator">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/inter_semibold_600"
+                    android:text="@string/select_duration"
+                    android:textColor="@color/textOnWhite"
+                    android:textSize="@dimen/_16sdp" />
+
+                <ImageView
+                    android:id="@+id/mClose"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_close"
+                    app:layout_constraintBottom_toBottomOf="@id/title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/title" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/title2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_12sdp"
+                android:fontFamily="@font/inter_medium_500"
+                android:text="@string/choose_the_option_that_fits_for_you"
+                android:textColor="@color/skip"
+                android:textSize="@dimen/_10sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mLinearNew" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_10sdp"
-                app:layout_constraintTop_toBottomOf="@+id/title" />
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                app:layout_constraintTop_toBottomOf="@+id/title2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/mLinear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/mConstraint"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_weight="1"
+                android:fontFamily="@font/manrope_semibold_600"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_5sdp"
+                android:text="@string/cancel"
+                android:textColor="@color/textOnWhiteAccentGray"
+                android:textSize="@dimen/_11sdp" />
+
+            <TextView
+                android:id="@+id/mContinue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_weight="1.8"
+                android:background="@drawable/save_background"
+                android:fontFamily="@font/manrope_semibold_600"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_12sdp"
+                android:text="@string/continue_txt"
+                android:textColor="@color/textOnSolid"
+                android:textSize="@dimen/_11sdp" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

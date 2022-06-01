@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.LegalPerson
 import ro.westaco.carhome.data.sources.remote.responses.models.NaturalPerson
 import ro.westaco.carhome.data.sources.remote.responses.models.VerifyRcaPerson
 import ro.westaco.carhome.presentation.screens.service.insurance.adapter.MyViewPagerAdapter
+import ro.westaco.carhome.presentation.screens.service.insurance.init.InsuranceViewModel
 
 
 class SelectUserFragment(
@@ -34,6 +35,7 @@ class SelectUserFragment(
     private lateinit var viewPager: ViewPager
 
     companion object {
+
         var ownerNaturalItem: NaturalPerson? = null
         var ownerLegalItem: LegalPerson? = null
         var userNaturalItem: NaturalPerson? = null
@@ -62,22 +64,23 @@ class SelectUserFragment(
 
     interface AddNewUserView {
         fun openNewUser(type: String?)
+        fun openEditUser(type: String?)
     }
 
     override fun onResume() {
         super.onResume()
-        if (type == "DRIVER_NEW")
+        if (type == "DRIVER_NEW" || type == "DRIVER") {
             viewModel.verifyNaturalPerson("DRIVER")
-        else
+        } else {
             viewModel.verifyNaturalPerson(type)
-        viewModel.verifyLegalPerson(type)
+            viewModel.verifyLegalPerson(type)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity()).get(InsuranceViewModel::class.java)
-
 
     }
 
@@ -165,11 +168,7 @@ class SelectUserFragment(
                         ownerListener?.onContinueOwner(ownerNaturalItem, ownerLegalItem)
                         dismiss()
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            requireContext().resources.getString(R.string.select_person),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showDialog(getString(R.string.select_person))
                     }
                 }
                 "USER" -> {
@@ -177,11 +176,7 @@ class SelectUserFragment(
                         userListener?.onContinueUser(userNaturalItem, userLegalItem)
                         dismiss()
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            requireContext().resources.getString(R.string.select_person),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showDialog(getString(R.string.select_person))
                     }
                 }
                 "DRIVER" -> {
@@ -189,11 +184,7 @@ class SelectUserFragment(
                         driverListner?.onContinueDriver(driverNaturalItem)
                         dismiss()
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            requireContext().resources.getString(R.string.select_person),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showDialog(getString(R.string.select_person))
                     }
                 }
                 "DRIVER_NEW" -> {
@@ -201,11 +192,9 @@ class SelectUserFragment(
                         newDriverListner?.onContinueDriverNew(driverNewNaturalItem)
                         dismiss()
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            requireContext().resources.getString(R.string.select_person),
-                            Toast.LENGTH_SHORT
-                        ).show()
+
+                        showDialog(getString(R.string.select_person))
+
                     }
                 }
             }
@@ -213,6 +202,14 @@ class SelectUserFragment(
 
         return myview
 
+    }
+
+    fun showDialog(massage: String) {
+        MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+            .setTitle(getString(R.string.information_items_))
+            .setMessage(massage)
+            .setPositiveButton("Ok", null)
+            .show()
     }
 
 

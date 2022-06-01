@@ -1,6 +1,7 @@
 package ro.westaco.carhome.data.sources.remote.responses.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Documents(
 
@@ -15,6 +16,7 @@ data class Documents(
 
     @field:SerializedName("rows")
     val rows: List<RowsItem>? = null
+
 )
 
 data class RowsItem(
@@ -48,4 +50,4 @@ data class RowsItem(
 
     @field:SerializedName("tagNames")
     val tagNames: List<Any?>? = null
-)
+) : Serializable

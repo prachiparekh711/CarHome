@@ -1,201 +1,117 @@
 package ro.westaco.carhome.presentation.screens.service.person
 
-import android.annotation.TargetApi
-import android.app.AlertDialog
-import android.os.Build
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.lifecycle.Lifecycle
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_billing_information.*
-import kotlinx.android.synthetic.main.fragment_data.back
-import kotlinx.android.synthetic.main.fragment_data.home
-import kotlinx.android.synthetic.main.fragment_data.pager
-import kotlinx.android.synthetic.main.fragment_data.tabs
 import ro.westaco.carhome.R
-import ro.westaco.carhome.data.sources.remote.responses.models.PaymentResponse
-import ro.westaco.carhome.data.sources.remote.responses.models.Vehicle
-import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.screens.settings.data.DataFragment
-import ro.westaco.carhome.utils.ViewUtils
+import ro.westaco.carhome.data.sources.remote.responses.models.LegalPerson
+import ro.westaco.carhome.data.sources.remote.responses.models.NaturalPerson
+import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.summary.BridgeTaxSummaryViewModel
 
-@AndroidEntryPoint
-class BillingInformationFragment : BaseFragment<BillingInfoViewModel>() {
-
-    companion object {
-        const val ARG_GUID = "arg_guid"
-        const val ARG_CAR = "arg_car"
-        const val ARG_OF = "arg_of"
-        const val INDEX = "arg_index"
-        var index = 0
-    }
+class BillingInformationFragment(
+    var listener: OnServicePersonListener,
+    var newListener: AddNewPersonList,
+    var type: String
+) :
+    BottomSheetDialogFragment() {
 
     var adapter: BillingPagerAdapter? = null
-    var guidModel: PaymentResponse? = null
-    var carModel: Vehicle? = null
-    var arg_of: String? = null
+    lateinit var viewModel: BridgeTaxSummaryViewModel
+    private lateinit var bottomSheet: ViewGroup
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
+    private lateinit var viewPager: ViewPager
 
-    override fun getContentView() = R.layout.fragment_billing_information
+    companion object {
+        var naturalItem: NaturalPerson? = null
+        var legalItem: LegalPerson? = null
+    }
 
-    override fun initUi() {
+    interface AddNewPersonList {
+        fun openNewPerson(type: String?)
+    }
 
-        back.setOnClickListener {
-            viewModel.onBack()
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        home.setOnClickListener {
-            viewModel.onMain()
-        }
+        viewModel = ViewModelProvider(requireActivity()).get(BridgeTaxSummaryViewModel::class.java)
 
-        tabs.addTab(tabs.newTab().setText(getString(R.string.natural_person)))
-        tabs.addTab(tabs.newTab().setText(getString(R.string.legal_person)))
+    }
 
-        adapter = BillingPagerAdapter(childFragmentManager)
-        pager.adapter = adapter
-        setTitle(DataFragment.index)
-        pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
+    override fun onCreateView(
 
-        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
 
+        val myView: View = inflater.inflate(R.layout.fragment_billing_information, container, false)
+        val tabLayout = myView.findViewById<TabLayout>(R.id.tabs)
+        val mClose = myView.findViewById<ImageView>(R.id.close)
+        val mDissmiss = myView.findViewById<TextView>(R.id.dissmiss)
+        val cta = myView.findViewById<TextView>(R.id.cta)
+        viewPager = myView.findViewById(R.id.newPage)
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.natural_person)))
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.legal_person)))
+        tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+
+        val adapter = BillingPagerAdapter(childFragmentManager, listener, type, newListener)
+        viewPager.adapter = adapter
+
+        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                pager.currentItem = tab.position
-                setTitle(tab.position)
+                viewPager.currentItem = tab.position
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
+        mClose.setOnClickListener { dismiss() }
+        mDissmiss.setOnClickListener { dismiss() }
 
-        arguments?.let {
-            guidModel = it.getSerializable(ARG_GUID) as PaymentResponse
-            carModel = it.getSerializable(ARG_CAR) as Vehicle?
-            index = it.getInt(INDEX)
-            arg_of = it.getString(ARG_OF)
-            pager.setCurrentItem(index, true)
-            tabs.getTabAt(index)?.select()
+        cta.setOnClickListener {
+            listener.onPersonChange(naturalItem = naturalItem, legalItem = legalItem)
+            dismiss()
         }
 
-        cta_next.setOnClickListener {
-            guidModel?.guid?.let { it1 -> viewModel.onNextClick(it1) }
-        }
-
-        tv_previous.setOnClickListener {
-            viewModel.onBack()
-        }
+        return myView
     }
 
-    override fun setObservers() {
-        viewModel.initTransectionData.observe(viewLifecycleOwner) { model ->
-            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
 
-                if (model != null) {
-                    if (model.warnings.isNullOrEmpty()) {
-                        model.html?.let {
+    interface OnServicePersonListener {
+        fun onPersonChange(naturalItem: NaturalPerson?, legalItem: LegalPerson?)
+    }
 
-                            showPurchaseBottomSheetDialog(
-                                model,
-                                vehicle = carModel
-                            )
-                        }
-                    }
-                } else {
-                    var warning = ""
-                    if (model?.warnings != null) {
-                        for (i in model.warnings) {
-                            warning += i + "\n"
-                        }
-
-                        showPurchaseWarningsDialog(
-                            model, warning
-                        )
-
-                    }
+    override fun onStart() {
+        super.onStart()
+        bottomSheet =
+            dialog?.findViewById(com.google.android.material.R.id.design_bottom_sheet) as ViewGroup // notice the R root package
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
+        bottomSheetBehavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(view: View, i: Int) {
+                if (BottomSheetBehavior.STATE_HIDDEN == i) {
+                    dismiss()
                 }
             }
 
-        }
-    }
+            override fun onSlide(view: View, v: Float) {}
+        })
 
-    private var purchaseDialog: AlertDialog? = null
-
-    private fun showPurchaseWarningsDialog(model: PaymentResponse, warning: String) {
-        purchaseDialog?.dismiss()
-        purchaseDialog = AlertDialog.Builder(requireContext(), R.style.DialogTheme).create()
-        purchaseDialog?.setMessage(warning)
-        purchaseDialog?.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
-        purchaseDialog?.setButton(AlertDialog.BUTTON_POSITIVE, "OK") { dialog, _ ->
-            dialog.dismiss()
-            carModel?.let { showPurchaseBottomSheetDialog(model, it) }
-        }
-        purchaseDialog?.show()
-    }
-
-    private fun showPurchaseBottomSheetDialog(model: PaymentResponse, vehicle: Vehicle?) {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(R.layout.bottom_sheet_purchase)
-        var navigated = false
-
-        val webView = bottomSheetDialog.findViewById<WebView>(R.id.webView)
-        webView?.clearHistory()
-
-        webView?.settings?.javaScriptEnabled = true
-        webView?.settings?.javaScriptCanOpenWindowsAutomatically = true
-        webView?.settings?.loadsImagesAutomatically = true
-
-        webView?.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(webView: WebView, url: String): Boolean {
-                return shouldOverrideUrlLoading(url)
-            }
-
-            @TargetApi(Build.VERSION_CODES.N)
-            override fun shouldOverrideUrlLoading(
-                webView: WebView,
-                request: WebResourceRequest,
-            ): Boolean {
-                val uri = request.url
-                return shouldOverrideUrlLoading(uri.toString())
-            }
-
-            private fun shouldOverrideUrlLoading(url: String): Boolean {
-                return if (url.contains("payment-done")) {
-                    if (!navigated) {
-                        navigated = true
-                        arg_of?.let { viewModel.onPaymentSuccess(model, arg_of = it) }
-                    }
-                    bottomSheetDialog.dismiss()
-                    true
-                } else {
-                    false
-                }
-            }
-
-        }
-
-        model.html?.replace("&#39;", "")
-            ?.let { webView?.loadData(it, "text/html; charset=UTF-8", null) }
-
-        bottomSheetDialog.findViewById<View>(R.id.dismiss)?.setOnClickListener {
-            bottomSheetDialog.dismiss()
-        }
-
-        val parentLayout =
-            bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-        parentLayout?.let { it ->
-            val behaviour = BottomSheetBehavior.from(it)
-            ViewUtils.setViewHeightAsWindowPercent(requireContext(), it, 85)
-            behaviour.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-
-        bottomSheetDialog.show()
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
     }
+
 
     override fun onResume() {
         super.onResume()

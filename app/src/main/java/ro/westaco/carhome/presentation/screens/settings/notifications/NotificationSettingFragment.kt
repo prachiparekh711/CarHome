@@ -59,7 +59,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
         oil_app_switch_button.setOnCheckedChangeListener(multiListener)
     }
 
-    val multiListener = object : SwitchButton.OnCheckedChangeListener {
+    private val multiListener = object : SwitchButton.OnCheckedChangeListener {
         override fun onCheckedChanged(view: SwitchButton?, isChecked: Boolean) {
             var channel: String? = null
             var type: String? = null
@@ -225,7 +225,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
         }
     }
 
-    fun rcaData(pref: NotificationPrefrences) {
+    private fun rcaData(pref: NotificationPrefrences) {
         val channels = pref.channels
         if (!channels.isNullOrEmpty()) {
 
@@ -245,7 +245,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
         }
     }
 
-    fun vignetteData(pref: NotificationPrefrences) {
+    private fun vignetteData(pref: NotificationPrefrences) {
         val channels = pref.channels
         if (!channels.isNullOrEmpty()) {
 
@@ -267,7 +267,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
 
     }
 
-    fun maintananceData(pref: NotificationPrefrences) {
+    private fun maintananceData(pref: NotificationPrefrences) {
         val channels = pref.channels
         if (!channels.isNullOrEmpty()) {
 
@@ -288,7 +288,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
 
     }
 
-    fun oilData(pref: NotificationPrefrences) {
+    private fun oilData(pref: NotificationPrefrences) {
         val channels = pref.channels
         if (!channels.isNullOrEmpty()) {
 

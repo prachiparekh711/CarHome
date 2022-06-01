@@ -1,5 +1,6 @@
 package ro.westaco.carhome.presentation.screens.settings
 
+import android.os.Handler
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
@@ -12,6 +13,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_settings.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.presentation.base.BaseFragment
+import ro.westaco.carhome.presentation.screens.main.MainActivity
+import ro.westaco.carhome.utils.DialogUtils
+import ro.westaco.carhome.utils.Progressbar
 
 
 //C- Redesign
@@ -22,15 +26,26 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
         const val TAG = "SettingsFragment"
     }
 
+    var progressbar: Progressbar? = null
     var dialogLogOut: BottomSheetDialog? = null
     override fun getContentView() = R.layout.fragment_settings
     private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun getStatusBarColor() =
-        ContextCompat.getColor(requireContext(), R.color.settingsHeaderBg)
+        ContextCompat.getColor(requireContext(), R.color.white)
 
     override fun initUi() {
         // Header options
+
+        progressbar = Progressbar(requireContext())
+        progressbar?.showPopup()
+
+        val info = requireContext().packageManager.getPackageInfo(
+            requireContext().packageName, 0
+        )
+        versionCode.text =
+            requireContext().resources.getString(R.string.versionName, info.versionName)
+
         profile.setOnClickListener {
             viewModel.onProfileClicked()
         }
@@ -65,7 +80,14 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
         }
 
         faq.setOnClickListener {
-            viewModel.onFaqClicked()
+            DialogUtils.showErrorInfo(
+                requireContext(),
+                requireContext().resources.getString(
+                    R.string.insurance_info,
+                    MainActivity.activeUser
+                )
+            )
+//            viewModel.onFaqClicked()
         }
 
         terms.setOnClickListener {
@@ -110,29 +132,36 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
                 viewModel.onLogoutClicked()
                 dialogLogOut?.dismiss()
             }
-
         }
+
+        Handler().postDelayed({
+            progressbar?.dismissPopup()
+        }, 500)
+
     }
 
     override fun setObservers() {
+
         viewModel.actionStream.observe(viewLifecycleOwner) {
-            when (it) {
-                is SettingsViewModel.ACTION.onLogout -> {
-                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.gcp_web_client_id))
-                        .requestEmail()
-                        .build()
 
-                    googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
-                    googleSignInClient.signOut()
-                    LoginManager.getInstance().logOut()
+            if (it is SettingsViewModel.ACTION.OnLogout) {
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.gcp_web_client_id))
+                    .requestEmail()
+                    .build()
 
-                    childFragmentManager.popBackStack(
-                        null,
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE
-                    )
-                }
+                googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+                googleSignInClient.signOut()
+                LoginManager.getInstance().logOut()
+
+                childFragmentManager.popBackStack(
+                    null,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
             }
         }
+
     }
+
+
 }

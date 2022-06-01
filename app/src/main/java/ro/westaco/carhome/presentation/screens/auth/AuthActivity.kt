@@ -13,7 +13,6 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.widget.TextView
@@ -53,6 +52,7 @@ import java.util.concurrent.Executor
 //C - Separate Auth Activity
 @AndroidEntryPoint
 class AuthActivity : BaseActivity<AuthModel>() {
+
 
     private var firebaseAuth = FirebaseAuth.getInstance()
 
@@ -101,7 +101,6 @@ class AuthActivity : BaseActivity<AuthModel>() {
 
     private fun intiUi() {
 
-
         val view = layoutInflater.inflate(R.layout.biometric_failure_layout, null)
         dialogError = BottomSheetDialog(this)
         dialogError?.setCancelable(false)
@@ -125,16 +124,19 @@ class AuthActivity : BaseActivity<AuthModel>() {
             finishAffinity()
         }
 
-        google.setOnClickListener {
-            viewModel.onGoogleAuth()
-        }
-
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.gcp_web_client_id))
             .requestEmail()
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        google.setOnClickListener {
+            googleSignInClient.signOut()
+            LoginManager.getInstance().logOut()
+            viewModel.onGoogleAuth()
+        }
+
 
         facebook.setOnClickListener {
             viewModel.onFacebookAuth()
@@ -175,7 +177,6 @@ class AuthActivity : BaseActivity<AuthModel>() {
 
         revealConfirmPassword.setOnClickListener {
             viewModel.onRevealConfirmPasswordClicked()
-//            requireActivity().onBackPressed()
         }
 
     }
@@ -448,8 +449,6 @@ class AuthActivity : BaseActivity<AuthModel>() {
 //        getString(R.string.terms_services)
         val termsStart = termsDescriptionSpannable.indexOf(termsStr)
 
-//        Log.e("spannable:", termsDescriptionSpannable.toString())
-//        Log.e("language:", AppPreferencesDelegates.get().language)
         if (AppPreferencesDelegates.get().language == resources.getString(R.string.english_lan)) {
 
 
@@ -571,8 +570,8 @@ class AuthActivity : BaseActivity<AuthModel>() {
 
         LoginManager.getInstance()
             .registerCallback(fbCallbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult) {
-                    handleFacebookAccessToken(loginResult.accessToken)
+                override fun onSuccess(result: LoginResult) {
+                    handleFacebookAccessToken(result.accessToken)
                 }
 
                 override fun onCancel() {
@@ -580,7 +579,6 @@ class AuthActivity : BaseActivity<AuthModel>() {
                 }
 
                 override fun onError(error: FacebookException) {
-                    Log.e("fb_error", error.message.toString())
                     viewModel.onFacebookLoginFailed()
                 }
             })

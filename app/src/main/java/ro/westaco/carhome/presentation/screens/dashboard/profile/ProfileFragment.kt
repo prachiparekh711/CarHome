@@ -2,15 +2,12 @@ package ro.westaco.carhome.presentation.screens.dashboard.profile
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.provider.DocumentsContract
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.airbnb.lottie.LottieAnimationView
@@ -18,32 +15,39 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_profile.*
-import okhttp3.ResponseBody
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.Attachments
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.Country
 import ro.westaco.carhome.data.sources.remote.responses.models.ProfileItem
+import ro.westaco.carhome.databinding.LogoOptionLayoutBinding
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.presentation.base.BaseActivity
+import ro.westaco.carhome.presentation.base.BaseActivity.Companion.profileLogoListner
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.common.DeleteDialogFragment
+import ro.westaco.carhome.presentation.screens.home.PdfActivity
+import ro.westaco.carhome.presentation.screens.main.MainActivity
 import ro.westaco.carhome.utils.CatalogUtils
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.FileUtil
+import ro.westaco.carhome.utils.FileUtil.Companion.checkCameraPermission
 import ro.westaco.carhome.utils.FileUtil.Companion.checkPermission
+import ro.westaco.carhome.utils.FileUtil.Companion.requestCamerasPermission
 import ro.westaco.carhome.utils.FileUtil.Companion.requestPermission
 import ro.westaco.carhome.utils.Progressbar
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 
 
 //C- Profile Section
 @AndroidEntryPoint
-class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
-
-    //    ProfiledetailsViewModel (S2)
+class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
+    BaseActivity.OnProfileLogoChangeListner {
 
     override fun getContentView() = R.layout.fragment_profile
 
@@ -54,20 +58,23 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
     var lottieAnimationView: LottieAnimationView? = null
     var countries: java.util.ArrayList<Country> = java.util.ArrayList()
     var licenseCatList: java.util.ArrayList<CatalogItem> = java.util.ArrayList()
-
-    companion object {
-        var profileId: Int? = null
-    }
+    var profileLogoExist = false
 
     override fun getStatusBarColor() = ContextCompat.getColor(requireContext(), R.color.white)
 
+    override fun onResume() {
+        super.onResume()
+        progressbar?.dismissPopup()
+    }
+
     override fun initUi() {
-        mContext = requireContext()
+
         progressbar = Progressbar(requireContext())
         progressbar?.showPopup()
         lottieAnimationView = lottieAnimation
         lottieAnimationView?.visibility = View.VISIBLE
         lblStepCount.text = requireContext().resources.getString(R.string.step_profile, 0, 0)
+
         back.setOnClickListener {
             viewModel.onBack()
         }
@@ -85,7 +92,6 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
             }
         }
 
-
         llUploadId.setOnClickListener {
             val result = checkPermission(requireContext())
             if (result) {
@@ -97,16 +103,9 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
 
         btnDeleteCertificate.setOnClickListener {
 
-            /*profileItem?.drivingLicenseAttachment?.id?.let { it1 ->
-                viewModel.onDeleteAttachment(
-                    it1,
-                    requireContext().getString(R.string.attchment_dl)
-                )
-            }*/
-
-            val DrivingLicenseDialog = DeleteDialogFragment()
-            DrivingLicenseDialog.layoutResId = R.layout.n_person_delete_doc
-            DrivingLicenseDialog.listener =
+            val drivingLicenseDialog = DeleteDialogFragment()
+            drivingLicenseDialog.layoutResId = R.layout.n_person_delete_doc
+            drivingLicenseDialog.listener =
                 object : DeleteDialogFragment.OnDialogInteractionListener {
                     override fun onPosClicked() {
 
@@ -117,18 +116,18 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
                             )
                         }
 
-                        DrivingLicenseDialog.dismiss()
+                        drivingLicenseDialog.dismiss()
                     }
                 }
 
-            DrivingLicenseDialog.show(childFragmentManager, DeleteDialogFragment.TAG)
+            drivingLicenseDialog.show(childFragmentManager, DeleteDialogFragment.TAG)
         }
 
         btnDeleteId.setOnClickListener {
 
-            val CNPDialog = DeleteDialogFragment()
-            CNPDialog.layoutResId = R.layout.n_person_delete_doc_id
-            CNPDialog.listener = object : DeleteDialogFragment.OnDialogInteractionListener {
+            val cnpDialog = DeleteDialogFragment()
+            cnpDialog.layoutResId = R.layout.n_person_delete_doc_id
+            cnpDialog.listener = object : DeleteDialogFragment.OnDialogInteractionListener {
                 override fun onPosClicked() {
 
                     profileItem?.identityDocumentAttachment?.id?.let { it1 ->
@@ -138,26 +137,61 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
                         )
                     }
 
-                    CNPDialog.dismiss()
+                    cnpDialog.dismiss()
                 }
             }
 
-            CNPDialog.show(childFragmentManager, DeleteDialogFragment.TAG)
+            cnpDialog.show(childFragmentManager, DeleteDialogFragment.TAG)
         }
 
         avatar.setOnClickListener {
-            val result = checkPermission(requireContext())
-            if (result) {
-                openGallery()
-            } else {
-                requestPermission(requireActivity())
-            }
+            logoOperationDialog()
         }
 
         delete.setOnClickListener {
             viewModel.onCloseAccount()
         }
     }
+
+    private fun logoOperationDialog() {
+        val bottomSheetDialog =
+            BottomSheetDialog(
+                requireActivity(),
+                R.style.BottomSheetStyle
+            )
+        val selectorBinding =
+            LogoOptionLayoutBinding.inflate(
+                LayoutInflater.from(
+                    requireActivity()
+                )
+            )
+        bottomSheetDialog.setContentView(
+            selectorBinding.root
+        )
+        bottomSheetDialog.show()
+
+        selectorBinding.delete.isVisible = profileLogoExist
+
+        selectorBinding.upload.setOnClickListener {
+            profileLogoListner = this
+            val result = checkCameraPermission(requireContext())
+            if (result) {
+                openCamera()
+            } else {
+                requestCamerasPermission(requireActivity())
+            }
+            bottomSheetDialog.dismiss()
+        }
+        selectorBinding.delete.setOnClickListener {
+            lottieAnimationView?.visibility = View.VISIBLE
+            viewModel.deleteLogo()
+            bottomSheetDialog.dismiss()
+        }
+        selectorBinding.Cancel.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+    }
+
 
     override fun setObservers() {
 //*        *** Do not remove this code(S2) ***
@@ -185,9 +219,9 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
 
         viewModel.profileLiveData?.observe(viewLifecycleOwner) { profileItem ->
             if (profileItem != null) {
+                MainActivity.profileItem = profileItem
                 this.profileItem = profileItem
 
-                profileId = profileItem.id
                 if (profileItem.stepDone != profileItem.stepTotal) {
                     lblStepCount.text = requireContext().resources.getString(
                         R.string.step_profile,
@@ -223,12 +257,8 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
 
                 val drivingLicense = profileItem.drivingLicense
                 drivingLicense?.licenseId?.let { lid.text = it }
-                drivingLicense?.issueDate?.let {
-                    lissue_date.text = viewModel.convertFromServerDate(it)
-                }
-                drivingLicense?.expirationDate?.let {
-                    exp_date.text = viewModel.convertFromServerDate(it)
-                }
+                lissue_date.text = drivingLicense?.issueDate
+                exp_date.text = drivingLicense?.expirationDate
 
                 //  (drivingLicenseAttachment) Object
                 dlAttachment = profileItem.drivingLicenseAttachment
@@ -255,22 +285,26 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
                 }
 
                 lblCertificate.setOnClickListener {
-                    dlAttachment?.href?.let { it ->
-                        progressbar?.showPopup()
-                        val baseUrl = ApiModule.BASE_URL_RESOURCES + it
-                        viewModel.fetchData(baseUrl)
+                    dlAttachment?.href?.let { it1 ->
+                        val url = ApiModule.BASE_URL_RESOURCES + it1
+                        val intent = Intent(requireContext(), PdfActivity::class.java)
+                        intent.putExtra(PdfActivity.ARG_DATA, url)
+                        intent.putExtra(PdfActivity.ARG_FROM, "DOCUMENT")
+                        requireContext().startActivity(intent)
                     }
                 }
 
                 lblId.setOnClickListener {
-                    idAttachment?.href?.let { it ->
-                        progressbar?.showPopup()
-                        val baseUrl = ApiModule.BASE_URL_RESOURCES + it
-                        viewModel.fetchData(baseUrl)
+                    idAttachment?.href?.let { it1 ->
+                        val url = ApiModule.BASE_URL_RESOURCES + it1
+                        val intent = Intent(requireContext(), PdfActivity::class.java)
+                        intent.putExtra(PdfActivity.ARG_DATA, url)
+                        intent.putExtra(PdfActivity.ARG_FROM, "DOCUMENT")
+                        requireContext().startActivity(intent)
                     }
                 }
 
-                cta.setOnClickListener {
+                editProfile.setOnClickListener {
                     viewModel.onEditAccount(profileItem)
                 }
 
@@ -291,108 +325,58 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
                             .format(DecodeFormat.PREFER_ARGB_8888)
                     )
                     .into(avatar)
+                profileLogoExist = true
+            } else {
+                profileLogoExist = false
             }
             lottieAnimationView?.visibility = View.GONE
-        }
 
-        viewModel.attachmentData.observe(viewLifecycleOwner) { attachmentData ->
-            progressbar?.dismissPopup()
-
-//            if (attachmentData != null) {
-//                val dir: File
-//                val root = Environment.getExternalStorageDirectory().absolutePath.toString()
-//                val myDir = File(root, "DCIM")
-//                myDir.mkdirs()
-//
-//                dir = File(myDir, context?.resources?.getString(R.string.app_name))
-//                if (!dir.exists()) {
-//                    dir.mkdirs()
-//                }
-//                saveFile(
-//                    attachmentData,
-//                    dir.absolutePath + "/Attachment_" + System.currentTimeMillis() + ".pdf"
-//                )
-//            }
         }
 
         viewModel.countryData.observe(viewLifecycleOwner) { countryData ->
-            this.countries = countryData
+            if (countryData != null) {
+                this.countries = countryData
+            }
         }
 
         viewModel.licenseCategoryData.observe(viewLifecycleOwner) { licenseCategoryData ->
-            this.licenseCatList = licenseCategoryData
-            val drivingLicense = profileItem?.drivingLicense
-            val categorylist = ArrayList<String>()
-            if (drivingLicense?.vehicleCategories?.isNotEmpty() == true) {
-                for (i in drivingLicense.vehicleCategories.indices) {
-                    val catelog = CatalogUtils.findById(
-                        licenseCategoryData,
-                        drivingLicense.vehicleCategories[i].toLong()
-                    )
-                    catelog?.name?.let { categorylist.add(it) }
-                }
-                categorylist.let { lcat.text = it.joinToString(", ") }
-            }
+            if (licenseCategoryData != null) {
+                this.licenseCatList = licenseCategoryData
 
+                val drivingLicense = profileItem?.drivingLicense
+                val categorylist = ArrayList<String>()
+                if (drivingLicense?.vehicleCategories?.isNotEmpty() == true) {
+                    for (i in drivingLicense.vehicleCategories.indices) {
+                        val catelog = CatalogUtils.findById(
+                            licenseCategoryData,
+                            drivingLicense.vehicleCategories[i].toLong()
+                        )
+                        catelog?.name?.let { categorylist.add(it) }
+                    }
+                    categorylist.sort()
+                    categorylist.let { lcat.text = it.joinToString(", ") }
+                }
+            }
         }
 
         viewModel.actionStream.observe(viewLifecycleOwner) {
             when (it) {
-                is ProfiledetailsViewModel.ACTION.onDeleteSuccess -> onDeleteSuccess(it.attachType)
-            }
-        }
-
-    }
-
-    fun saveFile(body: ResponseBody?, pathWhereYouWantToSaveFile: String): String {
-        if (body == null)
-            return ""
-        var input: InputStream? = null
-        try {
-            input = body.byteStream()
-            //val file = File(getCacheDir(), "cacheFileAppeal.srl")
-            val fos = FileOutputStream(pathWhereYouWantToSaveFile)
-            fos.use { output ->
-                val buffer = ByteArray(4 * 1024) // or other buffer size
-                var read: Int
-                while (input.read(buffer).also { read = it } != -1) {
-                    output.write(buffer, 0, read)
+                is ProfileDetailsViewModel.ACTION.OnDeleteSuccess -> onDeleteSuccess(it.attachType)
+                is ProfileDetailsViewModel.ACTION.OnDeleteLogo -> {
+                    lottieAnimationView?.visibility = View.GONE
+                    avatar.setImageDrawable(requireContext().resources.getDrawable(R.drawable.default_avatar))
                 }
-                output.flush()
             }
-            Toast.makeText(
-                requireContext(),
-                resources.getString(R.string.dwld_success),
-                Toast.LENGTH_SHORT
-            ).show()
-            return pathWhereYouWantToSaveFile
-        } catch (e: Exception) {
-            Toast.makeText(
-                requireContext(),
-                resources.getString(R.string.dwld_error),
-                Toast.LENGTH_SHORT
-            ).show()
-        } finally {
-            input?.close()
-
         }
-        return ""
+
     }
 
-    var mContext: Context? = null
-
-
-    fun openGallery() {
-        var imageUri: Uri? = null
-        val intent = Intent()
-        intent.action = Intent.ACTION_PICK
-        intent.type = "image/png"
-        intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, imageUri)
-        startActivityForResult(intent, 111)
+    private fun openCamera() {
+        CropImage.activity().setAllowFlipping(false).setAllowRotation(false).setAspectRatio(1, 1)
+            .setCropShape(CropImageView.CropShape.OVAL).start(requireActivity())
     }
 
     private fun callFileManagerForLicense() {
-
         try {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
@@ -416,9 +400,9 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
 
         if (requestCode == 101 && resultCode == Activity.RESULT_OK) {
             if (data != null && data.data != null) {
@@ -473,26 +457,6 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
         }
 
 
-        if (requestCode == 111 && resultCode == Activity.RESULT_OK) {
-            if (data != null && data.data != null) {
-
-                val selectedUri: Uri? = data.data
-                val selectedFile = selectedUri?.let {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        FileUtil.getFilePathFor11(requireContext(), it)
-                    } else {
-                        FileUtil.getPath(it, requireContext())
-                    }
-                }
-                if (selectedFile != null) {
-                    viewModel.onAddLogo(File(selectedFile))
-                }
-            }
-        }
-
-        if (requestCode == 1000 && resultCode == Activity.RESULT_OK) {
-            openGallery()
-        }
     }
 
     override fun onRequestPermissionsResult(
@@ -501,29 +465,24 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
         grantResults: IntArray
     ) {
         when (requestCode) {
-            200 -> if (grantResults.size > 0) {
-                val READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                val WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED
-                if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
-                    // perform action when allow permission success
+
+            201 -> if (grantResults.isNotEmpty()) {
+                val camera = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                if (camera) {
+                    openCamera()
                 } else {
-                    Toast.makeText(
+                    showErrorInfo(
                         requireContext(),
-                        requireContext().resources.getString(R.string.allow_permission),
-                        Toast.LENGTH_SHORT
+                        getString(R.string.crop_image_activity_no_permissions)
                     )
-                        .show()
                 }
             }
         }
     }
 
 
-    fun onDeleteSuccess(attachType: String) {
-        if (attachType.equals("DRIVING_LICENSE")) {
-            /*drivingLicenseTV?.isVisible = false
-            mDeleteDL?.isVisible = false
-            drivingLicenseUploadImg?.isVisible = true*/
+    private fun onDeleteSuccess(attachType: String) {
+        if (attachType == "DRIVING_LICENSE") {
             llUploadCertificate.visibility = View.VISIBLE
             llCertificate.visibility = View.GONE
         } else {
@@ -532,5 +491,14 @@ class ProfileFragment : BaseFragment<ProfiledetailsViewModel>() {
         }
     }
 
+    override fun onChangeLogo(uri: Uri) {
+        val selectedFile = uri.let {
+            FileUtil.getPath(it, requireContext())
+        }
+        if (selectedFile != null) {
+            lottieAnimationView?.visibility = View.VISIBLE
+            viewModel.onAddLogo(File(selectedFile))
+        }
+    }
 
 }

@@ -36,5 +36,13 @@ data class VehicleDetails(
     @SerializedName("brandName") val brandName: String? = null,
     @SerializedName("guid") val guid: String? = null
 
-) : Serializable
+) : Serializable {
+    override fun toString(): String {
+        return "VehicleDetails(id=$id, registrationCountryCode=$registrationCountryCode, licensePlate=$licensePlate, policyExpirationDate=$policyExpirationDate, vehicleCategory=$vehicleCategory, vehicleSubCategoryId=$vehicleSubCategoryId, vehicleSubCategoryName=$vehicleSubCategoryName, vehicleUsageType=$vehicleUsageType, vehicleUsageTypeName=$vehicleUsageTypeName, leasingCompany=$leasingCompany, vehicleBrand=$vehicleBrand, model=$model, vehicleIdentificationNumber=$vehicleIdentificationNumber, manufacturingYear=$manufacturingYear, maxAllowableMass=$maxAllowableMass, engineSize=$engineSize, enginePower=$enginePower, fuelTypeId=$fuelTypeId, noOfSeats=$noOfSeats, vehicleIdentityCard=$vehicleIdentityCard, vehicleEvents=$vehicleEvents, certificateAttachment=$certificateAttachment, otherAttachments=$otherAttachments, vignetteExpirationDate=$vignetteExpirationDate, vignetteAttachment=$vignetteAttachment, rcaAttachment=$rcaAttachment, brandName=$brandName, guid=$guid)"
+    }
+
+//    override fun toString(): String {
+//        return "VehicleDetails(id=$id, registrationCountryCode=$registrationCountryCode, licensePlate=$licensePlate, policyExpirationDate=$policyExpirationDate, vehicleCategory=$vehicleCategory, vehicleSubCategoryId=$vehicleSubCategoryId, vehicleSubCategoryName=$vehicleSubCategoryName, vehicleUsageType=$vehicleUsageType, vehicleUsageTypeName=$vehicleUsageTypeName, leasingCompany=$leasingCompany, vehicleBrand=$vehicleBrand, model=$model, vehicleIdentificationNumber=$vehicleIdentificationNumber, manufacturingYear=$manufacturingYear, maxAllowableMass=$maxAllowableMass, engineSize=$engineSize, enginePower=$enginePower, fuelTypeId=$fuelTypeId, noOfSeats=$noOfSeats, vehicleIdentityCard=$vehicleIdentityCard, vehicleEvents=$vehicleEvents, certificateAttachment=$certificateAttachment, otherAttachments=$otherAttachments, vignetteExpirationDate=$vignetteExpirationDate, vignetteAttachment=$vignetteAttachment, rcaAttachment=$rcaAttachment, brandName=$brandName, guid=$guid)"
+//    }
+}
 

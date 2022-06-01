@@ -48,7 +48,6 @@ class InsOfferDetailsAdapter(var context: Context) :
         private var mDriverName: TextView = itemView.findViewById(R.id.mDriverName)
         private var mDriverFirstName: TextView = itemView.findViewById(R.id.mDriverFirstName)
         private var mDriverLastName: TextView = itemView.findViewById(R.id.mDriverLastName)
-        private var mDriverSerialNo: TextView = itemView.findViewById(R.id.mDriverSerialNo)
         private var mDriverPIN: TextView = itemView.findViewById(R.id.mDriverPIN)
 
         fun onBind(position: Int) {
@@ -84,7 +83,6 @@ class InsOfferDetailsAdapter(var context: Context) :
         }
 
     }
-
     @SuppressLint("NotifyDataSetChanged")
     fun setItems(offerList: List<NaturalPersonDetails>?) {
         this.list.clear()

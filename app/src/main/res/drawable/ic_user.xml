@@ -4,17 +4,15 @@
     android:viewportWidth="42"
     android:viewportHeight="42">
     <path
-        android:fillAlpha="0.2"
-        android:fillColor="#5367FC"
-        android:pathData="M21,21m-21,0a21,21 0,1 1,42 0a21,21 0,1 1,-42 0"
-        android:strokeAlpha="0.2" />
+        android:fillColor="@color/appPrimary"
+        android:pathData="M21,21m-21,0a21,21 0,1 1,42 0a21,21 0,1 1,-42 0" />
     <group>
         <clip-path android:pathData="M21,21m-21,0a21,21 0,1 1,42 0a21,21 0,1 1,-42 0" />
         <path
-            android:fillColor="#5367FC"
+            android:fillColor="@color/white"
             android:pathData="M21,20.3333C24.6819,20.3333 27.6667,17.3486 27.6667,13.6667C27.6667,9.9848 24.6819,7 21,7C17.3181,7 14.3334,9.9848 14.3334,13.6667C14.3334,17.3486 17.3181,20.3333 21,20.3333Z" />
         <path
-            android:fillColor="#5367FC"
+            android:fillColor="@color/white"
             android:pathData="M21,24C9.9769,24 1,31.56 1,40.875C1,41.505 1.4841,42 2.1001,42H39.8999C40.5159,42 41,41.505 41,40.875C41,31.56 32.0231,24 21,24Z" />
     </group>
 </vector>

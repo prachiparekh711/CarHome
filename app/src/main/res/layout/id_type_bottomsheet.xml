@@ -16,7 +16,7 @@
         android:id="@+id/mTopRL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginHorizontal="@dimen/_12sdp"
         android:layout_marginTop="20dp">
 
         <TextView
@@ -26,7 +26,7 @@
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/id_type"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_18" />
+            android:textSize="@dimen/_15sdp" />
 
         <TextView
             android:id="@+id/title1"
@@ -36,7 +36,7 @@
             android:fontFamily="@font/inter_medium_500"
             android:text="@string/select_idtype"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_12" />
+            android:textSize="@dimen/_10sdp" />
 
         <ImageView
             android:id="@+id/mClose"
@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/mTypeRec"
-        android:layout_marginTop="@dimen/size_32"
+        android:layout_marginTop="@dimen/_20sdp"
         android:layout_marginBottom="@dimen/_15sdp"
         android:gravity="center"
         android:orientation="horizontal">
@@ -69,41 +69,41 @@
             android:id="@+id/mDismiss"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_24"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_weight="1"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
             android:paddingVertical="@dimen/_5sdp"
             android:text="@string/cancel"
             android:textColor="@color/textOnWhiteAccentGray"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <TextView
             android:id="@+id/cta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_24"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_weight="1.8"
             android:background="@drawable/save_background"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/continue_txt"
             android:textColor="@color/textOnSolid"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <!--            <TextView-->
         <!--                android:layout_width="match_parent"-->
         <!--                android:layout_height="wrap_content"-->
-        <!--                android:layout_marginHorizontal="@dimen/size_16"-->
-        <!--                android:layout_marginTop="@dimen/size_32"-->
+        <!--                android:layout_marginHorizontal="@dimen/_12sdp"-->
+        <!--                android:layout_marginTop="@dimen/_20sdp"-->
         <!--                android:background="@drawable/cta_background"-->
         <!--                android:fontFamily="@font/inter_bold_700"-->
         <!--                android:gravity="center"-->
-        <!--                android:paddingVertical="@dimen/size_16"-->
+        <!--                android:paddingVertical="@dimen/_12sdp"-->
         <!--                android:text="@string/continue_txt"-->
         <!--                android:textColor="@color/white"-->
-        <!--                android:textSize="@dimen/text_size_16"-->
+        <!--                android:textSize="@dimen/_11sdp"-->
         <!--                app:layout_constraintTop_toBottomOf="@+id/categories" />-->
 
     </LinearLayout>

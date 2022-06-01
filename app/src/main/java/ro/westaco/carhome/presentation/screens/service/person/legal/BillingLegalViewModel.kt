@@ -12,7 +12,7 @@ import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
-import ro.westaco.carhome.presentation.screens.settings.data.person_legal.add_new.AddNewLegalPersonFragment
+import ro.westaco.carhome.presentation.screens.data.person_legal.add_new.AddNewLegalPersonFragment
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -20,12 +20,12 @@ import javax.inject.Inject
 @HiltViewModel
 class BillingLegalViewModel @Inject constructor(
     private val app: Application,
-    private val api: CarHomeApi
+    private val api: CarHomeApi,
 ) : BaseViewModel() {
 
+    val legalPersonsLiveData = MutableLiveData<ArrayList<LegalPerson>?>()
+    val legalPersonsDetailsLiveData = MutableLiveData<LegalPersonDetails?>()
 
-    val legalPersonsLiveData = MutableLiveData<ArrayList<LegalPerson>>()
-    val legalPersonsDetailsLiveData = MutableLiveData<LegalPersonDetails>()
 
     override fun onFragmentCreated() {
         fetchRemoteData()
@@ -43,11 +43,12 @@ class BillingLegalViewModel @Inject constructor(
     }
 
     fun fetchLegalDetails(id: Long) {
+
         id.let {
             api.getLegalPersonDetails(it)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ resp ->
-                    legalPersonsDetailsLiveData.value = resp.data
+                    legalPersonsDetailsLiveData.value = resp?.data
                 }, {
                 })
         }
@@ -57,22 +58,22 @@ class BillingLegalViewModel @Inject constructor(
         uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.AddBillLegalPerson))
     }
 
+    internal fun onEdit(personDetail: LegalPersonDetails) {
 
-    internal fun onEdit() {
-        uiEventStream.value = UiEvent.Navigation(
-            NavAttribs(
-                Screen.AddLegalPerson,
-                object : BundleProvider() {
-                    override fun onAddArgs(bundle: Bundle?): Bundle {
-                        return Bundle().apply {
-                            putSerializable(AddNewLegalPersonFragment.ARG_IS_EDIT, true)
-                            putSerializable(
-                                AddNewLegalPersonFragment.ARG_LEGAL_PERSON,
-                                legalPersonsDetailsLiveData.value
-                            )
-                        }
+        uiEventStream.value =
+            UiEvent.Navigation(NavAttribs(Screen.AddLegalPerson, object : BundleProvider() {
+                override fun onAddArgs(bundle: Bundle?): Bundle {
+                    return Bundle().apply {
+                        putSerializable(AddNewLegalPersonFragment.ARG_IS_EDIT, true)
+                        putSerializable(
+                            AddNewLegalPersonFragment.ARG_LEGAL_PERSON,
+                            personDetail
+                        )
                     }
-                })
-        )
+                }
+            }))
+
     }
+
 }
+

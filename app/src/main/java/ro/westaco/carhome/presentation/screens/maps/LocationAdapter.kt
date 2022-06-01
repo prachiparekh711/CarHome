@@ -20,7 +20,7 @@ class LocationAdapter(
     RecyclerView.Adapter<LocationAdapter.ViewHolder>(), Filterable {
     var locationData: ArrayList<LocationV2Item> = locationDataList
     var filterData: ArrayList<LocationV2Item> = locationDataList
-    var clickItem: ClickLocationItem = clickItem
+    var mListner: ClickLocationItem = clickItem
 
     interface ClickLocationItem {
         fun click(pos: Int, openMap: Boolean)
@@ -31,6 +31,7 @@ class LocationAdapter(
     }
 
     private val filter: Filter = object : Filter() {
+
         override fun performFiltering(constraint: CharSequence): FilterResults {
             val filteredList1: ArrayList<LocationV2Item> = ArrayList()
             if (constraint.toString().isEmpty()) {
@@ -83,18 +84,18 @@ class LocationAdapter(
         }
 
         holder.binding.mText.setOnClickListener {
-            clickItem.click(
+            mListner.click(
                 position, false
             )
         }
         holder.binding.mDetail.setOnClickListener {
-            clickItem.click(
+            mListner.click(
                 position, false
             )
         }
 
         holder.binding.image.setOnClickListener {
-            clickItem.click(
+            mListner.click(
                 position, true
             )
         }

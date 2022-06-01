@@ -1,9 +1,15 @@
 package ro.westaco.carhome.presentation.screens.service.insurance.summary
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
@@ -16,6 +22,8 @@ import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.service.transaction_details.TransactionDetailsFragment
+import ro.westaco.carhome.utils.DateTimeUtils
+import ro.westaco.carhome.utils.DeviceUtils
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -36,6 +44,12 @@ class SummaryViewModel @Inject constructor(
     var rcaTransaction = MutableLiveData<TransactionData>()
     var initTransactionDataItems = MutableLiveData<PaymentResponse>()
     var mFirebaseAnalytics = FirebaseAnalytics.getInstance(app)
+    var profileLogoData: MutableLiveData<Bitmap>? = MutableLiveData()
+    var userLiveData = MutableLiveData<FirebaseUser>()
+
+    init {
+        userLiveData.value = FirebaseAuth.getInstance().currentUser
+    }
 
     internal fun onBack() {
         uiEventStream.value = UiEvent.NavBack
@@ -49,11 +63,19 @@ class SummaryViewModel @Inject constructor(
         uiEventStream.value = UiEvent.HideKeyboard
     }
 
+    internal fun getProfileImage(context: Context, user: FirebaseUser?) =
+        DeviceUtils.getProfileImage(context, user)
+
     override fun onFragmentCreated() {
         super.onFragmentCreated()
         fetchDefaultData()
+        fetchProfileData()
     }
 
+    internal fun convertFromServerDate(date: String?) =
+        DateTimeUtils.convertFromServerDate(app, date)
+
+    @SuppressLint("NullSafeMutableLiveData")
     fun fetchDefaultData() {
         api.getRcaDuration()
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -65,6 +87,25 @@ class SummaryViewModel @Inject constructor(
             )
     }
 
+    private fun fetchProfileData() {
+        api.getProfileLogo()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+
+                try {
+                    val byteArray = it.source().readByteArray()
+                    val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                    profileLogoData?.value = bitmap
+                } catch (e: Exception) {
+                    profileLogoData?.value = null
+                }
+            }, {
+                profileLogoData?.value = null
+            })
+    }
+
+    @SuppressLint("NullSafeMutableLiveData")
     internal fun onCtaItems(items: OffersItem, checked: Boolean, ds: Boolean) {
 
         if (!checked) {
@@ -84,7 +125,9 @@ class SummaryViewModel @Inject constructor(
 
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     internal fun paymentStart(transactionGuidId: String, invoicePersonGuidId: String) {
+//    internal fun paymentStart(transactionGuidId: String, invoicePersonGuidId: Int) {
 
         val request = PaymentRequest(
             transactionGuid = transactionGuidId,

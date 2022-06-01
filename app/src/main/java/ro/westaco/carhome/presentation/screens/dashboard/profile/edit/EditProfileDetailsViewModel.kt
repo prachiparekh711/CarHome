@@ -1,7 +1,6 @@
 package ro.westaco.carhome.presentation.screens.dashboard.profile.edit
 
 import android.app.Application
-import android.content.Intent
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -12,31 +11,27 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.*
+import ro.westaco.carhome.data.sources.remote.responses.models.Attachments
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.Country
 import ro.westaco.carhome.data.sources.remote.responses.models.Siruta
-import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
-import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
 import ro.westaco.carhome.utils.DateTimeUtils
-import ro.westaco.carhome.utils.DeviceUtils
 import ro.westaco.carhome.utils.default
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileDetailsViewModel @Inject constructor(
+
     private val app: Application,
     private val api: CarHomeApi
 ) : BaseViewModel() {
@@ -44,11 +39,12 @@ class EditProfileDetailsViewModel @Inject constructor(
     val profileDateLiveData = MutableLiveData<HashMap<View, Long>>().default(hashMapOf())
     val actionStream: SingleLiveEvent<ACTION> = SingleLiveEvent()
 
-    var occupationData = MutableLiveData<ArrayList<CatalogItem>>()
-    var idTypeData = MutableLiveData<ArrayList<CatalogItem>>()
-    var sirutaData = MutableLiveData<ArrayList<Siruta>>()
-    var countryData = MutableLiveData<ArrayList<Country>>()
-    var licenseCategoryData = MutableLiveData<ArrayList<CatalogItem>>()
+    var occupationData = MutableLiveData<ArrayList<CatalogItem>?>()
+    var idTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
+    var sirutaData = MutableLiveData<ArrayList<Siruta>?>()
+    var countryData = MutableLiveData<ArrayList<Country>?>()
+    var licenseCategoryData = MutableLiveData<ArrayList<CatalogItem>?>()
+    var streetTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
 
 
     override fun onFragmentCreated() {
@@ -58,8 +54,8 @@ class EditProfileDetailsViewModel @Inject constructor(
 
     sealed class ACTION {
         class ShowDatePicker(val view: View, val dateInMillis: Long) : ACTION()
-        class onDeleteSuccess(val attachType: String) : ACTION()
-        class onUploadSuccess(val attachType: String, val name: String) : ACTION()
+        class OnDeleteSuccess(val attachType: String) : ACTION()
+        class OnUploadSuccess(val attachType: String, val attachment: Attachments) : ACTION()
     }
 
     init {
@@ -67,6 +63,14 @@ class EditProfileDetailsViewModel @Inject constructor(
     }
 
     internal fun fetchDefaultData() {
+
+        api.getSimpleCatalog("NOM_STREET_TYPE")
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { streetTypeData.value = it.data }, {
+
+                })
+
         api.getCountries()
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -148,6 +152,7 @@ class EditProfileDetailsViewModel @Inject constructor(
         firstName: String?,
         occupationCorIsco08: CatalogItem?,
         phone: String?,
+        phoneCountryCode: String?,
         drivLicenseId: String?,
         drivLicenseIssueDate: String?,
         drivLicenseExpDate: String?,
@@ -189,6 +194,7 @@ class EditProfileDetailsViewModel @Inject constructor(
             identityDocument,
             cnp,
             phone,
+            phoneCountryCode,
             drivingLicense,
             employerName,
             DateTimeUtils.convertToServerDate(app, dateOfBirth),
@@ -208,14 +214,12 @@ class EditProfileDetailsViewModel @Inject constructor(
             })
     }
 
-    internal fun onCloseAccount() {
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.CloseAccount))
-    }
 
     internal fun convertFromServerDate(date: String?) =
         DateTimeUtils.convertFromServerDate(app, date)
 
     internal fun onAttach(
+        id: Int,
         attachType: String,
         attachmentFile: File
     ) {
@@ -229,81 +233,38 @@ class EditProfileDetailsViewModel @Inject constructor(
         val fullName: RequestBody =
             attachType.toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-        api.attachDocumentToProfile(fullName, body)
+        api.attachDocumentToNaturalPerson(id, fullName, body)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                if (attachType.equals("DRIVING_LICENSE")) {
+                if (attachType == "DRIVING_LICENSE") {
                     uiEventStream.value = UiEvent.ShowToast(R.string.dlUpload_success)
-                    actionStream.value =
-                        ACTION.onUploadSuccess("DRIVING_LICENSE", attachmentFile.name)
                 } else {
                     uiEventStream.value = UiEvent.ShowToast(R.string.idUpload_success)
-                    actionStream.value =
-                        ACTION.onUploadSuccess("IDENTITY_DOCUMENT", attachmentFile.name)
                 }
+                actionStream.value = it.data?.let { it1 -> ACTION.OnUploadSuccess(attachType, it1) }
             }, {
                 uiEventStream.value =
                     UiEvent.ShowToast(R.string.server_saving_error)
             })
     }
 
+
     internal fun onDeleteAttachment(
-        attachID: Int, attachType: String,
+        id: Int, attachID: Int, attachType: String,
     ) {
-        api.deleteAttachment(attachID)
+
+        api.deleteAttachmentToNaturalPerson(id.toLong(), attachID.toLong())
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
-                if (attachType.equals("DRIVING_LICENSE")) {
-                    actionStream.value = ACTION.onDeleteSuccess("DRIVING_LICENSE")
+                if (attachType == "DRIVING_LICENSE") {
+                    actionStream.value = ACTION.OnDeleteSuccess("DRIVING_LICENSE")
                 } else {
-                    actionStream.value = ACTION.onDeleteSuccess("IDENTITY_DOCUMENT")
+                    actionStream.value = ACTION.OnDeleteSuccess("IDENTITY_DOCUMENT")
                 }
             }, {
                 uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
-    }
-
-    var attachmentData: MutableLiveData<ResponseBody> = MutableLiveData()
-    internal fun fetchData(href: String) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
-        api.getAttachmentData(href)
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                attachmentData.value = it
-                if (attachmentData.value != null) {
-                    val buffer = ByteArray(8192)
-                    var bytesRead: Int? = null
-                    val output = ByteArrayOutputStream()
-                    while (attachmentData.value?.byteStream()?.read(buffer).also {
-                            if (it != null) {
-                                bytesRead = it
-                            }
-                        } != -1) {
-                        bytesRead?.let { it1 -> output.write(buffer, 0, it1) }
-                    }
-                    openPDF(output.toByteArray())
-                }
-
-            }, {
-                attachmentData.value = null
-            })
-    }
-
-    internal fun openPDF(data: ByteArray) {
-
-        val intent = Intent(app, PdfActivity::class.java)
-        intent.putExtra(PdfActivity.ARG_DATA, data)
-        intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
-        uiEventStream.postValue(
-            UiEvent.OpenIntent(
-                intent,
-                false
-            )
-        )
     }
 
     private fun validateFields(

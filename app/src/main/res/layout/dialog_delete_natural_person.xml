@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -11,7 +10,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_rect_white"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/size_24">
+            android:paddingBottom="@dimen/_15sdp">
 
             <View
                 android:id="@+id/mView"
@@ -21,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/mImage"
-                android:layout_width="@dimen/size_68"
-                android:layout_height="@dimen/size_68"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/_25sdp"
                 android:src="@drawable/ic_new_delete" />
@@ -36,7 +35,7 @@
                 android:gravity="center"
                 android:text="@string/delete_name"
                 android:textColor="@color/textcolor"
-                android:textSize="@dimen/text_size_18" />
+                android:textSize="@dimen/_15sdp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -46,7 +45,7 @@
                 android:gravity="center"
                 android:text="@string/delete_hint_n"
                 android:textColor="@color/textcolor_profile"
-                android:textSize="@dimen/text_size_13" />
+                android:textSize="@dimen/_10sdp" />
 
             <ImageView
                 android:id="@+id/mAction"
@@ -59,7 +58,7 @@
             <View
                 android:id="@+id/mViewSecond"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/input_field_stroke_width"
+                android:layout_height="@dimen/_1sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@color/delete_dialog_background" />
 
@@ -75,29 +74,29 @@
                     android:id="@+id/cancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_24"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_weight="1"
                     android:fontFamily="@font/manrope_semibold_600"
                     android:gravity="center"
                     android:paddingVertical="@dimen/_5sdp"
                     android:text="@string/cancel"
                     android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_16" />
+                    android:textSize="@dimen/_11sdp" />
 
                 <TextView
                     android:id="@+id/mDelete"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_24"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_weight="1.8"
                     android:background="@drawable/save_background"
                     android:backgroundTint="@color/delete_dialog_color"
                     android:fontFamily="@font/manrope_semibold_600"
                     android:gravity="center"
-                    android:paddingVertical="@dimen/size_16"
+                    android:paddingVertical="@dimen/_12sdp"
                     android:text="@string/delete"
                     android:textColor="@color/textOnSolid"
-                    android:textSize="@dimen/text_size_16" />
+                    android:textSize="@dimen/_11sdp" />
 
             </LinearLayout>
 
@@ -110,7 +109,7 @@
                     android:id="@+id/icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/size_24"
+                    android:layout_marginTop="@dimen/_15sdp"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_delete_dialog"
                     android:visibility="gone"
@@ -122,12 +121,12 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/size_16"
+                    android:layout_marginTop="@dimen/_12sdp"
                     android:fontFamily="@font/raleway_bold_700"
                     android:gravity="center"
                     android:text="@string/pers_delete_ques"
                     android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_18"
+                    android:textSize="@dimen/_15sdp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -137,13 +136,13 @@
                     android:id="@+id/subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_24"
-                    android:layout_marginTop="@dimen/size_8"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:fontFamily="@font/inter_regular_400"
                     android:gravity="center"
                     android:text="@string/pers_delete_subtitle"
                     android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14"
+                    android:textSize="@dimen/_11sdp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -153,15 +152,15 @@
                     android:id="@+id/neg"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/size_24"
-                    android:layout_marginTop="@dimen/size_32"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     android:background="@drawable/cta_background"
                     android:fontFamily="@font/inter_bold_700"
                     android:gravity="center"
-                    android:paddingVertical="@dimen/size_16"
+                    android:paddingVertical="@dimen/_12sdp"
                     android:text="@string/go_back"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_16"
+                    android:textSize="@dimen/_11sdp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@+id/pos"
                     app:layout_constraintStart_toStartOf="parent"
@@ -171,15 +170,15 @@
                     android:id="@+id/pos"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_24"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
                     android:background="@drawable/cta_background"
                     android:backgroundTint="#FFECEC"
                     android:fontFamily="@font/inter_bold_700"
                     android:gravity="center"
-                    android:paddingVertical="@dimen/size_16"
+                    android:paddingVertical="@dimen/_12sdp"
                     android:text="@string/yes_delete"
                     android:textColor="@color/deleteRed"
-                    android:textSize="@dimen/text_size_16"
+                    android:textSize="@dimen/_11sdp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/neg"

@@ -24,4 +24,10 @@ data class NaturalPersonDetails(
     @SerializedName("email") val email: String? = null,
     @SerializedName("guid") var guid: String? = null,
     @SerializedName("logoHref") var logoHref: String? = null
-) : Serializable
+
+) : Serializable {
+
+    override fun toString(): String {
+        return "NaturalPersonDetails(lastName=$lastName, address=$address, identityDocument=$identityDocument, cnp=$cnp, identityDocumentAttachment=$identityDocumentAttachment, employerName=$employerName, dateOfBirth=$dateOfBirth, drivingLicenseAttachment=$drivingLicenseAttachment, firstName=$firstName, occupationCorIsco08=$occupationCorIsco08, phone=$phone, phoneCountryCode=$phoneCountryCode, drivingLicense=$drivingLicense, id=$id, email=$email, guid=$guid, logoHref=$logoHref)"
+    }
+}

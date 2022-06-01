@@ -2,6 +2,7 @@ package ro.westaco.carhome.presentation.screens.service.insurance.offers
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.content.Intent
 import android.os.Build
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -24,6 +25,7 @@ import ro.westaco.carhome.data.sources.remote.responses.models.RcaDurationItem
 import ro.westaco.carhome.data.sources.remote.responses.models.RcaOfferDetails
 import ro.westaco.carhome.di.ApiModule
 import ro.westaco.carhome.presentation.base.BaseFragment
+import ro.westaco.carhome.presentation.screens.home.PdfActivity
 import ro.westaco.carhome.utils.CatalogUtils
 import ro.westaco.carhome.utils.ViewUtils
 import java.text.SimpleDateFormat
@@ -48,6 +50,7 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
     override fun getContentView(): Int {
 
         return R.layout.fragment_ins_offer_details
+
     }
 
     @SuppressLint("SetTextI18n", "SetJavaScriptEnabled")
@@ -59,6 +62,7 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
              * OfferView
              */
             rcaOfferDetail = it.getSerializable(ARG_OFFERDETAIL) as? RcaOfferDetails?
+
             if (rcaOfferDetail != null) {
 
                 rcaOfferDetail?.offer?.insurerLogoHref?.let { it1 ->
@@ -77,7 +81,11 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
                 }
 
                 seePID.setOnClickListener {
-                    rcaOfferDetail?.offer?.insurerCode?.let { viewModel.onViewPID(it, "RCA") }
+                    val intent = Intent(requireContext(), PdfActivity::class.java)
+                    intent.putExtra(PdfActivity.ARG_INSURER, rcaOfferDetail?.offer?.insurerCode)
+                    intent.putExtra(PdfActivity.ARG_SERVICE_TYPE, "RCA")
+                    intent.putExtra(PdfActivity.ARG_FROM, "SERVICE")
+                    requireContext().startActivity(intent)
                 }
 
                 /**
@@ -94,12 +102,7 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
                 /**
                  * CarInformation
                  */
-                rcaOfferDetail?.vehicle?.brandLogo?.let { it1 ->
-                    setImage(
-                        it1,
-                        mVehicleLogo
-                    )
-                }
+                rcaOfferDetail?.vehicle?.brandLogo?.let { it1 -> setImage(it1, mVehicleLogo) }
 
                 mCarRoadStar.text = rcaOfferDetail?.vehicle?.brandName
                 mCarCountry.text = rcaOfferDetail?.vehicle?.registrationCountryCode
@@ -111,9 +114,7 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
                     rcaOfferDetail?.vehicle?.enginePower.toString() + " " + getString(R.string.hp)
                 mCarSeat.text =
                     rcaOfferDetail?.vehicle?.noOfSeats.toString() + " " + getString(R.string.seat)
-//                mCarFuelType.text = rcaOfferDetail?.vehicle?.fuelTypeId.toString()
                 mCarMatw.text = rcaOfferDetail?.vehicle?.maxAllowableMass.toString()
-//                mCarUserType.text = rcaOfferDetail?.vehicle?.vehicleUsageType.toString()
 
                 /**
                  * Offer Validity
@@ -121,7 +122,6 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
 
                 et_start_date.setText(rcaOfferDetail?.beginDate)
                 et_end_date.setText(rcaOfferDetail?.endDate)
-//                rcaOfferDetail?.rcaDurationId?.let { it1 -> mDuration.setText(it1) }
 
                 /**
                  * OwnerData
@@ -133,7 +133,7 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
                     mOwnerFirstName.text = rcaOfferDetail?.vehicleOwnerNaturalPerson?.firstName
                     mOwnerLastName.text = rcaOfferDetail?.vehicleOwnerNaturalPerson?.lastName
                     mOwnerPIN.text = rcaOfferDetail?.vehicleOwnerNaturalPerson?.cnp
-                    mOwnerPerson.text = ""
+                    mOwnerPerson.text = getString(R.string.natural_person)
                     mOwnerAddress.text =
                         rcaOfferDetail?.vehicleOwnerNaturalPerson?.address?.countryCode
                     rcaOfferDetail?.vehicleOwnerNaturalPerson?.logoHref?.let { it1 ->
@@ -147,7 +147,7 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
                     mOwnerName.text =
                         rcaOfferDetail?.vehicleOwnerLegalPerson?.companyName
                     mOwnerPIN.text = rcaOfferDetail?.vehicleOwnerLegalPerson?.noRegistration
-                    mOwnerPerson.text = ""
+                    mOwnerPerson.text = getString(R.string.legal_person)
                     mOwnerAddress.text =
                         rcaOfferDetail?.vehicleOwnerLegalPerson?.address?.countryCode
                     rcaOfferDetail?.vehicleOwnerLegalPerson?.logoHref?.let { it1 ->
@@ -257,36 +257,31 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
 
             }
 
-        }
+            mPricelinearLayout.setOnClickListener {
 
-        mPrice.setOnClickListener {
+                rcaOfferDetail?.offer?.code?.let {
+                    rcaOfferDetail?.offer?.insurerCode?.let { it1 ->
+                        viewModel.onViewSummaryFragment(
+                            it, it1, false,
+                        )
+                    }
+                }
 
-            rcaOfferDetail?.offer?.code?.let {
-                rcaOfferDetail?.offer?.insurerCode?.let { it1 ->
-                    viewModel.onViewSummaryFragment(
-                        it,
-                        it1,
-                        false,
-//                        durationList[durationPosition]
-                    )
+            }
+
+            mPricePLLayout.setOnClickListener {
+
+                rcaOfferDetail?.offer?.code?.let {
+                    rcaOfferDetail?.offer?.insurerCode?.let { it1 ->
+                        viewModel.onViewSummaryFragment(
+                            it, it1, true,
+                        )
+                    }
                 }
             }
 
         }
 
-        mPricePL.setOnClickListener {
-
-            rcaOfferDetail?.offer?.code?.let {
-                rcaOfferDetail?.offer?.insurerCode?.let { it1 ->
-                    viewModel.onViewSummaryFragment(
-                        it,
-                        it1,
-                        true,
-//                        durationList[durationPosition]
-                    )
-                }
-            }
-        }
 
         car_info_fix_lay.setOnClickListener {
             if (menuOpen1) {
@@ -348,6 +343,7 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
             viewModel.onBack()
         }
 
+
     }
 
     private fun setImage(href: String, view: ImageView) {
@@ -375,12 +371,15 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
     override fun setObservers() {
 
         viewModel.durationData.observe(viewLifecycleOwner) { durationList ->
-            this.durationListItems = durationList
-            val pos = rcaOfferDetail?.rcaDurationId?.let { findPosById(durationList, it) }
-            if (pos != null) {
-                priceDuration = pos
-                mDurationItem.setText(durationList[pos].name)
+            if (durationList != null) {
+                this.durationListItems = durationList
 
+                val pos = rcaOfferDetail?.rcaDurationId?.let { findPosById(durationList, it) }
+                if (pos != null) {
+                    priceDuration = pos
+                    mDurationItem.setText(durationList[pos].name)
+
+                }
             }
         }
 

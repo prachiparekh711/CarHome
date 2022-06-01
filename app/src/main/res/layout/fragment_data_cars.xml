@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mFrame"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mFrame"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,7 +28,7 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/size_16"
+            android:layout_margin="@dimen/_12sdp"
             android:src="@drawable/ic_fab_plus"
             app:backgroundTint="@color/appPrimary"
             app:layout_constraintBottom_toTopOf="@+id/indicator"
@@ -55,7 +55,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="216dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_40"
+                android:layout_marginTop="@dimen/_27sdp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_generate_car_profile"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -66,23 +66,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginHorizontal="@dimen/size_32"
-                android:layout_marginTop="@dimen/size_16"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_12sdp"
                 android:fontFamily="@font/raleway_bold_700"
                 android:text="@string/cars_empty_state"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_24" />
+                android:textSize="@dimen/_20sdp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_32"
-                android:layout_marginTop="@dimen/size_8"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/inter_medium_500"
                 android:gravity="center_horizontal"
                 android:text="@string/no_cars_state_title"
                 android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14" />
+                android:textSize="@dimen/_11sdp" />
 
         </LinearLayout>
 
@@ -90,15 +90,15 @@
             android:id="@+id/cta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_24"
-            android:layout_marginBottom="@dimen/size_40"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_27sdp"
             android:background="@drawable/cta_background"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/add_new_vehicle"
             android:textColor="@color/textOnSolid"
-            android:textSize="@dimen/text_size_16"
+            android:textSize="@dimen/_11sdp"
             app:layout_constraintBottom_toTopOf="@+id/indicator"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -107,13 +107,14 @@
             android:id="@+id/indicator"
             android:layout_width="0dp"
             android:layout_height="5dp"
-            android:layout_marginBottom="@dimen/size_8"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/rounded_rect_100_black"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
             app:layout_constraintWidth_percent="0.3" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

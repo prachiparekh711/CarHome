@@ -5,7 +5,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.requests.RcaOfferRequest
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.screens.service.insurance.InsuranceStep2ViewModel
+import ro.westaco.carhome.presentation.screens.service.insurance.init.InsuranceStep2ViewModel
 
 
 @AndroidEntryPoint
@@ -23,9 +23,11 @@ class FetchScreenFragment : BaseFragment<InsuranceStep2ViewModel>() {
     override fun getContentView() = R.layout.fragment_fetch_screen
 
     override fun initUi() {
-        arguments?.let {
+        arguments?.let { it ->
             rcaOfferRequest = it.getSerializable(InsOffersFragment.ARG_REQUEST) as? RcaOfferRequest?
             rcaOfferRequest?.let { it1 -> viewModel.navigateToOffers(request = it1) }
+
+
         }
     }
 

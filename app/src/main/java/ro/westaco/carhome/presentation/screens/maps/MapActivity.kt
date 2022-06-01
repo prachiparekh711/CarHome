@@ -1,10 +1,10 @@
 package ro.westaco.carhome.presentation.screens.maps
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
@@ -16,8 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -36,9 +35,6 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.maps.android.clustering.Cluster
@@ -52,16 +48,15 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_map.*
-import kotlinx.android.synthetic.main.direction_bottom.view.*
 import ro.westaco.carhome.R
-import ro.westaco.carhome.data.sources.remote.responses.models.LocationFilterItem
 import ro.westaco.carhome.data.sources.remote.responses.models.LocationV2Item
 import ro.westaco.carhome.data.sources.remote.responses.models.OffsetItem
+import ro.westaco.carhome.data.sources.remote.responses.models.SectionModel
 import ro.westaco.carhome.databinding.DirectionPopupBinding
 import ro.westaco.carhome.databinding.LocationSelectorBinding
 import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.screens.main.MainActivity.Companion.activeUser
-import ro.westaco.carhome.utils.FirebaseAnalyticsList
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import java.io.IOException
 import java.util.*
 
@@ -73,17 +68,20 @@ class MapActivity : BaseActivity<LocationViewModel>(),
 
     ClusterManager.OnClusterClickListener<OffsetItem>,
     ClusterManager.OnClusterItemClickListener<OffsetItem> {
-    lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-    private var adapter: LocationAdapter? = null
     private var supportMapFragment: SupportMapFragment? = null
     private var client: FusedLocationProviderClient? = null
     private var mClusterManager: ClusterManager<OffsetItem>? = null
-    private var latitudeItem = 0.0
-    private var longitudeItem = 0.0
+    private var latitudeItem: Double? = null
+    private var longitudeItem: Double? = null
     var googleMap: GoogleMap? = null
     protected val REQUEST_CHECK_SETTINGS = 0x1
     protected val REQUEST_LOCATION_PERMISSION = 1
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
+    private lateinit var fragment: MapFiltersBottomSheetDialog
+    private var mapFilters: ArrayList<SectionModel> = ArrayList()
+    private lateinit var mapFilterAdapter: MapFilterAdapter
+    private var allFiltersNumber: Int = 0
+    private var searchViewText: String = ""
 
     companion object {
         var nearbyLocationList: ArrayList<LocationV2Item> = ArrayList()
@@ -92,31 +90,23 @@ class MapActivity : BaseActivity<LocationViewModel>(),
     override fun getContentView() = R.layout.activity_map
 
     override fun setupUi() {
+
         if (activeUser != null) {
             mText.text = resources.getString(R.string.hello_name, activeUser)
         }
 
-        bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet)
-
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-        bottomSheetBehavior.isHideable = false
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                sRelative?.visibility = View.INVISIBLE
-                if (newState == STATE_COLLAPSED) {
-                    bottomSheetBehavior.peekHeight = 125
-                } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-                } else {
-                    bottomSheetBehavior.setPeekHeight(125)
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-
-        })
+        mapFilterAdapter = MapFilterAdapter(this, mapFilters)
+        recycler.adapter = mapFilterAdapter
+        recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         placeAutoComplete()
+        setFilterButton()
+    }
+
+    private fun setFilterButton() {
+        openFiltersImageView2.setOnClickListener {
+            fragment.show(supportFragmentManager, "map_filters")
+        }
     }
 
     private fun placeAutoComplete() {
@@ -146,6 +136,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                 e.printStackTrace()
             }
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -167,7 +158,6 @@ class MapActivity : BaseActivity<LocationViewModel>(),
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         val window = window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = Color.TRANSPARENT
         supportMapFragment = this.supportFragmentManager
             .findFragmentById(R.id.google_map) as SupportMapFragment?
         client = LocationServices.getFusedLocationProviderClient(this)
@@ -183,10 +173,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                         if (report.areAllPermissionsGranted()) {
                             currentLocation
                             val params = Bundle()
-                            mFirebaseAnalytics.logEvent(
-                                FirebaseAnalyticsList.ACCESS_LOCATION_ANDROID,
-                                params
-                            )
+                            mFirebaseAnalytics.logEvent("Access_Location_AND", params)
                         }
                     }
                 }
@@ -204,18 +191,25 @@ class MapActivity : BaseActivity<LocationViewModel>(),
 
     override fun onResume() {
         super.onResume()
-        mSearch.setOnSearchClickListener { v ->
-            mRelative_location.visibility = View.GONE
-            mSearchRelative.visibility = View.VISIBLE
+        mSearch.clearFocus()
+        mSearch.setOnSearchClickListener {
+            searchImageView2.visibility = View.VISIBLE
         }
         mSearch.setOnCloseListener {
-            mRelative_location.visibility = View.VISIBLE
-            mSearchRelative.visibility = View.GONE
+            searchImageView2.visibility = View.INVISIBLE
             false
+        }
+        list_button.setOnClickListener {
+            finish()
         }
     }
 
+    override fun onBackPressed() {
+        finish()
+    }
+
     val currentLocation: Unit
+        @SuppressLint("PotentialBehaviorOverride")
         get() {
             if (ActivityCompat.checkSelfPermission(
                     this,
@@ -265,6 +259,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                         mClusterManager = ClusterManager<OffsetItem>(this@MapActivity, googleMap)
                         googleMap.setOnCameraIdleListener(mClusterManager)
                         googleMap.setOnMarkerClickListener(mClusterManager)
+                        googleMap.uiSettings.isMapToolbarEnabled = false
 
                         viewModel.getLocationFilter()
                         viewModel.getLocationData(latitudeItem.toString(), longitudeItem.toString())
@@ -288,6 +283,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                             == PackageManager.PERMISSION_GRANTED
                         ) {
                             googleMap.isMyLocationEnabled = true
+                            createCustomMyLocationButton()
                         } else {
                             ActivityCompat.requestPermissions(
                                 this,
@@ -297,72 +293,139 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                         }
 
                     }
-                } else {
-
                 }
             }
 
         }
 
-    override fun setupObservers() {
-
-        viewModel.filterData.observe(this) { filterList ->
-            if (filterList != null) {
-                recycler.layoutManager = LinearLayoutManager(
-                    this@MapActivity,
-                    LinearLayoutManager.HORIZONTAL,
-                    false
-                )
-                val allFilterList = filterList as ArrayList<LocationFilterItem>
-                allFilterList.add(0, LocationFilterItem(0, "All"))
-                recycler.adapter = LocationFilterAdapter(
-                    this@MapActivity,
-                    allFilterList
-                ) { pos ->
-                    val serviceID = allFilterList[pos].nomLSId
-                    val filterLocationList: ArrayList<LocationV2Item> = ArrayList()
-                    for (i in nearbyLocationList.indices) {
-                        val serviceIDList = nearbyLocationList[i].serviceIds
-                        if (serviceIDList != null) {
-                            if (serviceIDList.contains(serviceID.toString(), false)) {
-                                filterLocationList.add(nearbyLocationList[i])
-                            }
-                        }
+    @SuppressLint("ResourceType")
+    private fun createCustomMyLocationButton() {
+        try {
+            val locationButton = supportMapFragment?.requireView()?.findViewById<ImageView>(0x2)
+            if (locationButton != null) {
+                locationButton.visibility = View.GONE
+                myLocation.setOnClickListener {
+                    if (googleMap != null) {
+                        locationButton.callOnClick()
                     }
-
-                    setAdapter(filterLocationList)
                 }
-            } else {
-                Toast.makeText(
-                    applicationContext,
-                    resources.getString(R.string.data_not_available),
-                    Toast.LENGTH_SHORT
-                ).show()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
+    override fun setupObservers() {
+        fragment = MapFiltersBottomSheetDialog(viewModel)
+        viewModel.getSelectedItems().observe(this) { filters ->
+            mapFilters = filters
+            var isFiltered = false
+            filters.forEach {
+                if (it.filters.size != 0)
+                    isFiltered = true
+            }
+            if (isFiltered) {
+                mTab2.visibility = View.VISIBLE
+                appliedFiltersTextView2.text =
+                    getMapFiltersSize().toString() + "/" + allFiltersNumber
+            } else {
+                mTab2.visibility = View.GONE
+
+            }
+            mapFilterAdapter.data = mapFilters
+            mapFilterAdapter.notifyDataSetChanged()
+            getFilteredLocations()
+        }
+
+        mapFilterAdapter.getRemoveFromListEvent().observe(this) { removedPosition ->
+            removeItemAtPositionInMapFilters(removedPosition)
+            appliedFiltersTextView2.text = getMapFiltersSize().toString() + "/" + allFiltersNumber
+            if (getMapFiltersSize() == 0) {
+                mTab2.visibility = View.GONE
+            }
+            mapFilterAdapter.notifyDataSetChanged()
+            getFilteredLocations()
+        }
+
+        viewModel.filterDataMaps.observe(this) {
+            allFiltersNumber = 0
+            it?.forEach { sectionModel ->
+                allFiltersNumber += sectionModel.filters.size
+            }
+        }
+
+        viewModel.nearbyLocationsFiltered.observe(this) {
+            setAdapter(it)
         }
 
         viewModel.nearbyLocationData.observe(this) { nearbyLocationData ->
 
             if (nearbyLocationData != null) {
                 nearbyLocationList = nearbyLocationData
-                map_view.recycler_item.layoutManager = LinearLayoutManager(
-                    this@MapActivity,
-                    LinearLayoutManager.VERTICAL,
-                    false
-                )
+
 
                 setAdapter(nearbyLocationList)
             } else {
-                Toast.makeText(
-                    applicationContext,
-                    resources.getString(R.string.data_not_available),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorInfo(applicationContext, getString(R.string.data_not_available))
+
             }
-            map_view.mRelative.visibility = View.INVISIBLE
         }
     }
 
+    private fun removeItemAtPositionInMapFilters(position: Int) {
+        var itemCount = 0
+        var newPosition = 0
+        mapFilters.forEach {
+            if (position < it.filters.size) {
+                it.filters.removeAt(position)
+                return
+            }
+            if (itemCount + it.filters.size > position) {
+                newPosition = position % itemCount
+                it.filters.removeAt(newPosition)
+                return
+            } else {
+                itemCount += it.filters.size
+            }
+
+        }
+    }
+
+    private fun getMapFiltersSize(): Int {
+        var itemsCount = 0
+        mapFilters.forEach {
+            itemsCount += it.filters.size
+        }
+        return itemsCount
+    }
+
+    private fun getFilteredLocations() {
+        val arrayOfIds = getFiltersArrayList()
+        viewModel.getLocationDataFiltered(
+            latitudeItem.toString(),
+            longitudeItem.toString(),
+            searchViewText,
+            arrayOfIds
+        )
+        viewModel.nearbyLocationsFiltered.observe(this) { filteredLocations ->
+            if (filteredLocations != null) {
+                setAdapter(filteredLocations)
+            }
+        }
+    }
+
+    private fun getFiltersArrayList(): ArrayList<Int> {
+        val arrayOfIds = ArrayList<Int>()
+        mapFilters.forEach { sectionModel ->
+            sectionModel.filters.forEach {
+                arrayOfIds.add(it.nomLSId)
+            }
+        }
+        return arrayOfIds
+    }
+
+    @SuppressLint("SetTextI18n")
     private fun onMarkerClick(dataItem: LocationV2Item) {
 
         try {
@@ -430,9 +493,9 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                                     resources.getColor(R.color.list_time)
                                 )
                             }
-                            latitudeItem = currentLocation.latitude!!
+                            latitudeItem = currentLocation.latitude
                             longitudeItem =
-                                currentLocation.longitude!!
+                                currentLocation.longitude
                             dialogBinding.mapButton.setOnClickListener { v1 ->
                                 sheetDialog.dismiss()
                                 openMapDialog()
@@ -459,8 +522,6 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                 }
             }
 
-//            Toast.makeText(this, "" + nearbyLocationData[i].brandId , Toast.LENGTH_SHORT).show()
-
             mClusterManager?.addItem(offsetItem)
             nearbyLocationData[0].latitude?.let {
                 nearbyLocationData[0].longitude?.let { it1 ->
@@ -478,105 +539,49 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                     it
                 )
             }
-            googleMap?.setOnMapClickListener { latLng: LatLng? ->
-                sRelative.visibility = View.INVISIBLE
+            googleMap?.setOnMapClickListener {
+                details_card.visibility = View.GONE
+                mSearch.clearFocus()
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
             }
         }
         mClusterManager?.cluster()
 
-        val anInterface = object : LocationAdapter.ClickLocationItem {
-
-            override fun click(pos: Int, openMap: Boolean) {
-
-                val sheetDialog =
-                    BottomSheetDialog(
-                        this@MapActivity,
-                        R.style.BottomSheetStyle
-                    )
-                val dialogBinding: DirectionPopupBinding =
-                    DirectionPopupBinding.inflate(
-                        LayoutInflater.from(
-                            this@MapActivity
-                        )
-                    )
-                sheetDialog.setContentView(dialogBinding.root)
-
-                nearbyLocationData[pos].id?.let {
-                    viewModel.getCurrentLocationData(
-                        it
-                    ).observe(
-                        this@MapActivity
-                    ) { currentLocation ->
-
-//                        Toast.makeText(this@MapActivity, "" + currentLocation.email, Toast.LENGTH_SHORT).show()
-
-                        if (currentLocation.email?.endsWith("petrom.com") == true) {
-                            dialogBinding.mImg.setImageResource(R.drawable.petrom)
-                        } else {
-                            dialogBinding.mImg.setImageResource(R.drawable.omv)
-                        }
-                        dialogBinding.name.text = currentLocation.name
-
-                        dialogBinding.services.text = currentLocation.services
-                        dialogBinding.mAddress.text =
-                            currentLocation.fullAddress
-                        dialogBinding.mkm.text =
-                            "• " + (nearbyLocationData[pos].distance?.toInt()) + " km away"
-                        if (currentLocation.openNow == false) {
-                            dialogBinding.status.text =
-                                getString(R.string.closed)
-                            dialogBinding.status.setTextColor(
-                                resources.getColor(R.color.closed)
-                            )
-                        } else {
-                            dialogBinding.status.text =
-                                getString(R.string.open_24_hours)
-                            dialogBinding.status.setTextColor(
-                                resources.getColor(R.color.list_time)
-                            )
-                        }
-
-                        if (currentLocation.latitude != null && currentLocation.longitude != null) {
-                            latitudeItem = currentLocation.latitude
-                            longitudeItem = currentLocation.longitude
-                        }
-                    }
-                }
-                dialogBinding.mapButton.setOnClickListener {
-                    sheetDialog.dismiss()
-                    openMapDialog()
-                }
-                if (openMap) {
-                    openMapDialog()
-                } else {
-                    sheetDialog.show()
-                }
-            }
-
-        }
-        adapter = LocationAdapter(
-            this@MapActivity,
-            nearbyLocationData,
-            anInterface
-        )
-
-        map_view.text.text =
-            nearbyLocationData.size.toString() + " " + getString(R.string.fuel_stations)
-        map_view.recycler_item.adapter = adapter
         mSearch.setOnQueryTextListener(object :
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                return false
+                val arrayOfIds = getFiltersArrayList()
+                viewModel.getLocationDataFiltered(
+                    latitudeItem.toString(),
+                    longitudeItem.toString(),
+                    query,
+                    arrayOfIds
+                )
+                mSearch.clearFocus()
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+                return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                adapter?.filter?.filter(newText)
+                searchViewText = newText
+                if (newText.isEmpty()) {
+                    searchImageView2.visibility = View.VISIBLE
+                    val arrayOfIds = getFiltersArrayList()
+                    viewModel.getLocationDataFiltered(
+                        latitudeItem.toString(),
+                        longitudeItem.toString(),
+                        newText,
+                        arrayOfIds
+                    )
+
+                } else
+                    searchImageView2.visibility = View.INVISIBLE
                 return true
             }
         })
     }
 
-    fun openMapDialog() {
+    private fun openMapDialog() {
         val isAppInstalled =
             appInstalledOrNot("com.waze")
         val bottomSheetDialog =
@@ -640,8 +645,8 @@ class MapActivity : BaseActivity<LocationViewModel>(),
         return false
     }
 
-    private fun openPlayStoreApplication(appPackageName: String) {
-        var appPackageName = appPackageName
+    private fun openPlayStoreApplication(appPackageNameId: String) {
+        var appPackageName = appPackageNameId
         appPackageName = appPackageName.substring(appPackageName.indexOf("=") + 1)
         try {
             startActivity(
@@ -692,7 +697,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
         var context: Context? = null
         var mActivity: Activity? = null
         var mImageView: ImageView? = null
-        private val mDimension: Int
+        private var mDimension: Int? = null
         private val mIconGenerator = IconGenerator(context)
 
         override fun onBeforeClusterItemRendered(
@@ -709,9 +714,10 @@ class MapActivity : BaseActivity<LocationViewModel>(),
 //            marker.title = offset.title
         }
 
+        @SuppressLint("UseCompatLoadingForDrawables")
         private fun getItemIcon(offset: OffsetItem): BitmapDescriptor {
 
-            if (offset.title!!.endsWith("90002")) {
+            if (offset.title?.endsWith("90002") == true) {
                 mImageView?.setImageDrawable(context?.resources?.getDrawable(R.drawable.petrom_icon))
 
             } else {
@@ -729,10 +735,12 @@ class MapActivity : BaseActivity<LocationViewModel>(),
             this.context = context
             this.mActivity = activity
             mImageView = ImageView(context)
-            mDimension = context?.resources?.getDimension(R.dimen.size_48)?.toInt()!!
-            mImageView?.layoutParams = ViewGroup.LayoutParams(mDimension, mDimension)
-            val padding = (context.resources?.getDimension(R.dimen.size_2))?.toInt()!!
-            mImageView?.setPadding(padding, padding, padding, padding)
+            mDimension = context?.resources?.getDimension(R.dimen._35sdp)?.toInt()
+            mImageView?.layoutParams = mDimension?.let { ViewGroup.LayoutParams(it, it) }
+            val padding = (context?.resources?.getDimension(R.dimen._1sdp))?.toInt()
+            if (padding != null) {
+                mImageView?.setPadding(padding, padding, padding, padding)
+            }
             mIconGenerator.setContentView(mImageView)
 
         }
@@ -771,10 +779,8 @@ class MapActivity : BaseActivity<LocationViewModel>(),
     }
 
     override fun onClusterItemClick(item: OffsetItem?): Boolean {
-
-        bottomSheetBehavior.state = STATE_COLLAPSED
         if (item != null) {
-            sRelative?.visibility = View.VISIBLE
+            details_card?.visibility = View.VISIBLE
             onMarkerClick(nearbyLocationList[item.snippet!!.toInt()])
         }
         return false
@@ -827,7 +833,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
-        grantResults: IntArray,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // Check if location permissions are granted and if so enable the

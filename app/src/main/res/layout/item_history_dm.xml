@@ -20,7 +20,7 @@
             android:layout_marginEnd="@dimen/_5sdp"
             android:layout_marginBottom="@dimen/_5sdp"
             android:adjustViewBounds="true"
-            android:background="@drawable/ic_history_bg"
+            android:background="@drawable/bg_history_item"
             android:backgroundTint="#105367FC"
             android:padding="@dimen/_8sdp"
             android:scaleType="centerCrop"
@@ -58,24 +58,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/carBrand"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/inter_medium_500"
-                        android:maxLines="1"
-                        android:textColor="@color/secondaryTextOnWhite"
-                        android:textSize="@dimen/_10sdp" />
-
-                    <View
-                        android:id="@+id/_separator"
-                        android:layout_width="5dp"
-                        android:layout_height="5dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginHorizontal="@dimen/size_12"
-                        android:background="@drawable/circle"
-                        android:backgroundTint="@color/itemBgStroke" />
 
                     <TextView
                         android:id="@+id/carLpn"
@@ -85,7 +67,7 @@
                         android:fontFamily="@font/inter_medium_500"
                         android:maxLines="1"
                         android:textColor="@color/secondaryTextOnWhite"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textSize="@dimen/_9sdp" />
                 </LinearLayout>
 
             </LinearLayout>

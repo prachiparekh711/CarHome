@@ -28,8 +28,8 @@
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/size_16"
-            android:layout_marginTop="@dimen/size_16"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_back" />
 
@@ -42,434 +42,441 @@
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/new_reminder"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_18" />
+            android:textSize="@dimen/_15sdp" />
 
     </RelativeLayout>-->
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/cta"
-        android:layout_below="@id/toolbar"
-        android:layout_marginBottom="@dimen/_10sdp">
+        android:layout_below="@id/toolbar">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:orientation="vertical">
+            app:layout_behavior=".utils.OverScrollBounceBehavior">
 
-
-            <TextView
-                android:id="@+id/titleLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/new_reminder_title"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14" />
-
-            <EditText
-                android:id="@+id/title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_4"
-                android:background="@drawable/auth_text_input_background"
-                android:fontFamily="@font/inter_medium_500"
-                android:hint="@string/reminder_hint"
-                android:inputType="text"
-                android:paddingHorizontal="@dimen/size_16"
-                android:paddingVertical="@dimen/size_12"
-                android:textColor="@color/textOnWhite"
-                android:textColorHint="@color/hintOnWhite"
-                android:textCursorDrawable="@drawable/cursor"
-                android:textSize="@dimen/text_size_16" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/notesLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/new_reminder_notes"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14" />
-
-            <EditText
-                android:id="@+id/notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_4"
-                android:background="@drawable/auth_text_input_background"
-                android:fontFamily="@font/inter_medium_500"
-                android:gravity="start"
-                android:hint="@string/reminder_notes_hint"
-                android:inputType="textMultiLine"
-                android:lines="3"
-                android:paddingHorizontal="@dimen/size_16"
-                android:paddingVertical="@dimen/size_12"
-                android:textColor="@color/textOnWhite"
-                android:textColorHint="@color/hintOnWhite"
-                android:textCursorDrawable="@drawable/cursor"
-                android:textSize="@dimen/text_size_16" />
-
-            <View
-                android:id="@+id/_separator1"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginVertical="@dimen/size_12" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/dueDateLabel"
+                    android:id="@+id/titleLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_16"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/due_date"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/new_reminder_title"
                     android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/_11sdp" />
+
+                <EditText
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:hint="@string/reminder_hint"
+                    android:inputType="text"
+                    android:paddingHorizontal="@dimen/_12sdp"
+                    android:paddingVertical="@dimen/_10sdp"
+                    android:textColor="@color/textOnWhite"
+                    android:textColorHint="@color/hintOnWhite"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textSize="@dimen/_11sdp" />
 
                 <TextView
-                    android:id="@+id/dueDate"
+                    android:id="@+id/notesLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/size_8"
-                    android:layout_toStartOf="@id/dueDateCal"
-                    android:fontFamily="@font/inter_regular_400"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/new_reminder_notes"
                     android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14"
-                    android:visibility="gone"
-                    tools:text="11/11/2021" />
+                    android:textSize="@dimen/_11sdp" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/dueDateCal"
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
-                    android:padding="@dimen/_7sdp"
-                    android:src="@drawable/ic_calendar" />
-
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/_separator2"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginVertical="@dimen/size_12"
-                android:background="@color/textInputBorderGray" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/dueTimeLabel"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/notes"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_16"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/due_time"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14" />
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:gravity="start"
+                    android:hint="@string/reminder_notes_hint"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
+                    android:paddingHorizontal="@dimen/_12sdp"
+                    android:paddingVertical="@dimen/_10sdp"
+                    android:textColor="@color/textOnWhite"
+                    android:textColorHint="@color/hintOnWhite"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textSize="@dimen/_11sdp" />
 
-                <TextView
-                    android:id="@+id/dueTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/size_8"
-                    android:layout_toLeftOf="@id/dueTimeCal"
-                    android:fontFamily="@font/inter_regular_400"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14"
-                    android:visibility="visible"
-                    tools:text="11:11" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/dueTimeCal"
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:adjustViewBounds="true"
-                    android:padding="@dimen/_7sdp"
-                    android:src="@drawable/ic_calendar" />
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/_separator4"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginVertical="@dimen/size_12"
-                android:background="@color/textInputBorderGray" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/notificationLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_16"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/notification"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/notificationCheck"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="@dimen/size_16"
-                    android:layout_marginEnd="@dimen/size_16"
-                    android:checked="false"
-                    android:theme="@style/SwitchTheme" />
+                <View
+                    android:id="@+id/_separator1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginVertical="@dimen/_10sdp" />
 
                 <RelativeLayout
-                    android:id="@+id/notificationRL"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/notificationLabel"
-                    android:layout_centerHorizontal="true"
-                    android:visibility="gone">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                    <NumberPicker
-                        android:id="@+id/mNumberPicker"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <NumberPicker
-                        android:id="@+id/mDurationPicker"
+                    <TextView
+                        android:id="@+id/dueDateLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_20sdp"
-                        android:layout_toEndOf="@id/mNumberPicker" />
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:fontFamily="@font/inter_bold_700"
+                        android:text="@string/due_date"
+                        android:textColor="@color/textOnWhiteAccentGray"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/dueDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:layout_toStartOf="@id/dueDateCal"
+                        android:fontFamily="@font/inter_regular_400"
+                        android:textColor="@color/textOnWhiteAccentGray"
+                        android:textSize="@dimen/_11sdp"
+                        android:visibility="gone"
+                        tools:text="11/11/2021" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/dueDateCal"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="16dp"
+                        android:padding="@dimen/_7sdp"
+                        android:src="@drawable/ic_calendar" />
 
                 </RelativeLayout>
-            </RelativeLayout>
 
-            <View
-                android:id="@+id/_separator5"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:background="@color/textInputBorderGray" />
-
-            <TextView
-                android:id="@+id/tagsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_bold_700"
-                android:text="@string/new_reminder_tags"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/tags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_12"
-                android:layout_marginTop="@dimen/size_12"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="3"
-                tools:listitem="@layout/item_reminder_tag" />
-
-            <View
-                android:id="@+id/_separator6"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginVertical="@dimen/size_12"
-                android:background="@color/textInputBorderGray" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/repeatLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_16"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/new_reminder_repeat"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14" />
-
-                <TextView
-                    android:id="@+id/repeat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:drawableRight="@drawable/ic_right_arrow"
-                    android:drawablePadding="@dimen/text_size_20"
-                    android:fontFamily="@font/inter_regular_400"
-                    android:paddingHorizontal="@dimen/text_size_20"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_14" />
-
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/_separator7"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginVertical="@dimen/size_12"
-                android:background="@color/textInputBorderGray" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/locationLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_16"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/new_reminder_location"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/mSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/size_16"
-                    android:theme="@style/SwitchTheme" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/mRelative"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="15dp"
-                android:visibility="gone">
-
-
-                <TextView
-                    android:id="@+id/mText"
+                <View
+                    android:id="@+id/_separator2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/inter_semibold_600"
-                    android:singleLine="true"
-                    android:text="@string/omv"
-                    android:textColor="@color/list_color"
-                    android:textSize="16sp" />
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:background="@color/textInputBorderGray" />
 
-
-                <LinearLayout
-                    android:id="@+id/mLinear2"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/mText"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:id="@+id/mDetail"
+                    <TextView
+                        android:id="@+id/dueTimeLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/size_32"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:fontFamily="@font/inter_bold_700"
+                        android:text="@string/due_time"
+                        android:textColor="@color/textOnWhiteAccentGray"
+                        android:textSize="@dimen/_11sdp" />
 
-                        <TextView
-                            android:id="@+id/mGarage"
+                    <TextView
+                        android:id="@+id/dueTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:layout_toLeftOf="@id/dueTimeCal"
+                        android:fontFamily="@font/inter_regular_400"
+                        android:textColor="@color/textOnWhiteAccentGray"
+                        android:textSize="@dimen/_11sdp"
+                        android:visibility="visible"
+                        tools:text="11:11" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/dueTimeCal"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:adjustViewBounds="true"
+                        android:padding="@dimen/_7sdp"
+                        android:src="@drawable/ic_calendar" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/_separator4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:background="@color/textInputBorderGray" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/notificationLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:fontFamily="@font/inter_bold_700"
+                        android:text="@string/notification"
+                        android:textColor="@color/textOnWhiteAccentGray"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/notificationCheck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:checked="false"
+                        android:theme="@style/SwitchTheme" />
+
+                    <RelativeLayout
+                        android:id="@+id/notificationRL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/notificationLabel"
+                        android:layout_centerHorizontal="true"
+                        android:visibility="gone">
+
+                        <NumberPicker
+                            android:id="@+id/mNumberPicker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <NumberPicker
+                            android:id="@+id/mDurationPicker"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_medium_500"
-                            android:singleLine="true"
-                            android:textColor="@color/location_ser"
-                            android:textSize="11sp" />
+                            android:layout_marginHorizontal="@dimen/_20sdp"
+                            android:layout_toEndOf="@id/mNumberPicker" />
+
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/_separator5"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:background="@color/textInputBorderGray" />
+
+                <TextView
+                    android:id="@+id/tagsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_bold_700"
+                    android:text="@string/new_reminder_tags"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3"
+                    tools:listitem="@layout/item_reminder_tag" />
+
+                <View
+                    android:id="@+id/_separator6"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:background="@color/textInputBorderGray" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/repeatLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:fontFamily="@font/inter_bold_700"
+                        android:text="@string/new_reminder_repeat"
+                        android:textColor="@color/textOnWhiteAccentGray"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/repeat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:drawableRight="@drawable/ic_right_arrow"
+                        android:drawablePadding="@dimen/_16sdp"
+                        android:fontFamily="@font/inter_regular_400"
+                        android:paddingHorizontal="@dimen/_16sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textSize="@dimen/_11sdp" />
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/_separator7"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:background="@color/textInputBorderGray" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/locationLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:fontFamily="@font/inter_bold_700"
+                        android:text="@string/new_reminder_location"
+                        android:textColor="@color/textOnWhiteAccentGray"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/mSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_12sdp"
+                        android:theme="@style/SwitchTheme" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/mRelative"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:visibility="gone">
+
+
+                    <TextView
+                        android:id="@+id/mText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/inter_semibold_600"
+                        android:singleLine="true"
+                        android:text="@string/omv"
+                        android:textColor="@color/list_color"
+                        android:textSize="16sp" />
+
+
+                    <LinearLayout
+                        android:id="@+id/mLinear2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/mText"
+                        android:orientation="horizontal">
 
                         <LinearLayout
+                            android:id="@+id/mDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_marginEnd="@dimen/_20sdp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/mLocation"
-                                android:layout_width="match_parent"
+                                android:id="@+id/mGarage"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:fontFamily="@font/inter_medium_500"
                                 android:singleLine="true"
-                                android:textColor="@color/selected"
-                                android:textSize="13sp" />
+                                android:textColor="@color/location_ser"
+                                android:textSize="11sp" />
 
-                            <TextView
-                                android:id="@+id/mKm"
-                                android:layout_width="match_parent"
+                            <LinearLayout
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/mLinear2"
-                                android:fontFamily="@font/inter_medium_500"
-                                android:textColor="@color/unselected"
-                                android:textSize="13sp"
-                                android:visibility="visible" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/mLocation"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/inter_medium_500"
+                                    android:singleLine="true"
+                                    android:textColor="@color/selected"
+                                    android:textSize="13sp" />
+
+                                <TextView
+                                    android:id="@+id/mKm"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/mLinear2"
+                                    android:fontFamily="@font/inter_medium_500"
+                                    android:textColor="@color/unselected"
+                                    android:textSize="13sp"
+                                    android:visibility="visible" />
+
+
+                            </LinearLayout>
 
 
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/image"
+                                android:layout_width="34dp"
+                                android:layout_height="34dp"
+                                android:src="@drawable/ic_direction" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/image"
-                            android:layout_width="34dp"
-                            android:layout_height="34dp"
-                            android:src="@drawable/ic_direction" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </RelativeLayout>
+                </RelativeLayout>
 
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
     <TextView
@@ -477,15 +484,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="@dimen/size_24"
+        android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginBottom="@dimen/_25sdp"
         android:background="@drawable/cta_background"
         android:fontFamily="@font/manrope_semibold_600"
         android:gravity="center"
-        android:paddingVertical="@dimen/size_16"
+        android:paddingVertical="@dimen/_12sdp"
         android:text="@string/save"
         android:textColor="@color/textOnSolid"
-        android:textSize="@dimen/text_size_16" />
+        android:textSize="@dimen/_11sdp" />
 
 
 </RelativeLayout>

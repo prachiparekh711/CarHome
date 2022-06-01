@@ -6,10 +6,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="@dimen/size_16"
+        android:layout_marginHorizontal="@dimen/_12sdp"
         android:background="@drawable/rounded_rect_white"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/size_24">
+        android:paddingBottom="@dimen/_15sdp">
 
         <RelativeLayout
             android:id="@+id/mainRL"
@@ -20,12 +20,12 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_16"
+                android:layout_marginTop="@dimen/_12sdp"
                 android:fontFamily="@font/raleway_bold_700"
                 android:gravity="center"
                 android:text="@string/occupation"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_20" />
+                android:textSize="@dimen/_16sdp" />
 
             <TextView
                 android:id="@+id/subtitle"
@@ -35,7 +35,7 @@
                 android:fontFamily="@font/inter_regular_400"
                 android:text="@string/choose_option"
                 android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14" />
+                android:textSize="@dimen/_11sdp" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/close"
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/size_16"
+                android:layout_marginEnd="@dimen/_12sdp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_dismiss_x" />
         </RelativeLayout>
@@ -62,15 +62,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:layout_marginHorizontal="@dimen/size_16"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:background="@drawable/cta_background"
             android:fontFamily="@font/inter_bold_700"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/continue_txt"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
     </RelativeLayout>
 

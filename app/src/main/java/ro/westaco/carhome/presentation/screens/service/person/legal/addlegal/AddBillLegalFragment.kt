@@ -1,143 +1,62 @@
 package ro.westaco.carhome.presentation.screens.service.person.legal.addlegal
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add_bill_legal.*
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.address_arrow
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.address_in_lay
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.adds_hidden_view
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.apartment
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.blockName
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.buildingNo
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.cd_hidden_view
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.check
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.cnmae
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.companyName
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.county
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.cui
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.entrance
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.filled_county
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.filled_locality
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.flg
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.floor
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.in_filled_county
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.in_filled_locality
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.li_dialog
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.localitys
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.naceTV
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.name_arrow
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.name_in_lay
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.noReg
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.root
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.sp_quata
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.spinnerCity
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.spinnerCounty
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.streetName
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.toolbar
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.typeTV
-import kotlinx.android.synthetic.main.fragment_add_new_legal_person.zipCode
+import kotlinx.android.synthetic.main.fragment_add_bill_legal.apartment
+import kotlinx.android.synthetic.main.fragment_add_bill_legal.buildingNo
+import kotlinx.android.synthetic.main.fragment_add_bill_legal.entrance
+import kotlinx.android.synthetic.main.fragment_add_bill_legal.floor
+import kotlinx.android.synthetic.main.fragment_add_bill_legal.streetName
+import kotlinx.android.synthetic.main.fragment_add_bill_legal.zipCode
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.requests.Address
 import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.screens.service.person.natural.addnatural.AddBillCountryCodeDialog
-import ro.westaco.carhome.presentation.screens.settings.data.person_legal.add_new.ActivityTypeAdapter
-import ro.westaco.carhome.presentation.screens.settings.data.person_legal.add_new.AddNewLegalPersonFragment
-import ro.westaco.carhome.presentation.screens.settings.data.person_legal.add_new.caenAdapter
-import ro.westaco.carhome.presentation.screens.settings.data.person_natural.add_new.CountyAdapter
-import ro.westaco.carhome.presentation.screens.settings.data.person_natural.add_new.CountyListClick
-import ro.westaco.carhome.presentation.screens.settings.data.person_natural.add_new.LocalityAdapter
-import ro.westaco.carhome.utils.CatalogUtils
-import ro.westaco.carhome.utils.CountryCityUtils
-import ro.westaco.carhome.utils.Progressbar
-import ro.westaco.carhome.utils.ViewUtils
+import ro.westaco.carhome.presentation.interfaceitem.CountyListClick
+import ro.westaco.carhome.presentation.screens.data.commen.CountryCodeDialog
+import ro.westaco.carhome.presentation.screens.data.commen.CountyAdapter
+import ro.westaco.carhome.presentation.screens.data.commen.LocalityAdapter
+import ro.westaco.carhome.presentation.screens.data.person_legal.add_new.ActivityTypeAdapter
+import ro.westaco.carhome.presentation.screens.data.person_legal.add_new.CaenAdapter
+import ro.westaco.carhome.utils.*
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import java.util.*
 
 
 @AndroidEntryPoint
-class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
+class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>(),
+    CountryCodeDialog.CountryCodePicker {
 
     private var legalPersonDetails: LegalPersonDetails? = null
-    private var address: Address? = null
     private var caenItem: Caen? = null
     private var activityTypeItem: CatalogItem? = null
-    var progressbar: Progressbar? = null
     var typePos = 0
     var caendialog: BottomSheetDialog? = null
     var activitydialog: BottomSheetDialog? = null
-    var countydialog: BottomSheetDialog? = null
-    var locality: BottomSheetDialog? = null
-    var countyPosition = 0
-    var localityPosition = 0
 
-    var localityAdapter: LocalityAdapter? = null
-    var countries: java.util.ArrayList<Country> = java.util.ArrayList()
-    var sirutaDataList: java.util.ArrayList<Siruta> = java.util.ArrayList()
-    var streetTypeList: java.util.ArrayList<CatalogItem> = java.util.ArrayList()
-
-
-    companion object {
-        const val ARG_IS_EDIT = "arg_is_edit"
-
-        @SuppressLint("StaticFieldLeak")
-        var cna: TextView? = null
-
-        @SuppressLint("StaticFieldLeak")
-        var flgs: ImageView? = null
-
-        @SuppressLint("StaticFieldLeak")
-        private var in_filleds_county: TextInputLayout? = null
-
-        @SuppressLint("StaticFieldLeak")
-        private var in_filleds_locality: TextInputLayout? = null
-
-        @SuppressLint("StaticFieldLeak")
-        private var spinnerCity1: TextInputLayout? = null
-
-        @SuppressLint("StaticFieldLeak")
-        private var spinnerCounty1: TextInputLayout? = null
-
-
-        @SuppressLint("StaticFieldLeak")
-        lateinit var contexts: Context
-
-        var countryItem: Country? = null
-        fun getFlg(item: Country, flagDrawableResId: Int) {
-            this.countryItem = item
-
-
-            cna?.text = item.name
-            flgs?.setImageResource(flagDrawableResId)
-
-            if (item.code == "ROU") {
-                spinnerCity1?.isVisible = true
-                spinnerCounty1?.isVisible = true
-                in_filleds_county?.visibility = View.GONE
-                in_filleds_locality?.visibility = View.GONE
-
-            } else {
-                spinnerCity1?.isVisible = false
-                spinnerCounty1?.isVisible = false
-                in_filleds_county?.visibility = View.VISIBLE
-                in_filleds_locality?.visibility = View.VISIBLE
-
-            }
-
-        }
-
-    }
+    var address: Address? = null
+    var countriesList: ArrayList<Country> = ArrayList()
+    var streetTypeList: ArrayList<CatalogItem> = ArrayList()
+    var progressbar: Progressbar? = null
+    var countyPosition: Int? = null
+    var localityPosition: Int? = null
+    var countyDialog: BottomSheetDialog? = null
+    var localityDialog: BottomSheetDialog? = null
+    var countryItem: Country? = null
+    var cityList: ArrayList<Siruta> = ArrayList()
 
 
     override fun getContentView(): Int {
@@ -176,24 +95,12 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
             }
         }
 
-
-        county.setOnClickListener {
-
-            opencountydialog()
+        countySpinnerText.setOnClickListener {
+            openCountyDialog()
         }
 
-        contexts = requireContext()
-        cna = cnmae
-        flgs = flg
-
-        in_filleds_county = in_filled_county
-        in_filleds_locality = in_filled_locality
-        spinnerCity1 = spinnerCity
-        spinnerCounty1 = spinnerCounty
-
-
-        localitys?.setOnClickListener {
-            locality?.show()
+        localitySpinnerText?.setOnClickListener {
+            localityDialog?.show()
         }
 
         toolbar.setNavigationOnClickListener {
@@ -209,7 +116,12 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
             viewModel.onRootClicked()
         }
 
+        changeCountryState("ROU")
+        countySpinnerText.setText(SirutaUtil.defaultCounty?.name)
+        localitySpinnerText.setText(SirutaUtil.defaultCity?.name)
 
+        countyPosition = SirutaUtil.defaultCounty?.name?.let { SirutaUtil.fetchCountyPosition(it) }
+        localityPosition = SirutaUtil.defaultCity?.name?.let { SirutaUtil.fetchCountyPosition(it) }
 
         cta_bill_legal.setOnClickListener {
             val streetTypeItem =
@@ -221,54 +133,48 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
                         )
                     }
 
+            var regionStr: String? = null
             var sirutaCode: Int? = null
-            var locality: String? = null
-            var region: String? = null
+            var localityStr: String? = null
 
-            if (countryItem == null || countryItem?.code == "ROU") {
-                for (i in countries.indices) {
-                    if (countries[i].code == "ROU") {
-                        countryItem = countries[i]
-                    }
-                }
 
-                val cityList: java.util.ArrayList<Siruta> = java.util.ArrayList()
-                for (i in sirutaDataList.indices) {
-                    if (sirutaDataList[i].parentCode == null)
-                        cityList.add(sirutaDataList[i])
+            if (countryItem?.code == "ROU") {
+                if (countyPosition != -1 && localityPosition != -1) {
+                    regionStr = countyPosition?.let { SirutaUtil.countyList[it].name }
+                    sirutaCode = localityPosition?.let { cityList[it].code }
+                    localityStr = localityPosition?.let { cityList[it].name }
+                } else {
+                    regionStr = SirutaUtil.defaultCounty?.name
+                    sirutaCode = SirutaUtil.defaultCity?.code
+                    localityStr = SirutaUtil.defaultCity?.name
                 }
-                sirutaCode = cityList[countyPosition].code
-                val localityList: java.util.ArrayList<Siruta> = java.util.ArrayList()
-                for (i in sirutaDataList.indices) {
-                    if (sirutaCode == sirutaDataList[i].parentCode) {
-                        localityList.add(sirutaDataList[i])
-                    }
-                }
-                region = null
-                locality = localityList[localityPosition].name
             } else {
+                regionStr = stateProvinceText.text.toString()
                 sirutaCode = null
-                region = filled_county.text.toString()
-                locality = filled_locality.text.toString()
+                localityStr = localityAreaText.text.toString()
             }
 
-            address = Address(
-                zipCode = zipCode.text.toString(),
-                streetType = streetTypeItem,
-                sirutaCode = sirutaCode,
-                locality = locality,
-                streetName = streetName.text.toString(),
-                addressDetail = null,
-                buildingNo = buildingNo.text.toString(),
-                countryCode = AddNewLegalPersonFragment.countryItem?.code,
-                block = blockName.text.toString(),
-                region = region,
-                entrance = entrance.text.toString(),
-                floor = floor.text.toString(),
-                apartment = apartment.text.toString()
-            )
+            var addressItem: Address? = null
 
-
+            if (regionStr != null && localityStr != null) {
+                addressItem = Address(
+                    zipCode = zipCode.text.toString(),
+                    streetType = streetTypeItem,
+                    sirutaCode = sirutaCode,
+                    locality = localityStr,
+                    streetName = streetName.text.toString(),
+                    addressDetail = null,
+                    buildingNo = buildingNo.text.toString(),
+                    countryCode = countryItem?.code,
+                    block = blockName.text.toString(),
+                    region = regionStr,
+                    entrance = entrance.text.toString(),
+                    floor = floor.text.toString(),
+                    apartment = apartment.text.toString()
+                )
+            } else {
+                showErrorInfo(requireContext(), getString(R.string.address_require))
+            }
 
             if (companyName.text?.isNotEmpty() == true) {
 
@@ -287,129 +193,73 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
                                         companyName.text.toString(),
                                         cui.text.toString(),
                                         noReg.text.toString(),
-                                        address,
+                                        addressItem,
                                         check.isChecked,
                                         caenItem,
                                         activityTypeItem
                                     )
 
                                 } else {
-
-                                    Toast.makeText(
+                                    showErrorInfo(
                                         requireContext(),
-                                        requireContext().resources.getText(R.string.confirm_details),
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                                        getString(R.string.confirm_details)
+                                    )
                                 }
-
                             } else {
-
-                                Toast.makeText(
+                                showErrorInfo(
                                     requireContext(),
-                                    requireContext().resources.getText(R.string.Activity_type_empty),
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                    getString(R.string.Activity_type_empty)
+                                )
                             }
-
                         } else {
-
-                            Toast.makeText(
-                                requireContext(),
-                                requireContext().resources.getText(R.string.caen_empty),
-                                Toast.LENGTH_LONG
-                            ).show()
+                            showErrorInfo(requireContext(), getString(R.string.caen_empty))
                         }
-
-
                     } else {
-
-                        Toast.makeText(
-                            requireContext(),
-                            requireContext().resources.getText(R.string.invalid_cui),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        showErrorInfo(requireContext(), getString(R.string.invalid_cui))
                     }
 
                 } else {
-
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().resources.getText(R.string.cui_empty),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    showErrorInfo(requireContext(), getString(R.string.cui_empty))
                 }
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    requireContext().resources.getText(R.string.company_empty),
-                    Toast.LENGTH_LONG
-                ).show()
+                showErrorInfo(requireContext(), getString(R.string.company_empty))
             }
-        }
 
-        spinnerCity.isVisible = true
-        spinnerCounty.isVisible = true
-        in_filled_county.visibility = View.GONE
-        in_filled_locality.visibility = View.GONE
+        }
 
     }
 
     override fun setObservers() {
 
         viewModel.countryData.observe(viewLifecycleOwner) { countryData ->
-            this.countries = countryData
-            val countryCodeDialog = AddBillCountryCodeDialog(requireActivity(), countries, "Legal")
-
-            li_dialog.setOnClickListener {
-                countryCodeDialog.show()
-            }
-
-            for (i in countries.indices) {
-                if (countries[i].code == "ROU") {
-                    cnmae.text = countries[i].name
-                    flg.setImageResource(
-                        CountryCityUtils.getFlagDrawableResId(
-                            countries[i].twoLetterCode.lowercase(
-                                Locale.getDefault()
-                            )
-                        )
-                    )
+            if (countryData != null) {
+                this.countriesList = countryData
+                li_dialog.setOnClickListener {
+                    val countryCodeDialog =
+                        CountryCodeDialog(requireActivity(), countriesList, this)
+                    countryCodeDialog.show(requireActivity().supportFragmentManager, null)
                 }
+
+                val pos = Country.findPositionForCode(countriesList, "ROU")
+                this.countryItem = pos.let { countriesList[it] }
+                countryNameTV.text = countryItem?.name
+                countryItem?.twoLetterCode?.lowercase(
+                    Locale.getDefault()
+                )?.let { CountryCityUtils.getFlagId(it) }?.let { cuntryFlagIV.text = it }
             }
 
-        }
-
-        viewModel.sirutaData.observe(viewLifecycleOwner) { sirutaData ->
             progressbar?.dismissPopup()
-            this.sirutaDataList = sirutaData
-            sirutaDataList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-            var firstSirutaCode: Int? = null
-            for (i in sirutaDataList.indices) {
-                if (sirutaDataList[i].parentCode == null) {
-                    firstSirutaCode = sirutaDataList[i].code
-                    county.setText(sirutaDataList[i].name)
-                    break
-                }
-            }
 
-            val localityList: java.util.ArrayList<Siruta> = java.util.ArrayList()
-            for (i in sirutaDataList.indices) {
-                if (firstSirutaCode == sirutaDataList[i].parentCode) {
-                    localityList.add(sirutaDataList[i])
-                }
-            }
-            if (localityList.isNotEmpty()) {
-                localityList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-                localitys.setText(localityList[0].name)
-            }
         }
 
         viewModel.streetTypeData.observe(viewLifecycleOwner) { streetTypeData ->
-            this.streetTypeList = streetTypeData
+            if (streetTypeData != null) {
+                this.streetTypeList = streetTypeData
 
-            val arryadapter =
-                ArrayAdapter(requireContext(), R.layout.drop_down_list, streetTypeList)
-            sp_quata.adapter = arryadapter
+                val arrayAdapter =
+                    ArrayAdapter(requireContext(), R.layout.drop_down_list, streetTypeList)
+                sp_quata.adapter = arrayAdapter
+            }
         }
 
         viewModel.activityTypeData.observe(viewLifecycleOwner) { activityTypeList ->
@@ -417,7 +267,7 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
             activitydialog = BottomSheetDialog(requireContext())
 
             val typeInterface = object : ActivityTypeAdapter.TypeInterface {
-                override fun OnSelection(pos: Int, model: CatalogItem) {
+                override fun onSelection(pos: Int, model: CatalogItem) {
                     typePos = pos
                     activityTypeItem = model
                 }
@@ -426,7 +276,6 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
             adapter.arrayList.clear()
             val view = layoutInflater.inflate(R.layout.activity_type_layout, null)
             val mRecycler = view.findViewById<RecyclerView>(R.id.rv_caen)
-            val mainRL = view.findViewById<RelativeLayout>(R.id.mainRL)
             val cancel = view.findViewById<TextView>(R.id.cancel)
             val mClose = view.findViewById<ImageView>(R.id.mClose)
             val cta = view.findViewById<TextView>(R.id.cta)
@@ -434,7 +283,9 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
             mRecycler.layoutManager =
                 LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             mRecycler.adapter = adapter
-            adapter.addAll(activityTypeList)
+            if (activityTypeList != null) {
+                adapter.addAll(activityTypeList)
+            }
             activitydialog?.setCancelable(false)
             activitydialog?.setContentView(view)
 
@@ -445,7 +296,7 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
             cancel.setOnClickListener { activitydialog?.dismiss() }
             mClose.setOnClickListener { activitydialog?.dismiss() }
             cta.setOnClickListener {
-                typeTV.setText(activityTypeList[typePos].name)
+                typeTV.setText(activityTypeList?.get(typePos)?.name)
                 activitydialog?.dismiss()
             }
         }
@@ -455,27 +306,28 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
             caendialog = BottomSheetDialog(requireContext())
 
 
-            val typeInterface = object : caenAdapter.TypeInterface {
-                override fun OnSelection(pos: Int, model: Caen) {
+            val typeInterface = object : CaenAdapter.TypeInterface {
+                override fun onSelection(pos: Int, model: Caen) {
                     typePos = pos
                     caenItem = model
                 }
             }
-            val adapter = caenAdapter(requireContext(), typeInterface, typePos)
+            val adapter = CaenAdapter(requireContext(), typeInterface, typePos)
             adapter.arrayList.clear()
             val view = layoutInflater.inflate(R.layout.nace_items_layout, null)
             val etSearch = view.findViewById<androidx.appcompat.widget.SearchView>(R.id.etSearch)
             val mRecycler = view.findViewById<RecyclerView>(R.id.rv_caen)
             val cancel = view.findViewById<TextView>(R.id.cancel)
             val mClose = view.findViewById<ImageView>(R.id.mClose)
-            val mImage = view.findViewById<ImageView>(R.id.mImage)
             val cta = view.findViewById<TextView>(R.id.cta)
 
             mRecycler.layoutManager =
                 LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             mRecycler.layoutAnimation = null
             mRecycler.adapter = adapter
-            adapter.addAll(caenList)
+            if (caenList != null) {
+                adapter.addAll(caenList)
+            }
             adapter.filter.filter("")
             caendialog?.setCancelable(false)
             caendialog?.setContentView(view)
@@ -525,46 +377,41 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
         bottomSheet.layoutParams = layoutParams
     }
 
-    private fun opencountydialog() {
+    private fun openCountyDialog() {
 
-        var cityList = mutableListOf<Siruta>()
         val view = layoutInflater.inflate(R.layout.county_layout, null)
-        countydialog = BottomSheetDialog(requireContext())
-        countydialog?.setCancelable(true)
-        countydialog?.setContentView(view)
-        countydialog!!.show()
+        countyDialog = BottomSheetDialog(requireContext())
+        countyDialog?.setCancelable(true)
+        countyDialog?.setContentView(view)
+        countyDialog?.show()
 
-        val rv_county: RecyclerView? = view.findViewById(R.id.rv_county)
+        val rvCounty: RecyclerView? = view.findViewById(R.id.rv_county)
         val etSearchTrain: EditText? = view.findViewById(R.id.etSearchTrain)
         val mClose: ImageView? = view.findViewById(R.id.mClose)
-        rv_county?.layoutManager = LinearLayoutManager(requireContext())
+        rvCounty?.layoutManager = LinearLayoutManager(requireContext())
 
-        if (sirutaDataList.isNotEmpty()) {
+        if (SirutaUtil.countyList.isNotEmpty()) {
 
-            for (i in sirutaDataList.indices) {
+            val adapter =
 
-                if (sirutaDataList[i].parentCode == null)
+                CountyAdapter(
+                    requireContext(),
+                    SirutaUtil.countyList,
+                    countyCode = SirutaUtil.fetchCounty(countySpinnerText.text.toString())?.code
+                        ?: SirutaUtil.countyList[0].code,
+                    countyListClick = object :
+                        CountyListClick {
+                        override fun click(position: Int, code: Siruta) {
+                            countyPosition = position
+                            countySpinnerText.setText(code.name)
+                            localityBlock(code)
+                            countyDialog?.dismiss()
+                        }
+                    })
 
-                    cityList.add(sirutaDataList[i])
-            }
 
-            cityList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-
-            val adapter = CountyAdapter(
-                requireContext(),
-                cityList,
-                countyPosition = countyPosition,
-                countyListClick = object :
-                    CountyListClick {
-                    override fun click(position: Int, code: Siruta) {
-                        countyPosition = position
-                        county.setText(code.name)
-                        locality(code.code.toString())
-                        countydialog?.dismiss()
-
-                    }
-                })
-            rv_county?.adapter = adapter
+            rvCounty?.adapter = adapter
+            adapter.filter.filter("")
 
             etSearchTrain?.addTextChangedListener(object : TextWatcher {
 
@@ -577,18 +424,13 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
 
                 }
 
-                @SuppressLint("NotifyDataSetChanged")
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                     if (s.toString().isNotEmpty()) {
-
                         adapter.filter.filter(s.toString())
-
                     } else {
-
-
+                        adapter.filter.filter("")
                     }
-
                 }
 
                 override fun afterTextChanged(s: Editable?) {
@@ -601,87 +443,87 @@ class AddBillLegalFragment : BaseFragment<AddBillLegalViewModel>() {
         }
 
         mClose?.setOnClickListener {
+            countyDialog?.dismiss()
+        }
 
-            countydialog?.dismiss()
+
+    }
+
+    private fun localityBlock(county: Siruta) {
+
+        val view = layoutInflater.inflate(R.layout.locality_layout, null)
+        localityDialog = BottomSheetDialog(requireContext())
+        localityDialog?.setCancelable(true)
+        localityDialog?.setContentView(view)
+
+        val rvLocality: RecyclerView? = view.findViewById(R.id.rv_locality)
+        val etSearchTrain: EditText? = view.findViewById(R.id.etSearchTrain)
+        val mClose: ImageView? = view.findViewById(R.id.mClose)
+        rvLocality?.layoutManager = LinearLayoutManager(requireContext())
+
+        cityList = SirutaUtil.fetchCity(county)
+
+
+        localitySpinnerText.setText(cityList[0].name)
+        val adapter = LocalityAdapter(
+            requireContext(),
+            cityList,
+            localityListClick = object : LocalityAdapter.LocalityListClick {
+                override fun localityclick(position: Int, siruta: Siruta) {
+                    localityPosition = position
+                    localitySpinnerText.setText(siruta.name)
+                    localityDialog?.dismiss()
+                }
+            })
+        rvLocality?.adapter = adapter
+
+        etSearchTrain?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.toString().isNotEmpty()) {
+                    adapter.filter.filter(s.toString())
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
+
+        mClose?.setOnClickListener {
+            localityDialog?.dismiss()
         }
 
     }
 
-    private fun locality(code: String) {
+    override fun OnCountryPick(item: Country, flagDrawableResId: String) {
+        this.countryItem = item
+        countryNameTV.text = item.name
+        cuntryFlagIV.text = flagDrawableResId
+        changeCountryState(item.code)
+    }
 
-        var city = mutableListOf<Siruta>()
-
-        val view = layoutInflater.inflate(R.layout.locality_layout, null)
-        locality = BottomSheetDialog(requireContext())
-        locality?.setCancelable(true)
-        locality?.setContentView(view)
-
-        val rv_locality: RecyclerView? = view.findViewById(R.id.rv_locality)
-        val etSearchTrain: EditText? = view.findViewById(R.id.etSearchTrain)
-        val mClose: ImageView? = view.findViewById(R.id.mClose)
-        rv_locality?.layoutManager = LinearLayoutManager(requireContext())
-
-        if (sirutaDataList.isNotEmpty()) {
-
-            for (i in sirutaDataList.indices) {
-                if (code == sirutaDataList[i].parentCode.toString()) {
-                    city.add(sirutaDataList[i])
-                }
-            }
-
-            city.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-            localityAdapter = LocalityAdapter(
-                requireContext(),
-                city,
-                localityListClick = object : LocalityAdapter.LocalityListClick {
-                    override fun localityclick(position: Int, siruta: Siruta) {
-                        localityPosition = position
-                        localitys.setText(siruta.name)
-                        locality?.dismiss()
-                    }
-                })
-
-            rv_locality?.adapter = localityAdapter
-
-            etSearchTrain?.addTextChangedListener(object : TextWatcher {
-
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-
-                }
-
-                @SuppressLint("NotifyDataSetChanged")
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-                    if (s.toString().isNotEmpty()) {
-
-                        localityAdapter?.filter?.filter(s.toString())
-
-                    } else {
-
-
-                    }
-
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-
-                }
-
-
-            })
+    private fun changeCountryState(code: String) {
+        if (code == "ROU") {
+            spinnerCounty.isVisible = true
+            spinnerLocality.isVisible = true
+            stateProvinceLabel.isVisible = false
+            localityAreaLabel.isVisible = false
+        } else {
+            spinnerCounty.isVisible = false
+            spinnerLocality.isVisible = false
+            stateProvinceLabel.isVisible = true
+            localityAreaLabel.isVisible = true
         }
-
-
-        mClose?.setOnClickListener {
-
-            locality?.dismiss()
-        }
-
     }
 
 

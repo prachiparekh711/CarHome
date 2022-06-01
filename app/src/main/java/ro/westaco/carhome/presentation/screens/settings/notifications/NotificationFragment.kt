@@ -111,14 +111,14 @@ class NotificationFragment : BaseFragment<NotificationViewModel>(),
         listItems.clear()
         var prevCode = ""
         val now = getNowSeconds()
-        val today = getTitleDate(now, requireContext())
+        val today = getTitleDate(now, requireContext(), true)
         newList.forEach {
             val date = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(it.scheduleAt)
-            val code = getTitleDate(date.time, requireContext())
+            val code = getTitleDate(date.time, requireContext(), true)
 
 //            if (date.after(Date()) || isSameDay(date, Calendar.getInstance().time)) {
             if (code != prevCode) {
-                val day = getTitleDate(date.time, requireContext())
+                val day = getTitleDate(date.time, requireContext(), true)
                 val isToday = day == today
                 val listSection = ListSection(day, code, isToday, !isToday && date.time < now)
                 listItems.add(listSection)

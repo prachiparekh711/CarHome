@@ -1,6 +1,4 @@
 <resources>
-
-    <string name="app_name">CarHome Beta</string>
     <string name="bugsee_token" translatable="false">f5c99688-5e03-49fa-88a2-07f05bb5df17</string>
     <string name="facebook_app_id" translatable="false">452165059943407</string>
     <string name="gcp_web_client_id" translatable="false">143384765556-079f5f6lg3ai4gfgkuuav3jv652q77bo.apps.googleusercontent.com</string>

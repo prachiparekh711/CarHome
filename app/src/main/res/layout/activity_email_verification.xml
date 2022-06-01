@@ -9,8 +9,8 @@
         android:id="@+id/back"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/size_16"
-        android:layout_marginTop="@dimen/size_16"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:adjustViewBounds="true"
         android:src="@drawable/ic_back" />
 
@@ -25,11 +25,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_16"
+            android:layout_marginStart="@dimen/_12sdp"
             android:fontFamily="@font/inter_medium_500"
             android:text="@string/receive_no_link"
             android:textColor="@color/textOnWhiteAccentGray"
-            android:textSize="@dimen/text_size_12" />
+            android:textSize="@dimen/_10sdp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
             android:fontFamily="@font/inter_medium_500"
             android:text="@string/resend"
             android:textColor="@color/appPrimary"
-            android:textSize="@dimen/text_size_12" />
+            android:textSize="@dimen/_10sdp" />
     </LinearLayout>
 
     <LinearLayout
@@ -79,14 +79,14 @@
             android:id="@+id/gotoMailCta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/size_32"
+            android:layout_margin="@dimen/_20sdp"
             android:background="@drawable/cta_background"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/goto_email"
             android:textColor="@color/textOnSolid"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <RelativeLayout
             android:id="@+id/mConfirm"
@@ -103,7 +103,7 @@
                 android:gravity="center"
                 android:text="@string/already_verified"
                 android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/_10sdp" />
 
             <TextView
                 android:id="@+id/mText2"
@@ -116,17 +116,9 @@
                 android:gravity="center"
                 android:text="@string/confirm_here"
                 android:textColor="@color/appPrimary"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/_10sdp" />
         </RelativeLayout>
     </LinearLayout>
 
-    <View
-        android:id="@+id/indicator"
-        android:layout_width="@dimen/_80sdp"
-        android:layout_height="5dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/size_8"
-        android:background="@drawable/rounded_rect_100_black"
-        android:visibility="gone" />
+
 </RelativeLayout>

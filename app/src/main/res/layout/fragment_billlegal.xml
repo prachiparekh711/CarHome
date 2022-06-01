@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/screen_background_alfa"
-    tools:context=".presentation.screens.service.person.legal.BilllegalFragment">
+    tools:context=".presentation.screens.service.person.legal.BillLegalFragment">
 
 
     <androidx.core.widget.NestedScrollView
@@ -20,9 +20,8 @@
                 android:id="@+id/rv_bill_legal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:itemCount="5"
+                android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_bill_natural" />
-
 
             <LinearLayout
                 android:id="@+id/li_add_legal"
@@ -42,14 +41,13 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_medium_500"
                     android:paddingStart="@dimen/_5sdp"
-                    android:text="Add new.."
+                    android:text="@string/add_new_"
                     android:textColor="@color/black"
                     tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
 
         </LinearLayout>
-
 
     </androidx.core.widget.NestedScrollView>
 

@@ -8,20 +8,26 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
@@ -30,16 +36,20 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_bottom_map.*
 import ro.westaco.carhome.R
-import ro.westaco.carhome.data.sources.remote.responses.models.LocationFilterItem
 import ro.westaco.carhome.data.sources.remote.responses.models.LocationV2Item
+import ro.westaco.carhome.data.sources.remote.responses.models.SectionModel
 import ro.westaco.carhome.databinding.DialogLocationBinding
 import ro.westaco.carhome.databinding.DirectionPopupBinding
 import ro.westaco.carhome.databinding.FragmentBottomMapBinding
 import ro.westaco.carhome.databinding.LocationSelectorBinding
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.screens.maps.LocationFilterAdapter
+import ro.westaco.carhome.presentation.screens.main.MainActivity
 import ro.westaco.carhome.presentation.screens.maps.LocationViewModel
+import ro.westaco.carhome.presentation.screens.maps.MapFilterAdapter
+import ro.westaco.carhome.presentation.screens.maps.MapFiltersBottomSheetDialog
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import java.io.IOException
 import java.util.*
 
@@ -55,6 +65,17 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
     private var latitude = 0.0
     private var longitude: Double = 0.0
     var nearbyLocationList: ArrayList<LocationV2Item> = ArrayList()
+    var mapFilters: ArrayList<SectionModel> = ArrayList()
+    private var allFiltersNumber = 0
+    private lateinit var mapFilterAdapter: MapFilterAdapter
+    private lateinit var fragment: MapFiltersBottomSheetDialog
+    private var currentLocation = ClientLocation()
+    private var searchViewText: String = ""
+
+    inner class ClientLocation {
+        var lat: Double = 0.0
+        var lon: Double = 0.0
+    }
 
     companion object {
         const val TAG = "BottomMapFragment"
@@ -87,38 +108,61 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
     }
 
     override fun initUi() {
+        openFiltersImageView3.setOnClickListener {
+            fragment.show(childFragmentManager, "map")
+        }
+        placeAutoComplete()
+        mapFilterAdapter = MapFilterAdapter(requireContext(), mapFilters)
+        recycler_filters.adapter = mapFilterAdapter
+        recycler_filters.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        if (MainActivity.activeUser != null) {
+            mText3.text = resources.getString(R.string.your_location)
+        }
     }
 
     override fun setObservers() {
-        viewModel.filterData.observe(viewLifecycleOwner) { filterList ->
-            if (filterList != null) {
-                binding.recycler.layoutManager = LinearLayoutManager(
-                    mActivity,
-                    LinearLayoutManager.HORIZONTAL,
-                    false
-                )
-                val allFilterList = filterList as ArrayList<LocationFilterItem>
-                allFilterList.add(0, LocationFilterItem(0, "All"))
-                binding.recycler.adapter = LocationFilterAdapter(
-                    mActivity,
-                    allFilterList
-                ) { pos ->
-                    val serviceID = allFilterList[pos].nomLSId
-                    val filterLocationList: ArrayList<LocationV2Item> = ArrayList()
-                    for (i in nearbyLocationList.indices) {
-                        val serviceIDList = nearbyLocationList[i].serviceIds
-                        if (serviceIDList != null) {
-                            if (serviceIDList.contains(serviceID.toString(), false)) {
-                                filterLocationList.add(nearbyLocationList[i])
-                            }
-                        }
-                    }
-
-                    setAdapter(filterLocationList)
-                }
+        fragment = MapFiltersBottomSheetDialog(viewModel)
+        viewModel.nearbyLocationsFiltered.observe(viewLifecycleOwner) { filteredLocations ->
+            if (filteredLocations != null) {
+                setAdapter(filteredLocations)
             }
         }
+        viewModel.getSelectedItems().observe(viewLifecycleOwner) { filters ->
+            mapFilters = filters
+            var isFiltered = false
+            filters.forEach {
+                if (it.filters.size != 0)
+                    isFiltered = true
+            }
+            if (isFiltered) {
+                mTab.visibility = View.VISIBLE
+                appliedFiltersTextView.text =
+                    getMapFiltersSize().toString() + "/" + allFiltersNumber
+            } else {
+                mTab.visibility = View.GONE
+            }
+            mapFilterAdapter.data = mapFilters
+            getFilteredLocations()
+            mapFilterAdapter.notifyDataSetChanged()
+        }
 
+        mapFilterAdapter.getRemoveFromListEvent().observe(viewLifecycleOwner) { removedPosition ->
+            removeItemAtPositionInMapFilters(removedPosition)
+            appliedFiltersTextView.text = getMapFiltersSize().toString() + "/" + allFiltersNumber
+            if (getMapFiltersSize() == 0) {
+                mTab.visibility = View.GONE
+            }
+            getFilteredLocations()
+            mapFilterAdapter.notifyDataSetChanged()
+        }
+
+        viewModel.filterDataMaps.observe(viewLifecycleOwner) {
+            allFiltersNumber = 0
+            it?.forEach { sectionModel ->
+                allFiltersNumber += sectionModel.filters.size
+            }
+        }
         viewModel.nearbyLocationData.observe(viewLifecycleOwner) { allLocationList ->
             if (allLocationList != null) {
                 nearbyLocationList = allLocationList
@@ -133,14 +177,86 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
 
             } else {
                 binding.frame.visibility = View.GONE
-                Toast.makeText(
-                    mActivity,
-                    resources.getString(R.string.data_not_available),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorInfo(mActivity, getString(R.string.data_not_available))
             }
             binding.mRelative.visibility = View.INVISIBLE
         }
+    }
+
+    private fun placeAutoComplete() {
+
+        if (!Places.isInitialized()) {
+            Places.initialize(
+                requireActivity().applicationContext,
+                requireActivity().resources.getString(R.string.google_app_key),
+                Locale.US
+            )
+        }
+
+        placeLL2.setOnClickListener {
+            try {
+                val fields = listOf(
+                    Place.Field.ID,
+                    Place.Field.NAME,
+                    Place.Field.ADDRESS,
+                    Place.Field.ADDRESS_COMPONENTS
+                )
+                val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(requireActivity())
+                startActivityForResult(intent, 100)
+            } catch (e: GooglePlayServicesRepairableException) {
+                e.printStackTrace()
+            } catch (e: GooglePlayServicesNotAvailableException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun removeItemAtPositionInMapFilters(position: Int) {
+        var itemCount = 0
+        var newPosition = 0
+        mapFilters.forEach {
+            if (position < it.filters.size) {
+                it.filters.removeAt(position)
+                return
+            }
+            if (itemCount + it.filters.size > position) {
+                newPosition = position % itemCount
+                it.filters.removeAt(newPosition)
+                return
+            } else {
+                itemCount += it.filters.size
+            }
+
+        }
+    }
+
+    private fun getMapFiltersSize(): Int {
+        var itemsCount = 0
+        mapFilters.forEach {
+            itemsCount += it.filters.size
+        }
+        return itemsCount
+    }
+
+    private fun getFilteredLocations() {
+        val arrayOfIds = getFiltersArrayList()
+        viewModel.getLocationDataFiltered(
+            currentLocation.lat.toString(),
+            currentLocation.lon.toString(),
+            searchViewText,
+            arrayOfIds
+        )
+    }
+
+    private fun getFiltersArrayList(): java.util.ArrayList<Int> {
+        val arrayOfIds = java.util.ArrayList<Int>()
+        mapFilters.forEach { sectionModel ->
+            sectionModel.filters.forEach {
+                arrayOfIds.add(it.nomLSId)
+            }
+        }
+        return arrayOfIds
     }
 
     private fun setAdapter(nearbyLocationList: ArrayList<LocationV2Item>) {
@@ -240,6 +356,7 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
+                searchViewText = newText
                 adapter?.filter?.filter(newText)
                 return true
             }
@@ -365,9 +482,20 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 100) {
+            if (resultCode == Activity.RESULT_OK) {
+                val place = Autocomplete.getPlaceFromIntent(data)
+                mLiveLocationBottomMap.text = place.name
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                var status = Autocomplete.getStatusFromIntent(data)
+            }
+        }
+    }
+
     private fun locationFilter() {
         binding.mRelative.visibility = View.VISIBLE
-        binding.mTab.visibility = View.VISIBLE
         if (ActivityCompat.checkSelfPermission(
                 mActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -381,11 +509,25 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
             val location = task.result
             if (location != null) {
                 try {
+                    val geocoder = Geocoder(requireActivity(), Locale.getDefault())
+                    val addresses =
+                        geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                    currentLocation.lat = location.latitude
+                    currentLocation.lon = location.longitude
+
+                    if (mLiveLocationBottomMap != null) {
+
+                        mLiveLocationBottomMap.text = addresses[0].getAddressLine(0)
+
+                    }
 
                     viewModel.getLocationFilter()
 //                    viewModel.getLocationData(location.latitude.toString(), location.longitude.toString())
 //                    Static data for location
-                    viewModel.getLocationData("27.57", "44.01")
+                    viewModel.getLocationData(
+                        location.latitude.toString(),
+                        location.longitude.toString()
+                    )
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }

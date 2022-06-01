@@ -27,6 +27,9 @@ data class AddProfileDataRequest(
     @field:SerializedName("phone")
     val phone: String? = null,
 
+    @SerializedName("phoneCountryCode")
+    val phoneCountryCode: String? = null,
+
     @field:SerializedName("drivingLicense")
     val drivingLicense: DrivingLicense? = null,
 

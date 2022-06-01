@@ -21,11 +21,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/size_12"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/inter_bold_700"
             android:text="@string/save_as"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <ImageView
             android:id="@+id/close"

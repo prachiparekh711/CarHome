@@ -2,9 +2,9 @@
 <layout>
 
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout android:id="@id/mRelative"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@id/mRelative"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -19,20 +19,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/mView"
-            android:layout_marginHorizontal="@dimen/size_16"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             android:background="@drawable/rounded_rect_white"
-            android:paddingBottom="@dimen/size_24">
+            android:paddingBottom="@dimen/_15sdp">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/size_16"
+                android:layout_margin="@dimen/_12sdp"
                 android:fontFamily="@font/inter_semibold_600"
                 android:gravity="center"
                 android:text="@string/select_owner"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_20"
+                android:textSize="@dimen/_16sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,11 +40,11 @@
                 android:id="@+id/subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_8"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/inter_medium_500"
                 android:text="@string/choose_option"
                 android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
+                android:textSize="@dimen/_11sdp"
                 app:layout_constraintStart_toStartOf="@+id/title"
                 app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -52,7 +52,7 @@
                 android:id="@+id/close"
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
-                android:layout_marginEnd="@dimen/size_16"
+                android:layout_marginEnd="@dimen/_12sdp"
                 android:adjustViewBounds="true"
                 android:padding="@dimen/_6sdp"
                 android:src="@drawable/ic_close_icon"
@@ -70,7 +70,7 @@
             android:background="@color/white"
             app:tabBackground="@color/white"
             app:tabIndicatorColor="@color/appPrimary"
-            app:tabIndicatorHeight="@dimen/size_2"
+            app:tabIndicatorHeight="@dimen/_1sdp"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/appPrimary"
             app:tabTextAppearance="@style/TabLayoutTheme"
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="@dimen/size_20"
+            android:layout_marginTop="@dimen/_13sdp"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/_15sdp">
@@ -99,28 +99,28 @@
                 android:id="@+id/dissmiss"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_24"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_weight="1"
                 android:fontFamily="@font/manrope_semibold_600"
                 android:gravity="center"
                 android:paddingVertical="@dimen/_5sdp"
                 android:text="@string/cancel"
                 android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/_11sdp" />
 
             <TextView
                 android:id="@+id/cta"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_24"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_weight="1.8"
                 android:background="@drawable/save_background"
                 android:fontFamily="@font/manrope_semibold_600"
                 android:gravity="center"
-                android:paddingVertical="@dimen/size_16"
+                android:paddingVertical="@dimen/_12sdp"
                 android:text="@string/continue_txt"
                 android:textColor="@color/textOnSolid"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/_11sdp" />
 
         </LinearLayout>
 

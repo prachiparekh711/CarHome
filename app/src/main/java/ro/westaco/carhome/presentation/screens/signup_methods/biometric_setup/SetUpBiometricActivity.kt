@@ -19,7 +19,7 @@ class SetUpBiometricActivity : BaseActivity<BiometricSetupModel>() {
             SharedPrefrences.setBiometricsStatus(this, true)
             SharedPrefrences.setBiometricsMode(this, "TOUCH")
             touchRL.isVisible = false
-            viewModel.navigateToProgress()
+           viewModel.navigateToProgress()
 //            faceRL.isVisible = true
         }
 

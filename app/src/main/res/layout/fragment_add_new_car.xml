@@ -11,8 +11,8 @@
         android:id="@+id/back"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/size_16"
-        android:layout_marginTop="@dimen/size_16"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:adjustViewBounds="true"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +25,7 @@
         android:fontFamily="@font/inter_semibold_600"
         android:text="@string/add_car_11"
         android:textColor="@color/textOnWhite"
-        android:textSize="@dimen/text_size_18"
+        android:textSize="@dimen/_15sdp"
         app:layout_constraintBottom_toBottomOf="@+id/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,184 +35,56 @@
         android:id="@+id/home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/size_16"
+        android:layout_marginEnd="@dimen/_12sdp"
         android:adjustViewBounds="true"
         android:src="@drawable/ic_account"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/back" />
 
-    <ScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_20sdp"
-        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/indicator"
         app:layout_constraintTop_toBottomOf="@+id/title">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_20sdp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/registrationCountryLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/reg_country"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+            android:fillViewport="true"
+            app:layout_behavior=".utils.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_4"
-                android:background="@drawable/auth_text_input_background">
-
-                <Spinner
-                    android:id="@+id/registrationCountry"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:spinnerMode="dropdown"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textSize="@dimen/text_size_16"
-                    app:layout_constraintTop_toBottomOf="@+id/registrationCountryLabel" />
-
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/_7sdp"
-                    android:src="@drawable/ic_arrow_down_id" />
-
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/licensePlateLabel"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/license_plate"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/registrationCountry" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/licensePlate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/license_hint"
-                    android:inputType="text"
-                    android:paddingVertical="@dimen/size_12"
-                    android:paddingStart="@dimen/size_63"
-                    android:paddingEnd="@dimen/size_16"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/licensePlateCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="match_parent"
-                    android:layout_alignStart="@id/licensePlate"
-                    android:layout_alignTop="@id/licensePlate"
-                    android:layout_alignBottom="@id/licensePlate"
-                    android:background="@drawable/bg_document_category"
+                    android:id="@+id/registrationCountryLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
                     android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:text="A."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/reg_country"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="0dp"
-                    android:layout_alignTop="@id/licensePlateCateg"
-                    android:layout_alignEnd="@id/licensePlateCateg"
-                    android:layout_alignBottom="@id/licensePlateCateg"
-                    android:background="@color/appPrimary" />
-
-            </RelativeLayout>
-
-
-            <TextView
-                android:id="@+id/vehicleCategoryLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/vehicle_category"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/licensePlate" />
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/li_vehicleCategory"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/vehicleCategoryCateg"
-                        android:layout_width="@dimen/_40sdp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/bg_document_category"
-                        android:fontFamily="@font/inter_medium_500"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:paddingHorizontal="@dimen/size_12"
-                        android:text="J."
-                        android:textColor="@color/appPrimary"
-                        android:textSize="@dimen/_12sdp"
-                        tools:ignore="HardcodedText" />
-
-                    <View
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/appPrimary" />
-
+                    android:layout_height="45dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/auth_text_input_background">
 
                     <Spinner
-                        android:id="@+id/vehicleCategory"
+                        android:id="@+id/registrationCountry"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -220,7 +92,200 @@
                         android:fontFamily="@font/inter_medium_500"
                         android:spinnerMode="dropdown"
                         android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/text_size_16" />
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textSize="@dimen/_11sdp"
+                        app:layout_constraintTop_toBottomOf="@+id/registrationCountryLabel" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/_7sdp"
+                        android:src="@drawable/ic_arrow_down_id" />
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/licensePlateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/license_plate"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/registrationCountry" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/licensePlate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/license_hint"
+                        android:inputType="text"
+                        android:paddingVertical="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_50sdp"
+                        android:paddingEnd="@dimen/_12sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/licensePlateCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="match_parent"
+                        android:layout_alignStart="@id/licensePlate"
+                        android:layout_alignTop="@id/licensePlate"
+                        android:layout_alignBottom="@id/licensePlate"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="A."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="0dp"
+                        android:layout_alignTop="@id/licensePlateCateg"
+                        android:layout_alignEnd="@id/licensePlateCateg"
+                        android:layout_alignBottom="@id/licensePlateCateg"
+                        android:background="@color/appPrimary" />
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/vehicleCategoryLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/vehicle_category"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/licensePlate" />
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/li_vehicleCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/vehicleCategoryCateg"
+                            android:layout_width="@dimen/_40sdp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_document_category"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingHorizontal="@dimen/_10sdp"
+                            android:text="J."
+                            android:textColor="@color/appPrimary"
+                            android:textSize="@dimen/_12sdp"
+                            tools:ignore="HardcodedText" />
+
+                        <View
+                            android:layout_width="@dimen/_1sdp"
+                            android:layout_height="match_parent"
+                            android:background="@color/appPrimary" />
+
+
+                        <Spinner
+                            android:id="@+id/vehicleCategory"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:spinnerMode="dropdown"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="@dimen/_7sdp"
+                            android:src="@drawable/ic_arrow_down_id" />
+
+                    </LinearLayout>
+
+                    <!--<Spinner
+                        android:id="@+id/vehicleCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:paddingLeft="@dimen/_42sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textSize="@dimen/_11sdp" />-->
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/vehicleSubCategoryLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/vehicle_subcategory"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/licensePlate" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:gravity="center">
+
+                    <Spinner
+                        android:id="@+id/vehicleSubCategory"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:spinnerMode="dropdown"
+                        android:textColor="@color/textOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_15sdp" />
 
 
                     <ImageView
@@ -232,865 +297,808 @@
 
                 </LinearLayout>
 
-                <!--<Spinner
-                    android:id="@+id/vehicleCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:paddingVertical="@dimen/_7sdp"
-                    android:paddingLeft="@dimen/_42sdp"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_16" />-->
 
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/vehicleSubCategoryLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/vehicle_subcategory"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/licensePlate" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_4"
-                android:background="@drawable/auth_text_input_background"
-                android:gravity="center">
-
-                <Spinner
-                    android:id="@+id/vehicleSubCategory"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:spinnerMode="dropdown"
-                    android:textColor="@color/textOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_18" />
-
-
-                <ImageView
+                <TextView
+                    android:id="@+id/purposeLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/_7sdp"
-                    android:src="@drawable/ic_arrow_down_id" />
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/purposeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/purpose"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_4"
-                android:background="@drawable/auth_text_input_background"
-                android:gravity="center">
-
-                <Spinner
-                    android:id="@+id/purposeCategory"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
                     android:fontFamily="@font/inter_medium_500"
-                    android:spinnerMode="dropdown"
-                    android:textColor="@color/textOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
+                    android:text="@string/purpose"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/_7sdp"
-                    android:src="@drawable/ic_arrow_down_id" />
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/manufacturerLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/manufacturer"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/vehicleCategory" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_4"
-                android:background="@drawable/auth_text_input_background"
-                android:orientation="horizontal">
-
-
-                <TextView
-                    android:id="@+id/manufacturerCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="D1."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/appPrimary" />
-
-
-                <Spinner
-                    android:id="@+id/manufacturer"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_16" />
-
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/_7sdp"
-                    android:src="@drawable/ic_arrow_down_id" />
-
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/modelLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/model"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/manufacturer" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/model"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/model"
-                    android:inputType="text"
-                    android:paddingVertical="@dimen/size_12"
-                    android:paddingStart="@dimen/size_63"
-                    android:paddingEnd="@dimen/size_16"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
-
-                <TextView
-                    android:id="@+id/modelCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="0dp"
-                    android:layout_alignStart="@id/model"
-                    android:layout_alignTop="@id/model"
-                    android:layout_alignBottom="@id/model"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="D3."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="0dp"
-                    android:layout_alignTop="@id/model"
-                    android:layout_alignRight="@id/modelCateg"
-                    android:layout_alignBottom="@id/model"
-                    android:background="@color/appPrimary" />
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/vinLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/car_vin"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/vin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/car_vin"
-                    android:inputType="text"
-                    android:paddingVertical="@dimen/size_12"
-                    android:paddingStart="@dimen/size_63"
-                    android:paddingEnd="@dimen/size_16"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
-
-                <TextView
-                    android:id="@+id/vinCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="0dp"
-                    android:layout_alignStart="@id/vin"
-                    android:layout_alignTop="@id/vin"
-                    android:layout_alignBottom="@id/vin"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="E."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="0dp"
-                    android:layout_alignTop="@id/vin"
-                    android:layout_alignRight="@id/vinCateg"
-                    android:layout_alignBottom="@id/vin"
-                    android:background="@color/appPrimary" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/yearLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/year"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/vin" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/year"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/year"
-                    android:inputType="number"
-                    android:paddingVertical="@dimen/size_12"
-                    android:paddingStart="@dimen/size_63"
-                    android:paddingEnd="@dimen/size_16"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
-
-                <TextView
-                    android:id="@+id/yearCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="0dp"
-                    android:layout_alignStart="@id/year"
-                    android:layout_alignTop="@id/year"
-                    android:layout_alignBottom="@id/year"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="B."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="0dp"
-                    android:layout_alignTop="@id/year"
-                    android:layout_alignRight="@id/yearCateg"
-                    android:layout_alignBottom="@id/year"
-                    android:background="@color/appPrimary" />
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/maxAllowableMassLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/max_allow_mass"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/year" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/maxAllowableMass"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/max_allow_mass"
-                    android:inputType="number"
-                    android:paddingVertical="@dimen/size_12"
-                    android:paddingStart="@dimen/size_63"
-                    android:paddingEnd="@dimen/size_16"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
-
-                <TextView
-                    android:id="@+id/maxAllowableMassCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="0dp"
-                    android:layout_alignStart="@id/maxAllowableMass"
-                    android:layout_alignTop="@id/maxAllowableMass"
-                    android:layout_alignBottom="@id/maxAllowableMass"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="F1."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="0dp"
-                    android:layout_alignTop="@id/maxAllowableMass"
-                    android:layout_alignRight="@id/maxAllowableMassCateg"
-                    android:layout_alignBottom="@id/maxAllowableMass"
-                    android:background="@color/appPrimary" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/engineSizeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/engine_size"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/maxAllowableMass" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/engineSize"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/engine_size"
-                    android:inputType="number"
-                    android:paddingVertical="@dimen/size_12"
-                    android:paddingStart="@dimen/size_63"
-                    android:paddingEnd="@dimen/size_16"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
-
-                <TextView
-                    android:id="@+id/engineSizeCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="0dp"
-                    android:layout_alignStart="@id/engineSize"
-                    android:layout_alignTop="@id/engineSize"
-                    android:layout_alignBottom="@id/engineSize"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="P1."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="0dp"
-                    android:layout_alignTop="@id/engineSize"
-                    android:layout_alignRight="@id/engineSizeCateg"
-                    android:layout_alignBottom="@id/engineSize"
-                    android:background="@color/appPrimary" />
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/powerLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/power"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/engineSize" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/power"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/power"
-                    android:inputType="number"
-                    android:paddingVertical="@dimen/size_12"
-                    android:paddingStart="@dimen/size_63"
-                    android:paddingEnd="@dimen/size_16"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
-
-                <TextView
-                    android:id="@+id/powerCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="0dp"
-                    android:layout_alignStart="@id/power"
-                    android:layout_alignTop="@id/power"
-                    android:layout_alignBottom="@id/power"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="P2."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="0dp"
-                    android:layout_alignTop="@id/power"
-                    android:layout_alignRight="@+id/powerCateg"
-                    android:layout_alignBottom="@id/power"
-                    android:background="@color/appPrimary" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/fuelTypeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/fuel_type"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/power" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_4"
-                android:background="@drawable/auth_text_input_background"
-                android:orientation="horizontal">
-
-
-                <TextView
-                    android:id="@+id/fuelTypeCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="P3."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/appPrimary" />
-
-                <Spinner
-                    android:id="@+id/fuelType"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:textSize="@dimen/text_size_16" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/_7sdp"
-                    android:src="@drawable/ic_arrow_down_id" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/noSeatsLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/no_seats"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fuelType" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/noSeats"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/no_seats"
-                    android:inputType="number"
-                    android:paddingVertical="@dimen/size_12"
-                    android:paddingStart="@dimen/size_63"
-                    android:paddingEnd="@dimen/size_16"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
-
-                <TextView
-                    android:id="@+id/noSeatsCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="0dp"
-                    android:layout_alignStart="@+id/noSeats"
-                    android:layout_alignTop="@+id/noSeats"
-                    android:layout_alignBottom="@+id/noSeats"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="S."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="0dp"
-                    android:layout_alignTop="@+id/noSeats"
-                    android:layout_alignRight="@+id/noSeatsCateg"
-                    android:layout_alignBottom="@+id/noSeats"
-                    android:background="@color/appPrimary" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/civLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/civ"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/civ"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/civ"
-                    android:inputType="text"
-                    android:paddingVertical="@dimen/size_12"
-                    android:paddingStart="@dimen/size_63"
-                    android:paddingEnd="@dimen/size_16"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_16" />
-
-                <TextView
-                    android:id="@+id/civCateg"
-                    android:layout_width="@dimen/_40sdp"
-                    android:layout_height="0dp"
-                    android:layout_alignStart="@id/civ"
-                    android:layout_alignTop="@id/civ"
-                    android:layout_alignBottom="@id/civ"
-                    android:background="@drawable/bg_document_category"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/size_12"
-                    android:text="X."
-                    android:textColor="@color/appPrimary"
-                    android:textSize="@dimen/_12sdp"
-                    tools:ignore="HardcodedText" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="0dp"
-                    android:layout_alignTop="@id/civ"
-                    android:layout_alignRight="@+id/civCateg"
-                    android:layout_alignBottom="@id/civ"
-                    android:background="@color/appPrimary" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/leasingLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/leasing"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/size_16"
-                android:background="@drawable/auth_text_input_background"
-                android:padding="@dimen/_10sdp">
 
                 <LinearLayout
-                    android:id="@+id/leasingLL"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/leasingQues"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
+                    <Spinner
+                        android:id="@+id/purposeCategory"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
                         android:fontFamily="@font/inter_medium_500"
-                        android:text="@string/leasing_ques"
-                        android:textColor="@color/textOnWhiteAccentGray"
-                        android:textSize="@dimen/text_size_14" />
+                        android:spinnerMode="dropdown"
+                        android:textColor="@color/textOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
 
-                    <ro.westaco.carhome.utils.SwitchButton
-                        android:id="@+id/switch_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_23sdp"
-                        android:layout_gravity="right"
-                        app:sb_background="@color/unselected"
-                        app:sb_border_width="@dimen/_2sdp"
-                        app:sb_checked_color="@color/ctaBackground"
-                        app:sb_checkline_width="0dp"
-                        app:sb_show_indicator="false"
-                        app:sb_uncheck_color="@color/unselected" />
-                </LinearLayout>
-
-                <EditText
-                    android:id="@+id/leasingCompany"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_below="@id/leasingLL"
-                    android:layout_marginTop="@dimen/size_4"
-                    android:background="@drawable/auth_text_input_background"
-                    android:cursorVisible="false"
-                    android:drawableEnd="@drawable/ic_arrow_down_id"
-                    android:focusable="true"
-                    android:focusableInTouchMode="false"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/select_leasing"
-                    android:inputType="none"
-                    android:longClickable="false"
-                    android:padding="@dimen/_7sdp"
-                    android:singleLine="true"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/_10sdp"
-                    android:visibility="gone" />
-
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/others"
-                    android:textColor="@color/secondaryTextOnWhite"
-                    android:textSize="@dimen/_12sdp" />
-
-                <LinearLayout
-                    android:id="@+id/llUploadOther"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@drawable/attech_upload_background"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_5sdp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/upload"
-                        android:textColor="@color/ctaBackground"
-                        android:textSize="@dimen/_13sdp"
-                        android:textStyle="bold" />
 
                     <ImageView
-                        android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp"
-                        android:layout_marginStart="@dimen/_3sdp"
-                        android:padding="@dimen/_5sdp"
-                        android:src="@drawable/import_icon" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/_7sdp"
+                        android:src="@drawable/ic_arrow_down_id" />
+
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rcyViewOther"
+
+                <TextView
+                    android:id="@+id/manufacturerLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/manufacturer"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vehicleCategory" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/_10sdp" />
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/manufacturerCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="D1."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+
+                    <View
+                        android:layout_width="@dimen/_1sdp"
+                        android:layout_height="match_parent"
+                        android:background="@color/appPrimary" />
+
+
+                    <Spinner
+                        android:id="@+id/manufacturer"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:textColor="@color/textOnWhite"
+                        android:textSize="@dimen/_11sdp" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/_7sdp"
+                        android:src="@drawable/ic_arrow_down_id" />
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/modelLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/model"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/manufacturer" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/model"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/model"
+                        android:inputType="text"
+                        android:paddingVertical="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_50sdp"
+                        android:paddingEnd="@dimen/_12sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/modelCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="0dp"
+                        android:layout_alignStart="@id/model"
+                        android:layout_alignTop="@id/model"
+                        android:layout_alignBottom="@id/model"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="D3."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="0dp"
+                        android:layout_alignTop="@id/model"
+                        android:layout_alignRight="@id/modelCateg"
+                        android:layout_alignBottom="@id/model"
+                        android:background="@color/appPrimary" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/vinLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/car_vin"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/vin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/car_vin"
+                        android:inputType="text"
+                        android:paddingVertical="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_50sdp"
+                        android:paddingEnd="@dimen/_12sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/vinCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="0dp"
+                        android:layout_alignStart="@id/vin"
+                        android:layout_alignTop="@id/vin"
+                        android:layout_alignBottom="@id/vin"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="E."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="0dp"
+                        android:layout_alignTop="@id/vin"
+                        android:layout_alignRight="@id/vinCateg"
+                        android:layout_alignBottom="@id/vin"
+                        android:background="@color/appPrimary" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/yearLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/year"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vin" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/year"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/year"
+                        android:inputType="number"
+                        android:paddingVertical="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_50sdp"
+                        android:paddingEnd="@dimen/_12sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/yearCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="0dp"
+                        android:layout_alignStart="@id/year"
+                        android:layout_alignTop="@id/year"
+                        android:layout_alignBottom="@id/year"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="B."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="0dp"
+                        android:layout_alignTop="@id/year"
+                        android:layout_alignRight="@id/yearCateg"
+                        android:layout_alignBottom="@id/year"
+                        android:background="@color/appPrimary" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/maxAllowableMassLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/max_allow_mass"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/year" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/maxAllowableMass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/max_allow_mass"
+                        android:inputType="number"
+                        android:paddingVertical="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_50sdp"
+                        android:paddingEnd="@dimen/_12sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/maxAllowableMassCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="0dp"
+                        android:layout_alignStart="@id/maxAllowableMass"
+                        android:layout_alignTop="@id/maxAllowableMass"
+                        android:layout_alignBottom="@id/maxAllowableMass"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="F1."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="0dp"
+                        android:layout_alignTop="@id/maxAllowableMass"
+                        android:layout_alignRight="@id/maxAllowableMassCateg"
+                        android:layout_alignBottom="@id/maxAllowableMass"
+                        android:background="@color/appPrimary" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/engineSizeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/engine_size"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/maxAllowableMass" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/engineSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/engine_size"
+                        android:inputType="number"
+                        android:paddingVertical="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_50sdp"
+                        android:paddingEnd="@dimen/_12sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/engineSizeCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="0dp"
+                        android:layout_alignStart="@id/engineSize"
+                        android:layout_alignTop="@id/engineSize"
+                        android:layout_alignBottom="@id/engineSize"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="P1."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="0dp"
+                        android:layout_alignTop="@id/engineSize"
+                        android:layout_alignRight="@id/engineSizeCateg"
+                        android:layout_alignBottom="@id/engineSize"
+                        android:background="@color/appPrimary" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/powerLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/power"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/engineSize" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/power"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/power"
+                        android:inputType="number"
+                        android:paddingVertical="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_50sdp"
+                        android:paddingEnd="@dimen/_12sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/powerCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="0dp"
+                        android:layout_alignStart="@id/power"
+                        android:layout_alignTop="@id/power"
+                        android:layout_alignBottom="@id/power"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="P2."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="0dp"
+                        android:layout_alignTop="@id/power"
+                        android:layout_alignRight="@+id/powerCateg"
+                        android:layout_alignBottom="@id/power"
+                        android:background="@color/appPrimary" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/fuelTypeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/fuel_type"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/power" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/fuelTypeCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="P3."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/appPrimary" />
+
+                    <Spinner
+                        android:id="@+id/fuelType"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/_7sdp"
+                        android:src="@drawable/ic_arrow_down_id" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/noSeatsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/no_seats"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fuelType" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/noSeats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/no_seats"
+                        android:inputType="number"
+                        android:paddingVertical="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_50sdp"
+                        android:paddingEnd="@dimen/_12sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/noSeatsCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="0dp"
+                        android:layout_alignStart="@+id/noSeats"
+                        android:layout_alignTop="@+id/noSeats"
+                        android:layout_alignBottom="@+id/noSeats"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="S."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="0dp"
+                        android:layout_alignTop="@+id/noSeats"
+                        android:layout_alignRight="@+id/noSeatsCateg"
+                        android:layout_alignBottom="@+id/noSeats"
+                        android:background="@color/appPrimary" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/civLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/civ"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/civ"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/civ"
+                        android:inputType="text"
+                        android:paddingVertical="@dimen/_10sdp"
+                        android:paddingStart="@dimen/_50sdp"
+                        android:paddingEnd="@dimen/_12sdp"
+                        android:textColor="@color/textOnWhite"
+                        android:textColorHint="@color/hintOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:id="@+id/civCateg"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="0dp"
+                        android:layout_alignStart="@id/civ"
+                        android:layout_alignTop="@id/civ"
+                        android:layout_alignBottom="@id/civ"
+                        android:background="@drawable/bg_document_category"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:text="X."
+                        android:textColor="@color/appPrimary"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="0dp"
+                        android:layout_alignTop="@id/civ"
+                        android:layout_alignRight="@+id/civCateg"
+                        android:layout_alignBottom="@id/civ"
+                        android:background="@color/appPrimary" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/leasingLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/leasing"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_12sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:padding="@dimen/_10sdp">
+
+                    <LinearLayout
+                        android:id="@+id/leasingLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/leasingQues"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:text="@string/leasing_ques"
+                            android:textColor="@color/textOnWhiteAccentGray"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <ro.westaco.carhome.utils.SwitchButton
+                            android:id="@+id/switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_23sdp"
+                            android:layout_gravity="right"
+                            app:sb_background="@color/unselected"
+                            app:sb_border_width="@dimen/_2sdp"
+                            app:sb_checked_color="@color/ctaBackground"
+                            app:sb_checkline_width="0dp"
+                            app:sb_show_indicator="false"
+                            app:sb_uncheck_color="@color/unselected" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/leasingCompany"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_below="@id/leasingLL"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:cursorVisible="false"
+                        android:drawableEnd="@drawable/ic_arrow_down_id"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:hint="@string/select_leasing"
+                        android:inputType="none"
+                        android:longClickable="false"
+                        android:padding="@dimen/_7sdp"
+                        android:singleLine="true"
+                        android:textColor="@color/textOnWhite"
+                        android:textSize="@dimen/_10sdp"
+                        android:visibility="visible" />
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/others"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <LinearLayout
+                        android:id="@+id/llUploadOther"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:background="@drawable/attech_upload_background"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_5sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/upload"
+                            android:textColor="@color/ctaBackground"
+                            android:textSize="@dimen/_13sdp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_3sdp"
+                            android:padding="@dimen/_5sdp"
+                            android:src="@drawable/import_icon" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcyViewOther"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/_10sdp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/cta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_20sdp"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:background="@drawable/cta_background"
+                    android:fontFamily="@font/manrope_semibold_600"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_12sdp"
+                    android:text="@string/next"
+                    android:textColor="@color/textOnSolid"
+                    android:textSize="@dimen/_11sdp" />
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/cta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_20sdp"
-                android:layout_marginHorizontal="@dimen/size_24"
-                android:background="@drawable/cta_background"
-                android:fontFamily="@font/manrope_semibold_600"
-                android:gravity="center"
-                android:paddingVertical="@dimen/size_16"
-                android:text="@string/next"
-                android:textColor="@color/textOnSolid"
-                android:textSize="@dimen/text_size_16" />
+        </androidx.core.widget.NestedScrollView>
 
-        </LinearLayout>
-
-    </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
     <View
         android:id="@+id/indicator"
         android:layout_width="0dp"
         android:layout_height="5dp"
-        android:layout_marginBottom="@dimen/size_8"
+        android:layout_marginBottom="@dimen/_5sdp"
         android:background="@drawable/rounded_rect_100_black"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

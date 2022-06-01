@@ -27,6 +27,7 @@ class SplashViewModel @Inject constructor(
 
     override fun onActivityCreated() {
 
+
         Handler(Looper.getMainLooper()).postDelayed({
             if (appPreferences.wasOnboardingSeen) {
                 appPreferences.wasOnboardingSeen = true

@@ -36,7 +36,7 @@
             android:id="@+id/avatar"
             android:layout_width="@dimen/_35sdp"
             android:layout_height="@dimen/_35sdp"
-            android:src="@drawable/flag_peru"
+            android:src="@drawable/carhome_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -60,10 +60,10 @@
             android:id="@+id/tv_empty_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_4sdp"
             app:layout_constraintBottom_toBottomOf="@+id/avatar"
             app:layout_constraintEnd_toStartOf="@+id/tick_circle"
             app:layout_constraintStart_toEndOf="@+id/avatar"
+            android:layout_marginEnd="@dimen/_4sdp"
             app:layout_constraintTop_toBottomOf="@+id/tv_name">
 
             <LinearLayout
@@ -85,8 +85,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_regular_400"
                     android:paddingStart="@dimen/_3sdp"
-                    android:text="Address Missing"
-                    android:textColor="@color/textOnWhite"
+                    android:text="@string/data_missing_"
+                    android:textColor="@color/error_code_email"
                     android:textSize="@dimen/_10sdp"
                     tools:ignore="RtlSymmetry" />
 

@@ -1,7 +1,6 @@
 package ro.westaco.carhome.presentation.screens.dashboard.profile
 
 import android.app.Application
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -12,7 +11,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
@@ -25,18 +23,16 @@ import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.dashboard.profile.edit.EditProfileFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
 import ro.westaco.carhome.utils.DateTimeUtils
 import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.io.ByteArrayOutputStream
 import java.io.File
 import javax.inject.Inject
 
 
 @HiltViewModel
-class ProfiledetailsViewModel @Inject constructor(
+class ProfileDetailsViewModel @Inject constructor(
     private val app: Application,
     private val api: CarHomeApi
 ) : BaseViewModel() {
@@ -45,11 +41,12 @@ class ProfiledetailsViewModel @Inject constructor(
     var profileLogoData: MutableLiveData<Bitmap>? = MutableLiveData()
     val actionStream: SingleLiveEvent<ACTION> = SingleLiveEvent()
 
-    var countryData = MutableLiveData<ArrayList<Country>>()
-    var licenseCategoryData = MutableLiveData<ArrayList<CatalogItem>>()
+    var countryData = MutableLiveData<ArrayList<Country>?>()
+    var licenseCategoryData = MutableLiveData<ArrayList<CatalogItem>?>()
 
     sealed class ACTION {
-        class onDeleteSuccess(val attachType: String) : ACTION()
+        class OnDeleteSuccess(val attachType: String) : ACTION()
+        object OnDeleteLogo : ACTION()
     }
 
     override fun onFragmentCreated() {
@@ -99,7 +96,7 @@ class ProfiledetailsViewModel @Inject constructor(
             })
     }
 
-    internal fun fetchProfileData() {
+    private fun fetchProfileData() {
         api.getProfileLogo()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -113,8 +110,6 @@ class ProfiledetailsViewModel @Inject constructor(
                 }
             }, {
                 profileLogoData?.value = null
-//                it.printStackTrace()
-//                uiEventStream.value = UiEvent.ShowToast(R.string.failed_server)
             })
     }
 
@@ -146,8 +141,9 @@ class ProfiledetailsViewModel @Inject constructor(
         DateTimeUtils.convertFromServerDate(app, date)
 
     internal fun onAddLogo(
-        logoFile: File
+        logoFile: File,
     ) {
+
         val requestFile: RequestBody =
             logoFile.asRequestBody("multipart/form-data".toMediaTypeOrNull())
 
@@ -157,12 +153,22 @@ class ProfiledetailsViewModel @Inject constructor(
         api.addProfileLogo(body)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.logo_success_msg)
                 fetchProfileData()
             }, {
                 it.printStackTrace()
                 uiEventStream.value =
                     UiEvent.ShowToast(R.string.server_saving_error)
+            })
+    }
+
+    internal fun deleteLogo() {
+        api.deleteProfileLogo()
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                actionStream.value = ACTION.OnDeleteLogo
+                fetchProfileData()
+            }, {
+                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 
@@ -183,7 +189,7 @@ class ProfiledetailsViewModel @Inject constructor(
         api.attachDocumentToProfile(fullName, body)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                if (attachType.equals("DRIVING_LICENSE")) {
+                if (attachType == "DRIVING_LICENSE") {
                     uiEventStream.value = UiEvent.ShowToast(R.string.dlUpload_success)
                 } else {
                     uiEventStream.value = UiEvent.ShowToast(R.string.idUpload_success)
@@ -203,9 +209,9 @@ class ProfiledetailsViewModel @Inject constructor(
             .subscribe({
                 uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                 if (attachType.equals("DRIVING_LICENSE")) {
-                    actionStream.value = ACTION.onDeleteSuccess("DRIVING_LICENSE")
+                    actionStream.value = ACTION.OnDeleteSuccess("DRIVING_LICENSE")
                 } else {
-                    actionStream.value = ACTION.onDeleteSuccess("IDENTITY_DOCUMENT")
+                    actionStream.value = ACTION.OnDeleteSuccess("IDENTITY_DOCUMENT")
                 }
                 fetchRemoteData()
             }, {
@@ -213,45 +219,6 @@ class ProfiledetailsViewModel @Inject constructor(
             })
     }
 
-    var attachmentData: MutableLiveData<ResponseBody> = MutableLiveData()
-    internal fun fetchData(href: String) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
-        api.getAttachmentData(href)
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                attachmentData.value = it
-                if (attachmentData.value != null) {
-                    val buffer = ByteArray(8192)
-                    var bytesRead: Int? = null
-                    val output = ByteArrayOutputStream()
-                    while (attachmentData.value?.byteStream()?.read(buffer).also {
-                            if (it != null) {
-                                bytesRead = it
-                            }
-                        } != -1) {
-                        bytesRead?.let { it1 -> output.write(buffer, 0, it1) }
-                    }
-                    openPDF(output.toByteArray())
-                }
-            }, {
-                attachmentData.value = null
-            })
-    }
 
-    internal fun openPDF(data: ByteArray) {
-
-        val intent = Intent(app, PdfActivity::class.java)
-        intent.putExtra(PdfActivity.ARG_DATA, data)
-        intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
-        uiEventStream.postValue(
-            UiEvent.OpenIntent(
-                intent,
-                false
-            )
-        )
-    }
 
 }

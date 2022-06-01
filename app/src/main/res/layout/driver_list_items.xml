@@ -46,11 +46,11 @@
                         android:id="@+id/mDriverName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_semibold_600"
                         android:paddingStart="@dimen/_10sdp"
-                        android:text="Wade Warren"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_16" />
+                        android:fontFamily="@font/inter_semibold_600"
+                        android:text="Wade Warren"
+                        android:textSize="@dimen/_11sdp" />
 
 
                 </LinearLayout>
@@ -68,8 +68,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_medium_500"
                     android:text="@string/first_name"
+                    android:fontFamily="@font/inter_medium_500"
                     android:textColor="@color/skip" />
 
                 <TextView
@@ -78,8 +78,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_semibold_600"
                     android:gravity="end"
+                    android:fontFamily="@font/inter_semibold_600"
                     android:text="DHWK879"
                     android:textColor="@color/text_color" />
 
@@ -97,8 +97,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_medium_500"
                     android:text="@string/last_name"
+                    android:fontFamily="@font/inter_medium_500"
                     android:textColor="@color/skip" />
 
                 <TextView
@@ -107,9 +107,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_semibold_600"
                     android:gravity="end"
                     android:text="DHWK879"
+                    android:fontFamily="@font/inter_semibold_600"
                     android:textColor="@color/text_color" />
 
 
@@ -126,8 +126,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_medium_500"
                     android:text="@string/serial_no_ci"
+                    android:fontFamily="@font/inter_medium_500"
                     android:textColor="@color/skip" />
 
                 <TextView
@@ -136,8 +136,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_semibold_600"
                     android:gravity="end"
+                    android:fontFamily="@font/inter_semibold_600"
                     android:text="DHWK879"
                     android:textColor="@color/text_color" />
 
@@ -156,8 +156,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_medium_500"
                     android:text="@string/pin_cnp"
+                    android:fontFamily="@font/inter_medium_500"
                     android:textColor="@color/skip" />
 
                 <TextView
@@ -166,9 +166,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/inter_semibold_600"
                     android:gravity="end"
                     android:text="DHWK879"
+                    android:fontFamily="@font/inter_semibold_600"
                     android:textColor="@color/text_color" />
 
 

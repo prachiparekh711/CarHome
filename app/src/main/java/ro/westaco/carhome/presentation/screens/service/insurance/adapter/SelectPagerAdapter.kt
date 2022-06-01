@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment
-import ro.westaco.carhome.presentation.screens.service.person.legal.BilllegalFragment
+import ro.westaco.carhome.presentation.screens.service.person.legal.BillLegalFragment
 import ro.westaco.carhome.presentation.screens.service.person.natural.BillNaturalFragment
 
 class MyViewPagerAdapter(
@@ -19,13 +19,13 @@ class MyViewPagerAdapter(
 
     override fun getItem(position: Int): Fragment {
         if (type == "DRIVER") {
-            return BillNaturalFragment(type, addNewListner)
+            return BillNaturalFragment(type, addNewListner, null, null)
         } else {
             when (position) {
-                0 -> return BillNaturalFragment(type, addNewListner)
-                1 -> return BilllegalFragment(type, addNewListner)
+                0 -> return BillNaturalFragment(type, addNewListner, null, null)
+                1 -> return BillLegalFragment(type, addNewListner, null, null)
             }
-            return BillNaturalFragment(type, addNewListner)
+            return BillNaturalFragment(type, addNewListner, null, null)
         }
     }
 
@@ -37,7 +37,7 @@ class MyViewPagerAdapter(
     }
 
     fun selectDriver(): Fragment {
-        return BillNaturalFragment(type, addNewListner)
+        return BillNaturalFragment(type, addNewListner, null, null)
     }
 
 }

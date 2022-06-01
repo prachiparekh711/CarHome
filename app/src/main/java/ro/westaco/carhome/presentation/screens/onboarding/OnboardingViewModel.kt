@@ -2,6 +2,7 @@ package ro.westaco.carhome.presentation.screens.onboarding
 
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ro.westaco.carhome.R
@@ -26,7 +27,7 @@ class OnboardingViewModel @Inject constructor(
     }
 
     override fun onActivityCreated() {
-
+        Log.e("onboarding", appPreferences.wasOnboardingSeen.toString())
         if (appPreferences.wasOnboardingSeen) {
             onSkip()
         }

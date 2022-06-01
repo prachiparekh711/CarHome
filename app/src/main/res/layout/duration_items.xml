@@ -1,79 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
 
     <LinearLayout
         android:id="@+id/mLinear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/size_15"
-        android:layout_marginVertical="@dimen/size_8"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <!--        <androidx.appcompat.widget.AppCompatRadioButton-->
-        <!--            android:id="@+id/mImage"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:theme="@style/MyRadioButton"/>-->
-
-        <ImageView
-            android:id="@+id/mImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/_7sdp"
-            android:src="@drawable/radio_unchecked" />
+        android:layout_margin="@dimen/_5sdp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/mText"
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/inter_medium_500"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/_7sdp"
-            android:paddingEnd="@dimen/_10sdp"
-            android:text="30 de zile"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_14" />
+            android:id="@+id/textNew"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_margin="@dimen/_10sdp"
+            android:fontFamily="@font/manrope_extrabold_800"
+            android:gravity="center"
+            android:textColor="@color/list_time"
+            android:textSize="@dimen/_25sdp" />
 
-        <TextView
-            android:id="@+id/mMoney"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:fontFamily="@font/inter_medium_500"
-            android:gravity="end"
-            android:text="14.85 ron (3.00 EUR)"
-            android:textColor="@color/unselected"
-            android:textSize="@dimen/text_size_14" />
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <TextView
-            android:id="@+id/mNull"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:fontFamily="@font/inter_semibold_600"
-            android:gravity="end"
-            android:text="14.85 ron (3.00 EUR)"
-            android:textColor="@color/unselected"
-            android:textSize="@dimen/text_size_14"
-            android:visibility="gone" />
+            <TextView
+                android:id="@+id/mText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.7"
+                android:fontFamily="@font/inter_semibold_600"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingStart="@dimen/_7sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:textColor="@color/unselected"
+                android:textSize="@dimen/_10sdp" />
+
+            <TextView
+                android:id="@+id/mMoney"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.3"
+                android:fontFamily="@font/manrope_semibold_600"
+                android:gravity="end"
+                android:maxLines="1"
+                android:paddingStart="@dimen/_7sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:singleLine="true"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/_11sdp"
+                android:visibility="visible" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-    <View
-        android:id="@+id/mView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/input_field_stroke_width"
-        android:layout_below="@+id/mLinear"
-        android:background="@color/view_line" />
 
 </RelativeLayout>

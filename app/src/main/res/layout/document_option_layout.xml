@@ -19,12 +19,12 @@
             android:id="@+id/mName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/close"
             android:fontFamily="@font/inter_bold_700"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <ImageView
             android:id="@+id/close"

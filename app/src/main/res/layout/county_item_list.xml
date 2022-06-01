@@ -38,8 +38,8 @@
         android:layout_marginVertical="12dp"
         android:fontFamily="@font/inter_medium_500"
         android:gravity="center_horizontal"
-        android:text="@string/app_name"
         android:textColor="#303065"
+        android:text="@string/app_name"
         android:textSize="@dimen/_12sdp" />
 
     <ImageView
@@ -63,7 +63,7 @@
         android:id="@+id/check"
         android:layout_width="@dimen/_15sdp"
         android:layout_height="@dimen/_15sdp"
-        android:layout_margin="@dimen/size_12"
+        android:layout_margin="@dimen/_10sdp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_ischekd"
         android:visibility="visible" />-->

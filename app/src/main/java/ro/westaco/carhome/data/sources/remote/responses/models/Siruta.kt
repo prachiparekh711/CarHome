@@ -24,16 +24,6 @@ data class Siruta(
 
 ) : Serializable {
 
-    fun ischecked(): Boolean? {
-
-        return selected
-    }
-
-    fun setchecked(checked: Boolean) {
-
-        selected = checked
-    }
-
     override fun toString(): String {
         return name
     }

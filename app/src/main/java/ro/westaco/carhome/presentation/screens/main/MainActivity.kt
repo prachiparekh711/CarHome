@@ -5,19 +5,24 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Base64
-import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
+import ro.westaco.carhome.data.sources.remote.responses.models.ProfileItem
+import ro.westaco.carhome.data.sources.remote.responses.models.Siruta
 import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.base.ContextWrapper
+import ro.westaco.carhome.utils.SirutaUtil.Companion.countyList
+import ro.westaco.carhome.utils.SirutaUtil.Companion.defaultCity
+import ro.westaco.carhome.utils.SirutaUtil.Companion.defaultCounty
+import ro.westaco.carhome.utils.SirutaUtil.Companion.sirutaList
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
 
 
 //C- Set Language
+
 @AndroidEntryPoint
 class MainActivity : BaseActivity<MainViewModel>() {
 
@@ -26,7 +31,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
     companion object {
         var activeUser: String? = null
         var activeId: Int? = null
-
+        var profileItem: ProfileItem? = null
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -50,12 +55,9 @@ class MainActivity : BaseActivity<MainViewModel>() {
             for (signature in info.signatures) {
                 val md: MessageDigest = MessageDigest.getInstance("SHA")
                 md.update(signature.toByteArray())
-                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
             }
         } catch (e: PackageManager.NameNotFoundException) {
-            Log.e("e1:", e.message.toString())
         } catch (e: NoSuchAlgorithmException) {
-            Log.e("e2:", e.message.toString())
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -76,7 +78,31 @@ class MainActivity : BaseActivity<MainViewModel>() {
     }
 
     override fun setupObservers() {
+        viewModel.sirutaData.observe(this) { sirutaData ->
+            if (sirutaData != null) {
+                sirutaList = sirutaData
+                sirutaList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                for (i in sirutaList.indices) {
+                    if (sirutaList[i].parentCode == null) {
+                        countyList.add(sirutaList[i])
+                    }
+                }
 
+                countyList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                defaultCounty = countyList[0]
+
+                if (defaultCounty != null) {
+                    val cityList: ArrayList<Siruta> = ArrayList()
+                    for (i in sirutaList.indices) {
+                        if (defaultCounty?.code == sirutaList[i].parentCode) {
+                            cityList.add(sirutaData[i])
+                        }
+                    }
+                    cityList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                    defaultCity = cityList[0]
+                }
+            }
+        }
     }
 
 }

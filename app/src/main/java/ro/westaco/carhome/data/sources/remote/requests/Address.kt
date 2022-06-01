@@ -31,5 +31,9 @@ data class Address(
     val floor: String? = null,
     @field:SerializedName("apartment")
     val apartment: String? = null
-) : Serializable
+) : Serializable {
+    override fun toString(): String {
+        return "Address(zipCode=$zipCode, streetType=$streetType, sirutaCode=$sirutaCode, locality=$locality, streetName=$streetName, addressDetail=$addressDetail, buildingNo=$buildingNo, countryCode=$countryCode, block=$block, region=$region, entrance=$entrance, floor=$floor, apartment=$apartment)"
+    }
+}
 

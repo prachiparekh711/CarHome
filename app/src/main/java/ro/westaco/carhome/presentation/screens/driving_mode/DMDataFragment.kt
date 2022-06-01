@@ -1,7 +1,6 @@
 package ro.westaco.carhome.presentation.screens.driving_mode
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -9,17 +8,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_d_m_data.*
-import okhttp3.ResponseBody
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.*
+import ro.westaco.carhome.di.ApiModule
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.home.HomeViewModel
-import ro.westaco.carhome.presentation.screens.home.RecentDocumentAdapter
+import ro.westaco.carhome.presentation.screens.home.PdfActivity
+import ro.westaco.carhome.presentation.screens.home.adapter.RecentDocumentAdapter
 import ro.westaco.carhome.presentation.screens.reminder.DateReminderAdapter
 import ro.westaco.carhome.presentation.screens.settings.history.HistoryAdapter
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.Progressbar
-import java.io.FileOutputStream
-import java.io.InputStream
 import java.text.SimpleDateFormat
 
 @AndroidEntryPoint
@@ -79,25 +78,16 @@ class DMDataFragment : BaseFragment<HomeViewModel>(),
             }
         }
 
-        viewModel.attachmentData.observe(viewLifecycleOwner) { documentData ->
-            progressbar?.dismissPopup()
-
-        }
 
         viewModel.stateStream.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                HomeViewModel.STATE.DOCUMENT_NOT_FOUND -> {
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().resources.getString(R.string.doc_not_found),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            if (state == HomeViewModel.STATE.DOCUMENT_NOT_FOUND) {
+                showErrorInfo(requireContext(), getString(R.string.doc_not_found))
             }
         }
 
         viewModel.remindersTabData.observe(viewLifecycleOwner) { tags ->
-            allFilterList = tags
+            if (tags != null)
+                allFilterList = tags
         }
 
         viewModel.remindersLiveData.observe(viewLifecycleOwner) { reminderList ->
@@ -119,6 +109,7 @@ class DMDataFragment : BaseFragment<HomeViewModel>(),
                     }
                 }
                 reminderAdapter = DateReminderAdapter(
+                    viewModel,
                     arrayListOf(),
                     swipeInterface
                 )
@@ -168,42 +159,11 @@ class DMDataFragment : BaseFragment<HomeViewModel>(),
         viewModel.onHistoryDetail(item)
     }
 
-    private fun saveFile(body: ResponseBody?, pathWhereYouWantToSaveFile: String): String? {
-        if (body == null)
-            return null
-        var input: InputStream? = null
-        try {
-            input = body.byteStream()
-            val fos = FileOutputStream(pathWhereYouWantToSaveFile)
-            fos.use { output ->
-                val buffer = ByteArray(4 * 1024) // or other buffer size
-                var read: Int
-                while (input.read(buffer).also { read = it } != -1) {
-                    output.write(buffer, 0, read)
-                }
-                output.flush()
-            }
-            Toast.makeText(
-                requireContext(),
-                resources.getString(R.string.dwld_success),
-                Toast.LENGTH_SHORT
-            ).show()
-            return pathWhereYouWantToSaveFile
-        } catch (e: Exception) {
-            Toast.makeText(
-                requireContext(),
-                resources.getString(R.string.dwld_error),
-                Toast.LENGTH_SHORT
-            ).show()
-        } finally {
-            input?.close()
-
-        }
-        return null
-    }
-
     override fun onItemClick(item: RowsItem) {
-        progressbar?.showPopup()
-        item.href?.let { viewModel.fetchDocumentData(it) }
+        val url = ApiModule.BASE_URL_RESOURCES + item.href
+        val intent = Intent(requireContext(), PdfActivity::class.java)
+        intent.putExtra(PdfActivity.ARG_DATA, url)
+        intent.putExtra(PdfActivity.ARG_FROM, "DOCUMENT")
+        requireContext().startActivity(intent)
     }
 }

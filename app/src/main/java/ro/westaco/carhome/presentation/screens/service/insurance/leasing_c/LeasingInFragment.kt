@@ -1,6 +1,5 @@
 package ro.westaco.carhome.presentation.screens.service.insurance.leasing_c
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -8,19 +7,16 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.EditText
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.LeasingCompany
-import ro.westaco.carhome.presentation.screens.service.insurance.InsuranceViewModel
 
 //C- Leasing Company data for CarDetails
-class LeasingInFragment(val leasingCompanyList: ArrayList<LeasingCompany>) :
+class LeasingInFragment(private val leasingCompanyList: ArrayList<LeasingCompany>) :
     BottomSheetDialogFragment(),
     LeasingInAdapter.OnItemInteractionListener {
-    lateinit var viewModel: InsuranceViewModel
     var listener: OnDialogInteractionListener? = null
     override fun onStart() {
         super.onStart()
@@ -36,12 +32,6 @@ class LeasingInFragment(val leasingCompanyList: ArrayList<LeasingCompany>) :
 
     companion object {
         const val TAG = "Occupation"
-    }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireParentFragment()).get(InsuranceViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -68,7 +58,7 @@ class LeasingInFragment(val leasingCompanyList: ArrayList<LeasingCompany>) :
         categories.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         val adapter = LeasingInAdapter(
             requireContext(),
-            leasingCompanyList, null, this, enableSelection = true
+            leasingCompanyList, this
         )
         categories.adapter = adapter
 
@@ -83,18 +73,11 @@ class LeasingInFragment(val leasingCompanyList: ArrayList<LeasingCompany>) :
 
             }
 
-            @SuppressLint("NotifyDataSetChanged")
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
                 if (s.toString().isNotEmpty()) {
-
                     adapter.filter.filter(s.toString())
-
-                } else {
-
-
                 }
-
             }
 
             override fun afterTextChanged(s: Editable?) {

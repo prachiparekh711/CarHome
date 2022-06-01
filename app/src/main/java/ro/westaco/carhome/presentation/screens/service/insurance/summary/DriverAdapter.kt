@@ -23,9 +23,6 @@ class DriverAdapter(
     var naturalPersons: ArrayList<NaturalPersonDetails>,
 ) :
     RecyclerView.Adapter<DriverAdapter.ViewHolder>() {
-
-    private val appPreferences = AppPreferencesDelegates.get()
-
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -53,7 +50,8 @@ class DriverAdapter(
             val glideUrl = GlideUrl(
                 url,
                 LazyHeaders.Builder()
-                    .addHeader("Authorization", "Bearer ${appPreferences.token}").build()
+                    .addHeader("Authorization", "Bearer ${AppPreferencesDelegates.get().token}")
+                    .build()
             )
             val options = RequestOptions()
             mSelectDriverImage.clipToOutline = true

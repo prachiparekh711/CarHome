@@ -42,20 +42,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/size_32">
+        android:layout_marginVertical="@dimen/_20sdp">
 
         <TextView
             android:id="@+id/cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_24"
+            android:layout_marginStart="@dimen/_15sdp"
             android:background="@drawable/cta_background"
             android:fontFamily="@font/inter_bold_700"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/cancel"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_16"
+            android:textSize="@dimen/_11sdp"
             app:layout_constraintEnd_toStartOf="@+id/logout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -64,15 +64,15 @@
             android:id="@+id/logout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_24"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:background="@drawable/cta_background"
             android:backgroundTint="#FFECEC"
             android:fontFamily="@font/inter_bold_700"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/logout"
             android:textColor="@color/deleteRed"
-            android:textSize="@dimen/text_size_16"
+            android:textSize="@dimen/_11sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cancel"
             app:layout_constraintTop_toTopOf="@+id/cancel" />

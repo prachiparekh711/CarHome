@@ -2,28 +2,32 @@ package ro.westaco.carhome.data.sources.remote.requests
 
 import com.google.gson.annotations.SerializedName
 import ro.westaco.carhome.data.sources.remote.responses.models.BridgeTaxPrices
+import java.io.Serializable
 
 data class PassTaxInitRequest(
 
-    @field:SerializedName("registrationCountryCode")
+    @SerializedName("registrationCountryCode")
     val registrationCountryCode: String? = null,
 
-    @field:SerializedName("licensePlate")
+    @SerializedName("licensePlate")
     val licensePlate: String? = null,
 
-    @field:SerializedName("lowerCategoryReason")
+    @SerializedName("lowerCategoryReason")
     val lowerCategoryReason: Any? = null,
 
-    @field:SerializedName("price")
+    @SerializedName("price")
     val price: BridgeTaxPrices? = null,
 
-    @field:SerializedName("vin")
-    val vin: Any? = null,
+    @SerializedName("vin")
+    val vin: String? = null,
 
-    @field:SerializedName("vehicleGuid")
+    @SerializedName("vehicleGuid")
     val vehicleGuid: String? = null,
 
-    @field:SerializedName("startDate")
-    val startDate: Any? = null
-)
+    /* @field:SerializedName("vehicleId")
+     val vehicleId: Int? = null,*/
+
+    @SerializedName("startDate")
+    val startDate: String? = null
+) : Serializable
 

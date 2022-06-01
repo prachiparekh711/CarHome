@@ -31,9 +31,9 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/logo"
-                    android:layout_width="@dimen/size_48"
-                    android:layout_height="@dimen/size_48"
-                    android:layout_margin="@dimen/size_12"
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_margin="@dimen/_10sdp"
                     android:src="@drawable/carhome_icon_roviii" />
 
                 <LinearLayout
@@ -50,7 +50,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_bold_700"
                         android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/text_size_16"
+                        android:textSize="@dimen/_11sdp"
                         tools:text="BMW S67" />
 
                     <TextView
@@ -61,7 +61,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/romania"
                         android:textColor="@color/textInputBorderGray"
-                        android:textSize="@dimen/text_size_12" />
+                        android:textSize="@dimen/_10sdp" />
 
                 </LinearLayout>
 
@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_medium_500"
                         android:gravity="center_vertical"
-                        android:paddingStart="@dimen/size_2"
+                        android:paddingStart="@dimen/_1sdp"
                         android:text="@string/car_number"
                         android:textColor="@color/unselected"
                         android:textSize="@dimen/_8sdp"
@@ -101,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_bold_700"
                         android:gravity="center_vertical"
-                        android:paddingStart="@dimen/size_2"
+                        android:paddingStart="@dimen/_1sdp"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/_12sdp"
                         tools:ignore="RtlSymmetry" />
@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_medium_500"
                         android:gravity="center_vertical"
-                        android:paddingStart="@dimen/size_6"
+                        android:paddingStart="@dimen/_5sdp"
                         android:text="Insurance Expires"
                         android:textColor="@color/unselected"
                         android:textSize="@dimen/_8sdp" />
@@ -134,7 +134,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_bold_700"
                         android:gravity="center_vertical"
-                        android:paddingStart="@dimen/size_6"
+                        android:paddingStart="@dimen/_5sdp"
                         android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/_12sdp"
@@ -156,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_medium_500"
                         android:gravity="center_vertical"
-                        android:paddingStart="@dimen/size_16"
+                        android:paddingStart="@dimen/_12sdp"
                         android:text="@string/car_status"
                         android:textColor="@color/unselected"
                         android:textSize="@dimen/_8sdp" />
@@ -167,7 +167,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_bold_700"
                         android:gravity="center_vertical"
-                        android:paddingStart="@dimen/size_16"
+                        android:paddingStart="@dimen/_12sdp"
                         android:textColor="@color/list_time"
                         android:textSize="@dimen/_12sdp" />
 

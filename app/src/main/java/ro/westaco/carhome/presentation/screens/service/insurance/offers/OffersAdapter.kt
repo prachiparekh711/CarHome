@@ -2,13 +2,16 @@ package ro.westaco.carhome.presentation.screens.service.insurance.offers
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -50,6 +53,7 @@ class OffersAdapter(val context: Context, val listener: OnItemInteractionListene
 
         private var insurerImage: ImageView = itemView.findViewById(R.id.insurerImage)
         private var tv_view_offer: TextView = itemView.findViewById(R.id.tv_view_offer)
+        private var textView2: TextView = itemView.findViewById(R.id.textView2)
         private var nViewPID: TextView = itemView.findViewById(R.id.nViewPID)
         private var tv_offer_title: TextView = itemView.findViewById(R.id.tv_offer_title)
         private var description: TextView = itemView.findViewById(R.id.description)
@@ -58,6 +62,8 @@ class OffersAdapter(val context: Context, val listener: OnItemInteractionListene
         private var priceDs: TextView = itemView.findViewById(R.id.priceDs)
         private var rcaLL: LinearLayout = itemView.findViewById(R.id.rcaLL)
         private var rcadsLL: LinearLayout = itemView.findViewById(R.id.rcadsLL)
+        private var priceLL: LinearLayout = itemView.findViewById(R.id.priceLL)
+        private var offerLL: LinearLayout = itemView.findViewById(R.id.offerLL)
 
         @SuppressLint("UseCompatLoadingForDrawables")
         fun bind(position: Int) {
@@ -78,7 +84,7 @@ class OffersAdapter(val context: Context, val listener: OnItemInteractionListene
                 .load(glideUrl)
                 .error(context.resources.getDrawable(R.drawable.ic_profile_picture))
                 .apply(
-                    options.centerCrop()
+                    options.fitCenter()
                         .skipMemoryCache(true)
                         .priority(Priority.HIGH)
                         .format(DecodeFormat.PREFER_ARGB_8888)
@@ -89,11 +95,45 @@ class OffersAdapter(val context: Context, val listener: OnItemInteractionListene
             tv_offer_title.text = item.insurerNameLong
             description.text = item.description
 
-            messageFromProvider.isVisible = item.messageFromProvider != null
 
-            messageFromProvider.text = item.messageFromProvider
-            price.text = "${item.price} ${item.currency}"
-            priceDs.text = "${item.priceDs} ${item.currency}"
+            if (item.price?.toInt() == 0 || item.priceDs?.toInt() == 0) {
+
+                priceLL.isVisible = false
+                offerLL.isVisible = true
+
+            } else {
+                price.text = "${item.price} ${item.currency}"
+                priceDs.text = "${item.priceDs} ${item.currency}"
+                priceLL.isVisible = true
+                offerLL.isVisible = false
+            }
+
+            if (item.messageFromProvider.isNullOrEmpty()) {
+                TextViewCompat.setCompoundDrawableTintList(
+                    textView2,
+                    ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.gray
+                        )
+                    )
+                )
+                messageFromProvider.text = context.getString(R.string.no_message_insurer)
+
+            } else {
+                TextViewCompat.setCompoundDrawableTintList(
+                    textView2,
+                    ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.magic_star_color
+                        )
+                    )
+                )
+                messageFromProvider.text = item.messageFromProvider
+
+            }
+
 
             tv_view_offer.setOnClickListener {
                 listener?.onOfferClick(item)
@@ -110,6 +150,7 @@ class OffersAdapter(val context: Context, val listener: OnItemInteractionListene
             rcadsLL.setOnClickListener {
                 listener?.onRCADSClick(item)
             }
+
         }
     }
 

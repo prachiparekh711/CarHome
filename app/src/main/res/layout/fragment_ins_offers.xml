@@ -38,9 +38,9 @@
             android:id="@+id/carNo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:fontFamily="@font/inter_medium_500"
+            android:layout_gravity="center_vertical"
             android:textColor="@color/unselected"
             android:textSize="@dimen/_12sdp"
             tools:ignore="RtlSymmetry" />
@@ -49,10 +49,10 @@
             android:id="@+id/durationTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
             android:layout_weight="1"
             android:drawablePadding="@dimen/_15sdp"
             android:fontFamily="@font/inter_medium_500"
+            android:layout_gravity="right"
             android:gravity="right"
             android:paddingVertical="@dimen/_10sdp"
             android:textColor="#0B3468"
@@ -62,11 +62,18 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/offerRv"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/li_offers"
-        tools:listitem="@layout/item_ins_offers" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/li_offers">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/offerRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_ins_offers" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </RelativeLayout>

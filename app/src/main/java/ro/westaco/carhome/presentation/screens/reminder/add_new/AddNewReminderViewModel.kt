@@ -28,10 +28,10 @@ class AddNewReminderViewModel @Inject constructor(
 ) : BaseViewModel() {
     internal var dueDateLiveData = MutableLiveData<Long>()
     internal var dueTimeLiveData = MutableLiveData<Long>()
-    val remindersLiveData = MutableLiveData<Reminder>()
-    val repeatLiveData = MutableLiveData<ArrayList<CatalogItem>>()
-    val durationData = MutableLiveData<ArrayList<CatalogItem>>()
-    val remindersTabData = MutableLiveData<ArrayList<CatalogItem>>()
+    val remindersLiveData = MutableLiveData<Reminder?>()
+    val repeatLiveData = MutableLiveData<ArrayList<CatalogItem>?>()
+    val durationData = MutableLiveData<ArrayList<CatalogItem>?>()
+    val remindersTabData = MutableLiveData<ArrayList<CatalogItem>?>()
 
     internal val actionStream: SingleLiveEvent<ACTION> = SingleLiveEvent()
 
@@ -57,11 +57,9 @@ class AddNewReminderViewModel @Inject constructor(
                 remindersLiveData.value = resp?.data
             }, {
             })
-
-
     }
 
-    fun getDefaultData() {
+    private fun getDefaultData() {
         api.getSimpleCatalog("NOM_REMINDER_TAG")
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
@@ -133,7 +131,7 @@ class AddNewReminderViewModel @Inject constructor(
         dueDate: String,
         dueTime: String,
         notifications: ArrayList<ReminderNotification>,
-        selectedTag: CatalogItem?,
+        selectedTag: List<CatalogItem>?,
         repeatPos: Int,
         locationItem: LocationV2Item?,
         isEdit: Boolean,
@@ -152,7 +150,9 @@ class AddNewReminderViewModel @Inject constructor(
 
         val formattedDueDate = DateTimeUtils.convertToServerDate(app, dueDate)
 
-        val tagIds = if (selectedTag == null) listOf() else listOf(selectedTag.id)
+        val tagIds = selectedTag?.map {
+            it.id
+        }
 
         val repeatId = repeatLiveData.value?.get(repeatPos)?.id
 

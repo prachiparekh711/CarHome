@@ -7,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import ro.westaco.carhome.R
@@ -20,9 +18,7 @@ import java.util.*
 class LeasingInAdapter(
     private val context: Context,
     private var categories: MutableList<LeasingCompany>,
-    private var contactListFiltered: MutableList<LeasingCompany>? = null,
     val onItemInteractionListener: OnItemInteractionListener,
-    private val enableSelection: Boolean = false,
 
     ) : RecyclerView.Adapter<LeasingInAdapter.ViewHolder>(), Filterable {
 
@@ -30,11 +26,6 @@ class LeasingInAdapter(
 
     interface OnItemInteractionListener {
         fun onChecked(item: LeasingCompany)
-    }
-
-    init {
-
-        this.contactListFiltered = categories
     }
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -53,20 +44,14 @@ class LeasingInAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var companyName: TextView = itemView.findViewById(R.id.companyName)
         private var address: TextView = itemView.findViewById(R.id.address)
-        private var companyLogo: ImageView = itemView.findViewById(R.id.companyLogo)
         private var mainRL: ConstraintLayout = itemView.findViewById(R.id.mainRL)
-        private var tv_letter: TextView = itemView.findViewById(R.id.tv_letter)
-        private var check: AppCompatImageView = itemView.findViewById(R.id.check)
+        private var tvLetter: TextView = itemView.findViewById(R.id.tv_letter)
 
         fun bind(item: LeasingCompany) {
             companyName.text = item.name
             address.text = item.address
 
-            tv_letter.text = CountryCityUtils.firstTwo(item.name)
-
-            /*if (!itemView.isSelected) {
-                check.visibility = View.GONE
-            }*/
+            tvLetter.text = CountryCityUtils.firstTwo(item.name)
 
             mainRL.setOnClickListener {
 
@@ -98,14 +83,16 @@ class LeasingInAdapter(
 
                 val filterList: MutableList<LeasingCompany> = java.util.ArrayList()
 
-                for (i in contactListFiltered?.indices!!) {
+                if (categories.isNotEmpty()) {
+                    for (i in categories.indices) {
 
-                    if (contactListFiltered!![i].name.lowercase(Locale.getDefault()).contains(
+                        if (categories[i].name.lowercase(Locale.getDefault()).contains(
 
-                            p0.toString().lowercase(Locale.getDefault())
-                        )
-                    ) {
-                        filterList.add(contactListFiltered!![i])
+                                p0.toString().lowercase(Locale.getDefault())
+                            )
+                        ) {
+                            filterList.add(categories.get(i))
+                        }
                     }
                 }
 
@@ -114,9 +101,9 @@ class LeasingInAdapter(
 
             } else {
 
-                results.count = contactListFiltered?.size!!
+                results.count = categories.size
 
-                results.values = contactListFiltered
+                results.values = categories
             }
 
             return results
@@ -131,8 +118,4 @@ class LeasingInAdapter(
 
     }
 
-    fun getSelectedCar(): LeasingCompany? {
-        if (selectedPos < 0) return null
-        return categories[selectedPos]
-    }
 }

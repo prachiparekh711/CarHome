@@ -1,14 +1,12 @@
 package ro.westaco.carhome.presentation.screens.dashboard.profile.edit
 
 import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +33,7 @@ class IDTypeAdapter(
     }
 
     interface TypeInterface {
-        fun OnSelection(model: Int, id: Int)
+        fun onSelection(model: Int, id: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -47,16 +45,14 @@ class IDTypeAdapter(
         return viewHolder
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holders: RecyclerView.ViewHolder, position: Int) {
 
         val holder = holders as MyClassView
-
         holder.mTitle?.text = arrayList[position].toString()
 
         holder.mRelative?.setOnClickListener {
             typePos = position
-            typeInterface?.OnSelection(position, arrayList[position].id.toInt())
+            typeInterface?.onSelection(position, arrayList[position].id.toInt())
             notifyDataSetChanged()
         }
 

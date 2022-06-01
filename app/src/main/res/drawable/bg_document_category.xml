@@ -4,11 +4,11 @@
 
     <solid android:color="#1A5266FC" />
     <stroke
-        android:width="@dimen/input_field_stroke_width"
+        android:width="@dimen/_1sdp"
         android:color="@color/textInputBorder" />
     <corners
-        android:bottomLeftRadius="@dimen/radius_4"
+        android:bottomLeftRadius="@dimen/_2sdp"
         android:bottomRightRadius="0dp"
-        android:topLeftRadius="@dimen/radius_4"
+        android:topLeftRadius="@dimen/_2sdp"
         android:topRightRadius="0dp" />
 </shape>

@@ -65,10 +65,10 @@
                 android:id="@+id/switch_button"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_23sdp"
-                android:checked="true"
-                android:enabled="false"
                 android:thumb="@drawable/ic_switch_oval"
                 android:track="@drawable/custom_track"
+                android:checked="true"
+                android:enabled="false"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 

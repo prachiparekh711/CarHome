@@ -4,28 +4,40 @@
     android:id="@+id/frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="#FAFAFB"
     android:visibility="visible">
 
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/mAppBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginBottom="7dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="-5dp">
+                android:layout_below="@+id/mRelative_location"
+                android:layout_alignParentBottom="false"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="10dp">
+
+                <ImageView
+                    android:id="@+id/searchImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/mSearch"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="false"
+                    android:layout_marginEnd="25dp"
+                    app:srcCompat="@drawable/ic_search_normal" />
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/mSearch"
@@ -33,13 +45,14 @@
                     android:layout_height="wrap_content"
                     android:layoutDirection="rtl"
                     android:paddingTop="2.5dp"
+                    android:paddingRight="11dp"
                     android:splitMotionEvents="true"
                     android:theme="@style/ThemeOverlay.SearchView"
                     app:closeIcon="@drawable/ic_close"
-                    app:iconifiedByDefault="true"
+                    app:iconifiedByDefault="false"
                     app:queryBackground="@android:color/transparent"
-                    app:queryHint="Search here..."
-                    app:searchIcon="@drawable/ic_sreach" />
+                    app:queryHint="@string/search_here"
+                    app:searchIcon="@null" />
 
             </RelativeLayout>
 
@@ -47,8 +60,12 @@
                 android:id="@+id/back"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/mRelative_location"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/search_background"
-                android:visibility="invisible">
+                android:visibility="visible">
 
                 <ImageView
                     android:layout_width="50dp"
@@ -66,26 +83,25 @@
                 android:id="@+id/mRelative_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:gravity="center"
                 android:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/mProfile"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="@dimen/size_8"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/bg_circle_avatar"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_user" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_toEndOf="@+id/mProfile">
+                    android:layout_marginTop="6dp">
+
+                    <ImageView
+                        android:id="@+id/openFiltersImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="false"
+                        android:layout_alignParentBottom="false"
+                        app:srcCompat="@drawable/ic_filter" />
 
                     <TextView
                         android:id="@+id/mText"
@@ -127,22 +143,47 @@
             <RelativeLayout
                 android:id="@+id/mTab"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="52dp"
                 android:layout_below="@+id/back"
                 android:layout_marginTop="7dp"
+                android:background="#FAFAFB"
                 android:visibility="gone">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/appliedFiltersTextView"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/textView"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:layout_toEndOf="@+id/textView"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="TextView"
+                    android:textColor="#3B5179"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/applied_filters"
+                    android:textColor="#3B5179"
+                    android:textSize="11sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </LinearLayout>
+                    android:layout_below="@+id/textView"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="10dp" />
 
             </RelativeLayout>
 

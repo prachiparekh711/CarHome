@@ -25,7 +25,7 @@ class AllNotificationSettingFragment : BaseFragment<NotificationSettingModel>() 
 
     }
 
-    val multiListener = object : SwitchButton.OnCheckedChangeListener {
+    private val multiListener = object : SwitchButton.OnCheckedChangeListener {
         override fun onCheckedChanged(view: SwitchButton?, isChecked: Boolean) {
             var channel: String? = null
             var type: String? = null

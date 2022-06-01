@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -18,7 +18,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_16"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_marginTop="20dp">
 
             <TextView
@@ -28,7 +28,7 @@
                 android:fontFamily="@font/inter_semibold_600"
                 android:text="@string/locality"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_18" />
+                android:textSize="@dimen/_15sdp" />
 
 
             <ImageView
@@ -45,8 +45,8 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:layout_marginHorizontal="@dimen/size_16"
             android:background="@drawable/search_lay"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="@dimen/_8sdp">
@@ -64,13 +64,13 @@
                 android:fontFamily="@font/inter_medium_500"
                 android:hint="search name"
                 android:imeOptions="actionDone"
-                android:importantForAutofill="auto"
                 android:includeFontPadding="false"
                 android:inputType="text"
                 android:singleLine="true"
+                android:importantForAutofill="auto"
+                android:textCursorDrawable="@color/ctaBackground"
                 android:textColor="#303065"
                 android:textColorHint="#868383"
-                android:textCursorDrawable="@color/ctaBackground"
                 android:textSize="@dimen/_12sdp" />
 
             <ImageView
@@ -78,8 +78,8 @@
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:padding="@dimen/_2sdp"
-                android:src="@drawable/ic_search_normal"
                 android:visibility="visible"
+                android:src="@drawable/ic_search_normal"
                 app:tint="#5B5B7E" />
 
         </LinearLayout>
@@ -88,7 +88,7 @@
             android:id="@+id/rv_locality"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/size_16"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             tools:listitem="@layout/county_item_list" />
 
     </LinearLayout>

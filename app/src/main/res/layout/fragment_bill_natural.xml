@@ -6,10 +6,6 @@
     android:background="@color/screen_background_alfa"
     tools:context=".presentation.screens.service.person.natural.BillNaturalFragment">
 
-    <FrameLayout
-        android:id="@+id/mFrame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -24,7 +20,7 @@
                     android:id="@+id/rv_bill"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:itemCount="5"
+                    android:nestedScrollingEnabled="false"
                     tools:listitem="@layout/item_bill_natural" />
 
                 <LinearLayout
@@ -45,7 +41,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_medium_500"
                         android:paddingStart="@dimen/_5sdp"
-                        android:text="Add new.."
+                        android:text="@string/add_new_"
                         android:textColor="@color/black"
                         tools:ignore="RtlSymmetry" />
 
@@ -55,7 +51,6 @@
 
 
         </androidx.core.widget.NestedScrollView>
-    </FrameLayout>
 
 
 </RelativeLayout>

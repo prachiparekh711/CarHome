@@ -1,35 +1,38 @@
 package ro.westaco.carhome.presentation.screens.home
 
 import android.annotation.SuppressLint
-import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.Window
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import okhttp3.ResponseBody
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.responses.models.*
+import ro.westaco.carhome.di.ApiModule
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.dashboard.DashboardFragment
-import ro.westaco.carhome.presentation.screens.main.MainActivity.Companion.activeUser
-import ro.westaco.carhome.presentation.screens.reminder.DateReminderAdapter
+import ro.westaco.carhome.presentation.screens.data.cars.DataCarAdapter
+import ro.westaco.carhome.presentation.screens.home.adapter.CarProgressAdapter
+import ro.westaco.carhome.presentation.screens.home.adapter.RecentDocumentAdapter
+import ro.westaco.carhome.presentation.screens.home.adapter.ReminderAdapter
+import ro.westaco.carhome.presentation.screens.main.MainActivity.Companion.profileItem
 import ro.westaco.carhome.presentation.screens.settings.history.HistoryAdapter
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
+import ro.westaco.carhome.utils.MarginItemDecoration
 import ro.westaco.carhome.utils.Progressbar
-import java.io.FileOutputStream
-import java.io.InputStream
 import java.text.SimpleDateFormat
 
 
@@ -37,21 +40,23 @@ import java.text.SimpleDateFormat
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<HomeViewModel>(),
     CarProgressAdapter.OnCarItemInteractionListener,
-    CarDetailAdapter.OnCarDetailListener,
+    DataCarAdapter.OnItemInteractionListener,
     RecentDocumentAdapter.OnItemInteractionListener,
-    HistoryAdapter.OnItemInteractionListener {
+    HistoryAdapter.OnItemInteractionListener,
+    ReminderAdapter.OnItemInteractionListener {
 
     companion object {
         const val TAG = "HomeFragment"
     }
 
     private lateinit var carAdapter: CarProgressAdapter
-    private lateinit var carDetailAdapter: CarDetailAdapter
+    private lateinit var carDetailAdapter: DataCarAdapter
     private lateinit var recentDocAdapter: RecentDocumentAdapter
-    private lateinit var reminderAdapter: DateReminderAdapter
+    private lateinit var reminderAdapter: ReminderAdapter
 
     lateinit var adapter: HistoryAdapter
     var allFilterList: ArrayList<CatalogItem> = ArrayList()
+    var vehicleProgressList: ArrayList<VehicleProgressItem> = ArrayList()
     var progressbar: Progressbar? = null
 
     override fun getContentView() = R.layout.fragment_home
@@ -61,9 +66,11 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
     override fun initUi() {
 
         progressbar = Progressbar(requireContext())
+        progressbar?.showPopup()
 
         val parentFrag: DashboardFragment = this@HomeFragment.parentFragment as DashboardFragment
         val menu: Menu = parentFrag.bottomNavigationView.menu
+
 
         avatar.setOnClickListener {
 
@@ -71,8 +78,11 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
         }
 
         mProfileRL.setOnClickListener {
-
             viewModel.onAvatarClicked()
+        }
+
+        addCar.setOnClickListener {
+            viewModel.onAddNewCar()
         }
 
         noCarRL.setOnClickListener {
@@ -84,38 +94,38 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
         offerReminder.clipToOutline = true
 
         offerOpinion.setOnClickListener {
-
             viewModel.onContactUsClicked()
         }
 
         offerMap.setOnClickListener {
             val params = Bundle()
-            viewModel.mFirebaseAnalytics.logEvent("access_exciting_offers_home_And", params)
+            viewModel.mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.ACCESS_OFFER_HOME, params)
             parentFrag.bottomNavigationView.menu.findItem(R.id.maps).isChecked = true
             parentFrag.viewModel.onItemSelected(menu.findItem(R.id.maps))
         }
 
         offerReminder.setOnClickListener {
             val params = Bundle()
-            viewModel.mFirebaseAnalytics.logEvent("access_exciting_offers_home_And", params)
+            viewModel.mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.ACCESS_OFFER_HOME, params)
             parentFrag.bottomNavigationView.menu.findItem(R.id.reminder).isChecked = true
             parentFrag.viewModel.onItemSelected(menu.findItem(R.id.reminder))
         }
 
         insurance.setOnClickListener {
-
             viewModel.onInsurance()
         }
 
         rovinieta.setOnClickListener {
 
-            viewModel.onRoadTax()
+            viewModel.onServiceClicked("RO_VIGNETTE")
         }
 
         bridge_tax.setOnClickListener {
 
-            viewModel.onBridgeTax()
+            viewModel.onServiceClicked("RO_PASS_TAX")
+
         }
+
 
         cars.setOnClickListener {
             val params = Bundle()
@@ -164,70 +174,69 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
         }
     }
 
-    private fun showDialog() {
-        val dialog = Dialog(requireActivity())
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.info_layout)
-        val mOK = dialog.findViewById(R.id.mOK) as TextView
-        val mText = dialog.findViewById(R.id.mText) as TextView
-        mText.text = requireContext().resources.getString(R.string.insurance_info, activeUser)
-
-        mOK.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")
     override fun setObservers() {
+
         viewModel.remindersTabData.observe(viewLifecycleOwner) { tags ->
-            allFilterList = tags
+            if (tags != null)
+                allFilterList = tags
         }
 
         viewModel.profileLogoData?.observe(viewLifecycleOwner) { profileLogo ->
             if (profileLogo != null) {
+
+                val options = RequestOptions()
                 avatar.clipToOutline = true
                 Glide.with(requireContext())
                     .load(profileLogo)
+                    .apply(
+                        options.fitCenter()
+                            .skipMemoryCache(true)
+                            .priority(Priority.HIGH)
+                            .format(DecodeFormat.PREFER_ARGB_8888)
+                    )
                     .into(avatar)
+
             } else {
+                viewModel.getUserLivedata()
+            }
+        }
 
-                viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
-                    if (user != null) {
-                        val imageUrl = viewModel.getProfileImage(requireContext(), user)
-                        Picasso.with(context)
-                            .load(imageUrl)
-//                            .transform(CropCircleTransformation())
-                            .placeholder(R.drawable.ic_user)
-                            .into(avatar)
-
-                    }
-                }
+        viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                val imageUrl = viewModel.getProfileImage(requireContext(), user)
+                val options = RequestOptions()
+                avatar.clipToOutline = true
+                Glide.with(requireContext())
+                    .load(imageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .apply(
+                        options.fitCenter()
+                            .priority(Priority.HIGH)
+                            .format(DecodeFormat.PREFER_ARGB_8888)
+                    )
+                    .into(avatar)
             }
         }
 
         viewModel.progressData.observe(viewLifecycleOwner) { progressItem ->
             if (progressItem != null) {
-                val profileItem = progressItem.profileProgress
-                if (profileItem != null) {
-                    firstNameHint.text = profileItem.description ?: " "
+                val profileProgressItem = progressItem.profileProgress
+                if (profileProgressItem != null) {
+                    firstNameHint.text = profileProgressItem.description ?: " "
 
-                    if (profileItem.completionPercent != null) {
-                        if (profileItem.completionPercent == 100) {
+                    if (profileProgressItem.completionPercent != null) {
+                        if (profileProgressItem.completionPercent == 100) {
                             mProfileRL.isVisible = false
                         } else {
                             mProfileRL.isVisible = true
                             profileProgress.max = 100
-                            profileProgress.progress = profileItem.completionPercent
-                            profileProgressLbl.text = "${
+                            profileProgress.progress = profileProgressItem.completionPercent
+                            profileProgressLbl.text =
                                 requireContext().resources.getString(
                                     R.string.progress,
-                                    profileItem.completionPercent
+                                    profileProgressItem.completionPercent
                                 )
-                            }"
                         }
 
                     } else {
@@ -241,42 +250,51 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
                         "${requireContext().resources.getString(R.string.progress, 0)}"
                 }
 
-                val vehicleList = progressItem.vehicleProgress
-
-                if (vehicleList.isNullOrEmpty()) {
-                    noCarRL.isVisible = true
-                    carProgressRV.isVisible = false
-                } else {
-                    noCarRL.isVisible = false
-                    carProgressRV.isVisible = true
-                    carProgressRV.layoutManager =
-                        LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-
-                    val car100: ArrayList<VehicleProgressItem> = ArrayList()
-
-                    for (i in vehicleList.indices) {
-                        if (vehicleList[i].completionPercent != 100) {
-                            car100.add(vehicleList[i])
-                        }
-                    }
-                    carAdapter = CarProgressAdapter(requireContext(), car100, this)
-                    carProgressRV.adapter = carAdapter
-                    carAdapter.setItems(car100)
+                cta_profile.setOnClickListener {
+                    profileItem?.let { it1 -> viewModel.onEditProfile(it1) }
                 }
+
+                vehicleProgressList = progressItem.vehicleProgress as ArrayList<VehicleProgressItem>
             }
         }
 
         viewModel.carsLivedata.observe(viewLifecycleOwner) { carList ->
             if (carList.isNullOrEmpty()) {
                 carLL.isVisible = false
+                noCarRL.isVisible = true
+                carProgressRV.isVisible = false
             } else {
+                noCarRL.isVisible = false
+                carProgressRV.isVisible = true
+                carProgressRV.layoutManager =
+                    LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+
+                val car100: ArrayList<VehicleProgressItem> = ArrayList()
+
+                for (i in vehicleProgressList.indices) {
+                    if (vehicleProgressList[i].completionPercent != 100) {
+                        car100.add(vehicleProgressList[i])
+                    }
+                }
+                carAdapter = CarProgressAdapter(requireContext(), car100, this)
+                carProgressRV.adapter = carAdapter
+                carProgressRV.addItemDecoration(
+                    MarginItemDecoration(20, orientation = LinearLayoutManager.HORIZONTAL)
+                )
+                carAdapter.setItems(car100)
+
                 carLL.isVisible = true
                 carRv.layoutManager =
                     LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
-                carDetailAdapter = CarDetailAdapter(requireContext(), cars = arrayListOf(), this)
+                carDetailAdapter =
+                    DataCarAdapter(requireContext(), cars = arrayListOf(), this, from = "HOME")
                 carRv.adapter = carDetailAdapter
+                carRv.addItemDecoration(
+                    MarginItemDecoration(20, orientation = LinearLayoutManager.HORIZONTAL)
+                )
                 carDetailAdapter.setItems(carList)
             }
+            progressbar?.dismissPopup()
         }
 
         viewModel.documentLivedata.observe(viewLifecycleOwner) { docList ->
@@ -294,21 +312,12 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
                 documentRv.adapter = recentDocAdapter
                 recentDocAdapter.setItems(docList)
             }
-        }
-
-        viewModel.attachmentData.observe(viewLifecycleOwner) { documentData ->
             progressbar?.dismissPopup()
         }
 
         viewModel.stateStream.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                HomeViewModel.STATE.DOCUMENT_NOT_FOUND -> {
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().resources.getString(R.string.doc_not_found),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            if (state == HomeViewModel.STATE.DOCUMENT_NOT_FOUND) {
+                showErrorInfo(requireContext(), getString(R.string.doc_not_found))
             }
         }
 
@@ -318,23 +327,14 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
                 reminderRv.isVisible = false
                 viewReminder.isVisible = false
             } else {
-                val listItems = ArrayList<ListItem>(reminderList.size)
+                val listItems = ArrayList<Reminder>(reminderList.size)
                 reminderLL.isVisible = false
                 reminderRv.isVisible = true
                 viewReminder.isVisible = true
 
-                val swipeInterface = object : DateReminderAdapter.SwipeActions {
-                    override fun onDelete(item: Reminder) {
-                        viewModel.onDelete(item)
-                    }
-
-                    override fun onUpdate(item: Reminder) {
-                        viewModel.onUpdate(item)
-                    }
-                }
-                reminderAdapter = DateReminderAdapter(
+                reminderAdapter = ReminderAdapter(
                     arrayListOf(),
-                    swipeInterface
+                    this
                 )
                 reminderRv.adapter = reminderAdapter
                 reminderList.sortWith { o1, o2 ->
@@ -352,9 +352,11 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
                 }
                 reminderAdapter.setItems(listItems, allFilterList)
             }
+            progressbar?.dismissPopup()
         }
 
         viewModel.historyLiveData.observe(viewLifecycleOwner) { historyList ->
+
             if (historyList.isNullOrEmpty()) {
                 historyLL.isVisible = true
                 historyRv.isVisible = false
@@ -377,7 +379,9 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
                 }
                 adapter.setItems(list)
             }
+            progressbar?.dismissPopup()
         }
+
     }
 
     override fun onItemClick(item: VehicleProgressItem) {
@@ -403,6 +407,41 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
         }
     }
 
+    override fun onBuyClick(item: Vehicle, service: String) {
+        when (service) {
+            "RO_PASS_TAX" -> {
+                viewModel.onBuyPassTax(item)
+            }
+            "RO_VIGNETTE" -> {
+                viewModel.onBuyVignette(item)
+            }
+            "RO_RCA" -> {
+                viewModel.onBuyInsurance(item)
+            }
+        }
+    }
+
+    override fun onDocClick(item: Vehicle, service: String) {
+        var url: String? = null
+        when (service) {
+            "RO_PASS_TAX" -> {
+                url = ApiModule.BASE_URL_RESOURCES + item.passTaxDocumentHref
+            }
+            "RO_VIGNETTE" -> {
+                url = ApiModule.BASE_URL_RESOURCES + item.vignetteTicketHref
+            }
+            "RO_RCA" -> {
+                url = ApiModule.BASE_URL_RESOURCES + item.rcaDocumentHref
+            }
+        }
+        if (url != null) {
+            val intent = Intent(requireContext(), PdfActivity::class.java)
+            intent.putExtra(PdfActivity.ARG_DATA, url)
+            intent.putExtra(PdfActivity.ARG_FROM, "DOCUMENT")
+            requireContext().startActivity(intent)
+        }
+    }
+
     override fun onItemClick(item: HistoryItem) {
         val params = Bundle()
         viewModel.mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.ACCESS_HISTORY_HOME, params)
@@ -412,64 +451,37 @@ class HomeFragment : BaseFragment<HomeViewModel>(),
     override fun onItemClick(item: RowsItem) {
 
         val params = Bundle()
-        viewModel.mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.ACCESS_DOCUMENT_HOME, params)
+        viewModel.mFirebaseAnalytics.logEvent(
+            FirebaseAnalyticsList.ACCESS_DOCUMENT_HOME,
+            params
+        )
 
-        progressbar?.showPopup()
-        item.href?.let { viewModel.fetchDocumentData(it) }
+        val url = ApiModule.BASE_URL_RESOURCES + item.href
+        val intent = Intent(requireContext(), PdfActivity::class.java)
+        intent.putExtra(PdfActivity.ARG_DATA, url)
+        intent.putExtra(PdfActivity.ARG_FROM, "DOCUMENT")
+        requireContext().startActivity(intent)
     }
-
-    private fun saveFile(body: ResponseBody?, pathWhereYouWantToSaveFile: String): String? {
-        if (body == null)
-            return null
-        var input: InputStream? = null
-        try {
-            input = body.byteStream()
-            val fos = FileOutputStream(pathWhereYouWantToSaveFile)
-            fos.use { output ->
-                val buffer = ByteArray(4 * 1024) // or other buffer size
-                var read: Int
-                while (input.read(buffer).also { read = it } != -1) {
-                    output.write(buffer, 0, read)
-                }
-                output.flush()
-            }
-            Toast.makeText(
-                requireContext(),
-                resources.getString(R.string.dwld_success),
-                Toast.LENGTH_SHORT
-            ).show()
-            return pathWhereYouWantToSaveFile
-        } catch (e: Exception) {
-            Toast.makeText(
-                requireContext(),
-                resources.getString(R.string.dwld_error),
-                Toast.LENGTH_SHORT
-            ).show()
-        } finally {
-            input?.close()
-
-        }
-        return null
-    }
-
 
     override fun onResume() {
         super.onResume()
 
-        if (AppPreferencesDelegates.get().language == "en-US") {
+        viewModel.fetchProfileData()
 
+        if (AppPreferencesDelegates.get().language == "en-US") {
             offerOpinion.setImageResource(R.drawable.offer_opinion)
             offerMap.setImageResource(R.drawable.offer_map)
             offerReminder.setImageResource(R.drawable.offer_reminder)
-
-
         } else if (AppPreferencesDelegates.get().language == "en-RO") {
-
             offerOpinion.setImageResource(R.drawable.offer_opinion_ro)
             offerMap.setImageResource(R.drawable.offer_map_ro)
             offerReminder.setImageResource(R.drawable.offer_reminder_ro)
-
         }
+
+    }
+
+    override fun onItemClick(item: Reminder) {
+        viewModel.onUpdate(item)
     }
 
 }

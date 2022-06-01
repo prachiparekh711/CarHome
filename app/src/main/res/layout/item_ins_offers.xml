@@ -20,7 +20,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/insurerImage"
             android:layout_width="@dimen/_70sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_height="@dimen/_40sdp"
             android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -62,7 +62,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_view_offer">
+            app:layout_constraintTop_toBottomOf="@+id/insurerImage">
 
             <TextView
                 android:id="@+id/tv_offer_title"
@@ -98,6 +98,7 @@
                 android:fontFamily="@font/inter_semibold_600"
                 android:text="@string/msg_provider"
                 android:textColor="#253862"
+                android:drawableTint="@color/gray"
                 app:drawableStartCompat="@drawable/ic_magic_star"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/view3"
@@ -124,6 +125,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/messageFromProvider" />
 
             <LinearLayout
+                android:visibility="visible"
                 android:id="@+id/priceLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -144,8 +146,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
-                        android:fontFamily="@font/inter_bold_700"
                         android:text="@string/rca"
+                        android:fontFamily="@font/inter_bold_700"
                         android:textColor="@color/skip"
                         android:textSize="@dimen/_10sdp" />
 
@@ -192,8 +194,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
+                        android:text="@string/rca_ds"
                         android:fontFamily="@font/inter_bold_700"
-                        android:text="@string/ds"
                         android:textColor="@color/skip"
                         android:textSize="@dimen/_10sdp" />
 
@@ -215,7 +217,6 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/inter_bold_700"
                             android:paddingStart="@dimen/_10sdp"
-                            android:text="230.90 RON"
                             android:textColor="@color/white"
                             tools:ignore="RtlSymmetry" />
 
@@ -230,7 +231,39 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/offerLL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:fontFamily="@font/inter_bold_700"
+                    android:text="@string/offer_in_"
+                    android:textColor="@color/skip"
+                    android:textSize="@dimen/_10sdp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/no_offer_in_"
+                    android:textColor="@color/skip"
+                    android:textSize="@dimen/_10sdp" />
+
+
+            </LinearLayout>
+
         </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View

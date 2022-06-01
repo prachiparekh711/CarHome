@@ -31,7 +31,7 @@ class SettingsViewModel @Inject constructor(
     val actionStream: SingleLiveEvent<ACTION> = SingleLiveEvent()
 
     sealed class ACTION {
-        object onLogout : ACTION()
+        object OnLogout : ACTION()
     }
 
     /*
@@ -130,13 +130,13 @@ class SettingsViewModel @Inject constructor(
     }
 
     internal fun onLogoutClicked() {
-        actionStream.value = ACTION.onLogout
+        uiEventStream.value = UiEvent.ShowToast(R.string.logout_success)
+        actionStream.value = ACTION.OnLogout
         DashboardViewModel.selectedMenuItem = null
         appPreferences.token = ""
         firebaseAuth.signOut()
         val params = Bundle()
         mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.LOGOUT_ANDROID, params)
-        uiEventStream.value = UiEvent.ShowToast(R.string.logout_success)
         DeviceUtils.logoutApp(app)
     }
 }

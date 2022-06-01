@@ -19,23 +19,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/size_16"
-            android:layout_marginTop="@dimen/size_32"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:src="@drawable/ic_carhome_by_omv" />
 
 
-        <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/size_16"
-            android:adjustViewBounds="true"
-            android:background="@drawable/bg_circle_avatar"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_user" />
+            android:layout_marginEnd="@dimen/_12sdp"
+            app:cardCornerRadius="@dimen/_30sdp">
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_user" />
+
+        </com.google.android.material.card.MaterialCardView>
+
 
     </RelativeLayout>
 
@@ -45,770 +52,781 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <ScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/_8sdp"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:id="@+id/mProfileRL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_10sdp"
-                android:background="@drawable/bg_card_yellow"
-                android:padding="@dimen/_5sdp"
-                android:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/avatar1"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginHorizontal="@dimen/_5sdp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:padding="@dimen/size_2"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_profile_circle" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_toEndOf="@id/avatar1"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/t1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_semibold_600"
-                            android:text="@string/complete_ur_profile"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/_11sdp" />
-
-                        <TextView
-                            android:id="@+id/firstNameHint"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/t1"
-                            android:fontFamily="@font/inter_medium_500"
-                            android:textColor="@color/textOnWhiteAccentGray"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <TextView
-                            android:id="@+id/cta_profile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/cta_background"
-                            android:backgroundTint="@color/yellow"
-                            android:fontFamily="@font/manrope_semibold_600"
-                            android:gravity="center"
-                            android:paddingHorizontal="@dimen/size_16"
-                            android:paddingVertical="@dimen/_5sdp"
-                            android:text="@string/add"
-                            android:textColor="@color/textOnSolid"
-                            android:textSize="@dimen/_10sdp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ProgressBar
-                            android:id="@+id/profileProgress"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toStartOf="@id/profileProgressLbl"
-                            android:max="100"
-                            android:paddingEnd="@dimen/_10sdp"
-                            android:progressDrawable="@drawable/custom_progress" />
-
-                        <TextView
-                            android:id="@+id/profileProgressLbl"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:fontFamily="@font/inter_regular_400"
-                            android:textColor="@color/textOnWhiteAccentGray"
-                            android:textSize="@dimen/_8sdp" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/noCarRL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
-                android:background="@drawable/cta_edit_person_background"
-                android:padding="@dimen/_5sdp">
-
-                <ImageView
-                    android:id="@+id/avatar2"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginHorizontal="@dimen/_5sdp"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@null"
-                    android:padding="@dimen/size_2"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_add_car" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_toEndOf="@id/avatar2"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/t2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/inter_semibold_600"
-                            android:text="@string/complete_car_details"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/_11sdp" />
-
-                        <TextView
-                            android:id="@+id/carLbl"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/t2"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/inter_medium_500"
-                            android:text="@string/no_car"
-                            android:textColor="@color/textOnWhiteAccentGray"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/cta_background"
-                            android:fontFamily="@font/manrope_semibold_600"
-                            android:gravity="center"
-                            android:paddingHorizontal="@dimen/size_16"
-                            android:paddingVertical="@dimen/_5sdp"
-                            android:text="@string/add"
-                            android:textColor="@color/textOnSolid"
-                            android:textSize="@dimen/_10sdp" />
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/carProgressRV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/car_progress_item" />
+            app:layout_behavior=".utils.OverScrollBounceBehavior">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/_10sdp"
                 android:orientation="vertical">
 
-                <TextView
+                <RelativeLayout
+                    android:id="@+id/mProfileRL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:fontFamily="@font/inter_semibold_600"
-                    android:text="@string/offers"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/_11sdp" />
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:background="@drawable/bg_card_yellow"
+                    android:padding="@dimen/_5sdp"
+                    android:visibility="gone">
 
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:scrollbars="none"
-                    tools:ignore="SpeakableTextPresentCheck">
+                    <ImageView
+                        android:id="@+id/avatar1"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="@dimen/_5sdp"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:padding="@dimen/_1sdp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_profile_circle" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_toEndOf="@id/avatar1"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:id="@+id/offerOpinion"
-                            android:layout_width="@dimen/_220sdp"
-                            android:layout_height="@dimen/_130sdp"
-                            android:layout_marginStart="@dimen/_10sdp"
-                            android:adjustViewBounds="true"
-                            android:background="@drawable/bg_card_item_nostroke"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/offer_opinion" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:id="@+id/offerMap"
-                            android:layout_width="@dimen/_220sdp"
-                            android:layout_height="@dimen/_130sdp"
-                            android:layout_marginStart="@dimen/_10sdp"
-                            android:adjustViewBounds="true"
-                            android:background="@drawable/bg_card_item_nostroke"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/offer_map" />
+                            <TextView
+                                android:id="@+id/t1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_semibold_600"
+                                android:text="@string/complete_ur_profile"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
 
-                        <ImageView
-                            android:id="@+id/offerReminder"
-                            android:layout_width="@dimen/_220sdp"
-                            android:layout_height="@dimen/_130sdp"
-                            android:layout_marginStart="@dimen/_10sdp"
-                            android:adjustViewBounds="true"
-                            android:background="@drawable/bg_card_item_nostroke"
-                            android:scaleType="fitXY"
-                            android:src="@drawable/offer_reminder" />
+                            <TextView
+                                android:id="@+id/firstNameHint"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/t1"
+                                android:fontFamily="@font/inter_medium_500"
+                                android:textColor="@color/textOnWhiteAccentGray"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <TextView
+                                android:id="@+id/cta_profile"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/cta_background"
+                                android:backgroundTint="@color/yellow"
+                                android:fontFamily="@font/manrope_semibold_600"
+                                android:gravity="center"
+                                android:paddingHorizontal="@dimen/_20sdp"
+                                android:paddingVertical="@dimen/_5sdp"
+                                android:text="@string/add"
+                                android:textColor="@color/textOnSolid"
+                                android:textSize="@dimen/_10sdp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ProgressBar
+                                android:id="@+id/profileProgress"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toStartOf="@id/profileProgressLbl"
+                                android:max="100"
+                                android:paddingEnd="@dimen/_10sdp"
+                                android:progressDrawable="@drawable/custom_progress" />
+
+                            <TextView
+                                android:id="@+id/profileProgressLbl"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:fontFamily="@font/inter_regular_400"
+                                android:textColor="@color/textOnWhiteAccentGray"
+                                android:textSize="@dimen/_8sdp" />
+
+                        </RelativeLayout>
+
                     </LinearLayout>
-                </HorizontalScrollView>
 
-            </LinearLayout>
+                </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:orientation="vertical">
-
-                <TextView
+                <RelativeLayout
+                    android:id="@+id/noCarRL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_semibold_600"
-                    android:text="@string/services"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/_11sdp" />
+                    android:layout_margin="@dimen/_10sdp"
+                    android:background="@drawable/cta_edit_person_background"
+                    android:padding="@dimen/_5sdp">
 
-                <LinearLayout
+                    <ImageView
+                        android:id="@+id/avatar2"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="@dimen/_5sdp"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        android:padding="@dimen/_1sdp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_add_car" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_toEndOf="@id/avatar2"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/t2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_semibold_600"
+                                android:text="@string/complete_car_details"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <TextView
+                                android:id="@+id/carLbl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/t2"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/inter_medium_500"
+                                android:text="@string/no_car"
+                                android:textColor="@color/textOnWhiteAccentGray"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <TextView
+                                android:id="@+id/addCar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/cta_background"
+                                android:fontFamily="@font/manrope_semibold_600"
+                                android:gravity="center"
+                                android:paddingHorizontal="@dimen/_20sdp"
+                                android:paddingVertical="@dimen/_5sdp"
+                                android:text="@string/add"
+                                android:textColor="@color/textOnSolid"
+                                android:textSize="@dimen/_10sdp" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/carProgressRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="@dimen/_5sdp"
-                    android:layout_weight="3"
                     android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/insurance"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_1sdp"
-                        android:layout_marginBottom="@dimen/_1sdp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        app:cardCornerRadius="@dimen/_10sdp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_10sdp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_insurance_" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_5sdp"
-                                android:fontFamily="@font/inter_medium_500"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:text="@string/insurance"
-                                android:textColor="@color/textOnWhite" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/rovinieta"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_15sdp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        app:cardCornerRadius="@dimen/_10sdp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_10sdp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_rovinieta_" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_5sdp"
-                                android:fontFamily="@font/inter_medium_500"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:text="@string/rovinieta"
-                                android:textColor="@color/textOnWhite" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/bridge_tax"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_1sdp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        app:cardCornerRadius="@dimen/_10sdp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_10sdp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_bridge_tax_" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_5sdp"
-                                android:fontFamily="@font/inter_medium_500"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:text="@string/bridge_tax"
-                                android:textColor="@color/textOnWhite" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/car_progress_item" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="@dimen/_10sdp"
-                    android:layout_weight="3"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cars"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_1sdp"
-                        android:layout_marginBottom="@dimen/_1sdp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        app:cardCornerRadius="@dimen/_10sdp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_10sdp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_cars_" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_5sdp"
-                                android:fontFamily="@font/inter_medium_500"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:text="@string/data_tab_cars"
-                                android:textColor="@color/textOnWhite" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/person"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_15sdp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        app:cardCornerRadius="@dimen/_10sdp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_10sdp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_person_" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_5sdp"
-                                android:fontFamily="@font/inter_medium_500"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:text="@string/persons"
-                                android:textColor="@color/textOnWhite" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/companies"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_1sdp"
-                        android:layout_weight="1"
-                        android:background="@color/white"
-                        app:cardCornerRadius="@dimen/_10sdp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/_10sdp"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_companies_" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_5sdp"
-                                android:fontFamily="@font/inter_medium_500"
-                                android:gravity="center"
-                                android:singleLine="true"
-                                android:text="@string/companies"
-                                android:textColor="@color/textOnWhite" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/carLL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_10sdp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_semibold_600"
-                        android:text="@string/your_cars"
-                        android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/_11sdp" />
-
-                    <TextView
-                        android:id="@+id/viewCar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:fontFamily="@font/inter_medium_500"
-                        android:text="@string/view_all"
-                        android:textColor="@color/location_ser"
-                        android:textSize="@dimen/_10sdp" />
-                </RelativeLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/carRv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/car_detail_home_item" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_semibold_600"
-                        android:text="@string/documents"
-                        android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/_11sdp" />
-
-                    <TextView
-                        android:id="@+id/viewDocument"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:fontFamily="@font/inter_regular_400"
-                        android:text="@string/view_all"
-                        android:textColor="@color/location_ser"
-                        android:textSize="@dimen/_10sdp"
-                        android:visibility="gone" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/documentLL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@drawable/line_frame"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/_10sdp">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@drawable/ic_upload_doc" />
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_medium_500"
-                        android:gravity="center_horizontal"
-                        android:text="@string/upload_doc"
-                        android:textColor="#B5B5BE"
-                        android:textSize="@dimen/text_size_14" />
-
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/documentRv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@drawable/auth_text_input_background"
-                    android:nestedScrollingEnabled="false"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
                         android:fontFamily="@font/inter_semibold_600"
-                        android:text="@string/reminder"
+                        android:text="@string/offers"
                         android:textColor="@color/textOnWhite"
                         android:textSize="@dimen/_11sdp" />
 
-                    <TextView
-                        android:id="@+id/viewReminder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:fontFamily="@font/inter_regular_400"
-                        android:text="@string/view_all"
-                        android:textColor="@color/location_ser"
-                        android:textSize="@dimen/_10sdp" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/reminderLL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@drawable/line_frame"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/_10sdp">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@drawable/ic_create_reminder" />
-
-                    <TextView
+                    <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_medium_500"
-                        android:gravity="center_horizontal"
-                        android:text="@string/create_reminder"
-                        android:textColor="#B5B5BE"
-                        android:textSize="@dimen/text_size_14" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:scrollbars="none"
+                        tools:ignore="SpeakableTextPresentCheck">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/offerOpinion"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_130sdp"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:adjustViewBounds="true"
+                                android:background="@drawable/bg_card_item_nostroke"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/offer_opinion" />
+
+                            <ImageView
+                                android:id="@+id/offerMap"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_130sdp"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:adjustViewBounds="true"
+                                android:background="@drawable/bg_card_item_nostroke"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/offer_map" />
+
+                            <ImageView
+                                android:id="@+id/offerReminder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_130sdp"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:adjustViewBounds="true"
+                                android:background="@drawable/bg_card_item_nostroke"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/offer_reminder" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/reminderRv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:nestedScrollingEnabled="false"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_semibold_600"
-                        android:text="@string/history"
-                        android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/_11sdp" />
-
-                    <TextView
-                        android:id="@+id/viewHistory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:fontFamily="@font/inter_regular_400"
-                        android:text="@string/view_all"
-                        android:textColor="@color/textOnWhiteAccentGray"
-                        android:textSize="@dimen/_10sdp"
-                        android:visibility="gone" />
-                </RelativeLayout>
-
                 <LinearLayout
-                    android:id="@+id/historyLL"
+                    android:id="@+id/carLL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@drawable/line_frame"
-                    android:orientation="vertical"
-                    android:padding="@dimen/_7sdp">
+                    android:orientation="vertical">
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:src="@drawable/ic_make_purchase" />
-
-                    <TextView
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_medium_500"
-                        android:gravity="center_horizontal"
-                        android:text="@string/make_purchase"
-                        android:textColor="#B5B5BE"
-                        android:textSize="@dimen/text_size_14" />
+                        android:layout_marginHorizontal="@dimen/_10sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_semibold_600"
+                            android:text="@string/your_cars"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <TextView
+                            android:id="@+id/viewCar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:text="@string/view_all"
+                            android:textColor="@color/location_ser"
+                            android:textSize="@dimen/_10sdp" />
+                    </RelativeLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/carRv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_5sdp"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_data_car" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/mServices"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/mService"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:background="@drawable/cta_background"
-                        android:fontFamily="@font/manrope_semibold_600"
-                        android:paddingHorizontal="@dimen/size_16"
-                        android:paddingVertical="@dimen/_5sdp"
+                        android:fontFamily="@font/inter_semibold_600"
                         android:text="@string/services"
-                        android:textColor="@color/textOnSolid"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textColor="@color/textOnWhite"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_10sdp"
+                        android:layout_weight="3"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/insurance"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_1sdp"
+                            android:layout_marginBottom="@dimen/_1sdp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_10sdp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_insurance_dm" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:fontFamily="@font/inter_medium_500"
+                                    android:gravity="center"
+                                    android:singleLine="true"
+                                    android:text="@string/insurance"
+                                    android:textColor="@color/textOnWhite" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/rovinieta"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_10sdp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_rovinieta_" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:fontFamily="@font/inter_medium_500"
+                                    android:gravity="center"
+                                    android:singleLine="true"
+                                    android:text="@string/rovinieta"
+                                    android:textColor="@color/textOnWhite" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/bridge_tax"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_1sdp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_10sdp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_bridge_tax_" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:fontFamily="@font/inter_medium_500"
+                                    android:gravity="center"
+                                    android:singleLine="true"
+                                    android:text="@string/bridge_tax"
+                                    android:textColor="@color/textOnWhite" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/_10sdp"
+                        android:layout_weight="3"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cars"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_1sdp"
+                            android:layout_marginBottom="@dimen/_1sdp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_10sdp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_cars_" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:fontFamily="@font/inter_medium_500"
+                                    android:gravity="center"
+                                    android:singleLine="true"
+                                    android:text="@string/data_tab_cars"
+                                    android:textColor="@color/textOnWhite" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/person"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_10sdp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_person_" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:fontFamily="@font/inter_medium_500"
+                                    android:gravity="center"
+                                    android:singleLine="true"
+                                    android:text="@string/persons"
+                                    android:textColor="@color/textOnWhite" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/companies"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_1sdp"
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            app:cardCornerRadius="@dimen/_10sdp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/_10sdp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_companies_" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:fontFamily="@font/inter_medium_500"
+                                    android:gravity="center"
+                                    android:singleLine="true"
+                                    android:text="@string/companies"
+                                    android:textColor="@color/textOnWhite" />
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/historyRv"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_10sdp"
-                    android:background="@drawable/auth_text_input_background"
-                    android:nestedScrollingEnabled="false"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    android:layout_margin="@dimen/_10sdp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_semibold_600"
+                            android:text="@string/documents"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <TextView
+                            android:id="@+id/viewDocument"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:fontFamily="@font/inter_regular_400"
+                            android:text="@string/view_all"
+                            android:textColor="@color/location_ser"
+                            android:textSize="@dimen/_10sdp"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/documentLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/line_frame"
+                        android:orientation="vertical"
+                        android:paddingVertical="@dimen/_10sdp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/ic_upload_doc" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:gravity="center_horizontal"
+                            android:text="@string/upload_doc"
+                            android:textColor="#B5B5BE"
+                            android:textSize="@dimen/_11sdp" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/documentRv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_semibold_600"
+                            android:text="@string/reminder"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <TextView
+                            android:id="@+id/viewReminder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:fontFamily="@font/inter_regular_400"
+                            android:text="@string/view_all"
+                            android:textColor="@color/location_ser"
+                            android:textSize="@dimen/_10sdp" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/reminderLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/line_frame"
+                        android:orientation="vertical"
+                        android:paddingVertical="@dimen/_5sdp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/ic_create_reminder" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:gravity="center_horizontal"
+                            android:text="@string/create_reminder"
+                            android:textColor="#B5B5BE"
+                            android:textSize="@dimen/_11sdp" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/reminderRv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_semibold_600"
+                            android:text="@string/history"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <TextView
+                            android:id="@+id/viewHistory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:fontFamily="@font/inter_regular_400"
+                            android:text="@string/view_all"
+                            android:textColor="@color/textOnWhiteAccentGray"
+                            android:textSize="@dimen/_10sdp"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/historyLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/line_frame"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_7sdp">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/ic_make_purchase" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:gravity="center_horizontal"
+                            android:text="@string/make_purchase"
+                            android:textColor="#B5B5BE"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <TextView
+                            android:id="@+id/mServices"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:background="@drawable/cta_background"
+                            android:fontFamily="@font/manrope_semibold_600"
+                            android:paddingHorizontal="@dimen/_12sdp"
+                            android:paddingVertical="@dimen/_5sdp"
+                            android:text="@string/services"
+                            android:textColor="@color/textOnSolid"
+                            android:textSize="@dimen/_10sdp" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/historyRv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:background="@drawable/auth_text_input_background"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-    </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </LinearLayout>

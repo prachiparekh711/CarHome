@@ -34,7 +34,7 @@
                 android:gravity="center"
                 android:text="@string/settings_invite"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_18" />
+                android:textSize="@dimen/_15sdp" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/home"
@@ -42,6 +42,7 @@
                 android:layout_height="@dimen/_40sdp"
                 android:adjustViewBounds="true"
                 android:padding="@dimen/_5sdp"
+                android:visibility="invisible"
                 android:src="@drawable/ic_account" />
         </LinearLayout>
 
@@ -113,7 +114,7 @@
                         android:textColor="@color/textOnWhite"
                         android:textColorHint="@color/hintOnWhite"
                         android:textCursorDrawable="@drawable/cursor"
-                        android:textSize="@dimen/text_size_14" />
+                        android:textSize="@dimen/_11sdp" />
 
                     <LinearLayout
                         android:id="@+id/btnShareLink"

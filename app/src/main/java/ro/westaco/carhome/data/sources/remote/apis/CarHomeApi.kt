@@ -64,17 +64,6 @@ interface CarHomeApi {
 
 //test
 
-    /*
-    ** Vignette
-    */
-    @GET("transactions/rest/vignettes/prices")
-    fun getVignettePrices(): Observable<ApiResponse<ArrayList<VignettePrice>?>>
-
-    @POST("transactions/rest/vignettes/init")
-    fun initVignettePurchaseModel(@Body req: InitVignettePurchaseRequest): Call<ApiResponse<PaymentResponse>>
-
-    @GET("transactions/rest/vignettes/{guid}")
-    fun getVignetteTransaction(@Path("guid") guid: String): Observable<ApiResponse<TransactionData?>>
 
     /*
     ** Vehicles
@@ -140,6 +129,9 @@ interface CarHomeApi {
     @GET("carhome/rest/person/natural/{id}")
     fun getNaturalPersonOffer(@Path("id") id: Long): Observable<ApiResponse<NaturalPersonForOffer?>>
 
+    @GET("carhome/rest/vehicles/{id}")
+    fun getVehicleForOffer(@Path("id") id: Int): Observable<ApiResponse<VehicleDetailsForOffer?>>
+
     @POST("carhome/rest/person/natural")
     fun createNaturalPerson(@Body req: AddNaturalPersonRequest): Observable<ApiResponse<Nothing>>
 
@@ -177,6 +169,9 @@ interface CarHomeApi {
     fun getPersonLogo(
         @Path("id") id: Long
     ): Observable<ResponseBody>
+
+    @DELETE("carhome/rest/person/{id}/logo")
+    fun deletePersonLogo(@Path("id") id: Int): Observable<ApiResponse<Nothing>>
 
     /*
     ** Legal Persons
@@ -228,14 +223,26 @@ interface CarHomeApi {
     /*
     ** Locations
     */
+    @GET("locations/rest/filters")
+    fun locationFilterMaps(
+    ): Call<ApiResponse<List<SectionModel>>>
+
     @GET("locations/rest/getLocationFilter")
-    fun locationFilter(
+    fun locationFilterReminder(
     ): Call<ApiResponse<List<LocationFilterItem>>>
 
     @GET("locations/rest/getLocationsV2")
     fun getLocation(
         @Query("currentLat") currentLat: String,
         @Query("currentLong") currentLong: String
+    ): Call<LocationV2Data>
+
+    @GET("locations/rest/getLocationsV2")
+    fun getLocationsFiltered(
+        @Query("currentLat") currentLat: String,
+        @Query("currentLong") currentLong: String,
+        @Query("text") searchText: String?,
+        @Query("services") services: ArrayList<Int>
     ): Call<LocationV2Data>
 
     @GET("locations/rest/getLocation")
@@ -266,6 +273,9 @@ interface CarHomeApi {
     fun addProfileLogo(
         @Part attachment: MultipartBody.Part
     ): Observable<ApiResponse<Attachments>>
+
+    @DELETE("carhome/rest/profile/person/logo")
+    fun deleteProfileLogo(): Observable<ApiResponse<Nothing>>
 
     @GET("carhome/rest/profile/person/logo")
     fun getProfileLogo(): Observable<ResponseBody>
@@ -310,12 +320,9 @@ interface CarHomeApi {
 
     @POST("carhome/rest/notifications/devices")
     fun registerDevice(
-        @Body deviceToken: String
+        @Body deviceToken: DeviceTokenRequest
     ): Observable<ApiResponse<Nothing>>
 
-    //C- View Attachment
-    @GET
-    fun getAttachmentData(@Url url: String): Observable<ResponseBody>
 
     //C- Get Progress for profile and user’s vehicles.
     @GET("carhome/rest/progress")
@@ -410,23 +417,6 @@ interface CarHomeApi {
         @Body req: Categories
     ): Observable<ApiResponse<Nothing>>
 
-    /*
-  ** Bridge Tax
-  */
-    @POST("transactions/rest/passtax/prices")
-    fun getPasstaxPrices(@Body req: BridgeTaxPrices): Observable<ApiResponse<ArrayList<BridgeTaxPrices>?>>
-
-
-    @GET("transactions/rest/catalogs/NOM_PASSTAX_OBJECTIVES")
-    fun getObjectives(): Observable<ApiResponse<ArrayList<ObjectiveItem>>>
-
-    @POST("transactions/rest/passtax/init")
-    fun initPassTax(@Body req: PassTaxInitRequest): Call<ApiResponse<PaymentResponse>>
-
-
-    @GET("transactions/rest/passtax/{guid}")
-    fun getPassTaxTransaction(@Path("guid") guid: String): Observable<ApiResponse<TransactionData?>>
-
 
     /*
        Insurance
@@ -459,11 +449,6 @@ interface CarHomeApi {
         @Query("insurerCode") insurerCode: String
     ): Observable<ApiResponse<RcaOfferDetails>>
 
-    @GET("transactions/rest/rca/logo/{name}")
-    fun getInsuranceCompanyLogo(
-        @Path("name") name: String
-    ): Observable<ResponseBody>
-
     // Insurance type (eg. RCA).
     @GET("transactions/rest/rca/pid")
     fun getInsurancePID(
@@ -483,7 +468,50 @@ interface CarHomeApi {
     fun getRcaDuration(): Observable<ApiResponse<ArrayList<RcaDurationItem>>>
 
     /*
+    ** Vignette
+    */
+    @GET("transactions/rest/vignettes/prices")
+    fun getVignettePrices(): Observable<ApiResponse<ArrayList<VignettePrice>?>>
+
+    /*
+    Old URL
+       @POST("carhome/rest/transactions/vignettes/init")
+      */
+    @POST("transactions/rest/vignettes/init")
+    fun initVignettePurchaseModel(@Body req: InitVignettePurchaseRequest): Call<ApiResponse<PaymentResponse>>
+
+    /*
+    Old URL
+      @GET("carhome/rest/transactions/vignettes/{guid}")
+      */
+
+    @GET("transactions/rest/vignettes/{guid}")
+    fun getVignetteTransaction(@Path("guid") guid: String): Observable<ApiResponse<TransactionData?>>
+
+    /*
+     ** Bridge Tax
+     */
+    @POST("transactions/rest/passtax/prices")
+    fun getPasstaxPrices(@Body req: BridgeTaxPrices): Observable<ApiResponse<ArrayList<BridgeTaxPrices>?>>
+
+
+    @GET("transactions/rest/catalogs/NOM_PASSTAX_OBJECTIVES")
+    fun getObjectives(): Observable<ApiResponse<ArrayList<ObjectiveItem>>>
+
+    // Old URL
+    //    @POST("carhome/rest/transactions/passtax/init")
+    @POST("transactions/rest/passtax/init")
+    fun initPassTax(@Body req: PassTaxInitRequest): Call<ApiResponse<PaymentResponse>>
+
+    //  Old URL
+    //    @GET("carhome/rest/transactions/passtax/{guid}")
+    @GET("transactions/rest/passtax/{guid}")
+    fun getPassTaxTransaction(@Path("guid") guid: String): Observable<ApiResponse<TransactionData?>>
+
+    /*
     * Commen API
+    * Old URL
+    *    @POST("carhome/rest/transactions/payment")
     * */
     @POST("transactions/rest/payment")
     fun initPayment(@Body req: PaymentRequest): Observable<ApiResponse<PaymentResponse>>

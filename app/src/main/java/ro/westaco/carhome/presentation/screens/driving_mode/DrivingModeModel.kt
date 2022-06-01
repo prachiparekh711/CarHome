@@ -32,8 +32,8 @@ class DrivingModeModel @Inject constructor(
     var userLiveData = MutableLiveData<FirebaseUser>()
     var progressData: MutableLiveData<ProgressItem> = MutableLiveData()
     val carsLivedata: MutableLiveData<ArrayList<Vehicle>> = MutableLiveData()
-    val remindersLiveData = MutableLiveData<ArrayList<Reminder>>()
-    val remindersTabData = MutableLiveData<ArrayList<CatalogItem>>()
+    val remindersLiveData = MutableLiveData<ArrayList<Reminder>?>()
+    val remindersTabData = MutableLiveData<ArrayList<CatalogItem>?>()
 
     init {
         userLiveData.value = FirebaseAuth.getInstance().currentUser

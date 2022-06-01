@@ -30,5 +30,5 @@ data class RcaResponse(
     val driverSameAsOwner: Boolean? = null,
 
     @field:SerializedName("vehicle")
-    val vehicle: VehicleDetails? = null
+    val vehicle: VehicleDetailsForOffer? = null
 ) : Serializable

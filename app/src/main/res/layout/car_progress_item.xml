@@ -3,7 +3,6 @@
     android:id="@+id/mLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/_10sdp"
     android:background="@drawable/cta_edit_person_background"
     android:padding="@dimen/_5sdp">
 
@@ -15,7 +14,7 @@
         android:layout_marginHorizontal="@dimen/_5sdp"
         android:adjustViewBounds="true"
         android:contentDescription="@null"
-        android:padding="@dimen/size_2"
+        android:padding="@dimen/_1sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_add_car" />
 
@@ -25,16 +24,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_5sdp"
-        android:layout_toRightOf="@id/avatar1">
+        android:layout_toEndOf="@id/avatar1">
 
         <TextView
             android:id="@+id/t2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/mAdd"
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/complete_car_details"
             android:textColor="@color/textOnWhite"
+            android:layout_toStartOf="@id/mAdd"
             android:textSize="@dimen/_11sdp" />
 
         <TextView
@@ -44,22 +43,23 @@
             android:layout_below="@id/t2"
             android:layout_alignStart="@id/t2"
             android:layout_alignEnd="@id/t2"
-            android:layout_toLeftOf="@id/mAdd"
+            android:layout_toStartOf="@id/mAdd"
             android:fontFamily="@font/inter_medium_500"
             android:text="@string/no_car"
             android:textColor="@color/textOnWhiteAccentGray"
-            android:textSize="@dimen/text_size_14" />
+            android:textSize="@dimen/_10sdp" />
 
         <TextView
             android:id="@+id/mAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/_5sdp"
             android:background="@drawable/cta_background"
             android:fontFamily="@font/manrope_semibold_600"
-            android:paddingHorizontal="@dimen/size_16"
+            android:paddingHorizontal="@dimen/_20sdp"
             android:paddingVertical="@dimen/_5sdp"
             android:text="@string/add"
             android:textColor="@color/textOnSolid"
@@ -72,6 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/mRelative"
+        android:layout_marginTop="@dimen/_2sdp"
         android:layout_alignStart="@id/mRelative">
 
         <ProgressBar
@@ -79,9 +80,9 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/carProgressLbl"
+            android:layout_toStartOf="@id/carProgressLbl"
             android:max="100"
-            android:paddingRight="@dimen/_10sdp"
+            android:paddingEnd="@dimen/_10sdp"
             android:progressDrawable="@drawable/primary_progress" />
 
 
@@ -89,8 +90,9 @@
             android:id="@+id/carProgressLbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:fontFamily="@font/inter_regular_400"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/_2sdp"
+            android:fontFamily="@font/inter_medium_500"
             android:textColor="@color/textOnWhiteAccentGray"
             android:textSize="@dimen/_8sdp" />
 

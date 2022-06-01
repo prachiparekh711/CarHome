@@ -8,7 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.request.RequestOptions
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.Purchase
 import java.text.SimpleDateFormat
@@ -44,9 +47,16 @@ class PurchasesAdapter(
             val item = purchases[position]
             val ctx = itemView.context
 
-            Picasso.with(ctx)
+            val options = RequestOptions()
+            logo.clipToOutline = true
+            Glide.with(ctx)
                 .load(item.logoUrl)
-                .placeholder(R.drawable.logo_small)
+                .apply(
+                    options.fitCenter()
+                        .skipMemoryCache(true)
+                        .priority(Priority.HIGH)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
+                )
                 .into(logo)
 
             name.text = item.name

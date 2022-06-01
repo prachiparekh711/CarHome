@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bugsee_token" translatable="false">268187b3-f3b4-4b29-a07d-92ef6f4a9d18</string>
 
     <string name="facebook_app_id" translatable="false">1463185817391279</string>
     <string name="facebook_client_token" translatable="false">247d713a4a8c6f6cf1697eb6e1840a2c</string>
@@ -17,8 +16,6 @@
     <string name="server_date_format_template" translatable="false">yyyy-MM-dd</string>
     <string name="server_datetime_format_template" translatable="false">yyyy-MM-dd HH:mm:ss</string>
     <string name="server_standard_datetime_format_template" translatable="false">yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'</string>
-    <string name="server_standard_datetime_format_template2" translatable="false">yyyy-MM-dd\'T\'HH:mm:ss\'Z\'</string>
-    <string name="notification_datetime_format" translatable="false">dd MM,HH:mm a</string>
 
     <string name="BASE_URL_PRODUCTION" translatable="false">https://build3.westaco.com:8443/</string>
     <string name="BASE_URL_RESOURCES" translatable="false">https://carhome-build.westaco.com</string>

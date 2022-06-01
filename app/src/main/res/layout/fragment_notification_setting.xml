@@ -16,8 +16,8 @@
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/size_16"
-            android:layout_marginTop="@dimen/size_16"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_back" />
 
@@ -29,108 +29,696 @@
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/notifications"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_18" />
+            android:textSize="@dimen/_15sdp" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginEnd="@dimen/_12sdp"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/size_16"
+            android:visibility="invisible"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_account" />
     </RelativeLayout>
 
-    <ScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@id/indicator"
-        android:layout_below="@+id/topRL"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:scrollbars="none">
+        android:layout_below="@+id/topRL">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="@dimen/_10sdp"
+            app:layout_behavior=".utils.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:background="@drawable/layout_input_background"
-                android:orientation="vertical"
-                android:padding="@dimen/size_16">
+                android:orientation="vertical">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:background="@drawable/layout_input_background"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/rcaHint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:text="@string/rem_of_rca"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <ro.westaco.carhome.utils.SwitchButton
+                            android:id="@+id/rca_switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_23sdp"
+                            android:layout_alignParentRight="true"
+                            app:sb_background="@color/unselected"
+                            app:sb_border_width="@dimen/_2sdp"
+                            app:sb_checked_color="@color/ctaBackground"
+                            app:sb_checkline_width="0dp"
+                            app:sb_show_indicator="false"
+                            app:sb_uncheck_color="@color/unselected" />
+
+                    </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/rcaHint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/noti_of_detail"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <LinearLayout
+                        android:id="@+id/rcaLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:background="@color/appPrimary40" />
+
+                        <LinearLayout
+                            android:id="@+id/rcaSMSLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/rcaSMS"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/sms"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/rca_sms_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/rcaEmailLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/rcaEmail"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/email"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/rca_email_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/rcaAppReminderLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/rcaApp"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/app"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/rca_app_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:background="@drawable/layout_input_background"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/vignetteHint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:text="@string/rem_of_vignette"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <ro.westaco.carhome.utils.SwitchButton
+                            android:id="@+id/vignette_switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_23sdp"
+                            android:layout_alignParentRight="true"
+                            app:sb_background="@color/unselected"
+                            app:sb_border_width="@dimen/_2sdp"
+                            app:sb_checked_color="@color/ctaBackground"
+                            app:sb_checkline_width="0dp"
+                            app:sb_show_indicator="false"
+                            app:sb_uncheck_color="@color/unselected" />
+
+                    </RelativeLayout>
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/noti_of_detail"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <LinearLayout
+                        android:id="@+id/vignetteLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:background="@color/appPrimary40" />
+
+                        <LinearLayout
+                            android:id="@+id/vignetteSMSLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/vignetteSMS"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/sms"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/vignette_sms_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/vignetteEmailLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/vignetteEmail"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/email"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/vignette_email_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/vignetteAppReminderLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/vignetteApp"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/app"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/vignette_app_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:background="@drawable/layout_input_background"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:text="@string/rem_of_maintenance"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <ro.westaco.carhome.utils.SwitchButton
+                            android:id="@+id/maintenance_switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_23sdp"
+                            android:layout_alignParentRight="true"
+
+                            app:sb_background="@color/unselected"
+                            app:sb_border_width="@dimen/_2sdp"
+                            app:sb_checked_color="@color/ctaBackground"
+                            app:sb_checkline_width="0dp"
+                            app:sb_show_indicator="false"
+                            app:sb_uncheck_color="@color/unselected" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/noti_of_detail"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <LinearLayout
+                        android:id="@+id/maintenanceLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:background="@color/appPrimary40" />
+
+                        <LinearLayout
+                            android:id="@+id/maintenanceSMSLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/maintenanceSMS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/sms"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/maintenance_sms_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/maintenanceEmailLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/maintenanceEmail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/email"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/maintenance_email_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/maintenanceAppReminderLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/maintenanceApp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/app"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/maintenance_app_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:background="@drawable/layout_input_background"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:text="@string/rem_of_oil"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <ro.westaco.carhome.utils.SwitchButton
+                            android:id="@+id/oil_switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_23sdp"
+                            android:layout_alignParentRight="true"
+
+                            app:sb_background="@color/unselected"
+                            app:sb_border_width="@dimen/_2sdp"
+                            app:sb_checked_color="@color/ctaBackground"
+                            app:sb_checkline_width="0dp"
+                            app:sb_show_indicator="false"
+                            app:sb_uncheck_color="@color/unselected" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/noti_of_detail"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <LinearLayout
+                        android:id="@+id/oilLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:background="@color/appPrimary40" />
+
+                        <LinearLayout
+                            android:id="@+id/oilSMSLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/oilSMS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/sms"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/oil_sms_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/oilEmailLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/oilEmail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/email"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/oil_email_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/oilAppReminderLL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/oilApp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.5"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:text="@string/app"
+                                android:textColor="@color/textOnWhite"
+                                android:textSize="@dimen/_11sdp" />
+
+                            <ro.westaco.carhome.utils.SwitchButton
+                                android:id="@+id/oil_app_switch_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_23sdp"
+                                android:layout_gravity="right"
+                                app:sb_background="@color/unselected"
+                                app:sb_border_width="@dimen/_2sdp"
+                                app:sb_checked_color="@color/ctaBackground"
+                                app:sb_checkline_width="0dp"
+                                app:sb_show_indicator="false"
+                                app:sb_uncheck_color="@color/unselected" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/geoLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:background="@drawable/layout_input_background"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_bold_700"
-                        android:text="@string/rem_of_rca"
+                        android:text="@string/rem_of_geo"
                         android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/text_size_16" />
+                        android:textSize="@dimen/_11sdp" />
 
-                    <ro.westaco.carhome.utils.SwitchButton
-                        android:id="@+id/rca_switch_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_23sdp"
-                        android:layout_alignParentRight="true"
-                        app:sb_background="@color/unselected"
-                        app:sb_border_width="@dimen/_2sdp"
-                        app:sb_checked_color="@color/ctaBackground"
-                        app:sb_checkline_width="0dp"
-                        app:sb_show_indicator="false"
-                        app:sb_uncheck_color="@color/unselected" />
-
-                </RelativeLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:text="@string/noti_of_detail"
-                    android:textColor="@color/secondaryTextOnWhite"
-                    android:textSize="@dimen/text_size_12" />
-
-                <LinearLayout
-                    android:id="@+id/rcaLL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <View
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:background="@color/appPrimary40" />
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/noti_of_detail"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
 
                     <LinearLayout
-                        android:id="@+id/rcaSMSLL"
+                        android:id="@+id/geoAppLL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/rcaSMS"
-                            android:layout_width="0dp"
+                            android:id="@+id/geoApp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="0.5"
                             android:fontFamily="@font/inter_bold_700"
                             android:text="@string/sms"
                             android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
+                            android:textSize="@dimen/_11sdp" />
 
                         <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/rca_sms_switch_button"
+                            android:id="@+id/geo_app_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"
                             android:layout_gravity="right"
@@ -142,592 +730,11 @@
                             app:sb_uncheck_color="@color/unselected" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/rcaEmailLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/rcaEmail"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/email"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/rca_email_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/rcaAppReminderLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/rcaApp"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/app"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/rca_app_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/layout_input_background"
-                android:orientation="vertical"
-                android:padding="@dimen/size_16">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/vignetteHint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_bold_700"
-                        android:text="@string/rem_of_vignette"
-                        android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/text_size_16" />
-
-                    <ro.westaco.carhome.utils.SwitchButton
-                        android:id="@+id/vignette_switch_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_23sdp"
-                        android:layout_alignParentRight="true"
-                        app:sb_background="@color/unselected"
-                        app:sb_border_width="@dimen/_2sdp"
-                        app:sb_checked_color="@color/ctaBackground"
-                        app:sb_checkline_width="0dp"
-                        app:sb_show_indicator="false"
-                        app:sb_uncheck_color="@color/unselected" />
-
-                </RelativeLayout>
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:text="@string/noti_of_detail"
-                    android:textColor="@color/secondaryTextOnWhite"
-                    android:textSize="@dimen/text_size_12" />
-
-                <LinearLayout
-                    android:id="@+id/vignetteLL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:background="@color/appPrimary40" />
-
-                    <LinearLayout
-                        android:id="@+id/vignetteSMSLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/vignetteSMS"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/sms"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/vignette_sms_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/vignetteEmailLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/vignetteEmail"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/email"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/vignette_email_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/vignetteAppReminderLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/vignetteApp"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/app"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/vignette_app_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/layout_input_background"
-                android:orientation="vertical"
-                android:padding="@dimen/size_16">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_bold_700"
-                        android:text="@string/rem_of_maintenance"
-                        android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/text_size_16" />
-
-                    <ro.westaco.carhome.utils.SwitchButton
-                        android:id="@+id/maintenance_switch_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_23sdp"
-                        android:layout_alignParentRight="true"
-
-                        app:sb_background="@color/unselected"
-                        app:sb_border_width="@dimen/_2sdp"
-                        app:sb_checked_color="@color/ctaBackground"
-                        app:sb_checkline_width="0dp"
-                        app:sb_show_indicator="false"
-                        app:sb_uncheck_color="@color/unselected" />
-
-                </RelativeLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:text="@string/noti_of_detail"
-                    android:textColor="@color/secondaryTextOnWhite"
-                    android:textSize="@dimen/text_size_12" />
-
-                <LinearLayout
-                    android:id="@+id/maintenanceLL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:background="@color/appPrimary40" />
-
-                    <LinearLayout
-                        android:id="@+id/maintenanceSMSLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/maintenanceSMS"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/sms"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/maintenance_sms_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/maintenanceEmailLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/maintenanceEmail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/email"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/maintenance_email_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/maintenanceAppReminderLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/maintenanceApp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/app"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/maintenance_app_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/layout_input_background"
-                android:orientation="vertical"
-                android:padding="@dimen/size_16">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_bold_700"
-                        android:text="@string/rem_of_oil"
-                        android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/text_size_16" />
-
-                    <ro.westaco.carhome.utils.SwitchButton
-                        android:id="@+id/oil_switch_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_23sdp"
-                        android:layout_alignParentRight="true"
-
-                        app:sb_background="@color/unselected"
-                        app:sb_border_width="@dimen/_2sdp"
-                        app:sb_checked_color="@color/ctaBackground"
-                        app:sb_checkline_width="0dp"
-                        app:sb_show_indicator="false"
-                        app:sb_uncheck_color="@color/unselected" />
-
-                </RelativeLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:text="@string/noti_of_detail"
-                    android:textColor="@color/secondaryTextOnWhite"
-                    android:textSize="@dimen/text_size_12" />
-
-                <LinearLayout
-                    android:id="@+id/oilLL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:background="@color/appPrimary40" />
-
-                    <LinearLayout
-                        android:id="@+id/oilSMSLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/oilSMS"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/sms"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/oil_sms_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/oilEmailLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/oilEmail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/email"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/oil_email_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/oilAppReminderLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/oilApp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="0.5"
-                            android:fontFamily="@font/inter_bold_700"
-                            android:text="@string/app"
-                            android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
-
-                        <ro.westaco.carhome.utils.SwitchButton
-                            android:id="@+id/oil_app_switch_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/_23sdp"
-                            android:layout_gravity="right"
-                            app:sb_background="@color/unselected"
-                            app:sb_border_width="@dimen/_2sdp"
-                            app:sb_checked_color="@color/ctaBackground"
-                            app:sb_checkline_width="0dp"
-                            app:sb_show_indicator="false"
-                            app:sb_uncheck_color="@color/unselected" />
-                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-            <LinearLayout
-                android:id="@+id/geoLL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/layout_input_background"
-                android:orientation="vertical"
-                android:padding="@dimen/size_16">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/rem_of_geo"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_16" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:text="@string/noti_of_detail"
-                    android:textColor="@color/secondaryTextOnWhite"
-                    android:textSize="@dimen/text_size_12" />
-
-                <LinearLayout
-                    android:id="@+id/geoAppLL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/geoApp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="0.5"
-                        android:fontFamily="@font/inter_bold_700"
-                        android:text="@string/sms"
-                        android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/text_size_14" />
-
-                    <ro.westaco.carhome.utils.SwitchButton
-                        android:id="@+id/geo_app_switch_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/_23sdp"
-                        android:layout_gravity="right"
-                        app:sb_background="@color/unselected"
-                        app:sb_border_width="@dimen/_2sdp"
-                        app:sb_checked_color="@color/ctaBackground"
-                        app:sb_checkline_width="0dp"
-                        app:sb_show_indicator="false"
-                        app:sb_uncheck_color="@color/unselected" />
-                </LinearLayout>
-
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
     <View
@@ -736,10 +743,10 @@
         android:layout_height="5dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="@dimen/size_8"
-        android:layout_marginTop="@dimen/size_8"
-        android:layout_marginEnd="@dimen/size_8"
-        android:layout_marginBottom="@dimen/size_8"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
         android:background="@drawable/rounded_rect_100_black"
         android:visibility="gone" />
 

@@ -2,7 +2,6 @@ package ro.westaco.carhome.presentation.screens.signup_methods.email_verificatio
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.widget.Toast
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -10,6 +9,7 @@ import kotlinx.android.synthetic.main.activity_email_verification.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.utils.BiometricUtil
+import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.Progressbar
 
 //C- Email Verification Section
@@ -46,7 +46,7 @@ class EmailVerificationActivity : BaseActivity<EmailVerificationModel>() {
                         viewModel.login()
                     } else {
                         user?.sendEmailVerification(actionCodeSettings)
-                            ?.addOnCompleteListener { task ->
+                            ?.addOnCompleteListener {
 
                             }
                     }
@@ -66,32 +66,25 @@ class EmailVerificationActivity : BaseActivity<EmailVerificationModel>() {
                 this.startActivity(intent)
 
             } catch (e: ActivityNotFoundException) {
-                Toast.makeText(
-                    this@EmailVerificationActivity,
-                    resources.getString(R.string.no_email_app),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorInfo(this@EmailVerificationActivity, getString(R.string.no_email_app))
             }
         }
 
         resendLL.setOnClickListener {
             if (firebaseAuth.currentUser?.isEmailVerified == true) {
-                Toast.makeText(
-                    this@EmailVerificationActivity,
-                    resources.getString(R.string.email_verified),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showErrorInfo(this@EmailVerificationActivity, getString(R.string.email_verified))
 
                 viewModel.login()
             } else {
                 user?.sendEmailVerification(actionCodeSettings)
                     ?.addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            Toast.makeText(
+
+                            showErrorInfo(
                                 this@EmailVerificationActivity,
-                                resources.getString(R.string.email_sent),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                                getString(R.string.email_sent)
+                            )
+
                         }
                     }
             }
@@ -106,11 +99,12 @@ class EmailVerificationActivity : BaseActivity<EmailVerificationModel>() {
                         if (isEmailVerified) {
                             viewModel.login()
                         } else {
-                            Toast.makeText(
+
+                            showErrorInfo(
                                 this@EmailVerificationActivity,
-                                resources.getString(R.string.not_verified),
-                                Toast.LENGTH_LONG
-                            ).show()
+                                getString(R.string.not_verified)
+                            )
+
                         }
                     }
                 }

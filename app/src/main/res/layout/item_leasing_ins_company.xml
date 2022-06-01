@@ -19,8 +19,8 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/companycard"
-            android:layout_width="@dimen/_45sdp"
-            android:layout_height="@dimen/_45sdp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             app:cardBackgroundColor="@color/ctaBackground"
             app:cardCornerRadius="9dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -35,7 +35,7 @@
                 android:layout_centerVertical="true"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/flag_peru"
+                android:src="@drawable/carhome_icon"
                 android:visibility="gone" />
 
             <TextView
@@ -97,7 +97,7 @@
             android:id="@+id/check"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
-            android:layout_margin="@dimen/size_12"
+            android:layout_margin="@dimen/_10sdp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_ischekd"
             android:visibility="gone"

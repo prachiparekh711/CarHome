@@ -56,7 +56,7 @@
                 android:layout_width="5dp"
                 android:layout_height="5dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="@dimen/size_12"
+                android:layout_marginHorizontal="@dimen/_10sdp"
                 android:background="@drawable/circle"
                 android:backgroundTint="@color/itemBgStroke" />
 

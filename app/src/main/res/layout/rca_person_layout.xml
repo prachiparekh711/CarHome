@@ -10,8 +10,8 @@
         android:id="@+id/mSelectUserImage"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
-        android:layout_marginStart="@dimen/size_18"
         android:background="@drawable/oval_shape"
+        android:layout_marginStart="@dimen/_12sdp"
         android:src="@drawable/ic_profile_picture" />
 
     <LinearLayout
@@ -27,7 +27,7 @@
             android:fontFamily="@font/inter_regular_400"
             android:paddingStart="@dimen/_10sdp"
             android:textColor="#162651"
-            android:textSize="@dimen/text_size_14" />
+            android:textSize="@dimen/_11sdp" />
 
         <TextView
             android:id="@+id/mSelectUserEmail"
@@ -37,7 +37,7 @@
             android:paddingStart="@dimen/_10sdp"
             android:text="@string/select_owner"
             android:textColor="#162651"
-            android:textSize="@dimen/text_size_14"
+            android:textSize="@dimen/_11sdp"
             android:visibility="gone" />
     </LinearLayout>
 
@@ -45,7 +45,7 @@
         android:id="@+id/remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/size_16"
+        android:layout_marginStart="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_15sdp"
         android:src="@drawable/ic_minus_cirlce" />
 

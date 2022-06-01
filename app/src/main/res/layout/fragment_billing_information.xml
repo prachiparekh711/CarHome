@@ -23,12 +23,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size_12"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/back"
+                    android:id="@+id/close"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_marginStart="@dimen/_10sdp"
@@ -46,13 +46,14 @@
                     android:gravity="center"
                     android:text="@string/data"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_18" />
+                    android:textSize="@dimen/_15sdp" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/home"
+                    android:layout_marginEnd="@dimen/_12sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/size_16"
+                    android:visibility="invisible"
                     android:adjustViewBounds="true"
                     android:src="@drawable/ic_account"
                     android:tint="@color/appPrimary" />
@@ -65,11 +66,11 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size_16"
+            android:layout_marginTop="@dimen/_12sdp"
             android:background="@color/white"
             app:tabBackground="@color/white"
             app:tabIndicatorColor="@color/appPrimary"
-            app:tabIndicatorHeight="@dimen/size_2"
+            app:tabIndicatorHeight="@dimen/_1sdp"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/appPrimary"
             app:tabTextAppearance="@style/TabLayoutTheme"
@@ -81,11 +82,11 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/text_size_20"
+                android:layout_height="@dimen/_16sdp"
                 android:background="@drawable/white_toolbar_background" />
 
             <androidx.viewpager.widget.ViewPager
-                android:id="@+id/pager"
+                android:id="@+id/newPage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@id/rv_btm" />
@@ -99,34 +100,34 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/tv_previous"
+                    android:id="@+id/dissmiss"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_24"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_weight="1"
                     android:fontFamily="@font/inter_medium_500"
                     android:gravity="center"
                     android:paddingVertical="@dimen/_5sdp"
                     android:text="@string/previous"
                     android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_16"
+                    android:textSize="@dimen/_11sdp"
                     app:layout_constraintBottom_toTopOf="@+id/indicator"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
-                    android:id="@+id/cta_next"
+                    android:id="@+id/cta"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/size_24"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_weight="1.8"
                     android:background="@drawable/save_background"
                     android:fontFamily="@font/inter_bold_700"
                     android:gravity="center"
-                    android:paddingVertical="@dimen/size_16"
+                    android:paddingVertical="@dimen/_12sdp"
                     android:text="@string/next"
                     android:textColor="@color/textOnSolid"
-                    android:textSize="@dimen/text_size_16"
+                    android:textSize="@dimen/_11sdp"
                     app:layout_constraintBottom_toTopOf="@+id/cancel"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

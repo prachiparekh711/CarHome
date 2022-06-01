@@ -26,8 +26,8 @@ class ReminderViewModel @Inject constructor(
     private val api: CarHomeApi
 ) : BaseViewModel() {
 
-    val remindersLiveData = MutableLiveData<ArrayList<Reminder>>()
-    val remindersTabData = MutableLiveData<ArrayList<CatalogItem>>()
+    val remindersLiveData = MutableLiveData<ArrayList<Reminder>?>()
+    val remindersTabData = MutableLiveData<ArrayList<CatalogItem>?>()
 
     override fun onFragmentCreated() {
         fetchRemoteData()
@@ -55,7 +55,8 @@ class ReminderViewModel @Inject constructor(
             .subscribe({ resp ->
                 remindersLiveData.value = resp?.data
             }, {
-                //   it.printStackTrace()
+                it.printStackTrace()
+                remindersLiveData.value = null
             })
     }
 
@@ -63,7 +64,7 @@ class ReminderViewModel @Inject constructor(
     ** User Interaction
     */
     internal fun onFabClicked() {
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.AddReminder))
+        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.AddReminder, null, true))
     }
 
     internal fun onNotificationsClicked() {
@@ -92,7 +93,6 @@ class ReminderViewModel @Inject constructor(
 
     //    (R11)
     internal fun onUpdate(item: Reminder) {
-
         uiEventStream.value =
             UiEvent.Navigation(NavAttribs(Screen.AddReminder, object : BundleProvider() {
                 override fun onAddArgs(bundle: Bundle?): Bundle {
@@ -101,6 +101,6 @@ class ReminderViewModel @Inject constructor(
                         putSerializable(AddNewReminderFragment.ARG_REMINDER, item)
                     }
                 }
-            }))
+            }, true))
     }
 }

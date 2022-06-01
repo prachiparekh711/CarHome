@@ -40,13 +40,11 @@ class LanguageFragment : BaseFragment<CommenViewModel>() {
         englishRL.setOnClickListener {
             locale = requireContext().resources.getString(R.string.english_lan)
             setLanguage()
-
         }
 
         romaniaRL.setOnClickListener {
             locale = requireContext().resources.getString(R.string.romania_lan)
             setLanguage()
-
         }
 
         cta.setOnClickListener {
@@ -54,7 +52,6 @@ class LanguageFragment : BaseFragment<CommenViewModel>() {
             setAppLanguage()
             viewModel.onMain()
         }
-
     }
 
     private fun setLanguage() {

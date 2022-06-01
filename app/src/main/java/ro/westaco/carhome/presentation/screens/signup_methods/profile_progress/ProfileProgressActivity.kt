@@ -12,7 +12,7 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.VehicleProgressItem
 import ro.westaco.carhome.prefrences.SharedPrefrences
 import ro.westaco.carhome.presentation.base.BaseActivity
-import ro.westaco.carhome.presentation.screens.home.CarProgressAdapter
+import ro.westaco.carhome.presentation.screens.home.adapter.CarProgressAdapter
 import ro.westaco.carhome.presentation.screens.main.MainActivity
 
 //C- Profile Progress Section
@@ -46,7 +46,7 @@ class ProfileProgressActivity : BaseActivity<ProfileProgressModel>(),
         }
     }
 
-    fun navigateToMain() {
+    private fun navigateToMain() {
         val intent = Intent(this@ProfileProgressActivity, MainActivity::class.java)
         startActivity(intent)
         finish()

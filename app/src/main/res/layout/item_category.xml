@@ -8,11 +8,11 @@
         android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/size_16"
-        android:layout_marginTop="@dimen/size_24"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_15sdp"
         android:fontFamily="@font/inter_bold_700"
         android:textColor="@color/textOnWhite"
-        android:textSize="@dimen/text_size_14"
+        android:textSize="@dimen/_11sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,8 +20,8 @@
         android:id="@+id/purchases"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/size_16"
-        android:layout_marginTop="@dimen/size_8"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:background="@drawable/bg_card_item"
         app:layout_constraintTop_toBottomOf="@+id/category" />
 

@@ -9,16 +9,23 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.HistoryItem
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.dashboard.DashboardViewModel.Companion.serviceExpanded
+import ro.westaco.carhome.utils.Progressbar
 
 //C- History section
 @AndroidEntryPoint
 class HistoryFragment : BaseFragment<HistoryViewModel>(),
     HistoryAdapter.OnItemInteractionListener {
+
     lateinit var adapter: HistoryAdapter
+    var progressbar: Progressbar? = null
 
     override fun getContentView() = R.layout.fragment_history
 
     override fun initUi() {
+
+        progressbar = Progressbar(requireContext())
+        progressbar?.showPopup()
+
         back.setOnClickListener {
             viewModel.onBack()
         }
@@ -34,6 +41,7 @@ class HistoryFragment : BaseFragment<HistoryViewModel>(),
     }
 
     override fun setObservers() {
+
         viewModel.historyLiveData.observe(viewLifecycleOwner) { historyList ->
             if (historyList.isNullOrEmpty()) {
                 llEmpty.isVisible = true
@@ -47,10 +55,12 @@ class HistoryFragment : BaseFragment<HistoryViewModel>(),
                 historyRV.adapter = adapter
                 adapter.setItems(historyList)
             }
+            progressbar?.dismissPopup()
         }
     }
 
     override fun onItemClick(item: HistoryItem) {
         viewModel.onHistoryDetail(item)
     }
+
 }

@@ -9,6 +9,7 @@ import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.base.ContextWrapper
 import java.util.*
 
+
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 class SplashActivity : BaseActivity<SplashViewModel>() {
@@ -16,7 +17,6 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
     override fun getContentView() = R.layout.activity_splash
 
     override fun setupUi() {
-
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -34,10 +34,8 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
         super.attachBaseContext(context)
     }
 
-
     override fun setupObservers() {
 
     }
-
 
 }

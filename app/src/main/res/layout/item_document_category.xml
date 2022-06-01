@@ -1,40 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainBG"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="@dimen/_10sdp">
+    android:paddingHorizontal="@dimen/_5sdp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/logo"
-        android:layout_width="@dimen/size_48"
-        android:layout_height="@dimen/size_48"
-        android:layout_marginStart="@dimen/size_12"
-        android:layout_marginTop="@dimen/size_12"
-        android:layout_marginEnd="@dimen/size_12"
-        android:layout_marginBottom="@dimen/size_12"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_folder" />
+    <RelativeLayout
+        android:id="@+id/newRelative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/logoCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:background="@color/white"
+            app:cardCornerRadius="@dimen/_5sdp">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_folder" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <ImageView
+            android:id="@+id/pdf"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_folder" />
+
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/rightLL"
-        android:layout_toRightOf="@id/logo"
+        android:layout_toStartOf="@id/rightLL"
+        android:layout_toEndOf="@id/newRelative"
         android:fontFamily="@font/inter_semibold_600"
         android:maxLines="1"
         android:textColor="@color/textOnWhite"
-        android:textSize="@dimen/_12sdp" />
-
+        android:textSize="@dimen/_11sdp" />
 
     <RelativeLayout
         android:id="@+id/rightLL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true">
 
         <ImageView
@@ -58,6 +79,7 @@
         android:id="@+id/mView"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/logo"
+        android:layout_below="@id/newRelative"
         android:background="@color/tabUnselected" />
+
 </RelativeLayout>

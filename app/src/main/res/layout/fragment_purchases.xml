@@ -8,6 +8,6 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/size_24" />
+        android:paddingBottom="@dimen/_15sdp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

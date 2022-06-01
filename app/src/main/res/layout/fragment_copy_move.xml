@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".presentation.screens.home.documents.CopyMoveFragment">
+    tools:context=".presentation.screens.documents.CopyMoveFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:id="@+id/back"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
+                android:layout_marginStart="@dimen/_12sdp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_back" />
 
@@ -34,7 +34,7 @@
                 android:fontFamily="@font/inter_semibold_600"
                 android:text="@string/documents"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_18" />
+                android:textSize="@dimen/_15sdp" />
 
         </RelativeLayout>
 
@@ -48,15 +48,15 @@
             android:fontFamily="@font/raleway_bold_700"
             android:text="@string/empty_directory"
             android:textColor="@color/secondaryTextOnWhite"
-            android:textSize="@dimen/text_size_14"
+            android:textSize="@dimen/_11sdp"
             android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/catLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/cta"
             android:layout_below="@id/mPath"
+            android:layout_above="@id/cta"
             android:orientation="vertical">
 
             <TextView
@@ -64,11 +64,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/size_12"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/raleway_bold_700"
                 android:text="@string/categories"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/_11sdp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mRecycler"
@@ -84,15 +84,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginHorizontal="@dimen/size_24"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_marginVertical="@dimen/_10sdp"
             android:background="@drawable/cta_background"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/copy_here"
+            android:textSize="@dimen/_11sdp"
             android:textColor="@color/textOnSolid"
-            android:textSize="@dimen/text_size_16"
             android:visibility="gone" />
     </RelativeLayout>
 

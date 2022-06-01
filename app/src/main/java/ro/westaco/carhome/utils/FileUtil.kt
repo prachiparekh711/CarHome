@@ -226,19 +226,16 @@ class FileUtil {
                     val outputStream = FileOutputStream(file)
                     var read: Int
                     val maxBufferSize = 1 * 1024 * 1024
-                    val bytesAvailable = inputStream!!.available()
+                    val bytesAvailable = inputStream?.available()
 
-                    val bufferSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        min(bytesAvailable, maxBufferSize)
-                    } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        val bufferSize = bytesAvailable?.let { min(it, maxBufferSize) }
+                        val buffers = ByteArray(bufferSize as Int)
+                        while (inputStream.read(buffers).also { read = it } != -1) {
+                            outputStream.write(buffers, 0, read)
+                        }
                     }
-                    val buffers = ByteArray(bufferSize as Int)
-
-                    while (inputStream.read(buffers).also { read = it } != -1) {
-                        outputStream.write(buffers, 0, read)
-                    }
-
-                    inputStream.close()
+                    inputStream?.close()
                     outputStream.close()
                     return file.absolutePath
                 } else {
@@ -274,6 +271,28 @@ class FileUtil {
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 ),
                 200
+            )
+
+        }
+
+        fun checkCameraPermission(context: Context): Boolean {
+
+            val result =
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.CAMERA
+                )
+
+            return result == PackageManager.PERMISSION_GRANTED
+        }
+
+        fun requestCamerasPermission(activity: Activity) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(
+                    Manifest.permission.CAMERA
+                ),
+                201
             )
 
         }

@@ -10,16 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.databinding.LocationfilterHeaderViewBinding
-import ro.westaco.carhome.presentation.interfaceitem.ClickItem
+import ro.westaco.carhome.navigation.SingleLiveEvent
 
 class TagFilterAdapter(
-    var context: Context,
-    var clickItem: ClickItem
+    var context: Context
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private var selectedTags: ArrayList<CatalogItem> = ArrayList()
+    var selectedItemLiveData: SingleLiveEvent<ArrayList<CatalogItem>> = SingleLiveEvent()
     var data: ArrayList<CatalogItem> = ArrayList()
-    var selectedPos = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return MyTopHolder(
             LocationfilterHeaderViewBinding.inflate(LayoutInflater.from(parent.context))
@@ -27,34 +27,70 @@ class TagFilterAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = data[position]
+        val holder1 = holder as MyTopHolder
+        if (selectedTags.contains(item)) {
+            changeItemBackground(true, holder)
+        } else {
+            changeItemBackground(false, holder)
+        }
+        holder1.binding.textView.text = item.name
+        holder1.itemView.setOnClickListener { v: View? ->
+            changeSelectionList(item, holder1)
+        }
+    }
 
-        val holder1 =
-            holder as MyTopHolder
-        if (selectedPos == position) {
-            holder1.binding.textView.setTextColor(
+
+    fun changeSelectionList(item: CatalogItem, holder: MyTopHolder) {
+        if (selectedTags.contains(item)) {
+            if (item.name == "All") {
+                selectedTags.clear()
+            } else {
+                selectedTags.remove(item)
+                val allTag = selectedTags.find {
+                    it.name == "All"
+                }
+                if (allTag != null) {
+                    selectedTags.remove(allTag)
+                }
+            }
+        } else {
+            if (item.name == "All") {
+                selectedTags.clear()
+                selectedTags.addAll(data)
+            } else {
+                selectedTags.add(item)
+                val allTag = selectedTags.find {
+                    it.name == "All"
+                }
+                if (allTag == null && selectedTags.size == data.size - 1) {
+                    selectedTags.add(data[0])
+                }
+            }
+        }
+        selectedItemLiveData.value = selectedTags
+        notifyItemRangeChanged(0, data.size)
+    }
+
+    fun changeItemBackground(isSelected: Boolean, holder: MyTopHolder) {
+        if (isSelected) {
+            holder.binding.textView.setTextColor(
                 ContextCompat.getColor(
                     context,
                     R.color.appPrimary
                 )
             )
-            holder1.binding.textView.background =
+            holder.binding.textView.background =
                 ContextCompat.getDrawable(context, R.drawable.search_background_selected)
         } else {
-            holder1.binding.textView.setTextColor(ContextCompat.getColor(context, R.color.skip))
-            holder1.binding.textView.background =
+            holder.binding.textView.setTextColor(ContextCompat.getColor(context, R.color.skip))
+            holder.binding.textView.background =
                 ContextCompat.getDrawable(context, R.drawable.search_background)
         }
+    }
 
-        holder1.binding.textView.text = data[position].name
-        holder1.itemView.setOnClickListener { v: View? ->
-
-            val prevSelectedPos = selectedPos
-            selectedPos = position
-            notifyItemChanged(prevSelectedPos)
-            notifyItemChanged(selectedPos)
-            clickItem.click(position)
-        }
-
+    fun getSelectedTagsLiveData(): SingleLiveEvent<ArrayList<CatalogItem>> {
+        return selectedItemLiveData
     }
 
     override fun getItemCount(): Int {

@@ -19,7 +19,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_16"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_marginTop="20dp">
 
             <TextView
@@ -29,7 +29,7 @@
                 android:fontFamily="@font/inter_semibold_600"
                 android:text="@string/nace_code"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_18" />
+                android:textSize="@dimen/_15sdp" />
 
             <ImageView
                 android:id="@+id/mClose"
@@ -40,6 +40,7 @@
                 android:padding="3dp"
                 android:src="@drawable/ic_close" />
         </RelativeLayout>
+
 
 
         <RelativeLayout
@@ -85,9 +86,11 @@
             </RelativeLayout>
 
 
+
         </RelativeLayout>
 
         <androidx.appcompat.widget.SearchView
+            android:layoutDirection="rtl"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:layout_margin="@dimen/_8sdp"
@@ -99,13 +102,12 @@
             android:imeOptions="actionDone"
             android:importantForAutofill="auto"
             android:inputType="text"
-            android:layoutDirection="rtl"
             android:padding="@dimen/_5sdp"
+            android:visibility="gone"
             android:singleLine="true"
             android:textColor="#303065"
             android:textColorHint="#868383"
             android:textSize="@dimen/_12sdp"
-            android:visibility="gone"
             app:searchIcon="@drawable/ic_search_normal" />
 
 
@@ -113,7 +115,7 @@
             android:id="@+id/rv_caen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/size_9"
+            android:layout_marginHorizontal="@dimen/_5sdp"
             tools:listitem="@layout/linear_item1" />
 
     </LinearLayout>
@@ -131,28 +133,28 @@
             android:id="@+id/cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_24"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_weight="1"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
             android:paddingVertical="@dimen/_5sdp"
             android:text="@string/cancel"
             android:textColor="@color/textOnWhiteAccentGray"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <TextView
             android:id="@+id/cta"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/size_24"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_weight="1.8"
             android:background="@drawable/save_background"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_12"
+            android:paddingVertical="@dimen/_10sdp"
             android:text="@string/continue_txt"
             android:textColor="@color/textOnSolid"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
     </LinearLayout>
 </RelativeLayout>

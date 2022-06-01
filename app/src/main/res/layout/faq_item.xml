@@ -16,11 +16,11 @@
             android:layout_height="wrap_content"
             android:drawableRight="@drawable/ic_right_arrow"
             android:fontFamily="@font/inter_bold_700"
-            android:paddingHorizontal="@dimen/size_8"
-            android:paddingVertical="@dimen/size_4"
+            android:paddingHorizontal="@dimen/_5sdp"
+            android:paddingVertical="@dimen/_2sdp"
             android:text="@string/remember_hint"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
 
         <TextView
             android:id="@+id/mLabelAns"
@@ -28,11 +28,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/mLabel"
             android:fontFamily="@font/inter_regular_400"
-            android:paddingHorizontal="@dimen/size_8"
-            android:paddingVertical="@dimen/size_4"
+            android:paddingHorizontal="@dimen/_5sdp"
+            android:paddingVertical="@dimen/_2sdp"
             android:text="@string/remember_hint"
             android:textColor="@color/textOnWhiteAccentGray"
-            android:textSize="@dimen/text_size_14"
+            android:textSize="@dimen/_11sdp"
             android:visibility="gone" />
     </RelativeLayout>
 </layout>

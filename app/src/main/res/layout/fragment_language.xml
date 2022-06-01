@@ -16,8 +16,8 @@
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/size_16"
-            android:layout_marginTop="@dimen/size_16"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_back" />
 
@@ -29,7 +29,7 @@
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/change_lang"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_18" />
+            android:textSize="@dimen/_15sdp" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/home"
@@ -37,8 +37,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/size_16"
+            android:layout_marginEnd="@dimen/_12sdp"
             android:adjustViewBounds="true"
+            android:visibility="invisible"
             android:src="@drawable/ic_account" />
 
     </RelativeLayout>
@@ -47,18 +48,18 @@
         android:id="@+id/englishRL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topRL"
         android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_below="@+id/topRL"
         android:layout_marginTop="@dimen/_20sdp">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/logo1"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:layout_marginStart="@dimen/size_12"
-            android:layout_marginTop="@dimen/size_12"
-            android:layout_marginEnd="@dimen/size_12"
-            android:layout_marginBottom="@dimen/size_12"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_eng_lang" />
 
@@ -95,18 +96,18 @@
         android:id="@+id/romaniaRL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/englishRL"
         android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_below="@+id/englishRL"
         android:layout_marginTop="@dimen/_10sdp">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/logo2"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:layout_marginStart="@dimen/size_12"
-            android:layout_marginTop="@dimen/size_12"
-            android:layout_marginEnd="@dimen/size_12"
-            android:layout_marginBottom="@dimen/size_12"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_romania_lang" />
 
@@ -144,15 +145,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginHorizontal="@dimen/size_12"
-        android:layout_marginBottom="@dimen/size_27"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
         android:background="@drawable/cta_background"
         android:fontFamily="@font/inter_semibold_600"
         android:gravity="center"
-        android:paddingVertical="@dimen/size_16"
+        android:paddingVertical="@dimen/_12sdp"
         android:text="@string/save"
         android:textColor="@color/textOnSolid"
-        android:textSize="@dimen/text_size_16"
+        android:textSize="@dimen/_11sdp"
         android:visibility="visible" />
 
 </RelativeLayout>

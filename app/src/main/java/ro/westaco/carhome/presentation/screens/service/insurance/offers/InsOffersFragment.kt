@@ -1,5 +1,6 @@
 package ro.westaco.carhome.presentation.screens.service.insurance.offers
 
+import android.content.Intent
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import ro.westaco.carhome.data.sources.remote.responses.models.OffersItem
 import ro.westaco.carhome.data.sources.remote.responses.models.RcaDurationItem
 import ro.westaco.carhome.data.sources.remote.responses.models.RcaOfferResponse
 import ro.westaco.carhome.presentation.base.BaseFragment
+import ro.westaco.carhome.presentation.screens.home.PdfActivity
 import ro.westaco.carhome.presentation.screens.service.insurance.adapter.DurationAdapter
 import ro.westaco.carhome.utils.Progressbar
 
@@ -44,8 +46,8 @@ class InsOffersFragment : BaseFragment<InsOffersViewModel>(),
     }
 
     override fun initUi() {
-        progressbar = Progressbar(requireContext())
 
+        progressbar = Progressbar(requireContext())
 
         arguments?.let {
             rcaOfferResponse = it.getSerializable(ARG_RESPONSE) as? RcaOfferResponse?
@@ -86,11 +88,12 @@ class InsOffersFragment : BaseFragment<InsOffersViewModel>(),
                     LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
                 if (rcaOfferRequest?.rcaDurationId != null) {
-                    durationPosition = findPosById(durationList, rcaOfferRequest?.rcaDurationId!!)
+                    durationPosition =
+                        findPosById(durationList, rcaOfferRequest?.rcaDurationId)
                     durationTV.text = durationList[durationPosition].name
                 }
                 durationAdapter =
-                    DurationAdapter(requireContext(), durationPosition, this)
+                    durationPosition.let { DurationAdapter(requireContext(), it, this) }
                 durationRV?.adapter = durationAdapter
                 durationAdapter?.setItems(durationList)
 
@@ -124,7 +127,7 @@ class InsOffersFragment : BaseFragment<InsOffersViewModel>(),
 
     }
 
-    private fun findPosById(list: List<RcaDurationItem>?, id: Int): Int {
+    private fun findPosById(list: List<RcaDurationItem>?, id: Int?): Int {
         if (list.isNullOrEmpty()) return -1
         for (i in list.withIndex()) {
             if (i.value.id == id) {
@@ -139,7 +142,11 @@ class InsOffersFragment : BaseFragment<InsOffersViewModel>(),
     }
 
     override fun onPIDClick(item: OffersItem) {
-        item.insurerCode?.let { viewModel.onViewPID(it, "RCA") }
+        val intent = Intent(requireContext(), PdfActivity::class.java)
+        intent.putExtra(PdfActivity.ARG_INSURER, item.insurerCode)
+        intent.putExtra(PdfActivity.ARG_SERVICE_TYPE, "RCA")
+        intent.putExtra(PdfActivity.ARG_FROM, "SERVICE")
+        requireContext().startActivity(intent)
     }
 
     override fun onRCAClick(item: OffersItem) {

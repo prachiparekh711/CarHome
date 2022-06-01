@@ -154,7 +154,7 @@
                 android:gravity="center"
                 android:text="@string/dm_no_documents"
                 android:textColor="#B5B5BE"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/_11sdp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -189,7 +189,7 @@
                 android:gravity="center"
                 android:text="@string/dm_no_reminder"
                 android:textColor="#B5B5BE"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/_11sdp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -224,7 +224,7 @@
                 android:gravity="center"
                 android:text="@string/dm_no_history"
                 android:textColor="#B5B5BE"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/_11sdp" />
         </RelativeLayout>
 
 

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".presentation.screens.home.documents.NewDocumentFragment">
+    tools:context=".presentation.screens.documents.NewDocumentFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -133,14 +133,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginHorizontal="@dimen/size_16"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             android:background="@drawable/cta_background"
             android:fontFamily="@font/inter_bold_700"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/bugsee_remove_screenshot_changes_save"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -180,12 +180,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/size_12"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/inter_bold_700"
                 android:gravity="center_horizontal"
                 android:text="@string/selected_document"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/_11sdp" />
 
             <TextView
                 android:id="@+id/mSize"
@@ -195,7 +195,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/empty_directory"
                 android:textColor="@color/secondaryTextOnWhite"
-                android:textSize="@dimen/text_size_14" />
+                android:textSize="@dimen/_11sdp" />
 
         </LinearLayout>
 
@@ -204,13 +204,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginHorizontal="@dimen/size_16"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             android:background="@drawable/cta_background"
             android:fontFamily="@font/inter_bold_700"
             android:gravity="center"
-            android:paddingVertical="@dimen/size_16"
+            android:paddingVertical="@dimen/_12sdp"
             android:text="@string/upload"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/_11sdp" />
     </RelativeLayout>
 </LinearLayout>

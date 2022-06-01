@@ -23,7 +23,7 @@ data class TransactionData(
     val transactionNo: String? = null,
 
     @field:SerializedName("vehicleBrandName")
-    val vehicleBrandName: Any? = null,
+    val vehicleBrandName: String? = null,
 
     @field:SerializedName("transactionDate")
     val transactionDate: String? = null,

@@ -7,7 +7,7 @@
         android:endColor="@color/white"
         android:startColor="@color/white" />
     <stroke
-        android:width="@dimen/input_field_stroke_width"
+        android:width="@dimen/_1sdp"
         android:color="@color/delete_dialog_background" />
 
 </shape>

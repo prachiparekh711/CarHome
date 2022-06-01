@@ -9,7 +9,6 @@ import ro.westaco.carhome.data.sources.remote.requests.AddNaturalPersonRequest
 import ro.westaco.carhome.data.sources.remote.requests.Address
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.Country
-import ro.westaco.carhome.data.sources.remote.responses.models.Siruta
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import rx.android.schedulers.AndroidSchedulers
@@ -23,9 +22,8 @@ class AddBillNaturalViewModel @Inject constructor(
 ) : BaseViewModel() {
 
 
-    var streetTypeData = MutableLiveData<ArrayList<CatalogItem>>()
-    var sirutaData = MutableLiveData<ArrayList<Siruta>>()
-    var countryData = MutableLiveData<ArrayList<Country>>()
+    var streetTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
+    var countryData = MutableLiveData<ArrayList<Country>?>()
 
     override fun onFragmentCreated() {
         super.onFragmentCreated()
@@ -51,21 +49,12 @@ class AddBillNaturalViewModel @Inject constructor(
 
                 })
 
-        api.getSiruta()
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    sirutaData.value = it.data
-                }, {}
-            )
-
     }
 
     fun onSave(
         firstName: String,
         lastName: String,
         checked: Boolean,
-        id: Long?,
         address: Address?,
 
         ) {
@@ -83,7 +72,6 @@ class AddBillNaturalViewModel @Inject constructor(
             ?.subscribe({
                 uiEventStream.value = UiEvent.ShowToast(
                     R.string.save_success_msg
-
                 )
 
                 uiEventStream.value = UiEvent.NavBack

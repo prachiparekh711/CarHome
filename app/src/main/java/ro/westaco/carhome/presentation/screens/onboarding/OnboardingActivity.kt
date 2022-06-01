@@ -77,10 +77,7 @@ class OnboardingActivity : BaseActivity<OnboardingViewModel>() {
         skip.setOnClickListener {
             viewModel.onSkip()
         }
-
-
     }
-
 
     override fun setupObservers() {
         viewModel.pagerItems.observe(this) { items ->

@@ -12,7 +12,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager.widget.ViewPager
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.request.RequestOptions
+
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_driving_mode.*
@@ -32,7 +36,7 @@ class DrivingModeFragment : BaseFragment<DrivingModeModel>() {
     }
 
 
-    private var aReceiver: ReminderViewReceiver? = null
+    private lateinit var aReceiver: ReminderViewReceiver
     var adapterViewPager: FragmentPagerAdapter? = null
     override fun getContentView() = R.layout.fragment_driving_mode
 
@@ -44,7 +48,7 @@ class DrivingModeFragment : BaseFragment<DrivingModeModel>() {
         parentFrag = this@DrivingModeFragment.parentFragment as DashboardFragment
         aReceiver = ReminderViewReceiver()
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
-            aReceiver!!,
+            aReceiver,
             IntentFilter("DASHBOARD_VIEW")
         )
 
@@ -102,11 +106,20 @@ class DrivingModeFragment : BaseFragment<DrivingModeModel>() {
         viewModel.userLiveData.observe(viewLifecycleOwner) { user ->
             if (user != null) {
                 val imageUrl = viewModel.getProfileImage(requireContext(), user)
-                Picasso.with(context)
-                    .load(imageUrl)
-//                    .transform(CropCircleTransformation())
-                    .placeholder(R.drawable.default_avatar)
-                    .into(avatar)
+
+                val options = RequestOptions()
+                avatar.clipToOutline = true
+                context?.let {
+                    Glide.with(it)
+                        .load(imageUrl)
+                        .apply(
+                            options.fitCenter()
+                                .skipMemoryCache(true)
+                                .priority(Priority.HIGH)
+                                .format(DecodeFormat.PREFER_ARGB_8888)
+                        )
+                        .into(avatar)
+                }
             }
         }
     }

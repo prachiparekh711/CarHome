@@ -1,444 +1,694 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--//Old UI-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/mAppBar"
+    <LinearLayout
+        android:id="@+id/mRelativeItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/size_12">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/back"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_back"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_semibold_600"
-                android:text="@string/rovinieta"
-                android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_18"
-                app:layout_constraintBottom_toBottomOf="@+id/back"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/back" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/size_16"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_account"
-                app:layout_constraintBottom_toBottomOf="@+id/back"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/back" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/size_16"
-        android:fillViewport="true"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@+id/check"
-        app:layout_constraintTop_toBottomOf="@+id/mAppBar">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/service"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_24"
-                android:fontFamily="@font/inter_semibold_600"
-                android:text="@string/service"
-                android:textColor="@color/appPrimary"
-                android:textSize="@dimen/text_size_16"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/vignetteCategoryLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/vignette_category"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/service" />
-
-
-            <TextView
-                android:id="@+id/mVignette"
+            <LinearLayout
+                android:id="@+id/mAppBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_6"
-                android:background="@drawable/auth_text_input_background"
-                android:fontFamily="@font/inter_medium_500"
-                android:hint="@string/select_from_list"
-                android:paddingHorizontal="@dimen/size_16"
-                android:paddingVertical="@dimen/size_14"
-                android:textColor="@color/textOnWhite"
-                android:textColorHint="@color/hintOnWhite"
-                android:textCursorDrawable="@drawable/cursor"
-                android:textSize="@dimen/text_size_14"
-                android:visibility="visible"
-                app:drawableRightCompat="@drawable/ic_spinner_item"
-                app:layout_constraintTop_toBottomOf="@+id/vignetteCategoryLabel" />
+                app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                android:id="@+id/durationLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_14"
-                android:layout_marginTop="@dimen/size_12"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/duration"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mVignette" />
-
-            <RelativeLayout
-                android:id="@+id/mRelative2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_4"
-                android:background="@drawable/auth_text_input_background"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/durationLabel">
-
-                <Spinner
-                    android:id="@+id/duration"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:paddingHorizontal="@dimen/size_16"
-                    android:paddingVertical="@dimen/size_14"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textSize="@dimen/text_size_16" />
+                    android:layout_marginBottom="@dimen/_10sdp">
 
-            </RelativeLayout>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/back"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_back"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/mDuration"
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_semibold_600"
+                        android:text="@string/rovinieta"
+                        android:textColor="@color/textOnWhite"
+                        android:textSize="@dimen/_15sdp"
+                        app:layout_constraintBottom_toBottomOf="@+id/back"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/back" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_5"
-                android:background="@drawable/auth_text_input_background"
-                android:fontFamily="@font/inter_medium_500"
-                android:hint="@string/select_from_list"
-                android:paddingHorizontal="@dimen/size_16"
-                android:paddingVertical="@dimen/size_14"
-                android:textColor="@color/textOnWhite"
-                android:textColorHint="@color/hintOnWhite"
-                android:textCursorDrawable="@drawable/cursor"
-                android:textSize="@dimen/text_size_14"
-                android:visibility="visible"
-                app:drawableRightCompat="@drawable/ic_spinner_item"
-                app:layout_constraintTop_toBottomOf="@+id/durationLabel" />
+                android:layout_height="match_parent"
+                android:layout_below="@+id/mAppBar">
 
-            <TextView
-                android:id="@+id/startDateLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_14"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/start_date"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mDuration" />
-
-            <TextView
-                android:id="@+id/startDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_5"
-                android:background="@drawable/auth_text_input_background"
-                android:fontFamily="@font/inter_medium_500"
-                android:hint="@string/enter_start_date"
-                android:paddingHorizontal="@dimen/size_16"
-                android:paddingVertical="@dimen/size_14"
-                android:textColor="@color/textOnWhite"
-                android:textColorHint="@color/hintOnWhite"
-                android:textCursorDrawable="@drawable/cursor"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintTop_toBottomOf="@+id/startDateLabel" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/startDateCal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/size_16"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_calendar_items"
-                app:layout_constraintBottom_toBottomOf="@+id/startDate"
-                app:layout_constraintEnd_toEndOf="@+id/startDate"
-                app:layout_constraintTop_toTopOf="@+id/startDate" />
-
-            <TextView
-                android:id="@+id/startDateError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_5"
-                android:background="@drawable/ic_error_bg"
-                android:drawableLeft="@drawable/ic_info_circle"
-                android:drawablePadding="@dimen/_10sdp"
-                android:fontFamily="@font/inter_medium_500"
-                android:gravity="center_vertical"
-                android:padding="@dimen/_10sdp"
-                android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_14"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/startDate" />
-
-
-            <TextView
-                android:id="@+id/carInformation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_24"
-                android:fontFamily="@font/inter_semibold_600"
-                android:text="@string/car_info"
-                android:textColor="@color/appPrimary"
-                android:textSize="@dimen/text_size_16"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/startDateError" />
-
-            <TextView
-                android:id="@+id/regCountryLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_16"
-                android:layout_marginTop="@dimen/size_16"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/country_reg"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/text_size_14"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/carInformation" />
-
-            <RelativeLayout
-                android:id="@+id/mRelative"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginHorizontal="@dimen/size_16"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="@drawable/auth_text_input_background"
-                app:layout_constraintTop_toBottomOf="@+id/regCountryLabel">
-
-                <Spinner
-                    android:id="@+id/regCountry"
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fontFamily="@font/inter_semibold_600"
-                    android:padding="@dimen/_5sdp"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_14"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:background="@color/expande_colore"
+                    android:fillViewport="true"
+                    app:layout_behavior=".utils.OverScrollBounceBehavior">
 
-            </RelativeLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/mLicence"
+                        <LinearLayout
+                            android:id="@+id/mCarInformation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/carHeader"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_3sdp"
+                                android:padding="@dimen/_10sdp">
+
+                                <TextView
+                                    android:id="@+id/carInfo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/inter_semibold_600"
+                                    android:text="@string/car_info"
+                                    android:textColor="@color/information_details"
+                                    android:textSize="@dimen/_12sdp" />
+
+                                <ImageView
+                                    android:id="@+id/carInfoArrowIcon"
+                                    android:layout_width="@dimen/_15sdp"
+                                    android:layout_height="@dimen/_15sdp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginEnd="@dimen/_10sdp"
+                                    android:src="@drawable/ic_arrow_circle_up" />
+
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                android:id="@+id/carInfoBlock"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/li_dialog"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/spinner_background"
+                                    android:orientation="vertical"
+                                    android:paddingHorizontal="@dimen/_10sdp"
+                                    android:paddingVertical="@dimen/_7sdp">
+
+                                    <TextView
+                                        android:id="@+id/cou"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/inter_medium_500"
+                                        android:text="@string/country_reg"
+                                        android:textColor="@color/service_text_color"
+                                        android:textSize="@dimen/_11sdp"
+                                        app:layout_constraintLeft_toLeftOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        tools:ignore="RtlSymmetry" />
+
+                                    <TextView
+                                        android:id="@+id/countryFlag"
+                                        android:layout_width="@dimen/_30sdp"
+                                        android:layout_height="@dimen/_18sdp"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginTop="@dimen/_3sdp"
+                                        android:gravity="center"
+                                        android:text="@string/romania_flag"
+                                        android:textColor="@color/white"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/cou"
+                                        tools:ignore="RtlSymmetry" />
+
+                                    <TextView
+                                        android:id="@+id/countryName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:fontFamily="@font/inter_medium_500"
+                                        android:gravity="center_vertical"
+                                        android:text="@string/romania"
+                                        android:textColor="@color/service_text_color"
+                                        android:textSize="@dimen/_12sdp"
+                                        app:layout_constraintBottom_toBottomOf="@+id/countryFlag"
+                                        app:layout_constraintStart_toEndOf="@+id/countryFlag"
+                                        tools:ignore="RtlSymmetry" />
+
+                                    <ImageView
+                                        android:id="@+id/adds"
+                                        android:layout_width="@dimen/_15sdp"
+                                        android:layout_height="@dimen/_15sdp"
+                                        android:layout_marginEnd="@dimen/_10sdp"
+                                        android:src="@drawable/ic_arrow_down_id"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintRight_toRightOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:background="@android:color/white"
+                                    android:hint="@string/license_plate_number"
+                                    android:paddingVertical="@dimen/_5sdp"
+                                    android:textColor="@color/service_semitext_color"
+                                    android:theme="@style/TextInputLayoutAppearance"
+                                    app:boxBackgroundColor="@android:color/transparent"
+                                    app:boxCornerRadiusBottomEnd="0dp"
+                                    app:boxCornerRadiusBottomStart="0dp"
+                                    app:boxCornerRadiusTopEnd="0dp"
+                                    app:boxCornerRadiusTopStart="0dp"
+                                    app:boxStrokeColor="#FFF"
+                                    app:boxStrokeWidth="0dp"
+                                    app:hintTextColor="@color/service_semitext_color"
+                                    tools:ignore="RtlSymmetry">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/licensePlate"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@color/white"
+                                        android:editable="true"
+                                        android:focusable="true"
+                                        android:fontFamily="@font/inter_medium_500"
+                                        android:inputType="text"
+                                        android:singleLine="true"
+                                        android:textColor="@color/service_text_color"
+                                        android:textSize="@dimen/_12sdp" />
+
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <TextView
+                                    android:id="@+id/number_plate_error"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/white"
+                                    android:fontFamily="@font/inter_regular_400"
+                                    android:gravity="center_vertical"
+                                    android:paddingVertical="@dimen/_5sdp"
+                                    android:paddingStart="@dimen/_10sdp"
+                                    android:text="@string/license_error2"
+                                    android:textColor="@color/redExpired"
+                                    android:textSize="@dimen/_11sdp"
+                                    android:visibility="gone" />
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/vinLabelI"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:background="@color/white"
+                                    android:hint="@string/vin_number"
+                                    android:textColor="@color/service_semitext_color"
+                                    android:theme="@style/TextInputLayoutAppearance"
+                                    android:visibility="gone"
+                                    app:boxBackgroundColor="@android:color/transparent"
+                                    app:boxCornerRadiusBottomEnd="0dp"
+                                    app:boxCornerRadiusBottomStart="0dp"
+                                    app:boxCornerRadiusTopEnd="0dp"
+                                    app:boxCornerRadiusTopStart="0dp"
+                                    app:boxStrokeColor="#FFF"
+                                    app:boxStrokeWidth="0dp"
+                                    app:hintTextColor="@color/service_semitext_color"
+                                    tools:ignore="RtlSymmetry">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/vinET"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/_50sdp"
+                                        android:background="@color/white"
+                                        android:editable="true"
+                                        android:focusable="true"
+                                        android:fontFamily="@font/inter_medium_500"
+                                        android:inputType="text"
+                                        android:singleLine="true"
+                                        android:textColor="@color/service_text_color"
+                                        android:textSize="@dimen/_12sdp" />
+
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <TextView
+                                    android:id="@+id/vin_error"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/white"
+                                    android:drawableLeft="@drawable/ic_note"
+                                    android:drawablePadding="@dimen/_10sdp"
+                                    android:fontFamily="@font/inter_regular_400"
+                                    android:gravity="center_vertical"
+                                    android:paddingHorizontal="@dimen/_10sdp"
+                                    android:paddingVertical="@dimen/_5sdp"
+                                    android:text="@string/vin_required"
+                                    android:textColor="@color/service_error_text_color"
+                                    android:textSize="@dimen/_9sdp"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/mCarSelected"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_semibold_600"
+                                android:padding="@dimen/_10sdp"
+                                android:text="@string/selected_car_" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_60sdp"
+                                android:background="@color/white"
+                                android:orientation="horizontal"
+                                tools:ignore="RtlSymmetry">
+
+                                <ImageView
+                                    android:id="@+id/carLogo"
+                                    android:layout_width="@dimen/_40sdp"
+                                    android:layout_height="@dimen/_40sdp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="@dimen/_10sdp"
+                                    android:src="@drawable/carhome_icon" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:paddingStart="@dimen/_5sdp"
+                                    tools:ignore="RtlSymmetry">
+
+                                    <TextView
+                                        android:id="@+id/mCarName"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/inter_bold_700"
+                                        android:text="@string/car_info"
+                                        android:textColor="@color/textOnWhite"
+                                        android:textSize="@dimen/_12sdp" />
+
+                                    <TextView
+                                        android:id="@+id/mCountryName"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/inter_medium_500"
+                                        android:text="@string/romania"
+                                        android:textColor="@color/skip"
+                                        android:textSize="@dimen/_10sdp" />
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_3sdp"
+                                android:orientation="horizontal">
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/mCarNumber"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.60"
+                                    android:background="@android:color/transparent"
+                                    android:hint="@string/car_number"
+                                    android:textColor="@color/items_color"
+                                    android:theme="@style/TextInputLayoutAppearance"
+                                    app:boxBackgroundColor="@android:color/transparent"
+                                    app:boxCornerRadiusBottomEnd="0dp"
+                                    app:boxCornerRadiusBottomStart="0dp"
+                                    app:boxCornerRadiusTopEnd="0dp"
+                                    app:boxCornerRadiusTopStart="0dp"
+                                    app:boxStrokeColor="#FFF"
+                                    app:boxStrokeWidth="0dp"
+                                    app:endIconMode="custom"
+                                    app:hintTextColor="@color/items_color"
+                                    tools:ignore="RtlSymmetry">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/mCarNumberText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:clickable="false"
+                                        android:cursorVisible="false"
+                                        android:focusable="true"
+                                        android:focusableInTouchMode="false"
+                                        android:fontFamily="@font/inter_medium_500"
+                                        android:inputType="none"
+                                        android:longClickable="false"
+                                        android:singleLine="true"
+                                        android:textColor="@color/textOnWhite"
+                                        android:textSize="@dimen/_12sdp" />
+
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/mVINNumber"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/_2sdp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:hint="@string/vin_number"
+                                    android:textColor="@color/items_color"
+                                    android:theme="@style/TextInputLayoutAppearance"
+                                    app:boxBackgroundColor="@android:color/transparent"
+                                    app:boxCornerRadiusBottomEnd="0dp"
+                                    app:boxCornerRadiusBottomStart="0dp"
+                                    app:boxCornerRadiusTopEnd="0dp"
+                                    app:boxCornerRadiusTopStart="0dp"
+                                    app:boxStrokeColor="#FFF"
+                                    app:boxStrokeWidth="0dp"
+                                    app:endIconMode="custom"
+                                    app:hintTextColor="@color/items_color"
+                                    tools:ignore="RtlSymmetry">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/mVINNumberText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:clickable="false"
+                                        android:cursorVisible="false"
+                                        android:focusable="true"
+                                        android:focusableInTouchMode="false"
+                                        android:fontFamily="@font/inter_medium_500"
+                                        android:inputType="none"
+                                        android:longClickable="false"
+                                        android:singleLine="true"
+                                        android:textColor="@color/textOnWhite"
+                                        android:textSize="@dimen/_12sdp" />
+
+                                </com.google.android.material.textfield.TextInputLayout>
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/serviceHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_3sdp"
+                            android:padding="@dimen/_10sdp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_semibold_600"
+                                android:text="@string/service"
+                                android:textColor="@color/information_details"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <ImageView
+                                android:id="@+id/serviceInfoArrowIcon"
+                                android:layout_width="@dimen/_15sdp"
+                                android:layout_height="@dimen/_15sdp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="@dimen/_10sdp"
+                                android:src="@drawable/ic_arrow_circle_up" />
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/rovinietaTaxServiceBlock"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/vignetteCategory"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_2sdp"
+                                android:background="@android:color/white"
+                                android:hint="@string/vignette_category_"
+                                android:paddingVertical="@dimen/_5sdp"
+                                android:paddingEnd="@dimen/_10sdp"
+                                android:textColor="@color/service_semitext_color"
+                                android:theme="@style/TextInputLayoutAppearance"
+                                app:boxBackgroundColor="@android:color/transparent"
+                                app:boxCornerRadiusBottomEnd="0dp"
+                                app:boxCornerRadiusBottomStart="0dp"
+                                app:boxCornerRadiusTopEnd="0dp"
+                                app:boxCornerRadiusTopStart="0dp"
+                                app:boxStrokeColor="#FFF"
+                                app:boxStrokeWidth="0dp"
+                                app:endIconDrawable="@drawable/ic_arrow_down_id"
+                                app:endIconMode="custom"
+                                app:hintTextColor="@color/service_semitext_color"
+                                tools:ignore="RtlSymmetry">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/rovignette_categories"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/white"
+                                    android:focusable="true"
+                                    android:focusableInTouchMode="false"
+                                    android:fontFamily="@font/inter_medium_500"
+                                    android:inputType="none"
+                                    android:longClickable="false"
+                                    android:singleLine="true"
+                                    android:textColor="@color/service_text_color"
+                                    android:textSize="@dimen/_12sdp" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_3sdp"
+                                android:orientation="horizontal">
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/mStartDate"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/_2sdp"
+                                    android:layout_weight="0.70"
+                                    android:background="@android:color/transparent"
+                                    android:hint="@string/start_date"
+                                    android:textColor="@color/items_color"
+                                    android:theme="@style/TextInputLayoutAppearance"
+                                    app:boxBackgroundColor="@android:color/transparent"
+                                    app:boxCornerRadiusBottomEnd="0dp"
+                                    app:boxCornerRadiusBottomStart="0dp"
+                                    app:boxCornerRadiusTopEnd="0dp"
+                                    app:boxCornerRadiusTopStart="0dp"
+                                    app:boxStrokeColor="#FFF"
+                                    app:boxStrokeWidth="0dp"
+                                    app:hintTextColor="@color/items_color"
+                                    tools:ignore="RtlSymmetry">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/mStartDateText"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/_50sdp"
+                                        android:clickable="false"
+                                        android:cursorVisible="false"
+                                        android:drawableEnd="@drawable/ic_calendar_visible"
+                                        android:drawableTint="@color/gray"
+                                        android:focusable="true"
+                                        android:focusableInTouchMode="false"
+                                        android:fontFamily="@font/inter_medium_500"
+                                        android:inputType="none"
+                                        android:longClickable="false"
+                                        android:singleLine="true"
+                                        android:textColor="@color/textOnWhite"
+                                        android:textSize="@dimen/_12sdp" />
+
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/mDurationItem"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/_2sdp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:hint="@string/duration"
+                                    android:textColor="@color/items_color"
+                                    android:theme="@style/TextInputLayoutAppearance"
+                                    app:boxBackgroundColor="@android:color/transparent"
+                                    app:boxCornerRadiusBottomEnd="0dp"
+                                    app:boxCornerRadiusBottomStart="0dp"
+                                    app:boxCornerRadiusTopEnd="0dp"
+                                    app:boxCornerRadiusTopStart="0dp"
+                                    app:boxStrokeColor="#FFF"
+                                    app:boxStrokeWidth="0dp"
+                                    app:hintTextColor="@color/items_color"
+                                    tools:ignore="RtlSymmetry">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/mDuration"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/_50sdp"
+                                        android:clickable="false"
+                                        android:cursorVisible="false"
+                                        android:drawableEnd="@drawable/ic_clock_item_"
+                                        android:drawableTint="@color/gray"
+                                        android:focusable="true"
+                                        android:focusableInTouchMode="false"
+                                        android:fontFamily="@font/inter_medium_500"
+                                        android:inputType="none"
+                                        android:longClickable="false"
+                                        android:maxLines="1"
+                                        android:singleLine="true"
+                                        android:textColor="@color/textOnWhite"
+                                        android:textSize="@dimen/_12sdp" />
+
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/startDateError"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_3sdp"
+                                android:background="@color/white"
+                                android:drawablePadding="@dimen/_10sdp"
+                                android:fontFamily="@font/inter_regular_400"
+                                android:gravity="center_vertical"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_5sdp"
+                                android:text="@string/vin_required"
+                                android:textColor="@color/delete_dialog_color"
+                                android:textSize="@dimen/_9sdp"
+                                android:visibility="gone"
+                                app:drawableLeftCompat="@drawable/ic_error_status"
+                                app:drawableTint="@color/delete_dialog_color" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.core.widget.NestedScrollView>
+
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <LinearLayout
+                android:id="@+id/mLinearItems"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mRelative">
+                android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/licensePlateLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_16"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:text="@string/buy_vignette_license"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <EditText
-                    android:id="@+id/licensePlate"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/licensePlateLabel"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_5"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/license_hint"
-                    android:paddingHorizontal="@dimen/size_16"
-                    android:paddingVertical="@dimen/size_14"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_14" />
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/licenseEnter"
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/check"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:checked="false"
+                        app:buttonTint="@color/appPrimary" />
+
+                    <TextView
+                        android:id="@+id/confirmation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/i_hereby_confirm"
+                        android:textColor="@color/textOnWhite"
+                        android:textSize="@dimen/_11sdp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/mLinear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/licensePlate"
-                    android:layout_marginStart="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_5"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:layout_marginBottom="@dimen/_15sdp"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:text="@string/license_error"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_11.5"
-                    android:visibility="gone" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/mPrevious"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_15sdp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/manrope_semibold_600"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/_5sdp"
+                        android:text="@string/cancel"
+                        android:textColor="@color/textOnWhiteAccentGray"
+                        android:textSize="@dimen/_11sdp" />
 
-            <RelativeLayout
-                android:id="@+id/mVin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mLicence">
+                    <TextView
+                        android:id="@+id/cta"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_15sdp"
+                        android:layout_weight="1.8"
+                        android:background="@drawable/save_background_invisible"
+                        android:fontFamily="@font/manrope_semibold_600"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/_12sdp"
+                        android:text="@string/continue_txt"
+                        android:textColor="@color/textOnSolid"
+                        android:textSize="@dimen/_11sdp" />
 
-                <TextView
-                    android:id="@+id/vinLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_14"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:text="@string/vin_number"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_14" />
+                </LinearLayout>
 
-                <EditText
-                    android:id="@+id/vin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/vinLabel"
-                    android:layout_marginHorizontal="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_5"
-                    android:background="@drawable/auth_text_input_background"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:hint="@string/buy_vignette_vin_hint"
-                    android:maxLength="17"
-                    android:paddingHorizontal="@dimen/size_16"
-                    android:paddingVertical="@dimen/size_14"
-                    android:textColor="@color/textOnWhite"
-                    android:textColorHint="@color/hintOnWhite"
-                    android:textCursorDrawable="@drawable/cursor"
-                    android:textSize="@dimen/text_size_14" />
+            </LinearLayout>
 
-                <TextView
-                    android:id="@+id/mEnter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/vin"
-                    android:layout_marginStart="@dimen/size_16"
-                    android:layout_marginTop="@dimen/size_5"
-                    android:layout_marginBottom="@dimen/_15sdp"
-                    android:fontFamily="@font/inter_medium_500"
-                    android:text="@string/enter_vin_num"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/text_size_11.5" />
+        </RelativeLayout>
 
-            </RelativeLayout>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
-
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/check"
-        android:layout_width="30dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="@dimen/size_16"
-        android:checked="false"
-        app:buttonTint="@color/appPrimary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/confirmation" />
-
-    <TextView
-        android:id="@+id/confirmation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/size_8"
-        android:layout_marginEnd="@dimen/size_16"
-        android:layout_marginBottom="@dimen/size_12"
-        android:fontFamily="@font/inter_regular_400"
-        android:text="@string/i_hereby_confirm"
-        android:textColor="@color/textOnWhiteAccentGray"
-        android:textSize="@dimen/text_size_14"
-        app:layout_constraintBottom_toTopOf="@+id/cta"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/check" />
-
-    <TextView
-        android:id="@+id/cta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/size_24"
-        android:layout_marginBottom="@dimen/size_40"
-        android:background="@drawable/cta_background"
-        android:fontFamily="@font/manrope_semibold_600"
-        android:gravity="center"
-        android:paddingVertical="@dimen/size_16"
-        android:text="@string/continue_txt"
-        android:textColor="@color/textOnSolid"
-        android:textSize="@dimen/text_size_16"
-        app:layout_constraintBottom_toTopOf="@+id/indicator"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <View
-        android:id="@+id/indicator"
-        android:layout_width="0dp"
-        android:layout_height="5dp"
-        android:layout_marginBottom="@dimen/size_8"
-        android:background="@drawable/rounded_rect_100_black"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent="0.3" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

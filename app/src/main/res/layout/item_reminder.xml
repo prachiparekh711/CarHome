@@ -5,7 +5,7 @@
     android:id="@+id/mSwiper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/size_12"
+    android:layout_marginTop="@dimen/_10sdp"
     app:draggedItem="@id/drag_item"
     app:isFreeHorizontalDrag="true"
     app:isTogether="true"
@@ -23,7 +23,8 @@
         android:background="@color/activeGreen"
         android:gravity="center"
         android:padding="24dp"
-        android:src="@drawable/ic_update_vector" />
+        android:src="@drawable/ic_update_vector"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/right_view"
@@ -33,19 +34,20 @@
         android:background="@color/closed"
         android:gravity="center"
         android:padding="24dp"
-        android:src="@drawable/ic_delete_reminder" />
+        android:src="@drawable/ic_delete_reminder"
+        android:visibility="invisible" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/drag_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/size_16">
+        android:paddingHorizontal="@dimen/_10sdp">
 
         <ImageView
             android:id="@+id/tagIndicator"
             android:layout_width="5dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/size_8"
+            android:layout_marginBottom="@dimen/_5sdp"
             android:src="@color/appPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,11 +59,13 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_bold_700"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_18"
+            android:textSize="@dimen/_13sdp"
             app:layout_constraintBottom_toTopOf="@+id/monthAndYearGroup"
             app:layout_constraintEnd_toEndOf="@+id/monthAndYearGroup"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/monthAndYearGroup"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.19999999"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="02" />
 
@@ -69,9 +73,9 @@
             android:id="@+id/monthAndYearGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_12"
+            android:layout_marginStart="@dimen/_10sdp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/hourTextView"
             app:layout_constraintStart_toEndOf="@+id/tagIndicator"
             app:layout_constraintTop_toBottomOf="@+id/day"
             app:layout_constraintVertical_chainStyle="packed">
@@ -82,33 +86,49 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_bold_700"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_12"
+                android:textSize="@dimen/_10sdp"
                 tools:text="Sep" />
 
             <TextView
                 android:id="@+id/year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_2"
-                android:fontFamily="@font/inter_regular_400"
-                android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_12"
-                tools:text="'21'" />
+                android:layout_marginStart="@dimen/_1sdp"
+                android:fontFamily="@font/inter_bold_700"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/_10sdp"
+                tools:text="'21" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/hourTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:fontFamily="@font/inter_bold_700"
+            android:text="20:20"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/_10sdp"
+            app:layout_constraintBottom_toTopOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="@+id/monthAndYearGroup"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/monthAndYearGroup"
+            app:layout_constraintTop_toBottomOf="@+id/monthAndYearGroup"
+            app:layout_constraintVertical_bias="0.31" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/size_12"
+            android:layout_marginStart="@dimen/_10sdp"
             android:ellipsize="end"
             android:fontFamily="@font/inter_semibold_600"
             android:gravity="start"
             android:maxLines="1"
-            android:paddingTop="@dimen/size_8"
+            android:paddingTop="@dimen/_5sdp"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_14"
+            android:textSize="@dimen/_11sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/monthAndYearGroup"
             app:layout_constraintTop_toTopOf="parent"
@@ -122,8 +142,8 @@
             android:fontFamily="@font/inter_regular_400"
             android:gravity="start"
             android:maxLines="1"
-            android:textColor="@color/secondaryTextOnWhite"
-            android:textSize="@dimen/text_size_12"
+            android:textColor="@color/textOnWhiteAccentGray"
+            android:textSize="@dimen/_10sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@+id/title" />
@@ -132,7 +152,7 @@
             android:id="@+id/tagCL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size_12"
+            android:layout_marginTop="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="@+id/notes"
             app:layout_constraintTop_toBottomOf="@+id/notes">
 
@@ -148,10 +168,10 @@
                 android:id="@+id/tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_4"
+                android:layout_marginStart="@dimen/_2sdp"
                 android:fontFamily="@font/inter_regular_400"
                 android:textColor="@color/secondaryTextOnWhite"
-                android:textSize="@dimen/text_size_12"
+                android:textSize="@dimen/_10sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/tagCircle"
                 app:layout_constraintStart_toEndOf="@+id/tagCircle"
                 app:layout_constraintTop_toTopOf="@+id/tagCircle"
@@ -161,7 +181,7 @@
                 android:id="@+id/_separator"
                 android:layout_width="5dp"
                 android:layout_height="5dp"
-                android:layout_marginStart="@dimen/size_12"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:background="@drawable/circle"
                 android:backgroundTint="@color/itemBgStroke"
                 app:layout_constraintBottom_toBottomOf="@+id/tagCircle"
@@ -172,10 +192,10 @@
                 android:id="@+id/timeLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/size_12"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:fontFamily="@font/inter_medium_500"
                 android:textColor="@color/tag_orange"
-                android:textSize="@dimen/text_size_12"
+                android:textSize="@dimen/_10sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/tagCircle"
                 app:layout_constraintStart_toEndOf="@+id/_separator"
                 app:layout_constraintTop_toTopOf="@+id/tagCircle"
@@ -183,12 +203,14 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
+            android:id="@+id/view2"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/size_16"
+            android:layout_marginTop="@dimen/_12sdp"
             android:background="@color/itemBgStroke"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/tagCL"
+            app:layout_constraintStart_toStartOf="@+id/tagIndicator"
             app:layout_constraintTop_toBottomOf="@+id/tagCL" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.zerobranch.layout.SwipeLayout>

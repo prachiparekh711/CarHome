@@ -14,12 +14,13 @@ import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.dashboard.DashboardFragment.Companion.CAR_MODE
+import ro.westaco.carhome.presentation.screens.data.DataFragment
 import ro.westaco.carhome.presentation.screens.driving_mode.DrivingModeFragment
 import ro.westaco.carhome.presentation.screens.home.HomeFragment
 import ro.westaco.carhome.presentation.screens.maps.MapsFragment
 import ro.westaco.carhome.presentation.screens.reminder.ReminderFragment
+import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.select_car.SelectCarFragment
 import ro.westaco.carhome.presentation.screens.settings.SettingsFragment
-import ro.westaco.carhome.presentation.screens.settings.data.DataFragment
 import ro.westaco.carhome.utils.default
 import javax.inject.Inject
 
@@ -52,13 +53,18 @@ class DashboardViewModel @Inject constructor(
         super.onFragmentCreated()
 
         if (selectedMenuItem != null) {
-            onItemSelected(selectedMenuItem!!)
+            selectedMenuItem.let {
+                if (it != null) {
+                    onItemSelected(menuItem = it)
+                }
+            }
         } else {
-            if (CAR_MODE == "DRIVING")
+            if (CAR_MODE == "DRIVING") {
                 actionStream.value =
                     ACTION.OpenChildFragment(DrivingModeFragment(), DrivingModeFragment.TAG)
-            else
+            } else {
                 actionStream.value = ACTION.OpenChildFragment(HomeFragment(), HomeFragment.TAG)
+            }
         }
 
         if (serviceExpanded) {
@@ -70,13 +76,20 @@ class DashboardViewModel @Inject constructor(
     }
 
     internal fun onCollapseServices() {
+        serviceExpanded = false
         servicesStateLiveData.value = STATE.Collapsed
         actionStream.value = ACTION.CheckMenuItem(selectedMenuItem)
     }
 
-    internal fun onRoadTax() {
-//        servicesStateLiveData.value = STATE.Collapsed
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.VignetteSelectCar))
+    internal fun onServiceClicked(enter: String) {
+        uiEventStream.value =
+            UiEvent.Navigation(NavAttribs(Screen.SelectCarForService, object : BundleProvider() {
+                override fun onAddArgs(bundle: Bundle?): Bundle {
+                    return Bundle().apply {
+                        putString(SelectCarFragment.ARG_ENTER_VALUE, enter)
+                    }
+                }
+            }))
     }
 
     internal fun onDataClicked(index: Int) {
@@ -91,19 +104,13 @@ class DashboardViewModel @Inject constructor(
     }
 
     internal fun onNewDocument() {
-//        servicesStateLiveData.value = STATE.Collapsed
         uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Document))
     }
 
     internal fun onHistoryClicked() {
-//        servicesStateLiveData.value = STATE.Collapsed
         uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.History))
     }
 
-    internal fun onBridgeTax() {
-//        servicesStateLiveData.value = STATE.Collapsed
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.BridgeTax))
-    }
 
     internal fun onInsurance() {
         uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Insurance))
@@ -131,6 +138,7 @@ class DashboardViewModel @Inject constructor(
                 }
                 R.id.services -> {
                     servicesStateLiveData.value = STATE.Expanded
+                    serviceExpanded = true
                 }
                 R.id.maps -> {
                     selectedMenuItem = menuItem
@@ -144,6 +152,8 @@ class DashboardViewModel @Inject constructor(
                     servicesStateLiveData.value = STATE.Collapsed
                 }
             }
+        } else {
+            servicesStateLiveData.value = STATE.Collapsed
         }
     }
 

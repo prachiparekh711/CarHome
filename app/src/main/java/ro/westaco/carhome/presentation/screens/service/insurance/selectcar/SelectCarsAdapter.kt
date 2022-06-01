@@ -60,7 +60,6 @@ class SelectCarsAdapter(
 
             makeAndModel.text = "${item.vehicleBrand ?: ""} ${item.model ?: ""}"
 
-            /*vehicleBrandCar.text = item.vehicleBrand ?: ""*/
             carNumber.text = item.licensePlate
 
             if (item.policyExpirationDate.isNullOrEmpty()) {
@@ -77,7 +76,7 @@ class SelectCarsAdapter(
                 val formatter: DateFormat =
                     SimpleDateFormat("dd-MM-yyyy")
                 val dateStr: String =
-                    formatter.format(date!!)
+                    formatter.format(date)
                 policyExpiry.text = dateStr
                 policyExpiry.setTextColor(context.getColor(R.color.text_color))
 

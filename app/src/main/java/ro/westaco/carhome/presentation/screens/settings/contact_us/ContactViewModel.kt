@@ -68,7 +68,7 @@ class ContactViewModel @Inject constructor(
         attachmentFileList: ArrayList<File>?
     ) {
 
-        var attachmentBodyList: ArrayList<MultipartBody.Part>? = ArrayList()
+        val attachmentBodyList: ArrayList<MultipartBody.Part>? = ArrayList()
         if (attachmentFileList != null) {
 
             for (i in 0 until attachmentFileList.size) {

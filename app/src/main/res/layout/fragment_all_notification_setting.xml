@@ -1,296 +1,311 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:scrollbars="none"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="@dimen/_10sdp"
+    android:orientation="vertical"
     tools:context=".presentation.screens.settings.notifications.AllNotificationSettingFragment">
 
-    <LinearLayout
+
+    <RelativeLayout
+        android:id="@+id/topRL"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:id="@+id/topRL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/back"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="@dimen/size_16"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_back" />
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:fontFamily="@font/inter_semibold_600"
-                android:text="@string/notifications"
-                android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_18" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_account" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:orientation="vertical">
+            android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_back" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_bold_700"
-                android:text="@string/setting_title"
-                android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/text_size_16" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/setting_subtitle"
-                android:textColor="@color/secondaryTextOnWhite"
-                android:textSize="@dimen/text_size_12" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@color/tabUnselected" />
-
-        <LinearLayout
-            android:id="@+id/appLL"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:orientation="vertical">
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/inter_semibold_600"
+            android:text="@string/notifications"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/_15sdp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_account"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior=".utils.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/rcaApp"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/app_small"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_14" />
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:orientation="vertical">
 
-                <ro.westaco.carhome.utils.SwitchButton
-                    android:id="@+id/app_switch_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_23sdp"
-                    android:layout_gravity="right"
-                    app:sb_background="@color/unselected"
-                    app:sb_border_width="@dimen/_2sdp"
-                    app:sb_checked_color="@color/ctaBackground"
-                    app:sb_checkline_width="0dp"
-                    app:sb_show_indicator="false"
-                    app:sb_uncheck_color="@color/unselected" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold_700"
+                        android:text="@string/setting_title"
+                        android:textColor="@color/textOnWhite"
+                        android:textSize="@dimen/_11sdp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/setting_subtitle"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/tabUnselected" />
+
+                <LinearLayout
+                    android:id="@+id/appLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/rcaApp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.5"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:text="@string/app_small"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <ro.westaco.carhome.utils.SwitchButton
+                            android:id="@+id/app_switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_23sdp"
+                            android:layout_gravity="right"
+                            app:sb_background="@color/unselected"
+                            app:sb_border_width="@dimen/_2sdp"
+                            app:sb_checked_color="@color/ctaBackground"
+                            app:sb_checkline_width="0dp"
+                            app:sb_show_indicator="false"
+                            app:sb_uncheck_color="@color/unselected" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/app_hint"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/tabUnselected" />
+
+                <LinearLayout
+                    android:id="@+id/smsLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.5"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:text="@string/sms"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <ro.westaco.carhome.utils.SwitchButton
+                            android:id="@+id/sms_switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_23sdp"
+                            android:layout_gravity="right"
+                            app:sb_background="@color/unselected"
+                            app:sb_border_width="@dimen/_2sdp"
+                            app:sb_checked_color="@color/ctaBackground"
+                            app:sb_checkline_width="0dp"
+                            app:sb_show_indicator="false"
+                            app:sb_uncheck_color="@color/unselected" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/app_hint"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/tabUnselected" />
+
+                <LinearLayout
+                    android:id="@+id/emailLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.5"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:text="@string/email_hint"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <ro.westaco.carhome.utils.SwitchButton
+                            android:id="@+id/email_switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_23sdp"
+                            android:layout_gravity="right"
+                            app:sb_background="@color/unselected"
+                            app:sb_border_width="@dimen/_2sdp"
+                            app:sb_checked_color="@color/ctaBackground"
+                            app:sb_checkline_width="0dp"
+                            app:sb_show_indicator="false"
+                            app:sb_uncheck_color="@color/unselected" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/email_sett_hint"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/email_sett_note"
+                        android:textColor="#FF9100"
+                        android:textSize="@dimen/_10sdp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/tabUnselected" />
+
+                <LinearLayout
+                    android:id="@+id/geoLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:text="@string/rem_of_geo"
+                            android:textColor="@color/textOnWhite"
+                            android:textSize="@dimen/_11sdp" />
+
+                        <ro.westaco.carhome.utils.SwitchButton
+                            android:id="@+id/geo_app_switch_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/_23sdp"
+                            android:layout_gravity="right"
+                            app:sb_background="@color/unselected"
+                            app:sb_border_width="@dimen/_2sdp"
+                            app:sb_checked_color="@color/ctaBackground"
+                            app:sb_checkline_width="0dp"
+                            app:sb_show_indicator="false"
+                            app:sb_uncheck_color="@color/unselected" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:text="@string/geo_hint"
+                        android:textColor="@color/secondaryTextOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/tabUnselected" />
+
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/app_hint"
-                android:textColor="@color/secondaryTextOnWhite"
-                android:textSize="@dimen/text_size_12" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@color/tabUnselected" />
-
-        <LinearLayout
-            android:id="@+id/smsLL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/sms"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_14" />
-
-                <ro.westaco.carhome.utils.SwitchButton
-                    android:id="@+id/sms_switch_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_23sdp"
-                    android:layout_gravity="right"
-                    app:sb_background="@color/unselected"
-                    app:sb_border_width="@dimen/_2sdp"
-                    app:sb_checked_color="@color/ctaBackground"
-                    app:sb_checkline_width="0dp"
-                    app:sb_show_indicator="false"
-                    app:sb_uncheck_color="@color/unselected" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/app_hint"
-                android:textColor="@color/secondaryTextOnWhite"
-                android:textSize="@dimen/text_size_12" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@color/tabUnselected" />
-
-        <LinearLayout
-            android:id="@+id/emailLL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/email_hint"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_14" />
-
-                <ro.westaco.carhome.utils.SwitchButton
-                    android:id="@+id/email_switch_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_23sdp"
-                    android:layout_gravity="right"
-                    app:sb_background="@color/unselected"
-                    app:sb_border_width="@dimen/_2sdp"
-                    app:sb_checked_color="@color/ctaBackground"
-                    app:sb_checkline_width="0dp"
-                    app:sb_show_indicator="false"
-                    app:sb_uncheck_color="@color/unselected" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/email_sett_hint"
-                android:textColor="@color/secondaryTextOnWhite"
-                android:textSize="@dimen/text_size_12" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/email_sett_note"
-                android:textColor="#FF9100"
-                android:textSize="@dimen/text_size_12" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@color/tabUnselected" />
+        </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
-        <LinearLayout
-            android:id="@+id/geoLL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:fontFamily="@font/inter_bold_700"
-                    android:text="@string/rem_of_geo"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_16" />
-
-                <ro.westaco.carhome.utils.SwitchButton
-                    android:id="@+id/geo_app_switch_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_23sdp"
-                    android:layout_gravity="right"
-                    app:sb_background="@color/unselected"
-                    app:sb_border_width="@dimen/_2sdp"
-                    app:sb_checked_color="@color/ctaBackground"
-                    app:sb_checkline_width="0dp"
-                    app:sb_show_indicator="false"
-                    app:sb_uncheck_color="@color/unselected" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/geo_hint"
-                android:textColor="@color/secondaryTextOnWhite"
-                android:textSize="@dimen/text_size_12" />
-
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="@color/tabUnselected" />
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

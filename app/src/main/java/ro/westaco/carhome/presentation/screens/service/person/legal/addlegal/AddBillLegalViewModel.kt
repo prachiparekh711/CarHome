@@ -10,7 +10,6 @@ import ro.westaco.carhome.data.sources.remote.requests.Address
 import ro.westaco.carhome.data.sources.remote.responses.models.Caen
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.Country
-import ro.westaco.carhome.data.sources.remote.responses.models.Siruta
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.utils.DeviceUtils
@@ -29,11 +28,10 @@ class AddBillLegalViewModel @Inject constructor(
         fetchDefaultData()
     }
 
-    var caenData = MutableLiveData<ArrayList<Caen>>()
-    var streetTypeData = MutableLiveData<ArrayList<CatalogItem>>()
-    var sirutaData = MutableLiveData<ArrayList<Siruta>>()
-    var activityTypeData = MutableLiveData<ArrayList<CatalogItem>>()
-    var countryData = MutableLiveData<ArrayList<Country>>()
+    var caenData = MutableLiveData<ArrayList<Caen>?>()
+    var streetTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
+    var activityTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
+    var countryData = MutableLiveData<ArrayList<Country>?>()
 
 
     private fun fetchDefaultData() {
@@ -55,13 +53,6 @@ class AddBillLegalViewModel @Inject constructor(
 
                 })
 
-        api.getSiruta()
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    sirutaData.value = it.data
-                }, {}
-            )
 
         api.getCaen()
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

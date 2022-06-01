@@ -9,11 +9,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/size_12"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="@dimen/size_12"
+        app:cardCornerRadius="@dimen/_10sdp"
         app:cardElevation="0dp"
-        app:cardMaxElevation="@dimen/size_12">
+        app:cardMaxElevation="@dimen/_10sdp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,9 +29,9 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/logo"
-                    android:layout_width="@dimen/size_48"
-                    android:layout_height="@dimen/size_48"
-                    android:layout_margin="@dimen/size_12"
+                    android:layout_width="@dimen/_35sdp"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_margin="@dimen/_10sdp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/carhome_icon_roviii" />
 
@@ -50,13 +49,13 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_bold_700"
                         android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/text_size_16"
+                        android:textSize="@dimen/_11sdp"
                         tools:text="Tesla Roadster" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/size_2"
+                        android:layout_marginTop="@dimen/_1sdp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -64,26 +63,28 @@
                             android:layout_height="wrap_content"
                             android:text="@string/car_no"
                             android:textColor="@color/textInputBorderGray"
-                            android:textSize="@dimen/text_size_14"
-                            android:textStyle="bold" />
+                            android:fontFamily="@font/inter_medium_500"
+                            android:textSize="@dimen/_11sdp" />
 
                         <TextView
                             android:id="@+id/carNumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_5sdp"
                             android:fontFamily="@font/inter_bold_700"
+                            android:layout_marginStart="@dimen/_5sdp"
                             android:textColor="@color/textOnWhite"
-                            android:textSize="@dimen/text_size_14" />
+                            android:textSize="@dimen/_11sdp" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/noti"
-                    android:layout_width="@dimen/size_48"
-                    android:layout_height="@dimen/size_48"
-                    android:layout_margin="@dimen/size_12"
-                    android:src="@drawable/notification_icon" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:background="@drawable/bg_dm"
+                    android:padding="@dimen/_5sdp"
+                    android:src="@drawable/ic_home_notification" />
 
             </LinearLayout>
 
@@ -92,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="@dimen/size_8">
+                android:padding="@dimen/_5sdp">
 
                 <LinearLayout
                     android:id="@+id/rcaLL"
@@ -107,8 +108,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/rca_ins"
                         android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/inter_bold_700"
+                        android:textSize="@dimen/_11sdp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -120,14 +121,14 @@
                             android:id="@+id/statusRca"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/size_4"
+                            android:padding="@dimen/_2sdp"
                             android:text="@string/status_active"
                             android:textColor="@color/activeGreen"
-                            android:textSize="@dimen/text_size_14" />
+                            android:textSize="@dimen/_11sdp" />
 
                         <View
                             android:id="@+id/spacerRca"
-                            android:layout_width="@dimen/size_1"
+                            android:layout_width="@dimen/_1sdp"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/_5sdp"
                             android:background="@color/secondaryTextOnWhite" />
@@ -136,28 +137,29 @@
                             android:id="@+id/policyExpiryRca"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/size_4"
+                            android:padding="@dimen/_2sdp"
                             android:textColor="@color/secondaryTextOnWhite"
-                            android:textSize="@dimen/text_size_14" />
+                            android:textSize="@dimen/_11sdp" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/actionRcaTV"
-                    android:layout_width="@dimen/radius_100"
+                    android:layout_width="@dimen/_75sdp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/cta_background"
                     android:gravity="center"
-                    android:padding="@dimen/size_8"
+                    android:fontFamily="@font/inter_medium_500"
                     android:text="@string/document"
+                    android:padding="@dimen/_5sdp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/_11sdp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/size_2"
+                android:layout_height="@dimen/_1sdp"
                 android:background="@color/tint" />
 
             <LinearLayout
@@ -165,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="@dimen/size_8">
+                android:padding="@dimen/_5sdp">
 
                 <LinearLayout
                     android:id="@+id/rovinietaLL"
@@ -180,8 +182,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/rovinieta"
                         android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/inter_bold_700"
+                        android:textSize="@dimen/_11sdp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -193,14 +195,14 @@
                             android:id="@+id/statusRo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/size_4"
+                            android:padding="@dimen/_2sdp"
                             android:text="@string/status_active"
                             android:textColor="@color/activeGreen"
-                            android:textSize="@dimen/text_size_14" />
+                            android:textSize="@dimen/_11sdp" />
 
                         <View
                             android:id="@+id/spacerRo"
-                            android:layout_width="@dimen/size_1"
+                            android:layout_width="@dimen/_1sdp"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/_5sdp"
                             android:background="@color/secondaryTextOnWhite" />
@@ -209,29 +211,30 @@
                             android:id="@+id/policyExpiryRo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/size_4"
+                            android:padding="@dimen/_2sdp"
                             android:textColor="@color/secondaryTextOnWhite"
-                            android:textSize="@dimen/text_size_14" />
+                            android:textSize="@dimen/_11sdp" />
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/actionRoTV"
-                    android:layout_width="@dimen/radius_100"
+                    android:layout_width="@dimen/_75sdp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/buy_background"
                     android:gravity="center"
-                    android:padding="@dimen/size_8"
+                    android:fontFamily="@font/inter_medium_500"
                     android:text="@string/buy_vignette_cta"
+                    android:padding="@dimen/_5sdp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/_11sdp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/size_2"
+                android:layout_height="@dimen/_1sdp"
                 android:background="@color/tint" />
 
             <LinearLayout
@@ -239,7 +242,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="@dimen/size_8">
+                android:padding="@dimen/_5sdp">
 
                 <LinearLayout
                     android:id="@+id/bridgeLL"
@@ -254,8 +257,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/bridge_tax"
                         android:textColor="@color/textOnWhite"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/inter_bold_700"
+                        android:textSize="@dimen/_11sdp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -267,28 +270,30 @@
                             android:id="@+id/statusBt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/size_4"
+                            android:padding="@dimen/_2sdp"
                             android:text="@string/status_active"
                             android:textColor="@color/activeGreen"
-                            android:textSize="@dimen/text_size_14" />
+                            android:textSize="@dimen/_11sdp" />
 
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/actionBrTV"
-                    android:layout_width="@dimen/radius_100"
+                    android:layout_width="@dimen/_75sdp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/buy_background"
                     android:gravity="center"
-                    android:padding="@dimen/size_8"
+                    android:fontFamily="@font/inter_medium_500"
                     android:text="@string/buy_vignette_cta"
+                    android:padding="@dimen/_5sdp"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/_11sdp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
 </LinearLayout>

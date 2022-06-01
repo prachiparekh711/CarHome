@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/size_12"
+        android:layout_marginVertical="@dimen/_10sdp"
         android:gravity="center"
         android:padding="@dimen/_5sdp">
 
@@ -22,7 +22,7 @@
             android:fontFamily="@font/raleway_bold_700"
             android:text="@string/terms_tos"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/text_size_20"
+            android:textSize="@dimen/_16sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,7 +31,7 @@
             android:id="@+id/dismiss"
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
-            android:layout_marginEnd="@dimen/size_16"
+            android:layout_marginEnd="@dimen/_12sdp"
             android:padding="@dimen/_5sdp"
             android:src="@drawable/ic_dismiss_x"
             app:layout_constraintBottom_toBottomOf="@+id/title"

@@ -18,8 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/size_16"
-            android:layout_marginTop="@dimen/size_32"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:src="@drawable/ic_carhome_by_omv" />
 
         <ImageView
@@ -28,11 +28,11 @@
             android:layout_height="45dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/size_16"
+            android:layout_marginEnd="@dimen/_12sdp"
             android:adjustViewBounds="true"
             android:background="@drawable/bg_circle_avatar"
             android:contentDescription="@null"
-            android:padding="@dimen/size_2"
+            android:padding="@dimen/_1sdp"
             android:scaleType="centerCrop"
             android:src="@drawable/default_avatar" />
 

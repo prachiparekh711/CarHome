@@ -2,11 +2,11 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainCard"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/_3sdp"
     android:layout_marginStart="@dimen/_10sdp"
-    android:layout_marginEnd="@dimen/_3sdp"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="@dimen/_10sdp"
     app:cardElevation="0dp"
@@ -28,9 +28,9 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/logo"
-                android:layout_width="@dimen/size_48"
-                android:layout_height="@dimen/size_48"
-                android:layout_margin="@dimen/size_12"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_margin="@dimen/_10sdp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/carhome_icon_roviii" />
 
@@ -47,31 +47,53 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_bold_700"
                     android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/text_size_16" />
+                    android:textSize="@dimen/_11sdp" />
 
-                <TextView
-                    android:id="@+id/carNo"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    android:textColor="@color/textInputBorderGray"
-                    android:textSize="@dimen/_12sdp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/carName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/inter_regular_400"
+                        android:text="@string/car_no"
+                        android:textColor="@color/textInputBorderGray"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/carNo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_1sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:textColor="@color/textOnWhite"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/noti"
-                android:layout_width="@dimen/size_48"
-                android:layout_height="@dimen/size_48"
-                android:layout_margin="@dimen/size_12"
-                android:src="@drawable/notification_icon" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/bg_dm"
+                android:padding="@dimen/_5sdp"
+                android:src="@drawable/ic_home_notification" />
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/size_2"
-            android:background="@color/tint" />
+            android:layout_height="@dimen/_1sdp"
+            android:background="@color/appPrimary40" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -153,26 +175,27 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/rovinieta"
-                        android:textColor="#303065"
+                        android:text="@string/vignetee"
+                        android:textColor="@color/textOnWhite"
                         android:textSize="@dimen/_10sdp" />
 
                     <TextView
                         android:id="@+id/rostatus"
-                        android:layout_width="@dimen/_38sdp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:background="@drawable/active_status_back"
                         android:gravity="center"
-                        android:padding="2dp"
+                        android:paddingHorizontal="@dimen/_15sdp"
+                        android:paddingVertical="@dimen/_3sdp"
                         android:text="@string/info"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_9sdp" />
 
                     <ImageView
                         android:id="@+id/iv_alrt"
-                        android:layout_width="@dimen/_10sdp"
-                        android:layout_height="@dimen/_10sdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/_3sdp"
                         android:src="@drawable/ic_error_status"

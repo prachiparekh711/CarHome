@@ -20,10 +20,10 @@
                 android:id="@+id/back"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/size_5"
+                android:layout_marginStart="@dimen/_5sdp"
                 android:adjustViewBounds="true"
-                android:foregroundGravity="center_vertical"
                 android:padding="@dimen/_9sdp"
+                android:foregroundGravity="center_vertical"
                 android:src="@drawable/ic_back"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -33,9 +33,10 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.github.barteksc.pdfviewer.PDFView
-        android:id="@+id/pdfview"
+        android:id="@+id/pdfView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
 
 </LinearLayout>

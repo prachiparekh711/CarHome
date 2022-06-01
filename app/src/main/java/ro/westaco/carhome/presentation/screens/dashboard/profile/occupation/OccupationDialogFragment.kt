@@ -13,9 +13,10 @@ import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 //C- Occupation Catalog
 class OccupationDialogFragment : BottomSheetDialogFragment(),
     OccupationAdapter.OnItemInteractionListener {
-    var catelogList: ArrayList<CatalogItem>? = ArrayList()
+    private var catalogList: ArrayList<CatalogItem>? = ArrayList()
     var listener: OnDialogInteractionListener? = null
     var selectedOccupation: CatalogItem? = null
+
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
@@ -56,7 +57,7 @@ class OccupationDialogFragment : BottomSheetDialogFragment(),
 
         val categories = view.findViewById<RecyclerView>(R.id.categories)
         categories.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        val adapter = catelogList?.let {
+        val adapter = catalogList?.let {
             OccupationAdapter(
                 requireContext(),
                 it,

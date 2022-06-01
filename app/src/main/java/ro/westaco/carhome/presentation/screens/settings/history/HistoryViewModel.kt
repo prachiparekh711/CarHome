@@ -22,7 +22,8 @@ class HistoryViewModel @Inject constructor(
     private val app: Application,
     private val api: CarHomeApi
 ) : BaseViewModel() {
-    var historyLiveData = MutableLiveData<ArrayList<HistoryItem>>()
+
+    var historyLiveData = MutableLiveData<ArrayList<HistoryItem>?>()
 
     override fun onFragmentCreated() {
         super.onFragmentCreated()
@@ -35,8 +36,7 @@ class HistoryViewModel @Inject constructor(
             .subscribe({ resp ->
                 historyLiveData.value = resp?.data
             }, {
-                it.printStackTrace()
-                historyLiveData.value = null
+
             })
     }
 
@@ -60,6 +60,10 @@ class HistoryViewModel @Inject constructor(
                         putString(
                             TransactionDetailsFragment.ARG_OF,
                             item.service
+                        )
+                        putBoolean(
+                            TransactionDetailsFragment.ARG_HISTORY,
+                            true
                         )
                     }
                 }

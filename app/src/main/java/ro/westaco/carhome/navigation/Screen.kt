@@ -6,34 +6,35 @@ import ro.westaco.carhome.presentation.screens.dashboard.DashboardFragment
 import ro.westaco.carhome.presentation.screens.dashboard.profile.ProfileFragment
 import ro.westaco.carhome.presentation.screens.dashboard.profile.close.CloseAccountFragment
 import ro.westaco.carhome.presentation.screens.dashboard.profile.edit.EditProfileFragment
-import ro.westaco.carhome.presentation.screens.home.documents.DocumentsFragment
+import ro.westaco.carhome.presentation.screens.data.DataFragment
+import ro.westaco.carhome.presentation.screens.data.cars.add_new.AddNewCar2Fragment
+import ro.westaco.carhome.presentation.screens.data.cars.add_new.AddNewCarFragment
+import ro.westaco.carhome.presentation.screens.data.cars.details.CarDetailsFragment
+import ro.westaco.carhome.presentation.screens.data.cars.query_details.QueryCarDetailsFragment
+import ro.westaco.carhome.presentation.screens.data.person_legal.add_new.AddNewLegalPersonFragment
+import ro.westaco.carhome.presentation.screens.data.person_legal.details.LegalPersonDetailsFragment
+import ro.westaco.carhome.presentation.screens.data.person_natural.add_new.AddNewNaturalPersonFragment
+import ro.westaco.carhome.presentation.screens.data.person_natural.details.NaturalPersonDetailsFragment
+import ro.westaco.carhome.presentation.screens.documents.DocumentsFragment
 import ro.westaco.carhome.presentation.screens.reminder.add_new.AddNewReminderFragment
-import ro.westaco.carhome.presentation.screens.service.bridgetax.init.BridgeTaxInitFragment
-import ro.westaco.carhome.presentation.screens.service.bridgetax.select_bridge_tax.BridgeTaxSelectFragment
-import ro.westaco.carhome.presentation.screens.service.insurance.InsuranceFragment
-import ro.westaco.carhome.presentation.screens.service.insurance.InsuranceStep2Fragment
+import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.bridge_tax_init.PassTaxInitFragment
+import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.rovignette_init.BuyVignetteFragment
+import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.select_car.SelectCarFragment
+import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.summary.BridgeTaxSummaryFragment
+import ro.westaco.carhome.presentation.screens.service.help.TransactionHelpFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.DirectClaimInfoFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.init.InsuranceFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.init.InsuranceStep2Fragment
 import ro.westaco.carhome.presentation.screens.service.insurance.offers.FetchScreenFragment
 import ro.westaco.carhome.presentation.screens.service.insurance.offers.InsOfferDetailsFragment
 import ro.westaco.carhome.presentation.screens.service.insurance.offers.InsOffersFragment
 import ro.westaco.carhome.presentation.screens.service.insurance.summary.SummaryFragment
 import ro.westaco.carhome.presentation.screens.service.payment_methods.SavedCardsFragment
 import ro.westaco.carhome.presentation.screens.service.payment_methods.add_new.AddNewCardFragment
-import ro.westaco.carhome.presentation.screens.service.person.BillingInformationFragment
 import ro.westaco.carhome.presentation.screens.service.person.legal.addlegal.AddBillLegalFragment
 import ro.westaco.carhome.presentation.screens.service.person.natural.addnatural.AddBillNaturalFragment
 import ro.westaco.carhome.presentation.screens.service.transaction_details.TransactionDetailsFragment
-import ro.westaco.carhome.presentation.screens.service.vignette.buy.BuyVignetteFragment
-import ro.westaco.carhome.presentation.screens.service.vignette.select_car.VignetteSelectCarFragment
 import ro.westaco.carhome.presentation.screens.settings.contact_us.ContactUsFragment
-import ro.westaco.carhome.presentation.screens.settings.data.DataFragment
-import ro.westaco.carhome.presentation.screens.settings.data.cars.add_new.AddNewCar2Fragment
-import ro.westaco.carhome.presentation.screens.settings.data.cars.add_new.AddNewCarFragment
-import ro.westaco.carhome.presentation.screens.settings.data.cars.details.CarDetailsFragment
-import ro.westaco.carhome.presentation.screens.settings.data.cars.query_details.QueryCarDetailsFragment
-import ro.westaco.carhome.presentation.screens.settings.data.person_legal.add_new.AddNewLegalPersonFragment
-import ro.westaco.carhome.presentation.screens.settings.data.person_legal.details.LegalPersonDetailsFragment
-import ro.westaco.carhome.presentation.screens.settings.data.person_natural.add_new.AddNewNaturalPersonFragment
-import ro.westaco.carhome.presentation.screens.settings.data.person_natural.details.NaturalPersonDetailsFragment
 import ro.westaco.carhome.presentation.screens.settings.extras.*
 import ro.westaco.carhome.presentation.screens.settings.history.HistoryFragment
 import ro.westaco.carhome.presentation.screens.settings.notifications.AllNotificationSettingFragment
@@ -58,8 +59,8 @@ enum class Screen(fragmentClass: Class<out Fragment?>) {
     Document(
         DocumentsFragment::class.java
     ),
-    VignetteSelectCar(
-        VignetteSelectCarFragment::class.java
+    SelectCarForService(
+        SelectCarFragment::class.java
     ),
     BuyVignette(
         BuyVignetteFragment::class.java
@@ -159,15 +160,10 @@ enum class Screen(fragmentClass: Class<out Fragment?>) {
     Language(
         LanguageFragment::class.java
     ),
-    BridgeTax(
-        BridgeTaxSelectFragment::class.java
-    ),
     BridgeTaxInit(
-        BridgeTaxInitFragment::class.java
+        PassTaxInitFragment::class.java
     ),
-    BridgeTaxBillingInfo(
-        BillingInformationFragment::class.java
-    ),
+
 
     AddBillNaturalPerson(
         AddBillNaturalFragment::class.java
@@ -189,6 +185,10 @@ enum class Screen(fragmentClass: Class<out Fragment?>) {
         FetchScreenFragment::class.java
     ),
 
+    DirectClaimInfoScreen(
+        DirectClaimInfoFragment::class.java
+    ),
+
     InsuranceOffers(
         InsOffersFragment::class.java
     ),
@@ -199,6 +199,14 @@ enum class Screen(fragmentClass: Class<out Fragment?>) {
 
     InsuranceSummary(
         SummaryFragment::class.java
+    ),
+
+    BridgeTaxSummary(
+        BridgeTaxSummaryFragment::class.java
+    ),
+
+    TransactionHelp(
+        TransactionHelpFragment::class.java
     ),
 
     ;
@@ -214,6 +222,7 @@ enum class Screen(fragmentClass: Class<out Fragment?>) {
     }
 
     companion object {
+
         var screenLayerHashMap: HashMap<Class<*>, Screen>? = null
 
         init {
@@ -232,4 +241,6 @@ enum class Screen(fragmentClass: Class<out Fragment?>) {
             }
         }
     }
+
+
 }
