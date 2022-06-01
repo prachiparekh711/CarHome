@@ -54,7 +54,6 @@ import java.util.concurrent.Executor
 @AndroidEntryPoint
 class AuthActivity : BaseActivity<AuthModel>() {
 
-
     private var firebaseAuth = FirebaseAuth.getInstance()
 
     // Google
