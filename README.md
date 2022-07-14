@@ -11,6 +11,8 @@
             * Facebook & Google for access
             * Others: RxJava, Retrofit, Dagger Implementation, Data Binding, Flavors for build & Beta, Rest API, Deep linking, Bugsee
             * Plot , Notification , Network services
+            * Language Support : English & Romanian
+            
          
 
 
