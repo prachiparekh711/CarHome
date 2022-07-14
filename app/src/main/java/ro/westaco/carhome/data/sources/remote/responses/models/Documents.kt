@@ -22,7 +22,7 @@ data class Documents(
 data class RowsItem(
 
     @field:SerializedName("thumbnailHref")
-    val thumbnailHref: Any? = null,
+    val thumbnailHref: String? = null,
 
     @field:SerializedName("fileSize")
     val fileSize: Int? = null,
@@ -50,4 +50,8 @@ data class RowsItem(
 
     @field:SerializedName("tagNames")
     val tagNames: List<Any?>? = null
-) : Serializable
+) : Serializable {
+    override fun toString(): String {
+        return "RowsItem(name=$name, mimeType=$mimeType, href=$href)"
+    }
+}

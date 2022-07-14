@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.screens.maps.TopServicesMapFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/inter_bold_700"
+            android:text="@string/maps"
+            android:textColor="@color/textTitleAccentBlack"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="27dp"
+            android:fontFamily="@font/inter_medium_500"
+            android:text="@string/top_services"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/topServicesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_12sdp" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/mLinear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/mAppBar"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/mLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_190sdp"
+                    android:background="@color/fragment_background"
+                    android:foregroundGravity="center"
+                    android:padding="@dimen/_35sdp"
+                    android:src="@drawable/ic_location" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white">
+
+                    <LinearLayout
+                        android:id="@+id/mLinear2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:text="@string/location_required"
+                            android:textColor="@color/text_color"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginTop="15dp"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:text="@string/need_location"
+                            android:textColor="@color/unselected"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:text="@string/to_find_places"
+                            android:textColor="@color/unselected"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/inter_medium_500"
+                            android:text="@string/give_you_locations"
+                            android:textColor="@color/unselected"
+                            android:textSize="12sp" />
+
+
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/_25sdp"
+            android:layout_marginEnd="@dimen/_25sdp"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:backgroundTint="@color/selected"
+            android:text="@string/allow_location_permissions"
+            android:textAllCaps="false"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+</FrameLayout>

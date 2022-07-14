@@ -1,5 +1,6 @@
 package ro.westaco.carhome.presentation.screens.dashboard.profile
 
+import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -8,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.airbnb.lottie.LottieAnimationView
@@ -16,6 +18,14 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.karumi.dexter.listener.single.PermissionListener
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,27 +37,22 @@ import ro.westaco.carhome.data.sources.remote.responses.models.Country
 import ro.westaco.carhome.data.sources.remote.responses.models.ProfileItem
 import ro.westaco.carhome.databinding.LogoOptionLayoutBinding
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DeleteDialogFragment
 import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.base.BaseActivity.Companion.profileLogoListner
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.common.DeleteDialogFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
 import ro.westaco.carhome.presentation.screens.main.MainActivity
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
 import ro.westaco.carhome.utils.CatalogUtils
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.FileUtil
-import ro.westaco.carhome.utils.FileUtil.Companion.checkCameraPermission
-import ro.westaco.carhome.utils.FileUtil.Companion.checkPermission
-import ro.westaco.carhome.utils.FileUtil.Companion.requestCamerasPermission
-import ro.westaco.carhome.utils.FileUtil.Companion.requestPermission
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.views.Progressbar
 import java.io.File
 
 
 //C- Profile Section
 @AndroidEntryPoint
 class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
-    BaseActivity.OnProfileLogoChangeListner {
+    BaseActivity.OnProfileLogoChangeListener {
 
     override fun getContentView() = R.layout.fragment_profile
 
@@ -62,18 +67,13 @@ class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
 
     override fun getStatusBarColor() = ContextCompat.getColor(requireContext(), R.color.white)
 
-    override fun onResume() {
-        super.onResume()
-        progressbar?.dismissPopup()
-    }
-
     override fun initUi() {
 
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
         lottieAnimationView = lottieAnimation
         lottieAnimationView?.visibility = View.VISIBLE
         lblStepCount.text = requireContext().resources.getString(R.string.step_profile, 0, 0)
+
 
         back.setOnClickListener {
             viewModel.onBack()
@@ -84,23 +84,96 @@ class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
         }
 
         llUploadCertificate.setOnClickListener {
-            val result = checkPermission(requireContext())
-            if (result) {
-                callFileManagerForLicense()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                Dexter.withContext(requireActivity())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            report?.let {
+                                if (report.areAllPermissionsGranted()) {
+                                    callFileManagerForLicense()
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+                    }).withErrorListener {}
+
+                    .check()
+
             } else {
-                requestPermission(requireActivity())
+                if (permissionUpload()) {
+                    callFileManagerForLicense()
+                }
             }
+
         }
 
         llUploadId.setOnClickListener {
-            val result = checkPermission(requireContext())
-            if (result) {
-                callFileManagerForID()
+
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                Dexter.withContext(requireActivity())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            report?.let {
+                                if (report.areAllPermissionsGranted()) {
+                                    callFileManagerForID()
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+                    }).withErrorListener {}
+
+                    .check()
             } else {
-                requestPermission(requireActivity())
+                if (permissionUpload()) {
+                    callFileManagerForID()
+                }
             }
+
         }
 
+        avatar.setOnClickListener {
+            logoOperationDialog()
+        }
         btnDeleteCertificate.setOnClickListener {
 
             val drivingLicenseDialog = DeleteDialogFragment()
@@ -144,16 +217,13 @@ class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
             cnpDialog.show(childFragmentManager, DeleteDialogFragment.TAG)
         }
 
-        avatar.setOnClickListener {
-            logoOperationDialog()
-        }
-
         delete.setOnClickListener {
             viewModel.onCloseAccount()
         }
     }
 
     private fun logoOperationDialog() {
+
         val bottomSheetDialog =
             BottomSheetDialog(
                 requireActivity(),
@@ -174,12 +244,20 @@ class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
 
         selectorBinding.upload.setOnClickListener {
             profileLogoListner = this
-            val result = checkCameraPermission(requireContext())
-            if (result) {
-                openCamera()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                onCameraPermission()
             } else {
-                requestCamerasPermission(requireActivity())
+
+                if (permission()) {
+                    openCamera()
+                }
             }
+
             bottomSheetDialog.dismiss()
         }
         selectorBinding.delete.setOnClickListener {
@@ -309,7 +387,6 @@ class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
                 }
 
             }
-            progressbar?.dismissPopup()
         }
 
         viewModel.profileLogoData?.observe(viewLifecycleOwner) { profileLogo ->
@@ -330,7 +407,6 @@ class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
                 profileLogoExist = false
             }
             lottieAnimationView?.visibility = View.GONE
-
         }
 
         viewModel.countryData.observe(viewLifecycleOwner) { countryData ->
@@ -448,36 +524,6 @@ class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
             }
         }
 
-        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
-            callFileManagerForLicense()
-        }
-
-        if (requestCode == 1002 && resultCode == Activity.RESULT_OK) {
-            callFileManagerForID()
-        }
-
-
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-
-            201 -> if (grantResults.isNotEmpty()) {
-                val camera = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                if (camera) {
-                    openCamera()
-                } else {
-                    showErrorInfo(
-                        requireContext(),
-                        getString(R.string.crop_image_activity_no_permissions)
-                    )
-                }
-            }
-        }
     }
 
 
@@ -499,6 +545,50 @@ class ProfileFragment : BaseFragment<ProfileDetailsViewModel>(),
             lottieAnimationView?.visibility = View.VISIBLE
             viewModel.onAddLogo(File(selectedFile))
         }
+    }
+
+    private fun onCameraPermission() {
+
+        Dexter.withContext(requireContext())
+            .withPermission(Manifest.permission.CAMERA)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+                    openCamera()
+                }
+
+                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {}
+
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: PermissionRequest?,
+                    p1: PermissionToken?,
+                ) {
+                    p1?.continuePermissionRequest()
+                }
+            }).withErrorListener {}
+
+            .check()
+    }
+
+    private fun permission(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+
+    }
+
+    private fun permissionUpload(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+
     }
 
 }

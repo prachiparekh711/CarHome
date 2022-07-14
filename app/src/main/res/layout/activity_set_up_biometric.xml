@@ -13,15 +13,15 @@
         android:layout_marginStart="@dimen/_12sdp"
         android:layout_marginTop="@dimen/_12sdp"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_back" />
+        android:src="@drawable/ic_back"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/touchRL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/back"
-        android:layout_above="@id/indicator"
-        android:layout_marginBottom="@dimen/_20sdp">
+        android:layout_marginVertical="@dimen/_20sdp">
 
         <TextView
             android:id="@+id/header"
@@ -87,7 +87,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/back"
         android:layout_marginBottom="@dimen/_20sdp"
-        android:layout_above="@id/indicator"
         android:visibility="gone">
 
         <TextView

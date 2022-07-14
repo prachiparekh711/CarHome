@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_copy_move.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.Categories
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.views.Progressbar
 
 @AndroidEntryPoint
 class CopyMoveFragment : BaseFragment<DocumentOperationViewModel>(),
@@ -63,7 +63,6 @@ class CopyMoveFragment : BaseFragment<DocumentOperationViewModel>(),
         }
 
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
         view?.isFocusableInTouchMode = true
         view?.requestFocus()
 

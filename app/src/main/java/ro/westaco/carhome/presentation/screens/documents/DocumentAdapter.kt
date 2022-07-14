@@ -3,7 +3,6 @@ package ro.westaco.carhome.presentation.screens.documents
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
@@ -95,11 +95,12 @@ class DocumentAdapter(
                 val options = RequestOptions()
                 logo.clipToOutline = true
                 Glide.with(context)
+                    .asDrawable()
                     .load(glideUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .error(context.resources.getDrawable(R.drawable.ic_pdf))
                     .apply(
                         options.centerCrop()
-                            .skipMemoryCache(true)
                             .priority(Priority.HIGH)
                             .format(DecodeFormat.PREFER_ARGB_8888)
                     )
@@ -108,14 +109,26 @@ class DocumentAdapter(
                             resource: Drawable,
                             transition: com.bumptech.glide.request.transition.Transition<in Drawable?>?
                         ) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                logo.background = context.resources.getDrawable(R.drawable.bg_dm)
-                                logo.setImageDrawable(resource)
-                            }
+                            logo.background = context.resources.getDrawable(R.drawable.bg_dm)
+                            logo.setImageDrawable(resource)
                         }
-
                     })
+            } else {
+                val options = RequestOptions()
+                logo.clipToOutline = true
+                Glide.with(context)
+                    .load(context.resources.getDrawable(R.drawable.ic_pdf))
+                    .apply(
+                        options.centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .priority(Priority.HIGH)
+                            .format(DecodeFormat.PREFER_ARGB_8888)
+                    )
+                    .into(logo)
+                logo.background = null
             }
+
             mainLL.setOnClickListener {
                 if (multipleSelection) {
                     item.id?.let { it1 ->

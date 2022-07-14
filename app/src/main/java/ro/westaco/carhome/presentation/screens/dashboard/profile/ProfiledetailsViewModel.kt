@@ -23,8 +23,8 @@ import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.dashboard.profile.edit.EditProfileFragment
+import ro.westaco.carhome.presentation.screens.main.MainActivity.Companion.profileItem
 import ro.westaco.carhome.utils.DateTimeUtils
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File
@@ -79,14 +79,12 @@ class ProfileDetailsViewModel @Inject constructor(
 
 
     private fun fetchRemoteData() {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
+
         api.getProfile()
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (it.success && it.data != null) {
+                    profileItem = it.data
                     profileLiveData?.value = it.data
                     fetchDefaultData()
                 }
@@ -127,6 +125,7 @@ class ProfileDetailsViewModel @Inject constructor(
     }
 
     internal fun onEditAccount(profileItem: ProfileItem) {
+
         uiEventStream.value =
             UiEvent.Navigation(NavAttribs(Screen.EditAccount, object : BundleProvider() {
                 override fun onAddArgs(bundle: Bundle?): Bundle {
@@ -155,9 +154,7 @@ class ProfileDetailsViewModel @Inject constructor(
             .subscribe({
                 fetchProfileData()
             }, {
-                it.printStackTrace()
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 
@@ -168,7 +165,6 @@ class ProfileDetailsViewModel @Inject constructor(
                 actionStream.value = ACTION.OnDeleteLogo
                 fetchProfileData()
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 
@@ -196,8 +192,7 @@ class ProfileDetailsViewModel @Inject constructor(
                 }
                 fetchRemoteData()
             }, {
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 
@@ -207,7 +202,6 @@ class ProfileDetailsViewModel @Inject constructor(
         api.deleteAttachment(attachID)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                 if (attachType.equals("DRIVING_LICENSE")) {
                     actionStream.value = ACTION.OnDeleteSuccess("DRIVING_LICENSE")
                 } else {
@@ -215,7 +209,6 @@ class ProfileDetailsViewModel @Inject constructor(
                 }
                 fetchRemoteData()
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 

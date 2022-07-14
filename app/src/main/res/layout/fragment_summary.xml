@@ -27,7 +27,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,6 +107,7 @@
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        app:hintTextAppearance="@style/TextLabel"
                         android:id="@+id/start_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -145,6 +146,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        app:hintTextAppearance="@style/TextLabel"
                         android:id="@+id/end_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -207,6 +209,19 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_profile_picture" />
 
+                        <TextView
+                            android:id="@+id/textLogoOwner"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:background="@drawable/oval_shape"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:textColor="#5367FC"
+                            android:textSize="@dimen/_10sdp"
+                            android:visibility="gone" />
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -214,6 +229,7 @@
                             android:orientation="vertical">
 
                             <com.google.android.material.textfield.TextInputLayout
+                                app:hintTextAppearance="@style/TextLabel"
                                 android:id="@+id/mOwnerTitle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -286,6 +302,7 @@
                     android:text="@string/rca_usage_type" />
 
                 <com.google.android.material.textfield.TextInputLayout
+                    app:hintTextAppearance="@style/TextLabel"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/_2sdp"
@@ -351,6 +368,20 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_profile_picture" />
 
+                        <TextView
+                            android:id="@+id/textLogoBill"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:background="@drawable/oval_shape"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:textColor="#5367FC"
+                            android:textSize="@dimen/_10sdp"
+                            android:visibility="gone" />
+
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -358,6 +389,7 @@
                             android:orientation="vertical">
 
                             <com.google.android.material.textfield.TextInputLayout
+                                app:hintTextAppearance="@style/TextLabel"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="@dimen/_2sdp"
@@ -622,8 +654,8 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginVertical="@dimen/_10sdp"
             android:layout_marginStart="@dimen/_5sdp"
             android:checked="false"

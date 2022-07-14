@@ -29,7 +29,6 @@ class LegalPersonsAdapter(
 ) : RecyclerView.Adapter<LegalPersonsAdapter.ViewHolder>() {
 
     private val appPreferences = AppPreferencesDelegates.get()
-
     interface OnItemInteractionListener {
         fun onClick(item: LegalPerson)
     }

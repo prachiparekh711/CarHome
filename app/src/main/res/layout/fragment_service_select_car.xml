@@ -137,7 +137,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior=".utils.OverScrollBounceBehavior">
+                app:layout_behavior=".views.OverScrollBounceBehavior">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -222,6 +222,7 @@
             android:background="@drawable/save_background_invisible"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
+            android:clickable="false"
             android:paddingVertical="@dimen/_12sdp"
             android:text="@string/continue_txt"
             android:textColor="@color/textOnSolid"

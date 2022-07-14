@@ -3,7 +3,6 @@ package ro.westaco.carhome.presentation.screens.auth
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -17,6 +16,8 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.DeviceTokenRequest
+import ro.westaco.carhome.data.sources.remote.requests.TermsRequestItem
+import ro.westaco.carhome.data.sources.remote.responses.models.TermsResponseItem
 import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
@@ -53,6 +54,7 @@ class AuthModel @Inject constructor(
     private val appPreferences = AppPreferencesDelegates.get()
 
     var authStateLiveData = MutableLiveData<STATE>().default(STATE.Login)
+    var termsLiveData = MutableLiveData<ArrayList<TermsResponseItem>?>()
 
     sealed class STATE {
         object Login : STATE()
@@ -72,8 +74,10 @@ class AuthModel @Inject constructor(
         object AuthenticateViaBiometrics : ACTION()
         object UserSuccess : ACTION()
         object UserFailure : ACTION()
+        object NetworkFailure : ACTION()
         object SetSharedPrefrences : ACTION()
         object UserRetrievalSuccess : ACTION()
+        object LoginSuceess : ACTION()
 
     }
 
@@ -81,14 +85,23 @@ class AuthModel @Inject constructor(
     private var isConfirmPasswordHidden = true
 
     override fun onActivityCreated() {
-
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             actionStream.value = ACTION.UserSuccess
             onUserRetrieved(currentUser)
         } else {
+            getAPPTerms()
             actionStream.value = ACTION.UserFailure
         }
+    }
+
+    private fun getAPPTerms() {
+        api.getAllTermsForScope("USE_APP")
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ resp ->
+                termsLiveData.value = resp.data
+            }) {
+            }
     }
 
     private fun isLastLoginRecent(): Boolean {
@@ -108,10 +121,7 @@ class AuthModel @Inject constructor(
                 actionStream.value = ACTION.UserFailure
                 actionStream.value = ACTION.AuthenticateViaBiometrics
             } else {
-
                 actionStream.value = ACTION.UserSuccess
-//                Do not uncomment
-//                uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Dashboard))
                 uiEventStream.postValue(
                     UiEvent.OpenIntent(
                         Intent(app, MainActivity::class.java),
@@ -124,7 +134,6 @@ class AuthModel @Inject constructor(
 
         if (!DeviceUtils.isOnline(app)) {
             actionStream.value = ACTION.UserFailure
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
             return
         }
 
@@ -132,49 +141,18 @@ class AuthModel @Inject constructor(
             if (task.isSuccessful) {
                 // save Firebase token
                 appPreferences.token = task.result.token.toString()
-                Log.e("token", appPreferences.token)
-                if (firebaseAuth.currentUser?.isEmailVerified == true) {
-                    if (BIOMETRICS_SETUP) {
-//*             Authenticate via biometrics (S4)
+//                Log.e("token", appPreferences.token)
+                api.login()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        registerDevice()
+                        actionStream.value = ACTION.LoginSuceess
 
-                        api.login()
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({
+                    }, {
+                        actionStream.value = ACTION.UserFailure
+                    })
 
-                                if (BIOMETRICS) {
-                                    actionStream.value = ACTION.UserFailure
-                                    actionStream.value = ACTION.AuthenticateViaBiometrics
-                                } else {
-                                    actionStream.value = ACTION.UserSuccess
-                                    appPreferences.lastLoginMillis = System.currentTimeMillis()
-                                    uiEventStream.postValue(
-                                        UiEvent.OpenIntent(
-                                            Intent(
-                                                app,
-                                                MainActivity::class.java
-                                            ), finishSourceActivity = true
-                                        )
-                                    )
-                                }
-                            }, {
-                                actionStream.value = ACTION.UserFailure
-                                uiEventStream.value =
-                                    UiEvent.ShowToast(R.string.failed_server)
-                            })
-                    } else {
-                        actionStream.value = ACTION.UserRetrievalSuccess
-                    }
-
-                } else {
-                    uiEventStream.postValue(
-
-                        UiEvent.OpenIntent(
-                            Intent(app, EmailVerificationActivity::class.java),
-                            false
-                        )
-                    )
-                }
             } else {
                 actionStream.value = ACTION.UserFailure
                 uiEventStream.value = UiEvent.ShowToast(R.string.user_retrieval_failed)
@@ -193,6 +171,7 @@ class AuthModel @Inject constructor(
                 actionStream.value = ACTION.UserSuccess
                 appPreferences.lastLoginMillis = System.currentTimeMillis()
 //                uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Dashboard))
+                registerDevice()
                 uiEventStream.postValue(
                     UiEvent.OpenIntent(
                         Intent(app, MainActivity::class.java),
@@ -202,7 +181,6 @@ class AuthModel @Inject constructor(
 
             }, {
                 actionStream.value = ACTION.UserFailure
-                uiEventStream.value = UiEvent.ShowToast(R.string.failed_server)
             })
     }
 
@@ -229,7 +207,10 @@ class AuthModel @Inject constructor(
             if (task.exception?.message.isNullOrEmpty()) {
                 uiEventStream.value = UiEvent.ShowToast(R.string.login_failed)
             } else {
-                uiEventStream.value = task.exception?.message?.let { UiEvent.ShowToastMsg(it) }
+                if (task.exception?.javaClass?.simpleName == "FirebaseNetworkException")
+                    actionStream.value = ACTION.NetworkFailure
+                else
+                    uiEventStream.value = task.exception?.message?.let { UiEvent.ShowToastMsg(it) }
             }
         }
     }
@@ -239,7 +220,7 @@ class AuthModel @Inject constructor(
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             actionStream.value = ACTION.UserSuccess
-            registerDevice()
+
             onUserRetrieved(currentUser)
 
             val params = Bundle()
@@ -257,7 +238,6 @@ class AuthModel @Inject constructor(
     private fun registerDevice() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.w("TAG", "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
 
@@ -274,7 +254,13 @@ class AuthModel @Inject constructor(
 
     }
 
-    internal fun onSignup(email: String, password: String, confirmPassword: String) {
+
+    internal fun onSignup(
+        email: String,
+        password: String,
+        confirmPassword: String,
+        termsList: ArrayList<TermsResponseItem>
+    ) {
         if (email.isEmpty()) {
             uiEventStream.value = UiEvent.ShowToast(R.string.email_required)
             return
@@ -288,6 +274,15 @@ class AuthModel @Inject constructor(
             return
         }
 
+        if (termsList.isNotEmpty()) {
+            for (i in termsList.indices) {
+                if (!termsList[i].allowed && termsList[i].mandatory == true) {
+                    uiEventStream.value = UiEvent.ShowToast(R.string.terms_info)
+                    return
+                }
+            }
+        }
+
         actionStream.value = ACTION.CreateUserWithEmailAndPassword(email, password)
 
     }
@@ -295,37 +290,28 @@ class AuthModel @Inject constructor(
     internal fun onSignupTaskCompleted(task: Task<AuthResult>) {
         if (task.isSuccessful) {
             actionStream.value = ACTION.UserSuccess
-            registerDevice()
             actionStream.value = ACTION.SetSharedPrefrences
 
             val params = Bundle()
             mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.SIGNUP_ANDROID, params)
 
-//            uiEventStream.value = UiEvent.ShowToast(R.string.new_car_error)
-
-            firebaseAuth.currentUser?.getIdToken(true)?.addOnCompleteListener { taskResult ->
-                if (taskResult.isSuccessful) {
-                    // save Firebase token
-                    appPreferences.token = taskResult.result.token.toString()
-                    uiEventStream.postValue(
-                        UiEvent.OpenIntent(
-                            Intent(app, EmailVerificationActivity::class.java), false
-                        )
-                    )
-                }
-            }
+            firebaseLogin()
         } else {
             actionStream.value = ACTION.UserFailure
             if (task.exception?.message.isNullOrEmpty()) {
                 uiEventStream.value = UiEvent.ShowToast(R.string.signup_failed)
             } else {
-                uiEventStream.value = task.exception?.message?.let { UiEvent.ShowToastMsg(it) }
+                if (task.exception?.javaClass?.simpleName == "FirebaseNetworkException")
+                    actionStream.value = ACTION.NetworkFailure
+                else
+                    uiEventStream.value = task.exception?.message?.let { UiEvent.ShowToastMsg(it) }
             }
         }
     }
 
     internal fun onGoogleAuth() {
         actionStream.value = ACTION.LaunchSignInWithGoogle
+
     }
 
     internal fun onGoogleLoginFailed() {
@@ -362,24 +348,6 @@ class AuthModel @Inject constructor(
         authStateLiveData.value = if (authState == STATE.Login) STATE.SignUp else STATE.Login
     }
 
-    internal fun onTermsClicked(linkClicked: Boolean) {
-        uiEventStream.value = UiEvent.ShowBottomSheet(
-            R.string.terms_tos,
-            R.string.tc,
-            R.layout.layout_bottom_sheet,
-            linkClicked
-        )
-    }
-
-    internal fun onGdprClicked(linkClicked: Boolean) {
-        uiEventStream.value = UiEvent.ShowBottomSheet(
-            R.string.gdpr_title,
-            R.string.gdpr,
-            R.layout.layout_bottom_sheet,
-            linkClicked
-        )
-    }
-
     internal fun navigateToProgress() {
 
         uiEventStream.postValue(
@@ -404,5 +372,90 @@ class AuthModel @Inject constructor(
     internal fun onBack() {
         uiEventStream.value = UiEvent.NavBack
     }
+
+    private fun firebaseLogin() {
+        firebaseAuth.currentUser?.getIdToken(true)?.addOnCompleteListener { taskResult ->
+            if (taskResult.isSuccessful) {
+                // save Firebase token
+                appPreferences.token = taskResult.result.token.toString()
+                api.login()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        registerDevice()
+                        actionStream.value = ACTION.LoginSuceess
+
+                    }, {
+                        actionStream.value = ACTION.UserFailure
+                    })
+            }
+        }
+    }
+
+    fun saveTerms(termsResponseList: ArrayList<TermsResponseItem>?) {
+        if (authStateLiveData.value == STATE.SignUp) {
+            if (termsResponseList?.isNotEmpty() == true) {
+                for (i in termsResponseList.indices) {
+                    if (!termsResponseList[i].allowed && termsResponseList[i].mandatory == true) {
+                        uiEventStream.value = UiEvent.ShowToast(R.string.terms_info)
+                        actionStream.value = ACTION.UserFailure
+                        return
+                    }
+                }
+            }
+
+            val requestList: ArrayList<TermsRequestItem> = ArrayList()
+            for (i in termsResponseList?.indices!!) {
+                val item =
+                    TermsRequestItem(
+                        termsResponseList[i].versionId,
+                        termsResponseList[i].allowed
+                    )
+                requestList.add(item)
+            }
+
+            api.saveUserTermResolutions(requestList)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    navigate()
+                }, {
+                    actionStream.value = ACTION.UserFailure
+                })
+        } else {
+            navigate()
+        }
+    }
+
+    private fun navigate() {
+        if (firebaseAuth.currentUser?.isEmailVerified == true) {
+            if (BIOMETRICS_SETUP) {
+                if (BIOMETRICS) {
+                    actionStream.value = ACTION.UserFailure
+                    actionStream.value = ACTION.AuthenticateViaBiometrics
+                } else {
+                    actionStream.value = ACTION.UserSuccess
+                    appPreferences.lastLoginMillis = System.currentTimeMillis()
+                    uiEventStream.postValue(
+                        UiEvent.OpenIntent(
+                            Intent(
+                                app,
+                                MainActivity::class.java
+                            ), finishSourceActivity = true
+                        )
+                    )
+                }
+            } else {
+                actionStream.value = ACTION.UserRetrievalSuccess
+            }
+        } else {
+            uiEventStream.postValue(
+                UiEvent.OpenIntent(
+                    Intent(app, EmailVerificationActivity::class.java),
+                    false
+                )
+            )
+        }
+    }
+
 
 }

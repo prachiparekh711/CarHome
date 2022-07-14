@@ -5,6 +5,7 @@ import android.annotation.TargetApi
 import android.app.AlertDialog
 import android.os.Build
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.view.View
 import android.webkit.WebResourceRequest
@@ -26,9 +27,11 @@ import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.bridge_tax_summary_fragment.*
-import kotlinx.android.synthetic.main.bridge_tax_summary_fragment.check
+import kotlinx.android.synthetic.main.bridge_tax_summary_fragment.firstName
+import kotlinx.android.synthetic.main.bridge_tax_summary_fragment.lastName
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.requests.Address
@@ -36,18 +39,20 @@ import ro.westaco.carhome.data.sources.remote.requests.InitVignettePurchaseReque
 import ro.westaco.carhome.data.sources.remote.requests.PassTaxInitRequest
 import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DialogUtils
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.interfaceitem.CountyListClick
 import ro.westaco.carhome.presentation.screens.data.commen.CountryCodeDialog
 import ro.westaco.carhome.presentation.screens.data.commen.CountyAdapter
 import ro.westaco.carhome.presentation.screens.data.commen.LocalityAdapter
+import ro.westaco.carhome.presentation.screens.main.MainActivity.Companion.activeService
 import ro.westaco.carhome.presentation.screens.main.MainActivity.Companion.profileItem
-import ro.westaco.carhome.presentation.screens.service.person.BillingInformationFragment
+import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.bill_user.BillingInformationFragment
 import ro.westaco.carhome.utils.CatalogUtils
-import ro.westaco.carhome.utils.Progressbar
 import ro.westaco.carhome.utils.SirutaUtil
 import ro.westaco.carhome.utils.SirutaUtil.Companion.countyList
 import ro.westaco.carhome.utils.ViewUtils
+import ro.westaco.carhome.views.Progressbar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,7 +71,6 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
         const val ARG_ENTER_VALUE = "arg_enter_value"
         const val ARG_CAR = "arg_car"
         var addNewPerson = ""
-
     }
 
     var paymentResponse: PaymentResponse? = null
@@ -75,10 +79,9 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
     var legalPersonItemsDetails: LegalPersonDetails? = null
     var naturalPersonItemsDetails: NaturalPersonDetails? = null
     var progressbar: Progressbar? = null
-    private var address: Address? = null
+
     private var vehicleDetail: VehicleDetails? = null
     var vehicle: Vehicle? = null
-    var activeService: String = ""
     var personGuid: String = ""
     var bottomSheetDialog: BillingInformationFragment? = null
     var streetTypeList: ArrayList<CatalogItem> = ArrayList()
@@ -90,12 +93,13 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
     var localityPosition: Int? = null
     var countyDialog: BottomSheetDialog? = null
     var localityDialog: BottomSheetDialog? = null
+    var onAddressEdit = false
+    var onNameEdit = false
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun initUi() {
 
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
 
         arguments?.let {
             paymentResponse = it.getSerializable(ARG_PAYMENT_RESPONSE) as? PaymentResponse?
@@ -121,15 +125,21 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
                 Glide.with(requireContext())
                     .load(glideUrl)
                     .apply(
-                        options.centerCrop()
+                        options.fitCenter()
                             .skipMemoryCache(true)
                             .priority(Priority.HIGH)
                             .format(DecodeFormat.PREFER_ARGB_8888)
                     )
+                    .error(R.drawable.carhome_icon_roviii)
                     .into(carLogo)
             }
 
-            mOwnerName.setText("${profileItem?.firstName} ${profileItem?.lastName}")
+            mOwnerName.setText(
+                "${
+                    profileItem?.firstName.toString().ifBlank { "" }
+                } ${profileItem?.lastName.toString().ifBlank { "" }}"
+            )
+            setImage(profileItem?.logoHref, "${profileItem?.firstName} ${profileItem?.lastName}")
             profileItem?.id?.toLong()?.let { it1 -> viewModel.getNaturalPerson(it1) }
             mNumberOfPassesText.setText(passTaxRequest?.price?.description)
 
@@ -137,12 +147,12 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
 
             when (activeService) {
                 "RO_PASS_TAX" -> {
-                    chargeLabel.text = requireContext().resources.getString(R.string.bridge_tax)
+                    chargeLabel.text = requireContext().resources.getString(R.string.br_charges)
                     mCategoryLabel.hint =
                         requireContext().resources.getString(R.string.bridge_tax_cat_)
                 }
                 "RO_VIGNETTE" -> {
-                    chargeLabel.text = requireContext().resources.getString(R.string.rovinieta)
+                    chargeLabel.text = requireContext().resources.getString(R.string.ro_charges)
                     mCategoryLabel.hint =
                         requireContext().resources.getString(R.string.vignette_category)
                 }
@@ -172,6 +182,8 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
         }
 
         mChange.setOnClickListener {
+            onAddressEdit = false
+            onNameEdit = false
             bottomSheetDialog = BillingInformationFragment(this, this, addNewPerson)
             bottomSheetDialog?.show(requireActivity().supportFragmentManager, null)
         }
@@ -189,37 +201,50 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
             openCountyDialog()
         }
 
-        mContinue.setOnClickListener {
+        localitySpinnerText?.setOnClickListener {
+            localityDialog?.show()
+        }
 
-            var editMode = false
+
+        mContinue.setOnClickListener {
             if (check.isChecked) {
 
-                when {
-
-                    naturalPersonItemsDetails != null -> {
-                        editMode = naturalPersonItemsDetails?.address?.streetName.isNullOrEmpty() ||
-                                naturalPersonItemsDetails?.address?.buildingNo.isNullOrEmpty() ||
-                                naturalPersonItemsDetails?.address?.countryCode.isNullOrEmpty() ||
-                                naturalPersonItemsDetails?.address?.region.isNullOrEmpty() ||
-                                naturalPersonItemsDetails?.address?.locality.isNullOrEmpty()
+                var firstNameStr: String? = null
+                var lastNameStr: String? = null
+                if (onNameEdit) {
+                    if (firstName.text.toString().isEmpty() || lastName.text.toString().isEmpty()) {
+                        DialogUtils.showErrorInfo(
+                            requireContext(),
+                            getString(R.string.name_require)
+                        )
+                        return@setOnClickListener
                     }
 
-                    legalPersonItemsDetails != null -> {
-                        editMode =
-                            legalPersonItemsDetails?.address?.streetName.isNullOrEmpty() ||
-                                    legalPersonItemsDetails?.address?.buildingNo.isNullOrEmpty() ||
-                                    legalPersonItemsDetails?.address?.countryCode.isNullOrEmpty() ||
-                                    legalPersonItemsDetails?.address?.region.isNullOrEmpty() ||
-                                    legalPersonItemsDetails?.address?.locality.isNullOrEmpty()
-
+                    firstNameStr = firstName.text.toString()
+                    lastNameStr = lastName.text.toString()
+                } else {
+                    when {
+                        naturalPersonItemsDetails != null -> {
+                            firstNameStr = naturalPersonItemsDetails?.firstName
+                            lastNameStr = naturalPersonItemsDetails?.lastName
+                        }
                     }
                 }
 
-                mAddressLayout.isVisible = editMode
-                if (editMode) {
+                var addressItem: Address? = null
+                if (onAddressEdit) {
 
+                    if (mStreetNameText.text.toString().isEmpty() || mNumberText.text.toString()
+                            .isEmpty()
+                    ) {
+                        DialogUtils.showErrorInfo(
+                            requireContext(),
+                            getString(R.string.address_require)
+                        )
+                        return@setOnClickListener
+                    }
                     val streetTypeItem =
-                        sp_quata?.selectedItemPosition?.let { it1 -> streetTypeList.get(it1).id }
+                        sp_quata?.selectedItemPosition?.let { it1 -> streetTypeList[it1].id }
                             ?.let { it2 ->
                                 CatalogUtils.findById(streetTypeList, it2)
                             }
@@ -244,91 +269,219 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
                         localityStr = localityAreaText.text.toString()
                     }
 
-                    var addressItem: Address? = null
                     addressItem = Address(
-                        zipCode = mZipCodeNameText.text.toString(),
+                        zipCode = mZipCodeNameText.text.toString().ifBlank { null },
                         streetType = streetTypeItem,
                         sirutaCode = sirutaCode,
                         locality = localityStr,
-                        streetName = mStreetNameText.text.toString(),
+                        streetName = mStreetNameText.text.toString().ifBlank { null },
                         addressDetail = null,
-                        buildingNo = mNumberText.text.toString(),
+                        buildingNo = mNumberText.text.toString().ifBlank { null },
                         countryCode = countryItem?.code,
-                        block = mBlockNameText.text.toString(),
+                        block = mBlockNameText.text.toString().ifBlank { null },
                         region = regionStr,
-                        entrance = mEntranceNameText.text.toString(),
-                        floor = mFloorNameText.text.toString(),
-                        apartment = mApartmentNameText.text.toString()
+                        entrance = mEntranceNameText.text.toString().ifBlank { null },
+                        floor = mFloorNameText.text.toString().ifBlank { null },
+                        apartment = mApartmentNameText.text.toString().ifBlank { null }
                     )
+
+                } else {
+                    when {
+                        naturalPersonItemsDetails != null -> {
+                            addressItem = naturalPersonItemsDetails?.address
+                        }
+                        legalPersonItemsDetails != null -> {
+                            addressItem = legalPersonItemsDetails?.address
+                        }
+                    }
+                }
+
+                if (onNameEdit || onAddressEdit) {
 
                     when {
                         naturalPersonItemsDetails != null -> {
-
-                            naturalPersonItemsDetails?.id?.toLong()?.let { it1 ->
-
-                                paymentResponse?.guid?.let { it2 ->
-
-                                    personGuid.let { it3 ->
-                                        viewModel.onSaveNaturalPerson(
-                                            id = it1,
-                                            firstName = naturalPersonItemsDetails?.firstName,
-                                            lastname = naturalPersonItemsDetails?.lastName,
-                                            address = addressItem,
-                                            cnp = naturalPersonItemsDetails?.cnp,
-                                            phone = naturalPersonItemsDetails?.phone,
-                                            phoneCountryCode = naturalPersonItemsDetails?.phoneCountryCode,
-                                            dateOfBirth = naturalPersonItemsDetails?.dateOfBirth,
-                                            email = naturalPersonItemsDetails?.email,
-                                            drivingLicenseCateg = naturalPersonItemsDetails?.drivingLicense?.vehicleCategories as ArrayList<Int>?,
-                                            drivLicenseId = naturalPersonItemsDetails?.drivingLicense?.licenseId,
-                                            drivLicenseIssueDate = naturalPersonItemsDetails?.drivingLicense?.issueDate,
-                                            drivLicenseExpDate = naturalPersonItemsDetails?.drivingLicense?.expirationDate,
-                                            idDoc = naturalPersonItemsDetails?.identityDocument,
-                                            guid = it2,
-                                            personGUID = it3,
-                                            check = check.isChecked
-                                        )
-                                    }
+                            paymentResponse?.guid?.let { it2 ->
+                                personGuid.let { it3 ->
+                                    viewModel.onSaveNaturalPerson(
+                                        item = naturalPersonItemsDetails,
+                                        address = addressItem,
+                                        firstName = firstNameStr,
+                                        lastName = lastNameStr,
+                                        personGUID = it3,
+                                        guid = it2
+                                    )
                                 }
-
                             }
-
                         }
 
                         legalPersonItemsDetails != null -> {
-
-                            legalPersonItemsDetails?.id?.let { it1 ->
-
-                                paymentResponse?.guid?.let { it2 ->
-                                    personGuid.let { it3 ->
-                                        viewModel.onSaveLegalPerson(
-                                            noReg = legalPersonItemsDetails?.noRegistration,
-                                            address = addressItem,
-                                            cui = legalPersonItemsDetails?.cui,
-                                            companyName = legalPersonItemsDetails?.companyName,
-                                            caen = legalPersonItemsDetails?.caen,
-                                            id = it1,
-                                            activityType = legalPersonItemsDetails?.activityType,
-                                            phoneId = legalPersonItemsDetails?.phone,
-                                            phoneCountryCodeId = legalPersonItemsDetails?.phoneCountryCode,
-                                            emailId = legalPersonItemsDetails?.email,
-                                            guid = it2,
-                                            personGUID = it3,
-                                            check = check.isChecked
-                                        )
-                                    }
+                            paymentResponse?.guid?.let { it2 ->
+                                personGuid.let { it3 ->
+                                    viewModel.onSaveLegalPerson(
+                                        item = legalPersonItemsDetails,
+                                        address = addressItem,
+                                        guid = it2,
+                                        personGUID = it3
+                                    )
                                 }
-
                             }
                         }
                     }
-                } else {
+                }
+
+                if (checkNameRequired()) {
+                    onNameEdit = true
+                }
+
+                if (checkAddressRequired()) {
+                    onAddressEdit = true
+                }
+
+                if (!onAddressEdit && !onNameEdit) {
+                    progressbar?.showPopup()
                     paymentResponse?.guid?.let { it1 -> viewModel.onNextClick(it1, personGuid) }
                 }
+            } else {
+                DialogUtils.showErrorInfo(requireContext(), getString(R.string.check_info))
+            }
+        }
+    }
+
+    private fun checkNameRequired(): Boolean {
+        var i = 0
+        when {
+            naturalPersonItemsDetails != null -> {
+                if (naturalPersonItemsDetails?.firstName.isNullOrEmpty()) {
+                    changeHint(fNameLabel, resources.getString(R.string.first_name_cc))
+                    i++
+                }
+
+                if (naturalPersonItemsDetails?.lastName.isNullOrEmpty()) {
+                    changeHint(lNameLabel, resources.getString(R.string.last_name_cc))
+                    i++
+                }
+
             }
 
+            legalPersonItemsDetails != null -> {
+                i = 0
+            }
+        }
+        mNameLayout.isVisible = i > 0
+        return i > 0
+    }
+
+    private fun checkAddressRequired(): Boolean {
+        var i = 0
+        when {
+            naturalPersonItemsDetails != null -> {
+                if (naturalPersonItemsDetails?.address?.streetName.isNullOrEmpty()) {
+                    changeHint(mStreetName, resources.getString(R.string.street_name_cc))
+                    i++
+                }
+
+                if (naturalPersonItemsDetails?.address?.buildingNo.isNullOrEmpty()) {
+                    changeHint(mNumber, resources.getString(R.string.address_number_cc))
+                    i++
+                }
+
+                if (naturalPersonItemsDetails?.address?.countryCode.isNullOrEmpty()) {
+                    changeHint(
+                        mCountry_Name,
+                        resources.getString(R.string.country_cc)
+                    )
+                    i++
+                }
+
+                if (naturalPersonItemsDetails?.address?.region.isNullOrEmpty()) {
+                    changeHint(
+                        spinnerCounty,
+                        resources.getString(R.string.address_county_cc)
+                    )
+                    changeHint(
+                        stateProvinceLabel,
+                        resources.getString(R.string.state_provinces_cc)
+                    )
+                    i++
+                }
+
+
+                if (naturalPersonItemsDetails?.address?.locality.isNullOrEmpty()) {
+                    changeHint(
+                        spinnerLocality,
+                        resources.getString(R.string.address_city_cc)
+                    )
+                    changeHint(
+                        localityAreaLabel,
+                        resources.getString(R.string.locality_area_cc)
+                    )
+                    i++
+                }
+
+            }
+
+            legalPersonItemsDetails != null -> {
+                i = 0
+                if (legalPersonItemsDetails?.address?.streetName.isNullOrEmpty()) {
+                    changeHint(mStreetName, resources.getString(R.string.street_name_cc))
+                    i++
+                }
+
+                if (legalPersonItemsDetails?.address?.buildingNo.isNullOrEmpty()) {
+                    changeHint(
+                        mNumber,
+                        resources.getString(R.string.address_number_cc)
+                    )
+                    i++
+                }
+                if (legalPersonItemsDetails?.address?.countryCode.isNullOrEmpty()) {
+                    changeHint(
+                        mCountry_Name,
+                        resources.getString(R.string.country_cc)
+                    )
+                    i++
+                }
+
+                if (legalPersonItemsDetails?.address?.region.isNullOrEmpty()) {
+                    changeHint(
+                        spinnerCounty,
+                        resources.getString(R.string.address_county_cc)
+                    )
+                    changeHint(
+                        stateProvinceLabel,
+                        resources.getString(R.string.state_provinces_cc)
+                    )
+                    i++
+                }
+
+                if (legalPersonItemsDetails?.address?.locality.isNullOrEmpty()) {
+                    changeHint(
+                        spinnerLocality,
+                        resources.getString(R.string.address_city_cc)
+                    )
+                    changeHint(
+                        localityAreaLabel,
+                        resources.getString(R.string.locality_area_cc)
+                    )
+                    i++
+                }
+
+            }
         }
 
+        mAddressLayout.isVisible = i > 0
+        return i > 0
+    }
+
+    private fun changeHint(tvLayout: TextInputLayout, str: String) {
+        tvLayout.hint = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(
+                str,
+                Html.FROM_HTML_MODE_COMPACT
+            )
+        } else {
+            Html.fromHtml(str)
+        }
     }
 
     override fun setObservers() {
@@ -357,6 +510,7 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
                         context?.let {
                             Glide.with(it)
                                 .load(imageUrl)
+                                .error(requireContext().resources.getDrawable(R.drawable.ic_profile_picture))
                                 .apply(
                                     options.fitCenter()
                                         .skipMemoryCache(true)
@@ -364,212 +518,248 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
                                         .format(DecodeFormat.PREFER_ARGB_8888)
                                 )
                                 .into(mSelectOwnerImage)
-
                         }
                     }
                 }
             }
+        }
 
-            viewModel.vehicleCategories.observe(viewLifecycleOwner) { catList ->
-                for (i in catList.indices) {
-                    if (catList[i].code == passTaxRequest?.price?.passTaxCategoryCode) {
-                        mCategoryText.setText(catList[i].description)
-                        bridgeTaxInformation.isVisible = true
-                        vignetteInformation.isVisible = false
-                    }
-                    if (catList[i].code == initTaxRequest?.price?.vignetteCategoryCode) {
-                        mVignetteText.setText(catList[i].description)
-                        bridgeTaxInformation.isVisible = false
-                        vignetteInformation.isVisible = true
-                    }
+        viewModel.vehicleCategories.observe(viewLifecycleOwner) { catList ->
+            for (i in catList.indices) {
+                if (catList[i].code == passTaxRequest?.price?.passTaxCategoryCode) {
+                    mCategoryText.setText(catList[i].description)
+                    bridgeTaxInformation.isVisible = true
+                    vignetteInformation.isVisible = false
+                }
+                if (catList[i].code == initTaxRequest?.price?.vignetteCategoryCode) {
+                    mVignetteText.setText(catList[i].description)
+                    bridgeTaxInformation.isVisible = false
+                    vignetteInformation.isVisible = true
                 }
             }
+        }
 
-            viewModel.bridgeTaxObjectives.observe(viewLifecycleOwner) { objectiveList ->
-                for (i in objectiveList.indices) {
-                    if (objectiveList[i].code == passTaxRequest?.price?.objectiveCode) {
-                        mObjectiveText.setText(objectiveList[i].description)
-                    }
+        viewModel.bridgeTaxObjectives.observe(viewLifecycleOwner) { objectiveList ->
+            for (i in objectiveList.indices) {
+                if (objectiveList[i].code == passTaxRequest?.price?.objectiveCode) {
+                    mObjectiveText.setText(objectiveList[i].description)
                 }
             }
+        }
 
-            viewModel.vignetteDurations.observe(viewLifecycleOwner) { vehicleDuration ->
-                for (i in vehicleDuration.indices) {
-                    if (initTaxRequest?.price?.vignetteDurationCode == vehicleDuration[i].code) {
-                        val textDuration: String =
-                            vehicleDuration[i].timeUnitCount.toString() + " " + vehicleDuration[i].timeUnit
-                        mVignetteDurationText.setText(textDuration)
-                    }
+        viewModel.vignetteDurations.observe(viewLifecycleOwner) { vehicleDuration ->
+            for (i in vehicleDuration.indices) {
+                if (initTaxRequest?.price?.vignetteDurationCode == vehicleDuration[i].code) {
+                    val textDuration: String =
+                        vehicleDuration[i].timeUnitCount.toString() + " " + vehicleDuration[i].timeUnit
+                    mVignetteDurationText.setText(textDuration)
                 }
             }
+        }
 
-            viewModel.initTransectionData.observe(viewLifecycleOwner) { model ->
+        viewModel.initTransectionData.observe(viewLifecycleOwner) { model ->
 
-                if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
 
-                    if (model != null) {
-                        if (model.warnings.isNullOrEmpty()) {
-                            model.html?.let {
+                if (model != null) {
+                    if (model.warnings.isNullOrEmpty()) {
+                        model.html?.let {
 
-                                showPurchaseBottomSheetDialog(
-                                    model
-                                )
-                            }
-                        } else {
-                            var warning = ""
-                            for (i in model.warnings) {
-                                warning += i + "\n"
-                            }
-
-                            showPurchaseWarningsDialog(
-                                model, warning
+                            showPurchaseBottomSheetDialog(
+                                model
                             )
-
                         }
-                    }
-                }
-
-            }
-
-            viewModel.naturalPersonDetailsLiveDataList.observe(viewLifecycleOwner) { naturalPerson ->
-                this.naturalPersonItemsDetails = naturalPerson
-
-                progressbar?.dismissPopup()
-                naturalPerson.let {
-                    if (it != null) {
-                        val addressNatural = it.address
-                        if (addressNatural != null) {
-                            mStreetNameText.setText(addressNatural.streetName)
-                            mNumberText.setText(addressNatural.buildingNo)
-                            mBlockNameText.setText(addressNatural.block)
-                            mEntranceNameText.setText(addressNatural.entrance)
-                            mFloorNameText.setText(addressNatural.floor)
-                            mApartmentNameText.setText(addressNatural.apartment)
-                            mZipCodeNameText.setText(addressNatural.zipCode)
-
-                            addressNatural.countryCode?.let { it1 -> changeCountryState(it1) }
-                            if (addressNatural.countryCode == "ROU") {
-                                countySpinnerText.setText(addressNatural.region)
-                                localitySpinnerText.setText(addressNatural.locality)
-                            } else {
-                                stateProvinceText.setText(addressNatural.region)
-                                localityAreaText.setText(addressNatural.locality)
-                            }
-                        } else {
-                            changeCountryState("ROU")
-                            countySpinnerText.setText(SirutaUtil.defaultCounty?.name)
-                            localitySpinnerText.setText(SirutaUtil.defaultCity?.name)
+                    } else {
+                        var warning = ""
+                        for (i in model.warnings) {
+                            warning += i + "\n"
                         }
-                    }
-                }
-            }
 
-            viewModel.legalPersonDetailsLiveDataList.observe(viewLifecycleOwner) { legalPerson ->
-                this.legalPersonItemsDetails = legalPerson
-
-                progressbar?.dismissPopup()
-                legalPerson.let {
-                    if (it != null) {
-                        val addressLegal = it.address
-                        if (addressLegal != null) {
-                            mStreetNameText.setText(addressLegal.streetName)
-                            mNumberText.setText(addressLegal.buildingNo)
-                            mBlockNameText.setText(addressLegal.block)
-                            mEntranceNameText.setText(addressLegal.entrance)
-                            mFloorNameText.setText(addressLegal.floor)
-                            mApartmentNameText.setText(addressLegal.apartment)
-                            mZipCodeNameText.setText(addressLegal.zipCode)
-
-                            if (addressLegal.countryCode == "ROU") {
-                                countySpinnerText.setText(addressLegal.region)
-                                localitySpinnerText.setText(addressLegal.locality)
-                            } else {
-                                stateProvinceText.setText(addressLegal.region)
-                                localityAreaText.setText(addressLegal.locality)
-                            }
-                        } else {
-                            changeCountryState("ROU")
-                            countySpinnerText.setText(SirutaUtil.defaultCounty?.name)
-                            localitySpinnerText.setText(SirutaUtil.defaultCity?.name)
-                        }
-                    }
-
-                }
-
-            }
-
-            viewModel.vehicleDetailsLivedata.observe(viewLifecycleOwner) { vehicleDetailsItems ->
-                vehicleDetail = vehicleDetailsItems
-            }
-
-            viewModel.countryData.observe(viewLifecycleOwner) { countryData ->
-
-                this.countriesList = countryData
-
-                if (vehicleDetail != null) {
-
-                    val pos = vehicleDetail?.registrationCountryCode?.let {
-                        Country.findPositionForCode(
-                            countriesList,
-                            it
+                        showPurchaseWarningsDialog(
+                            model, warning
                         )
+
                     }
-
-                    this.countryItem = pos?.let { countriesList[it] }
-
-                } else {
-
-                    this.countryItem = countriesList[Country.findPositionForCode(countriesList)]
-
                 }
-
-                val countryCodeDialog = CountryCodeDialog(requireActivity(), countriesList, this)
-
-                mCountry_NameText.setOnClickListener {
-                    countryCodeDialog.show(requireActivity().supportFragmentManager, null)
-                }
-                progressbar?.dismissPopup()
-
             }
 
+        }
 
-            viewModel.streetTypeData.observe(viewLifecycleOwner) { streetTypeData ->
+        viewModel.naturalPersonDetailsLiveDataList.observe(viewLifecycleOwner) { naturalPerson ->
+            this.naturalPersonItemsDetails = naturalPerson
 
-                if (streetTypeData != null) {
+            progressbar?.dismissPopup()
+            naturalPerson.let {
+                if (it != null) {
+                    firstName.setText(
+                        naturalPersonItemsDetails?.firstName?.ifBlank { "" })
+                    lastName.setText(
+                        naturalPersonItemsDetails?.lastName?.ifBlank { "" })
+                    val addressNatural = it.address
+                    if (addressNatural != null) {
+                        mStreetNameText.setText(addressNatural.streetName)
+                        mNumberText.setText(addressNatural.buildingNo)
+                        mBlockNameText.setText(addressNatural.block)
+                        mEntranceNameText.setText(addressNatural.entrance)
+                        mFloorNameText.setText(addressNatural.floor)
+                        mApartmentNameText.setText(addressNatural.apartment)
+                        mZipCodeNameText.setText(addressNatural.zipCode)
 
-                    this.streetTypeList = streetTypeData
-                    val arryadapter =
-                        ArrayAdapter(requireContext(), R.layout.drop_down_list, streetTypeList)
-                    sp_quata.adapter = arryadapter
+                        addressNatural.countryCode?.let { it1 -> changeCountryState(it1) }
+                        if (addressNatural.countryCode == "ROU") {
+                            countySpinnerText.setText(addressNatural.region)
+                            localitySpinnerText.setText(addressNatural.locality)
+                        } else {
+                            stateProvinceText.setText(addressNatural.region)
+                            localityAreaText.setText(addressNatural.locality)
+                        }
+                        countyPosition =
+                            addressNatural.region?.let { SirutaUtil.fetchCountyPosition(it) }
 
-                    if (naturalPersonItemsDetails != null) {
+                        localityPosition =
+                            addressNatural.locality?.let { SirutaUtil.fetchCountyPosition(it) }
+                    } else {
+                        changeCountryState("ROU")
+                        countySpinnerText.setText(SirutaUtil.defaultCounty?.name)
+                        localitySpinnerText.setText(SirutaUtil.defaultCity?.name)
 
-                        address = naturalPersonItemsDetails?.address
-                        address?.streetType?.id?.let {
-                            CatalogUtils.findPosById(
-                                streetTypeList,
+                        countyPosition = SirutaUtil.defaultCounty?.name?.let {
+                            SirutaUtil.fetchCountyPosition(
                                 it
                             )
                         }
-                            ?.let { sp_quata?.setSelection(it) }
-
+                        localityPosition = SirutaUtil.defaultCity?.name?.let {
+                            SirutaUtil.fetchCountyPosition(
+                                it
+                            )
+                        }
                     }
+                }
+            }
+        }
 
-                    if (legalPersonItemsDetails != null) {
+        viewModel.legalPersonDetailsLiveDataList.observe(viewLifecycleOwner) { legalPerson ->
+            this.legalPersonItemsDetails = legalPerson
 
-                        address = legalPersonItemsDetails?.address
-                        address?.streetType?.id?.let {
-                            CatalogUtils.findPosById(streetTypeList, it)
-                        }?.let {
-                            sp_quata?.setSelection(it)
+            progressbar?.dismissPopup()
+            legalPerson.let {
+                if (it != null) {
+                    val addressLegal = it.address
+                    if (addressLegal != null) {
+                        mStreetNameText.setText(addressLegal.streetName)
+                        mNumberText.setText(addressLegal.buildingNo)
+                        mBlockNameText.setText(addressLegal.block)
+                        mEntranceNameText.setText(addressLegal.entrance)
+                        mFloorNameText.setText(addressLegal.floor)
+                        mApartmentNameText.setText(addressLegal.apartment)
+                        mZipCodeNameText.setText(addressLegal.zipCode)
+
+                        if (addressLegal.countryCode == "ROU") {
+                            countySpinnerText.setText(addressLegal.region)
+                            localitySpinnerText.setText(addressLegal.locality)
+                        } else {
+                            stateProvinceText.setText(addressLegal.region)
+                            localityAreaText.setText(addressLegal.locality)
                         }
 
+                        countyPosition =
+                            addressLegal.region?.let { SirutaUtil.fetchCountyPosition(it) }
+
+                        localityPosition =
+                            addressLegal.locality?.let { SirutaUtil.fetchCountyPosition(it) }
+                    } else {
+                        changeCountryState("ROU")
+                        countySpinnerText.setText(SirutaUtil.defaultCounty?.name)
+                        localitySpinnerText.setText(SirutaUtil.defaultCity?.name)
+
+                        countyPosition = SirutaUtil.defaultCounty?.name?.let {
+                            SirutaUtil.fetchCountyPosition(
+                                it
+                            )
+                        }
+                        localityPosition = SirutaUtil.defaultCity?.name?.let {
+                            SirutaUtil.fetchCountyPosition(
+                                it
+                            )
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        viewModel.vehicleDetailsLivedata.observe(viewLifecycleOwner) { vehicleDetailsItems ->
+            vehicleDetail = vehicleDetailsItems
+        }
+
+        viewModel.countryData.observe(viewLifecycleOwner) { countryData ->
+
+            this.countriesList = countryData
+
+            if (vehicleDetail != null) {
+
+                val pos = vehicleDetail?.registrationCountryCode?.let {
+                    Country.findPositionForCode(
+                        countriesList,
+                        it
+                    )
+                }
+
+                this.countryItem = pos?.let { countriesList[it] }
+
+            } else {
+
+                this.countryItem = countriesList[Country.findPositionForCode(countriesList)]
+
+            }
+
+            val countryCodeDialog = CountryCodeDialog(requireActivity(), countriesList, this)
+
+            mCountry_NameText.setOnClickListener {
+                countryCodeDialog.show(requireActivity().supportFragmentManager, null)
+            }
+            progressbar?.dismissPopup()
+
+        }
+
+        viewModel.streetTypeData.observe(viewLifecycleOwner) { streetTypeData ->
+
+            if (streetTypeData != null) {
+
+                this.streetTypeList = streetTypeData
+                val arryadapter =
+                    ArrayAdapter(requireContext(), R.layout.drop_down_list, streetTypeList)
+                sp_quata.adapter = arryadapter
+                var address: Address? = null
+                if (naturalPersonItemsDetails != null) {
+
+                    address = naturalPersonItemsDetails?.address
+                    address?.streetType?.id?.let {
+                        CatalogUtils.findPosById(
+                            streetTypeList,
+                            it
+                        )
+                    }
+                        ?.let { sp_quata?.setSelection(it) }
+
+                }
+
+                if (legalPersonItemsDetails != null) {
+
+                    address = legalPersonItemsDetails?.address
+                    address?.streetType?.id?.let {
+                        CatalogUtils.findPosById(streetTypeList, it)
+                    }?.let {
+                        sp_quata?.setSelection(it)
                     }
 
                 }
 
             }
+
         }
+
     }
 
     private var purchaseDialog: AlertDialog? = null
@@ -628,14 +818,18 @@ class BridgeTaxSummaryFragment : BaseFragment<BridgeTaxSummaryViewModel>(),
                     false
                 }
             }
-
         }
 
         model.html?.replace("&#39;", "")
             ?.let { webView?.loadData(it, "text/html; charset=UTF-8", null) }
 
         bottomSheetDialog.findViewById<View>(R.id.dismiss)?.setOnClickListener {
+            progressbar?.dismissPopup()
             bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.setOnDismissListener {
+            progressbar?.dismissPopup()
         }
 
         val parentLayout =

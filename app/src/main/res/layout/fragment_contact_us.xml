@@ -7,174 +7,208 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.screens.settings.contact_us.ContactUsFragment">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/back"
-            android:layout_width="30dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topCl"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_semibold_600"
-            android:text="@string/contact_us"
-            android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/_15sdp"
-            app:layout_constraintBottom_toBottomOf="@+id/back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/back" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_account"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/back" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/cta"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title">
-
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/back"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_12sdp"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/reason"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/_11sdp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_back"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/registrationCountry" />
-
-            <Spinner
-                android:id="@+id/reasonSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/auth_text_input_background"
-                android:fontFamily="@font/inter_medium_500"
-                android:inputType="text"
-                android:padding="@dimen/_7sdp"
-                android:textColor="@color/textOnWhite"
-                android:textColorHint="@color/hintOnWhite"
-                android:textCursorDrawable="@drawable/cursor"
-                android:textSize="@dimen/_11sdp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/subreason"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/_11sdp"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/registrationCountry" />
-
-            <Spinner
-                android:id="@+id/subreasonSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/auth_text_input_background"
-                android:fontFamily="@font/inter_medium_500"
-                android:inputType="text"
-                android:padding="20dp"
-                android:textSize="@dimen/_11sdp"
+                android:fontFamily="@font/inter_semibold_600"
+                android:text="@string/contact_us"
                 android:textColor="@color/textOnWhite"
-                android:textColorHint="@color/hintOnWhite"
-                android:textCursorDrawable="@drawable/cursor"
-                android:visibility="gone" />
+                android:textSize="@dimen/_15sdp"
+                app:layout_constraintBottom_toBottomOf="@+id/back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/back" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/message"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/_11sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/registrationCountry" />
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_account"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/back" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <EditText
-                android:id="@+id/message"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="@drawable/auth_text_input_background"
-                android:fontFamily="@font/inter_medium_500"
-                android:gravity="start"
-                android:hint="@string/type_here"
-                android:inputType="text"
-                android:lines="5"
-                android:maxLines="5"
-                android:padding="@dimen/_12sdp"
-                android:textColor="@color/textOnWhite"
-                android:textColorHint="@color/hintOnWhite"
-                android:textCursorDrawable="@drawable/cursor"
-                android:textSize="@dimen/_11sdp" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/topCl"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:scrollbars="none">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:fontFamily="@font/inter_medium_500"
-                android:text="@string/attach"
-                android:textColor="@color/textOnWhiteAccentGray"
-                android:textSize="@dimen/_11sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/registrationCountry" />
-
-            <TextView
-                android:id="@+id/attachment"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="@drawable/auth_text_input_background"
-                android:fontFamily="@font/inter_medium_500"
-                android:gravity="start"
-                android:hint="@string/upload_img"
-                android:inputType="text"
-                android:drawableRight="@drawable/ic_attachment"
-                android:padding="@dimen/_7sdp"
-                android:textColor="@color/textOnWhite"
-                android:textColorHint="@color/hintOnWhite"
-                android:textCursorDrawable="@drawable/cursor"
-                android:textSize="@dimen/_11sdp" />
-        </LinearLayout>
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/reason"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:gravity="center">
+
+                    <Spinner
+                        android:id="@+id/reasonSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:spinnerMode="dropdown"
+                        android:textColor="@color/textOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_15sdp" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/_7sdp"
+                        android:src="@drawable/ic_arrow_down_id" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/subreason"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:gravity="center">
+
+                    <Spinner
+                        android:id="@+id/subreasonSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:fontFamily="@font/inter_medium_500"
+                        android:spinnerMode="dropdown"
+                        android:textColor="@color/textOnWhite"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/_15sdp" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="@dimen/_7sdp"
+                        android:src="@drawable/ic_arrow_down_id" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/message"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp" />
+
+                <EditText
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:gravity="start"
+                    android:hint="@string/type_here"
+                    android:inputType="text"
+                    android:lines="5"
+                    android:maxLines="5"
+                    android:padding="@dimen/_12sdp"
+                    android:textColor="@color/textOnWhite"
+                    android:textColorHint="@color/hintOnWhite"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textSize="@dimen/_11sdp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:text="@string/attach"
+                    android:textColor="@color/textOnWhiteAccentGray"
+                    android:textSize="@dimen/_11sdp" />
+
+                <TextView
+                    android:id="@+id/attachment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/auth_text_input_background"
+                    android:drawableRight="@drawable/ic_attachment"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/inter_medium_500"
+                    android:gravity="start"
+                    android:hint="@string/upload_img"
+                    android:maxLines="1"
+                    android:padding="@dimen/_10sdp"
+                    android:singleLine="true"
+                    android:textColor="@color/textOnWhite"
+                    android:textColorHint="@color/hintOnWhite"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textSize="@dimen/_11sdp" />
+            </LinearLayout>
+        </ScrollView>
 
         <TextView
             android:id="@+id/cta"
@@ -189,10 +223,8 @@
             android:text="@string/submit"
             android:textColor="@color/textOnSolid"
             android:textSize="@dimen/_11sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_alignParentBottom="true"
             app:layout_goneMarginBottom="@dimen/_20sdp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </layout>

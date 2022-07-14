@@ -15,7 +15,7 @@ data class NaturalPersonDetails(
     @SerializedName("employerName") val employerName: String? = null,
     @SerializedName("dateOfBirth") val dateOfBirth: String? = null,
     @SerializedName("drivingLicenseAttachment") val drivingLicenseAttachment: Attachments? = null,
-    @SerializedName("firstName") val firstName: String? = null,
+    @SerializedName("firstName") var firstName: String? = null,
     @SerializedName("occupationCorIsco08") val occupationCorIsco08: CatalogItem? = null,
     @SerializedName("phone") val phone: String? = null,
     @SerializedName("phoneCountryCode") val phoneCountryCode: String? = null,
@@ -23,7 +23,8 @@ data class NaturalPersonDetails(
     @SerializedName("id") val id: Int? = null,
     @SerializedName("email") val email: String? = null,
     @SerializedName("guid") var guid: String? = null,
-    @SerializedName("logoHref") var logoHref: String? = null
+    @SerializedName("logoHref") var logoHref: String? = null,
+    @SerializedName("profile") var profile: Boolean? = null
 
 ) : Serializable {
 

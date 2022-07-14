@@ -7,7 +7,7 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.Notification
 import ro.westaco.carhome.data.sources.remote.responses.models.NotificationPrefrences
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.utils.SwitchButton
+import ro.westaco.carhome.views.SwitchButton
 
 //C- Notification Settings
 @AndroidEntryPoint
@@ -71,7 +71,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
                 }
                 R.id.rca_email_switch_button -> {
                     type = requireContext().resources.getString(R.string.type_rca)
-                    channel = requireContext().resources.getString(R.string.email)
+                    channel = requireContext().resources.getString(R.string.noti_email)
                 }
                 R.id.rca_app_switch_button -> {
                     type = requireContext().resources.getString(R.string.type_rca)
@@ -83,7 +83,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
                 }
                 R.id.vignette_email_switch_button -> {
                     type = requireContext().resources.getString(R.string.type_vignette)
-                    channel = requireContext().resources.getString(R.string.email)
+                    channel = requireContext().resources.getString(R.string.noti_email)
                 }
                 R.id.vignette_app_switch_button -> {
                     type = requireContext().resources.getString(R.string.type_vignette)
@@ -95,7 +95,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
                 }
                 R.id.maintenance_email_switch_button -> {
                     type = requireContext().resources.getString(R.string.type_maintanance)
-                    channel = requireContext().resources.getString(R.string.email)
+                    channel = requireContext().resources.getString(R.string.noti_email)
                 }
                 R.id.maintenance_app_switch_button -> {
                     type = requireContext().resources.getString(R.string.type_maintanance)
@@ -107,7 +107,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
                 }
                 R.id.oil_email_switch_button -> {
                     type = requireContext().resources.getString(R.string.type_oil)
-                    channel = requireContext().resources.getString(R.string.email)
+                    channel = requireContext().resources.getString(R.string.noti_email)
                 }
                 R.id.oil_app_switch_button -> {
                     type = requireContext().resources.getString(R.string.type_oil)
@@ -185,7 +185,7 @@ class NotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
                         )
                         viewModel.onChange(
                             type,
-                            requireContext().resources.getString(R.string.email),
+                            requireContext().resources.getString(R.string.noti_email),
                             isChecked
                         )
                         viewModel.onChange(

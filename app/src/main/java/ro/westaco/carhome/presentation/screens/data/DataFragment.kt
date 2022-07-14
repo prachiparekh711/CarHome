@@ -55,7 +55,6 @@ class DataFragment : BaseFragment<CommenViewModel>() {
                 pager.currentItem = tab.position
                 setTitle(tab.position)
             }
-
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })

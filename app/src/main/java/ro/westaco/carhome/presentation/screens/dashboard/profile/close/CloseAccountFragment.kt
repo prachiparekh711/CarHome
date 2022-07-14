@@ -4,10 +4,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_close_account.*
 import ro.westaco.carhome.R
-import ro.westaco.carhome.prefrences.SharedPrefrences
+import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.presentation.base.BaseFragment
 
 @AndroidEntryPoint
@@ -15,6 +18,7 @@ class CloseAccountFragment : BaseFragment<CloseAccountViewModel>() {
     override fun getContentView() = R.layout.fragment_close_account
 
     override fun getStatusBarColor() = ContextCompat.getColor(requireContext(), R.color.white)
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun initUi() {
         back.setOnClickListener {
@@ -59,7 +63,14 @@ class CloseAccountFragment : BaseFragment<CloseAccountViewModel>() {
             when (it) {
 
                 is CloseAccountViewModel.ACTION.CloseAccount -> {
-                    SharedPrefrences.setBiometricsSetup(requireContext(), false)
+                    AppPreferencesDelegates.get().biometricSetUp = false
+                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.gcp_web_client_id))
+                        .requestEmail()
+                        .build()
+
+                    googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+                    googleSignInClient.signOut()
                 }
             }
         }

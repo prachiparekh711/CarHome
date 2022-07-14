@@ -3,6 +3,8 @@ package ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.rov
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.GsonBuilder
@@ -15,22 +17,24 @@ import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.InitVignettePurchaseRequest
 import ro.westaco.carhome.data.sources.remote.responses.ApiResponse
 import ro.westaco.carhome.data.sources.remote.responses.models.*
+import ro.westaco.carhome.dialog.NoServerDialog
 import ro.westaco.carhome.navigation.BundleProvider
 import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
+import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.summary.BridgeTaxSummaryFragment.Companion.ARG_CAR
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.summary.BridgeTaxSummaryFragment.Companion.ARG_ENTER_VALUE
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.summary.BridgeTaxSummaryFragment.Companion.ARG_PASS_TAX_REQUEST
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.summary.BridgeTaxSummaryFragment.Companion.ARG_PAYMENT_RESPONSE
 import ro.westaco.carhome.utils.DateTimeUtils
-import ro.westaco.carhome.utils.DeviceUtils
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.IOException
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -44,14 +48,13 @@ class BuyVignetteViewModel @Inject constructor(
 
     private var mFirebaseAnalytics = FirebaseAnalytics.getInstance(app)
     internal val dateLiveData = MutableLiveData<Long>()
-    internal val vehicleDetailsLivedata = MutableLiveData<VehicleDetails>()
+    internal val vehicleDetailsLivedata = MutableLiveData<VehicleDetails?>()
     var vignettePricesLivedata = MutableLiveData<ArrayList<VignettePrice>?>()
-    private var vignetteDurationPosLivedata = MutableLiveData<Int>()
 
     val stateStream: SingleLiveEvent<STATE> = SingleLiveEvent()
 
     enum class STATE {
-        EnterLpn, EnterVin, ErrorVin, EnterCategory
+        EnterLpn, EnterVin, ErrorVin, EnterCategory, StopProgress
     }
 
     var rovignetteCategories = MutableLiveData<ArrayList<ServiceCategory>>()
@@ -142,11 +145,11 @@ class BuyVignetteViewModel @Inject constructor(
         uiEventStream.value = UiEvent.GoToMain
     }
 
-    internal fun onDateClicked() {
+    internal fun onDateClicked(dateInMillis: Long?) {
         uiEventStream.value = UiEvent.HideKeyboard
 
         val date = dateLiveData.value
-        actionStream.value = ACTION.ShowDatePicker(date ?: Date().time)
+        actionStream.value = ACTION.ShowDatePicker(dateInMillis ?: Date().time)
     }
 
     internal fun onDatePicked(dateInMillis: Long) {
@@ -171,36 +174,34 @@ class BuyVignetteViewModel @Inject constructor(
             return
         }
 
-        if (!isChecked) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.confirm_details)
-            return
-        }
-
         if (licensePlate.length >= 11) {
             uiEventStream.value = UiEvent.ShowToast(R.string.license_error)
             return
         }
 
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
+        if (!isChecked) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.check_info)
             return
         }
 
+        val dateFormat: DateFormat = SimpleDateFormat("\'T\'HH:mm:ss.SSS\'Z\'")
+        val calendar1 = Calendar.getInstance()
+        val yStr = dateFormat.format(calendar1.time)
+
+        val xStr = DateTimeUtils.convertDate(
+            startDate,
+            SimpleDateFormat(app.getString(R.string.date_format_template)),
+            SimpleDateFormat(
+                app.getString(R.string.server_date_format_template)
+            )
+        )
         val request = InitVignettePurchaseRequest(
             vehicleGuid = vehicle?.guid,
             registrationCountryCode = registrationCountryCode,
             licensePlate = licensePlate,
             vin = vin,
             price = model,
-            startDate =
-            DateTimeUtils.convertDate(
-                startDate,
-                SimpleDateFormat(app.getString(R.string.date_format_template), Locale.US),
-                SimpleDateFormat(
-                    app.getString(R.string.server_standard_datetime_format_template),
-                    Locale.US
-                )
-            )
+            startDate = "$xStr$yStr"
         )
 
         api.initVignettePurchaseModel(request)
@@ -220,7 +221,7 @@ class BuyVignetteViewModel @Inject constructor(
                         }
 
                     } else {
-
+                        stateStream.value = STATE.StopProgress
                         val gson = GsonBuilder().create()
                         try {
                             val pojo = gson.fromJson(
@@ -263,7 +264,16 @@ class BuyVignetteViewModel @Inject constructor(
 
                             }
 
-                        } catch (e: IOException) {
+                        } catch (e: Exception) {
+                            if (e is IOException) {
+                                Handler(Looper.getMainLooper()).post {
+                                    BaseActivity.instance?.let {
+                                        NoServerDialog.showServerErrorInfo(
+                                            it
+                                        )
+                                    }
+                                }
+                            }
                         }
 
                     }
@@ -274,7 +284,7 @@ class BuyVignetteViewModel @Inject constructor(
                     call: Call<ApiResponse<PaymentResponse>>,
                     t: Throwable,
                 ) {
-
+                    stateStream.value = STATE.StopProgress
 
                 }
             })
@@ -296,7 +306,7 @@ class BuyVignetteViewModel @Inject constructor(
                 override fun onAddArgs(bundle: Bundle?): Bundle {
 
                     return Bundle().apply {
-
+                        stateStream.value = STATE.StopProgress
                         putSerializable(ARG_PAYMENT_RESPONSE, model)
                         putSerializable(ARG_PASS_TAX_REQUEST, request)
                         putString(ARG_ENTER_VALUE, type)

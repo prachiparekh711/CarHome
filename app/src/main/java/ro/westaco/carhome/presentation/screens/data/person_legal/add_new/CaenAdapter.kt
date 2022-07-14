@@ -36,9 +36,9 @@ class CaenAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val itemView: View
         var viewHolder: RecyclerView.ViewHolder? = null
-        itemView = LayoutInflater.from(context).inflate(R.layout.linear_item1, parent, false)
+        val itemView: View =
+            LayoutInflater.from(context).inflate(R.layout.linear_item1, parent, false)
         viewHolder = MyClassView(itemView)
 
         return viewHolder
@@ -95,7 +95,10 @@ class CaenAdapter(
             } else {
                 for (location in arrayList) {
                     if (location.name.lowercase()
-                            .contains(constraint.toString().lowercase())
+                            .contains(
+                                constraint.toString().lowercase()
+                            ) || location.code?.lowercase()
+                            ?.contains(constraint.toString().lowercase()) == true
                     ) {
                         filteredList1.add(location)
                     }

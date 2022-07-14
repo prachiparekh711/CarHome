@@ -22,4 +22,8 @@ data class NaturalPersonForOffer(
     @SerializedName("id") val id: Int? = null,
     @SerializedName("email") val email: String? = null,
     @SerializedName("guid") var guid: String? = null
-) : Serializable
+) : Serializable {
+    override fun toString(): String {
+        return "NaturalPersonForOffer(firstName=$firstName)"
+    }
+}

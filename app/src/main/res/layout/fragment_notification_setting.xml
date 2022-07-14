@@ -36,9 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:layout_centerVertical="true"
             android:visibility="invisible"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/_12sdp"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_account" />
     </RelativeLayout>
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,7 +81,7 @@
                             android:textColor="@color/textOnWhite"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/rca_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"
@@ -134,7 +134,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/rca_sms_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -165,7 +165,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/rca_email_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -196,7 +196,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/rca_app_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -235,7 +235,7 @@
                             android:textColor="@color/textOnWhite"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/vignette_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"
@@ -289,7 +289,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/vignette_sms_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -320,7 +320,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/vignette_email_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -351,7 +351,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/vignette_app_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -389,7 +389,7 @@
                             android:textColor="@color/textOnWhite"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/maintenance_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"
@@ -443,7 +443,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/maintenance_sms_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -474,7 +474,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/maintenance_email_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -505,7 +505,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/maintenance_app_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -542,7 +542,7 @@
                             android:textColor="@color/textOnWhite"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/oil_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"
@@ -596,7 +596,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/oil_sms_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -627,7 +627,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/oil_email_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -658,7 +658,7 @@
                                 android:textColor="@color/textOnWhite"
                                 android:textSize="@dimen/_11sdp" />
 
-                            <ro.westaco.carhome.utils.SwitchButton
+                            <ro.westaco.carhome.views.SwitchButton
                                 android:id="@+id/oil_app_switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_23sdp"
@@ -717,7 +717,7 @@
                             android:textColor="@color/textOnWhite"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/geo_app_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"

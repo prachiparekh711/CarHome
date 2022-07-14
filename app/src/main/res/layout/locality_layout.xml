@@ -67,8 +67,8 @@
                 android:includeFontPadding="false"
                 android:inputType="text"
                 android:singleLine="true"
-                android:importantForAutofill="auto"
                 android:textCursorDrawable="@color/ctaBackground"
+                android:importantForAutofill="auto"
                 android:textColor="#303065"
                 android:textColorHint="#868383"
                 android:textSize="@dimen/_12sdp" />

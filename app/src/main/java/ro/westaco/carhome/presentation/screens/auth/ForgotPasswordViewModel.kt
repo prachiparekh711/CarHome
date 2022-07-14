@@ -67,7 +67,6 @@ class ForgotPasswordViewModel @Inject constructor(
                         actionStream.value = ACTION.LoginSuccess
 
                     }, {
-                        uiEventStream.value = UiEvent.ShowToast(R.string.failed_server)
                     })
             }
         }

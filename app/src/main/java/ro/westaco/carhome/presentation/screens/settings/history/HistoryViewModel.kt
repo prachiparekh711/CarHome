@@ -11,7 +11,7 @@ import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
-import ro.westaco.carhome.presentation.screens.service.transaction_details.TransactionDetailsFragment
+import ro.westaco.carhome.presentation.screens.service.support.transaction_details.TransactionDetailsFragment
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject

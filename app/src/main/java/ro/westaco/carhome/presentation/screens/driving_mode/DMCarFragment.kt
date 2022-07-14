@@ -10,7 +10,7 @@ import ro.westaco.carhome.data.sources.remote.responses.models.Vehicle
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.data.cars.DataCarAdapter
 import ro.westaco.carhome.presentation.screens.home.HomeViewModel
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.views.Progressbar
 
 @AndroidEntryPoint
 class DMCarFragment : BaseFragment<HomeViewModel>(),
@@ -64,6 +64,10 @@ class DMCarFragment : BaseFragment<HomeViewModel>(),
     }
 
     override fun onDocClick(item: Vehicle, service: String) {
+
+    }
+
+    override fun onNotificationClick(item: Vehicle) {
 
     }
 

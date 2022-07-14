@@ -3,8 +3,8 @@
     android:id="@+id/mLinear"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/_5sdp"
     android:layout_marginVertical="@dimen/_3sdp"
+    android:layout_marginHorizontal="@dimen/_5sdp"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -42,8 +42,8 @@
             android:fontFamily="@font/inter_semibold_600"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/_7sdp"
-            android:paddingEnd="@dimen/_10sdp"
             android:singleLine="true"
+            android:paddingEnd="@dimen/_10sdp"
             android:textColor="@color/unselected"
             android:textSize="@dimen/_8sdp" />
 

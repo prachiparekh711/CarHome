@@ -48,15 +48,18 @@ import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_map.*
+import kotlinx.coroutines.*
 import ro.westaco.carhome.R
+import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.responses.models.LocationV2Item
 import ro.westaco.carhome.data.sources.remote.responses.models.OffsetItem
 import ro.westaco.carhome.data.sources.remote.responses.models.SectionModel
 import ro.westaco.carhome.databinding.DirectionPopupBinding
 import ro.westaco.carhome.databinding.LocationSelectorBinding
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseActivity
+import ro.westaco.carhome.presentation.base.ContextWrapper
 import ro.westaco.carhome.presentation.screens.main.MainActivity.Companion.activeUser
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import java.io.IOException
 import java.util.*
 
@@ -67,12 +70,13 @@ import java.util.*
 class MapActivity : BaseActivity<LocationViewModel>(),
 
     ClusterManager.OnClusterClickListener<OffsetItem>,
-    ClusterManager.OnClusterItemClickListener<OffsetItem> {
+    ClusterManager.OnClusterItemClickListener<OffsetItem>,
+    LocationListener {
     private var supportMapFragment: SupportMapFragment? = null
     private var client: FusedLocationProviderClient? = null
     private var mClusterManager: ClusterManager<OffsetItem>? = null
-    private var latitudeItem: Double? = null
-    private var longitudeItem: Double? = null
+    private var latitudeItem: Double = 0.0
+    private var longitudeItem: Double = 0.0
     var googleMap: GoogleMap? = null
     protected val REQUEST_CHECK_SETTINGS = 0x1
     protected val REQUEST_LOCATION_PERMISSION = 1
@@ -80,11 +84,26 @@ class MapActivity : BaseActivity<LocationViewModel>(),
     private lateinit var fragment: MapFiltersBottomSheetDialog
     private var mapFilters: ArrayList<SectionModel> = ArrayList()
     private lateinit var mapFilterAdapter: MapFilterAdapter
+    private lateinit var googleApiClient: GoogleApiClient
     private var allFiltersNumber: Int = 0
     private var searchViewText: String = ""
+    private var searchJob: Job? = null
 
     companion object {
         var nearbyLocationList: ArrayList<LocationV2Item> = ArrayList()
+        var PARENT = "parent"
+        var HOME_FRAGMENT = "HOME_FRAGMENT"
+        var LOCATIONS_LIST = "LOCATIONS_LIST"
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val newLocale: Locale = if (AppPreferencesDelegates.get().language == "en-US") {
+            Locale("en")
+        } else {
+            Locale("ro")
+        }
+        val context: Context = ContextWrapper.wrap(newBase, newLocale)
+        super.attachBaseContext(context)
     }
 
     override fun getContentView() = R.layout.activity_map
@@ -92,13 +111,16 @@ class MapActivity : BaseActivity<LocationViewModel>(),
     override fun setupUi() {
 
         if (activeUser != null) {
-            mText.text = resources.getString(R.string.hello_name, activeUser)
+            mText.text = resources.getString(R.string.your_location)
         }
 
         mapFilterAdapter = MapFilterAdapter(this, mapFilters)
         recycler.adapter = mapFilterAdapter
         recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
+        googleApiClient = GoogleApiClient.Builder(this)
+            .addApi(LocationServices.API).build()
+        if (!googleApiClient.isConnected)
+            googleApiClient.connect()
         placeAutoComplete()
         setFilterButton()
     }
@@ -125,7 +147,8 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                     Place.Field.ID,
                     Place.Field.NAME,
                     Place.Field.ADDRESS,
-                    Place.Field.ADDRESS_COMPONENTS
+                    Place.Field.ADDRESS_COMPONENTS,
+                    Place.Field.LAT_LNG
                 )
                 val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
                     .build(this@MapActivity)
@@ -144,16 +167,25 @@ class MapActivity : BaseActivity<LocationViewModel>(),
         if (requestCode == 100) {
             if (resultCode == Activity.RESULT_OK) {
                 val place = Autocomplete.getPlaceFromIntent(data)
-//                mLive.text = place.
+                mLive.text = place.name
+                place.latLng?.let {
+                    latitudeItem = it.latitude
+                    longitudeItem = it.longitude
+                }
+                getFilteredLocations()
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 val status = Autocomplete.getStatusFromIntent(data)
+            }
+        }
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            if (resultCode == Activity.RESULT_OK) {
+                displayLocationSettingsRequest(this)
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        displayLocationSettingsRequest(this@MapActivity)
         viewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         val window = window
@@ -171,7 +203,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                 override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
                     report?.let {
                         if (report.areAllPermissionsGranted()) {
-                            currentLocation
+                            displayLocationSettingsRequest(this@MapActivity)
                             val params = Bundle()
                             mFirebaseAnalytics.logEvent("Access_Location_AND", params)
                         }
@@ -200,7 +232,16 @@ class MapActivity : BaseActivity<LocationViewModel>(),
             false
         }
         list_button.setOnClickListener {
-            finish()
+            val parent = intent.extras?.let {
+                it[PARENT]
+            }
+            if (parent == HOME_FRAGMENT) {
+                var intent = Intent(this, LocationsListActivity::class.java)
+                startActivity(intent)
+            } else if (parent == LOCATIONS_LIST) {
+                finish()
+            }
+
         }
     }
 
@@ -245,10 +286,14 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                         latitudeItem = location.latitude
                         longitudeItem = location.longitude
 
+                        viewModel.fetchLocationFilter()
 
                     } catch (e: IOException) {
                         e.printStackTrace()
                     }
+                } else {
+                    val (locationRequest, builder) = createGoogleApiClientAndLocationRequest()
+                    createLocationRequest(locationRequest)
                 }
             }
 
@@ -261,8 +306,6 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                         googleMap.setOnMarkerClickListener(mClusterManager)
                         googleMap.uiSettings.isMapToolbarEnabled = false
 
-                        viewModel.getLocationFilter()
-                        viewModel.getLocationData(latitudeItem.toString(), longitudeItem.toString())
 
                         val renderer = ZoomBasedRenderer(
                             baseContext,
@@ -276,6 +319,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                         mClusterManager?.setOnClusterItemClickListener(this)
 
 
+
                         if (ContextCompat.checkSelfPermission(
                                 this,
                                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -283,7 +327,16 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                             == PackageManager.PERMISSION_GRANTED
                         ) {
                             googleMap.isMyLocationEnabled = true
+                            moveToCurrentLocation(
+                                LatLng(
+                                    location.latitude,
+                                    location.longitude
+                                )
+                            )
                             createCustomMyLocationButton()
+                            getLocationButton()?.let {
+                                it.callOnClick()
+                            }
                         } else {
                             ActivityCompat.requestPermissions(
                                 this,
@@ -298,10 +351,20 @@ class MapActivity : BaseActivity<LocationViewModel>(),
 
         }
 
+    private fun moveToCurrentLocation(currentLocation: LatLng) {
+        googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15f))
+        googleMap!!.animateCamera(CameraUpdateFactory.zoomIn())
+        googleMap!!.animateCamera(CameraUpdateFactory.zoomTo(15f), 2000, null)
+    }
+
+    private fun getLocationButton(): ImageView? {
+        return supportMapFragment?.requireView()?.findViewById<ImageView>(0x2)
+    }
+
     @SuppressLint("ResourceType")
     private fun createCustomMyLocationButton() {
         try {
-            val locationButton = supportMapFragment?.requireView()?.findViewById<ImageView>(0x2)
+            val locationButton = getLocationButton()
             if (locationButton != null) {
                 locationButton.visibility = View.GONE
                 myLocation.setOnClickListener {
@@ -317,7 +380,6 @@ class MapActivity : BaseActivity<LocationViewModel>(),
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun setupObservers() {
-        fragment = MapFiltersBottomSheetDialog(viewModel)
         viewModel.getSelectedItems().observe(this) { filters ->
             mapFilters = filters
             var isFiltered = false
@@ -331,7 +393,6 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                     getMapFiltersSize().toString() + "/" + allFiltersNumber
             } else {
                 mTab2.visibility = View.GONE
-
             }
             mapFilterAdapter.data = mapFilters
             mapFilterAdapter.notifyDataSetChanged()
@@ -353,22 +414,20 @@ class MapActivity : BaseActivity<LocationViewModel>(),
             it?.forEach { sectionModel ->
                 allFiltersNumber += sectionModel.filters.size
             }
+            fragment = if (intent.getSerializableExtra("SECTION_EXTRA") != null) {
+                val sectionModel = intent.getSerializableExtra("SECTION_EXTRA") as SectionModel
+                MapFiltersBottomSheetDialog(viewModel, sectionModel)
+            } else {
+                MapFiltersBottomSheetDialog(viewModel, null)
+            }
         }
 
         viewModel.nearbyLocationsFiltered.observe(this) {
-            setAdapter(it)
-        }
-
-        viewModel.nearbyLocationData.observe(this) { nearbyLocationData ->
-
-            if (nearbyLocationData != null) {
-                nearbyLocationList = nearbyLocationData
-
-
-                setAdapter(nearbyLocationList)
+            if (it != null) {
+                nearbyLocationList = it
+                setAdapter(it)
             } else {
                 showErrorInfo(applicationContext, getString(R.string.data_not_available))
-
             }
         }
     }
@@ -493,9 +552,12 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                                     resources.getColor(R.color.list_time)
                                 )
                             }
-                            latitudeItem = currentLocation.latitude
-                            longitudeItem =
-                                currentLocation.longitude
+                            currentLocation.latitude?.let { lat ->
+                                latitudeItem = lat
+                            }
+                            currentLocation.longitude?.let { lon ->
+                                longitudeItem = lon
+                            }
                             dialogBinding.mapButton.setOnClickListener { v1 ->
                                 sheetDialog.dismiss()
                                 openMapDialog()
@@ -523,22 +585,22 @@ class MapActivity : BaseActivity<LocationViewModel>(),
             }
 
             mClusterManager?.addItem(offsetItem)
-            nearbyLocationData[0].latitude?.let {
-                nearbyLocationData[0].longitude?.let { it1 ->
-                    LatLng(
-                        it,
-                        it1
-                    )
-                }
-            }?.let {
-                CameraUpdateFactory.newLatLngZoom(
-                    it, 5f
-                )
-            }?.let {
-                googleMap?.moveCamera(
-                    it
-                )
-            }
+//            nearbyLocationData[0].latitude?.let {
+//                nearbyLocationData[0].longitude?.let { it1 ->
+//                    LatLng(
+//                        it,
+//                        it1
+//                    )
+//                }
+//            }?.let {
+//                CameraUpdateFactory.newLatLngZoom(
+//                    it, 5f
+//                )
+//            }?.let {
+//                googleMap?.moveCamera(
+//                    it
+//                )
+//            }
             googleMap?.setOnMapClickListener {
                 details_card.visibility = View.GONE
                 mSearch.clearFocus()
@@ -550,13 +612,6 @@ class MapActivity : BaseActivity<LocationViewModel>(),
         mSearch.setOnQueryTextListener(object :
             SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                val arrayOfIds = getFiltersArrayList()
-                viewModel.getLocationDataFiltered(
-                    latitudeItem.toString(),
-                    longitudeItem.toString(),
-                    query,
-                    arrayOfIds
-                )
                 mSearch.clearFocus()
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
                 return true
@@ -566,6 +621,12 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                 searchViewText = newText
                 if (newText.isEmpty()) {
                     searchImageView2.visibility = View.VISIBLE
+
+                } else
+                    searchImageView2.visibility = View.INVISIBLE
+                searchJob?.cancel()
+                searchJob = CoroutineScope(Dispatchers.Main).launch {
+                    delay(500L)
                     val arrayOfIds = getFiltersArrayList()
                     viewModel.getLocationDataFiltered(
                         latitudeItem.toString(),
@@ -573,12 +634,13 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                         newText,
                         arrayOfIds
                     )
-
-                } else
-                    searchImageView2.visibility = View.INVISIBLE
+                }
                 return true
             }
         })
+        getLocationButton()?.let {
+            it.callOnClick()
+        }
     }
 
     private fun openMapDialog() {
@@ -691,7 +753,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
         DefaultClusterRenderer<OffsetItem>(context, map1, clusterManager),
         GoogleMap.OnCameraIdleListener {
 
-        private var zoom = 15f
+        private var zoom = 5f
         private var oldZoom: Float? = null
         var map: GoogleMap? = null
         var context: Context? = null
@@ -787,24 +849,13 @@ class MapActivity : BaseActivity<LocationViewModel>(),
     }
 
     private fun displayLocationSettingsRequest(context: Context) {
-        val googleApiClient = GoogleApiClient.Builder(context)
-            .addApi(LocationServices.API).build()
-        googleApiClient.connect()
-        val locationRequest = LocationRequest.create()
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 10000
-        locationRequest.fastestInterval = (10000 / 2).toLong()
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        builder.setAlwaysShow(true)
+        val (locationRequest, builder) = createGoogleApiClientAndLocationRequest()
         val result =
             LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
         result.setResultCallback { result ->
             val status = result.status
             when (status.statusCode) {
-                LocationSettingsStatusCodes.SUCCESS -> Log.i(
-                    ContentValues.TAG,
-                    "All location settings are satisfied."
-                )
+                LocationSettingsStatusCodes.SUCCESS -> currentLocation
                 LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                     Log.i(
                         ContentValues.TAG,
@@ -830,6 +881,43 @@ class MapActivity : BaseActivity<LocationViewModel>(),
 
     }
 
+    private fun createGoogleApiClientAndLocationRequest(): Pair<LocationRequest, LocationSettingsRequest.Builder> {
+        val locationRequest = LocationRequest.create()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.interval = 10000
+        locationRequest.fastestInterval = (10000 / 2).toLong()
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        builder.setAlwaysShow(true)
+        return Pair(locationRequest, builder)
+    }
+
+    protected fun createLocationRequest(locationRequest: LocationRequest) {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+            googleApiClient,
+            this
+        )
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+            googleApiClient,
+            locationRequest,
+            this
+        )
+    }
+
+    override fun onLocationChanged(p0: Location) {
+        currentLocation
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this)
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
@@ -843,7 +931,7 @@ class MapActivity : BaseActivity<LocationViewModel>(),
                 && grantResults[0]
                 == PackageManager.PERMISSION_GRANTED
             ) {
-                currentLocation
+                displayLocationSettingsRequest(this)
             }
         }
     }

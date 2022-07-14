@@ -1,5 +1,6 @@
 package ro.westaco.carhome.presentation.screens.data.person_natural.add_new
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -9,8 +10,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
@@ -18,11 +19,18 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputLayout
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add_new_natural_person.*
 import kotlinx.android.synthetic.main.fragment_add_new_natural_person.apartment
@@ -37,8 +45,9 @@ import ro.westaco.carhome.data.sources.remote.requests.Address
 import ro.westaco.carhome.data.sources.remote.requests.PhoneCodeModel
 import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DeleteDialogFragment
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.common.DeleteDialogFragment
 import ro.westaco.carhome.presentation.interfaceitem.CountyListClick
 import ro.westaco.carhome.presentation.screens.dashboard.profile.edit.IDTypeAdapter
 import ro.westaco.carhome.presentation.screens.data.commen.CodeDialog
@@ -46,18 +55,17 @@ import ro.westaco.carhome.presentation.screens.data.commen.CountryCodeDialog
 import ro.westaco.carhome.presentation.screens.data.commen.CountyAdapter
 import ro.westaco.carhome.presentation.screens.data.commen.LocalityAdapter
 import ro.westaco.carhome.presentation.screens.data.person_natural.driving_categories.DrivingCategoriesDialogFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
 import ro.westaco.carhome.utils.*
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.SirutaUtil.Companion.countyList
 import ro.westaco.carhome.utils.SirutaUtil.Companion.defaultCity
 import ro.westaco.carhome.utils.SirutaUtil.Companion.defaultCounty
 import ro.westaco.carhome.utils.SirutaUtil.Companion.fetchCounty
 import ro.westaco.carhome.utils.SirutaUtil.Companion.fetchCountyPosition
+import ro.westaco.carhome.views.Progressbar
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.text.isNotEmpty as isNotEmpty1
 
 //C- Rebuilt Section
 @AndroidEntryPoint
@@ -87,8 +95,10 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
     var localityPosition: Int? = null
     var countyDialog: BottomSheetDialog? = null
     var localityDialog: BottomSheetDialog? = null
-
     lateinit var bottomSheet: BottomSheetDialog
+
+    //    verify for validation to edit Insurance person( Owner, User, Driver)
+    var verifyNaturalItem: VerifyRcaPerson? = null
 
     override fun getContentView() = R.layout.fragment_add_new_natural_person
 
@@ -97,12 +107,9 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
     companion object {
         const val ARG_IS_EDIT = "arg_is_edit"
         const val ARG_NATURAL_PERSON = "arg_natural_person"
+        const val ARG_VERIFY_ITEM = "arg_verify_list"
     }
 
-    override fun onResume() {
-        super.onResume()
-        progressbar?.dismissPopup()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,6 +117,8 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
         arguments?.let {
             isEdit = it.getBoolean(ARG_IS_EDIT)
             naturalPersonDetails = it.getSerializable(ARG_NATURAL_PERSON) as? NaturalPersonDetails?
+            verifyNaturalItem =
+                it.getSerializable(ARG_VERIFY_ITEM) as VerifyRcaPerson?
         }
         bottomSheet = BottomSheetDialog(requireContext())
     }
@@ -117,7 +126,6 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
     override fun initUi() {
 
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
 
         countySpinnerText.setOnClickListener {
             openCountyDialog()
@@ -145,51 +153,23 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
         }
 
         personal_info_lay.setOnClickListener {
-            if (p_hidden_view.visibility == View.VISIBLE) {
-                p_hidden_view.visibility = View.GONE
-                personal_info_lay.setBackgroundColor(resources.getColor(R.color.white))
-                p_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
-            } else {
-                personal_info_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
-                p_hidden_view.visibility = View.VISIBLE
-                p_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
-            }
+            personalInfoView2.isVisible = !personalInfoView2.isVisible
+            personalInfoSection()
         }
 
         identity_lay.setOnClickListener {
-            if (identity_hidden_view.visibility == View.VISIBLE) {
-                identity_hidden_view.visibility = View.GONE
-                identity_lay.setBackgroundColor(resources.getColor(R.color.white))
-                id_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
-            } else {
-                identity_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
-                identity_hidden_view.visibility = View.VISIBLE
-                id_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
-            }
+            identity_hidden_view.isVisible = !identity_hidden_view.isVisible
+            idSection()
         }
 
         license_lay.setOnClickListener {
-            if (license_hidden_view.visibility == View.VISIBLE) {
-                license_hidden_view.visibility = View.GONE
-                license_lay.setBackgroundColor(resources.getColor(R.color.white))
-                license_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
-            } else {
-                license_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
-                license_hidden_view.visibility = View.VISIBLE
-                license_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
-            }
+            license_hidden_view.isVisible = !license_hidden_view.isVisible
+            drivingLicenseSection()
         }
 
         fullAddress_lay.setOnClickListener {
-            if (adds_hidden_view.visibility == View.VISIBLE) {
-                adds_hidden_view.visibility = View.GONE
-                fullAddress_lay.setBackgroundColor(resources.getColor(R.color.white))
-                adds_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
-            } else {
-                fullAddress_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
-                adds_hidden_view.visibility = View.VISIBLE
-                adds_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
-            }
+            address_hidden_view.isVisible = !address_hidden_view.isVisible
+            addressSection()
         }
 
         document_lay.setOnClickListener {
@@ -204,12 +184,8 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             }
         }
 
-        toolbar.setNavigationOnClickListener {
+        back.setOnClickListener {
             viewModel.onBack()
-        }
-
-        toolbar.setOnMenuItemClickListener {
-            true
         }
 
         root.setOnClickListener {
@@ -242,45 +218,52 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
 
         cta.setOnClickListener {
 
-            if (drivLicenseId.text?.isNotEmpty1() == true) {
+            if (!check.isChecked) {
+                showErrorInfo(requireContext(), getString(R.string.check_info))
+                return@setOnClickListener
+            }
 
-                when (countryItem?.code) {
-
-                    "ROU" -> {
-                        if (!RegexData.checkNumberPlateROU(drivLicenseId.text.toString())) {
-                            showErrorInfo(requireContext(), getString(R.string.license_error))
-                            return@setOnClickListener
+            if (verifyNaturalItem != null) {
+                if (!verifyRcaFieldOnComplete()) {
+                    val warningsItemList = verifyNaturalItem?.validationResult?.warnings
+                    var dialogBody = ""
+                    if (warningsItemList?.isNotEmpty() == true) {
+                        var warningStr = ""
+                        for (i in warningsItemList.indices) {
+                            val field = requireContext().resources?.getIdentifier(
+                                "${warningsItemList[i]?.field}",
+                                "string",
+                                requireContext().packageName
+                            )
+                                ?.let { requireContext().resources?.getString(it) }
+                            warningStr =
+                                "$warningStr${field} : ${warningsItemList.get(i)?.warning}\n"
                         }
+                        dialogBody = "$dialogBody\n$warningStr"
                     }
-
-                    "QAT" -> {
-                        if (!RegexData.checkNumberPlateQAT(drivLicenseId.text.toString())) {
-                            showErrorInfo(requireContext(), getString(R.string.license_error))
-                            return@setOnClickListener
-                        }
-                    }
-
-                    "UKR" -> {
-                        if (!RegexData.checkNumberPlateUKR(drivLicenseId.text.toString())) {
-                            showErrorInfo(requireContext(), getString(R.string.license_error))
-                            return@setOnClickListener
-                        }
-                    }
-
-                    "BGR" -> {
-                        if (!RegexData.checkNumberPlateBGR(drivLicenseId.text.toString())) {
-                            showErrorInfo(requireContext(), getString(R.string.license_error))
-                            return@setOnClickListener
-                        }
-                    }
+                    showErrorInfo(
+                        requireContext(),
+                        dialogBody
+                    )
+                    return@setOnClickListener
                 }
             }
 
-            if (cnp.text?.isNotEmpty1() == true) {
-                if (!RegexData.checkCNPNumberIsValid(cnpNumber = cnp.text.toString())) {
-                    showErrorInfo(requireContext(), getString(R.string.reg_invalid_cnp))
-                    return@setOnClickListener
-                }
+            if (!cnp.text.toString()
+                    .isEmpty() && !RegexData.checkCNPNumberIsValid(cnpNumber = cnp.text.toString())
+            ) {
+                showErrorInfo(requireContext(), getString(R.string.reg_invalid_cnp))
+                return@setOnClickListener
+            }
+
+            if (!email.text.toString()
+                    .isEmpty() && !RegexData.checkEmailRegex(email.text.toString())
+            ) {
+                showErrorInfo(
+                    requireContext(),
+                    getString(R.string.invalid_email)
+                )
+                return@setOnClickListener
             }
 
             val streetTypeItem =
@@ -295,7 +278,6 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             var regionStr: String? = null
             var sirutaCode: Int? = null
             var localityStr: String? = null
-
 
             if (countryItem?.code == "ROU") {
                 if (countyPosition != -1 && localityPosition != -1) {
@@ -314,26 +296,22 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             }
 
             var addressItem: Address? = null
-            if (regionStr != null && localityStr != null) {
+            if (countryItem != null && streetName?.text != null && buildingNo?.text != null) {
                 addressItem = Address(
-                    zipCode = zipCode.text.toString(),
+                    zipCode = zipCode.text.toString().ifBlank { null },
                     streetType = streetTypeItem,
                     sirutaCode = sirutaCode,
                     locality = localityStr,
-                    streetName = streetName.text.toString(),
-                    addressDetail = null,
-                    buildingNo = buildingNo.text.toString(),
+                    streetName = streetName.text.toString().ifBlank { null },
+                    buildingNo = buildingNo.text.toString().ifBlank { null },
                     countryCode = countryItem?.code,
-                    block = blockName.text.toString(),
+                    block = blockName.text.toString().ifBlank { null },
                     region = regionStr,
-                    entrance = entrance.text.toString(),
+                    entrance = entrance.text.toString().ifBlank { null },
                     floor = floor.text.toString(),
-                    apartment = apartment.text.toString()
+                    apartment = apartment.text.toString().ifBlank { null }
                 )
-            } else {
-                showErrorInfo(requireContext(), getString(R.string.address_require))
             }
-
 
             val pos = selectedPhoneCode?.let { it1 ->
                 Country.findPositionForTwoLetterCode(
@@ -346,71 +324,27 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             if (pos != null)
                 phoneCountryCode = countriesList[pos].code
 
-            if (firstName.text?.isNotEmpty1() == true) {
-
-                if (lastName.text?.isNotEmpty1() == true) {
-
-                    if (firstName.text?.length in 2..50) {
-
-                        if (lastName.text?.length in 2..50) {
-
-                            if (addressItem?.streetName?.isNotEmpty1() == true) {
-
-                                if (addressItem.buildingNo?.isNotEmpty1() == true) {
-
-                                    if (!check.isChecked) {
-                                        showErrorInfo(
-                                            requireContext(),
-                                            getString(R.string.confirm_details)
-                                        )
-                                    } else {
-                                        addressItem.let { it1 ->
-                                            viewModel.onSave(
-                                                naturalPersonDetails?.id?.toLong(),
-                                                lastName.text.toString(),
-                                                address = it1,
-                                                idTypeSpinner.text.toString(),
-                                                typeID,
-                                                series.text.toString(),
-                                                number.text.toString(),
-                                                expdate.text.toString(),
-                                                cnp.text.toString(),
-                                                dob.text.toString(),
-                                                firstName.text.toString(),
-                                                phone.text.toString(),
-                                                phoneCountryCode = phoneCountryCode,
-                                                drivLicenseId.text.toString(),
-                                                drivLicenseIssueDate.text.toString(),
-                                                drivLicenseExpDate.text.toString(),
-                                                drivingCat,
-                                                email.text.toString(),
-                                                check.isChecked,
-                                                isEdit
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    showErrorInfo(
-                                        requireContext(),
-                                        getString(R.string.number_empty)
-                                    )
-                                }
-                            } else {
-                                showErrorInfo(requireContext(), getString(R.string.street_empty))
-                            }
-                        } else {
-                            showErrorInfo(requireContext(), getString(R.string.last_name_len))
-                        }
-                    } else {
-                        showErrorInfo(requireContext(), getString(R.string.first_name_len))
-                    }
-                } else {
-                    showErrorInfo(requireContext(), getString(R.string.last_name_r))
-                }
-            } else {
-                showErrorInfo(requireContext(), getString(R.string.first_name_r))
-            }
-
+            viewModel.onSave(
+                naturalPersonDetails?.id?.toLong(),
+                lastName.text.toString().ifBlank { null },
+                address = addressItem,
+                idTypeSpinner.text.toString().ifBlank { null },
+                typeID,
+                series.text.toString().ifBlank { null },
+                number.text.toString().ifBlank { null },
+                expdate.text.toString().ifBlank { null },
+                cnp.text.toString().ifBlank { null },
+                dob.text.toString().ifBlank { null },
+                firstName.text.toString().ifBlank { null },
+                phone.text.toString().ifBlank { null },
+                phoneCountryCode = phoneCountryCode,
+                drivLicenseId.text.toString().ifBlank { null },
+                drivLicenseIssueDate.text.toString().ifBlank { null },
+                drivLicenseExpDate.text.toString().ifBlank { null },
+                drivingCat,
+                email.text.toString().ifBlank { null },
+                isEdit
+            )
         }
 
         if (isEdit && naturalPersonDetails != null) {
@@ -423,7 +357,7 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             phone.setText(naturalPersonDetails?.phone)
             email.setText(naturalPersonDetails?.email)
 
-            toolbar.title = getString(R.string.natural_pers_details)
+            titleItems.text = getString(R.string.natural_pers_details)
             cta.text = getString(R.string.save_changes)
 
             //  (identityDocument) Object
@@ -502,21 +436,92 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
         }
 
         llUploadCertificate.setOnClickListener {
-            val result = FileUtil.checkPermission(requireContext())
-            if (result) {
-                callFileManagerForLicense()
+
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                Dexter.withContext(requireActivity())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            report?.let {
+                                if (report.areAllPermissionsGranted()) {
+                                    callFileManagerForLicense()
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+                    }).withErrorListener {}
+
+                    .check()
+
             } else {
-                FileUtil.requestPermission(requireActivity())
+                if (permissionUpload()) {
+                    callFileManagerForLicense()
+                }
             }
+
         }
 
         llUploadId.setOnClickListener {
-            val result = FileUtil.checkPermission(requireContext())
-            if (result) {
-                callFileManagerForID()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                Dexter.withContext(requireActivity())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            report?.let {
+                                if (report.areAllPermissionsGranted()) {
+                                    callFileManagerForID()
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+                    }).withErrorListener {}
+
+                    .check()
+
             } else {
-                FileUtil.requestPermission(requireActivity())
+                if (permissionUpload()) {
+                    callFileManagerForID()
+                }
             }
+
         }
 
         btnDeleteCertificate.setOnClickListener {
@@ -581,7 +586,6 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
 
         lblId.setOnClickListener {
             idAttachment?.href?.let { it1 ->
-                progressbar?.showPopup()
                 val url = ApiModule.BASE_URL_RESOURCES + it1
                 val intent = Intent(requireContext(), PdfActivity::class.java)
                 intent.putExtra(PdfActivity.ARG_DATA, url)
@@ -590,6 +594,12 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             }
         }
 
+        if (verifyNaturalItem != null) {
+            verificationForRca()
+        } else {
+            changeHint(fNameLabel, resources.getString(R.string.first_name_cc))
+            changeHint(lNameLabel, resources.getString(R.string.last_name_cc))
+        }
     }
 
     private fun setPhoneCountryData() {
@@ -688,7 +698,7 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-                    if (s.toString().isNotEmpty1()) {
+                    if (s.toString().isNotEmpty()) {
                         adapter.filter.filter(s.toString())
                     } else {
                         adapter.filter.filter("")
@@ -749,7 +759,7 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().isNotEmpty1()) {
+                if (s.toString().isNotEmpty()) {
                     adapter.filter.filter(s.toString())
                 }
             }
@@ -821,7 +831,7 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
                     countryCodeDialog.show(requireActivity().supportFragmentManager, null)
                 }
 
-                if (isEdit && naturalPersonDetails != null) {
+                if (isEdit && naturalPersonDetails?.address != null) {
                     val pos = address?.countryCode?.let {
                         Country.findPositionForCode(
                             countriesList,
@@ -859,7 +869,6 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             }
 
             setPhoneCountryData()
-            progressbar?.dismissPopup()
         }
 
         viewModel.licenseCategoryData.observe(viewLifecycleOwner) { licenseCategoryData ->
@@ -1004,6 +1013,11 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)
         )
 
+        if (view == dob || view == drivLicenseIssueDate)
+            dpd?.datePicker?.maxDate = System.currentTimeMillis()
+        else {
+            dpd?.datePicker?.minDate = System.currentTimeMillis() + (1000 * 24 * 60 * 60)
+        }
         dpd?.show()
     }
 
@@ -1029,9 +1043,11 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
                 }
                 if (selectedFile != null) {
                     lblCertificate.visibility = View.VISIBLE
+                    lblCertificate.text = requireContext().resources.getString(R.string.uploading_)
                     btnDeleteCertificate.visibility = View.VISIBLE
                     val dlFile = File(selectedFile)
                     naturalPersonDetails?.id?.let {
+                        progressbar?.showPopup()
                         viewModel.onAttach(
                             it,
                             "DRIVING_LICENSE",
@@ -1055,9 +1071,11 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
                 }
                 if (selectedFile != null) {
                     lblId.visibility = View.VISIBLE
+                    lblId.text = requireContext().resources.getString(R.string.uploading_)
                     btnDeleteId.visibility = View.VISIBLE
                     val idFile = File(selectedFile)
                     naturalPersonDetails?.id?.let {
+                        progressbar?.showPopup()
                         viewModel.onAttach(
                             it,
                             "IDENTITY_DOCUMENT",
@@ -1068,45 +1086,6 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
             }
         }
 
-        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
-            callFileManagerForLicense()
-        }
-        if (requestCode == 1002 && resultCode == Activity.RESULT_OK) {
-            callFileManagerForID()
-        }
-        if (requestCode == 2296) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callFileManagerForID()
-                }
-            }
-        }
-        if (requestCode == 2297) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callFileManagerForLicense()
-                }
-            }
-        }
-
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            200 -> if (grantResults.size > 0) {
-                val readExternalStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                val writeExternalStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED
-                if (readExternalStorage && writeExternalStorage) {
-
-                } else {
-                    showErrorInfo(requireContext(), getString(R.string.allow_permission))
-                }
-            }
-        }
     }
 
     private fun onDeleteSuccess(attachType: String) {
@@ -1122,6 +1101,7 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
     }
 
     private fun onUploadSuccess(attachType: String, attachments: Attachments) {
+        progressbar?.dismissPopup()
         if (attachType == "DRIVING_LICENSE") {
             lblCertificate.visibility = View.VISIBLE
             btnDeleteCertificate.visibility = View.VISIBLE
@@ -1165,6 +1145,409 @@ class AddNewNaturalPersonFragment : BaseFragment<AddNewNaturalPersonViewModel>()
                     countries.key?.lowercase(Locale.getDefault()).toString()
                 ).toString()
             )
+    }
+
+
+    private fun permissionUpload(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+
+    }
+
+    private fun verificationForRca() {
+        val warningsItemList = verifyNaturalItem?.validationResult?.warnings
+        if (warningsItemList?.size != 0) {
+            if (!warningsItemList.isNullOrEmpty()) {
+                for (i in warningsItemList.indices) {
+                    when (warningsItemList[i]?.field) {
+                        "firstName" ->
+                            changeHint(fNameLabel, resources.getString(R.string.first_name_cc))
+                        "lastName" ->
+                            changeHint(lNameLabel, resources.getString(R.string.last_name_cc))
+                        "cnp" -> {
+                            changeHint(cnpLabel, resources.getString(R.string.profile_cnp_cc))
+                            identity_hidden_view.isVisible = true
+                        }
+                        "dateOfBirth" -> {
+                            changeHint(
+                                dobLabel,
+                                resources.getString(R.string.natural_date_of_birth_cc)
+                            )
+                            personalInfoView2.isVisible = true
+                        }
+                        "identityDocument.series" -> {
+                            changeHint(seriesLabel, resources.getString(R.string.profile_series_cc))
+                            identity_hidden_view.isVisible = true
+                        }
+                        "identityDocument.number" -> {
+                            changeHint(
+                                idNumberLabel,
+                                resources.getString(R.string.profile_number_cc)
+                            )
+                            identity_hidden_view.isVisible = true
+                        }
+                        "identityDocument.expirationDate" -> {
+                            changeHint(
+                                idExpDateLabel,
+                                resources.getString(R.string.profile_exp_date_cc)
+                            )
+                            identity_hidden_view.isVisible = true
+                        }
+                        "identityDocument.documentType", "identityDocument.documentType.id", "identityDocument.documentType.name" -> {
+                            changeHint(idTypeLabel, resources.getString(R.string.id_type_cc))
+                            identity_hidden_view.isVisible = true
+                        }
+                        "drivingLicense.licenseId" -> {
+                            changeHint(licenseNoLabel, resources.getString(R.string.license_no_cc))
+                            license_hidden_view.isVisible = true
+                        }
+                        "drivingLicense.issueDate" -> {
+                            changeHint(
+                                dlIssueDateLabel,
+                                resources.getString(R.string.d_license_issue_cc)
+                            )
+                            license_hidden_view.isVisible = true
+                        }
+                        "drivingLicense.expirationDate" -> {
+                            changeHint(
+                                dlExpDateLabel,
+                                resources.getString(R.string.d_license_exp_cc)
+                            )
+                            license_hidden_view.isVisible = true
+                        }
+                        "drivingLicense.vehicleCategories" -> {
+                            changeHint(
+                                drivingCatLabel,
+                                resources.getString(R.string.d_license_cat_cc)
+                            )
+                            license_hidden_view.isVisible = true
+                        }
+                        "phone" -> {
+                            changeHint(phoneLabel, resources.getString(R.string.phone_num_cc))
+                            personalInfoView2.isVisible = true
+                        }
+                        "phoneCountryCode" -> {
+                            phoneCountryCodeLabel.text =
+                                requireContext().resources.getString(R.string.country_cc)
+                            personalInfoView2.isVisible = true
+                        }
+                        "email" -> {
+                            changeHint(emailLabel, resources.getString(R.string.email_hint_cc))
+                            personalInfoView2.isVisible = true
+                        }
+                        "address.countryCode" -> {
+//                            countryCodeLabel.text =
+//                                requireContext().resources.getString(R.string.country_cc)
+                            changeTextViewHint(
+                                countryCodeLabel,
+                                resources.getString(R.string.country_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.region" -> {
+                            changeHint(
+                                spinnerCounty,
+                                resources.getString(R.string.address_county_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.locality", "address.sirutaCode" -> {
+                            changeHint(
+                                spinnerLocality,
+                                resources.getString(R.string.address_city_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.streetType", "address.streetType.id", "address.streetType.name" -> {
+//                            streetTypeLabel.text =
+//                                requireContext().resources.getString(R.string.street_type_cc)
+                            changeTextViewHint(
+                                streetTypeLabel,
+                                resources.getString(R.string.street_type_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.streetName" -> {
+                            changeHint(
+                                streetNameLabel,
+                                resources.getString(R.string.address_street_name_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.block" -> {
+                            changeHint(blockLabel, resources.getString(R.string.block_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.entrance" -> {
+                            changeHint(entranceLabel, resources.getString(R.string.entrance_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.floor" -> {
+                            changeHint(floorLabel, resources.getString(R.string.floor_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.apartment" -> {
+                            changeHint(apartmentLabel, resources.getString(R.string.apartment_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.zipCode" -> {
+                            changeHint(zipCodeLabel, resources.getString(R.string.zip_code_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.buildingNo" -> {
+                            changeHint(
+                                buildingNoLabel,
+                                resources.getString(R.string.profile_number_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                    }
+                }
+                personalInfoSection()
+                idSection()
+                drivingLicenseSection()
+                addressSection()
+            }
+        }
+    }
+
+    private fun changeHint(tvLayout: TextInputLayout, str: String) {
+        tvLayout.hint = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(
+                str,
+                Html.FROM_HTML_MODE_COMPACT
+            )
+        } else {
+            Html.fromHtml(str)
+        }
+    }
+
+    private fun changeTextViewHint(tvLayout: TextView, str: String) {
+        tvLayout.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(
+                str,
+                Html.FROM_HTML_MODE_COMPACT
+            )
+        } else {
+            Html.fromHtml(str)
+        }
+    }
+
+    private fun personalInfoSection() {
+        if (personalInfoView2.visibility == View.VISIBLE) {
+            personal_info_lay.setBackgroundColor(resources.getColor(R.color.white))
+            p_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
+        } else {
+            personal_info_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
+            p_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
+        }
+    }
+
+    private fun idSection() {
+        if (identity_hidden_view.visibility == View.VISIBLE) {
+            identity_lay.setBackgroundColor(resources.getColor(R.color.white))
+            id_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
+        } else {
+            identity_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
+            id_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
+        }
+    }
+
+    private fun drivingLicenseSection() {
+        if (license_hidden_view.visibility == View.VISIBLE) {
+            license_lay.setBackgroundColor(resources.getColor(R.color.white))
+            license_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
+        } else {
+            license_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
+            license_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
+        }
+    }
+
+    private fun addressSection() {
+        if (address_hidden_view.visibility == View.VISIBLE) {
+            fullAddress_lay.setBackgroundColor(resources.getColor(R.color.white))
+            adds_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
+        } else {
+            fullAddress_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
+            adds_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
+        }
+    }
+
+    private fun verifyRcaFieldOnComplete(): Boolean {
+        var fieldComplete = true
+        val warningsItemList = verifyNaturalItem?.validationResult?.warnings
+        if (warningsItemList?.size != 0) {
+            if (!warningsItemList.isNullOrEmpty()) {
+                for (i in warningsItemList.indices) {
+                    when (warningsItemList[i]?.field) {
+                        "firstName" -> {
+                            if (firstName.text.isNullOrEmpty())
+                                fieldComplete = false
+                        }
+                        "lastName" -> {
+                            if (lastName.text.isNullOrEmpty())
+                                fieldComplete = false
+                        }
+                        "cnp" -> {
+                            if (cnp.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                identity_hidden_view.isVisible = true
+                            }
+                        }
+                        "dateOfBirth" -> {
+                            if (dob.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                personalInfoView2.isVisible = true
+                            }
+                        }
+                        "identityDocument.series" -> {
+                            if (series.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                identity_hidden_view.isVisible = true
+                            }
+                        }
+                        "identityDocument.number" -> {
+                            if (number.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                identity_hidden_view.isVisible = true
+                            }
+                        }
+                        "identityDocument.expirationDate" -> {
+                            if (expdate.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                identity_hidden_view.isVisible = true
+                            }
+                        }
+                        "identityDocument.documentType", "identityDocument.documentType.id", "identityDocument.documentType.name" -> {
+                            if (idTypeSpinner.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                identity_hidden_view.isVisible = true
+                            }
+                        }
+                        "drivingLicense.licenseId" -> {
+                            if (drivLicenseId.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                license_hidden_view.isVisible = true
+                            }
+                        }
+                        "drivingLicense.issueDate" -> {
+                            if (drivLicenseIssueDate.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                license_hidden_view.isVisible = true
+                            }
+                        }
+                        "drivingLicense.expirationDate" -> {
+                            if (drivLicenseExpDate.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                license_hidden_view.isVisible = true
+                            }
+                        }
+                        "drivingLicense.vehicleCategories" -> {
+                            if (drivLicenseCateg.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                license_hidden_view.isVisible = true
+                            }
+                        }
+                        "phone" -> {
+                            if (phone.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                personalInfoView2.isVisible = true
+                            }
+                        }
+                        "phoneCountryCode" -> {
+                            if (phoneCode.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                personalInfoView2.isVisible = true
+                            }
+                        }
+                        "email" -> {
+                            if (email.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                personalInfoView2.isVisible = true
+                            }
+                        }
+                        "address.countryCode" -> {
+                            if (countryNameTV.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.region" -> {
+                            if (countySpinnerText.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.locality", "address.sirutaCode" -> {
+                            if (localitySpinnerText.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.streetType", "address.streetType.id", "address.streetType.name" -> {
+                            if (sp_quata.selectedItemPosition < 0) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.streetName" -> {
+                            if (streetName.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.block" -> {
+                            if (blockName.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.entrance" -> {
+                            if (entrance.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.floor" -> {
+                            if (floor.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.apartment" -> {
+                            if (apartment.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.zipCode" -> {
+                            if (zipCode.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.buildingNo" -> {
+                            if (buildingNo.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                    }
+                }
+                personalInfoSection()
+                idSection()
+                drivingLicenseSection()
+                addressSection()
+            }
+        }
+        return fieldComplete
     }
 
 }

@@ -12,8 +12,8 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_forgot_password.*
 import ro.westaco.carhome.R
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 
 @AndroidEntryPoint
 class ForgotPasswordFragment : BaseFragment<ForgotPasswordViewModel>() {

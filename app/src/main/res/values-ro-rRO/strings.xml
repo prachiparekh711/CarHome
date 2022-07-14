@@ -1,28 +1,28 @@
 <resources>
     <string name="app_name">Masina Acasă</string>
     <string name="car_home">Masina Acasă</string>
+
+    <string name="phone_rooted">Telefonul este rootat, aplicația se va închide!</string>f
+
     <string name="int_not_connect">Nu aveți o conexiune activă la internet</string>
     <string name="general_server_error">Eroare de server</string>
     <string name="server_saving_error">Eroare! Verificați informațiile pe care le-ați trimis și încercați din nou</string>
-    <string name="save_success_msg">Salvat</string>
-    <string name="edit_success_msg">Editat</string>
     <string name="dlUpload_success">Permisul de conducere a fost încărcat cu succes!</string>
     <string name="idUpload_success">Documentul de identitate a fost încărcat cu succes!</string>
     <string name="logo_success_msg">Logo-ul a fost schimbat cu succes!</string>
-    <string name="delete_success_msg">Șters</string>
     <string name="date_hint">ZZ/LL/AAAA</string>
-    <string name="days_template">%d zile</string>
-    <string name="hours_template">%d ore</string>
-    <string name="minutes_template">%d min</string>
+    <string name="days_template">%d Zile</string>
+    <string name="hours_template">%d Ore</string>
+    <string name="minutes_template">%d Min</string>
     <string name="duetime_in_future">%s Au rămas</string>
-    <string name="duetime_in_past">%s acum</string>
+    <string name="duetime_in_past">%s trecut</string>
     <string name="progress">%d\%% Terminat</string>
 
 
     <string name="onb_skip">Ocolire</string>
-    <string name="onb_title1">Obțineți actualizări \n în timp real despre toate mașinile dvs. \n</string>
-    <string name="onb_title2">Gestionați-vă \n asigurările și taxele \n Într-un singur loc</string>
-    <string name="onb_title3">Nu ratați nimic \n Cu mementourile noastre inteligente \n</string>
+    <string name="onb_title1">Obțineți în timp real \n Actualizări pentru toate \n dvs Mașini</string>
+    <string name="onb_title2">Gestionați-vă asigurările \n și impozitele într-un \n singur loc</string>
+    <string name="onb_title3">Nu ratați nimic cu \n Mementourile noastre \n inteligente</string>
     <string name="onb_get_started">Incepe</string>
 
 
@@ -35,8 +35,6 @@
     <string name="sign_up">Inscrie-te</string>
     <string name="login_with">Sau conectați-vă cu</string>
     <string name="sign_up_with">Sau înscrieți-vă cu</string>
-    <string name="terms">Atingând „Autentificare” și folosind aplicația Car Home, sunteți de acord cu Termenii și condițiile și GDPR</string>
-    <string name="sign_up_terms">Atingând „Înscrieți-vă” și utilizând aplicația Car Home, sunteți de acord cu Termenii și condițiile și GDPR</string>
     <string name="terms_services">Termeni și condiții</string>
     <string name="switch_to_signup">Nu aveți un cont? Inscrie-te</string>
     <string name="switch_to_login">ai deja un cont? Autentificare</string>
@@ -135,6 +133,7 @@
     <string name="retry">Biometrică necesită deschiderea acestei aplicații.</string>
     <string name="try_again1">Încearcă din nou</string>
     <string name="close1">Închideți aplicația</string>
+    <string name="close">Închideți</string>
 
 
     <string name="first_name_c">Nume<font color='#FB4079'>*</font></string>
@@ -145,10 +144,10 @@
     <string name="address">Abordare</string>
     <string name="address_number">Număr<font color='#FB4079'>*</font></string>
     <string name="address_street_name">Numele strazii</string>
-    <string name="address_block">bloc</string>
-    <string name="address_entrance">Intrare</string>
-    <string name="address_floor">Podea</string>
-    <string name="address_apartment">Apartament</string>
+    <string name="block">bloc</string>
+    <string name="entrance">Intrare</string>
+    <string name="floor">Podea</string>
+    <string name="apartment">Apartament</string>
     <string name="address_city_c">Oraș<font color='#FB4079'>*</font></string>
     <string name="address_city">Oraș</string>
     <string name="address_county_c">jud<font color='#FB4079'>*</font></string>
@@ -207,16 +206,25 @@
     <string name="vin_number">Număr VIN</string>
     <string name="license_plate">Înmatriculare</string>
     <string name="manufacturer">Producător</string>
+    <string name="manufacturer_">Producător<font color='#FB4079'>*</font></string>
     <string name="model">Model</string>
+    <string name="model_">Model<font color='#FB4079'>*</font></string>
     <string name="vehicle_category">Categoria vehiculului</string>
+    <string name="vehicle_category_">Categoria vehiculului<font color='#FB4079'>*</font></string>
     <string name="engine_size">Dimensiunea motorului (cm3)</string>
+    <string name="engine_size_">Dimensiunea motorului (cm3)<font color='#FB4079'>*</font></string>
     <string name="power">Putere (kW)</string>
+    <string name="power_">Putere (kW)<font color='#FB4079'>*</font></string>
     <string name="fuel_type">Tipul combustibilului</string>
+    <string name="fuel_type_">Tipul combustibilului<font color='#FB4079'>*</font></string>
     <string name="no_seats">Nr de locuri</string>
+    <string name="no_seats_">Nr de locuri<font color='#FB4079'>*</font></string>
     <string name="max_allow_mass">Max. Masa admisibila</string>
+    <string name="max_allow_mass_">Max. Masa admisibila<font color='#FB4079'>*</font></string>
     <string name="year">An</string>
+    <string name="year_">An<font color='#FB4079'>*</font></string>
     <string name="civ">CIV</string>
-
+    <string name="civ_">CIV<font color='#FB4079'>*</font></string>
     <string name="car_delete_title">Hei, chiar vrei\nsă ștergi această mașină?</string>
     <string name="go_back">Întoarce-te</string>
     <string name="yes_delete">Da, șterge</string>
@@ -225,6 +233,7 @@
     <string name="add_new_car">Adăugați mașină nouă</string>
     <string name="enter_vin">Introduceți VIN și\nNumărul de înregistrare</string>
     <string name="reg_country">Țara de înregistrare</string>
+    <string name="reg_country_">Țara de înregistrare<font color='#FB4079'>*</font></string>
     <string name="reg_number">Număr de înregistrare</string>
     <string name="fill_all_fields">Vă rugăm să completați toate câmpurile pentru a continua</string>
     <string name="error_vin">vin trebuie să aibă 17 caractere</string>
@@ -254,18 +263,24 @@
     <string name="add_car_manually">Adăugați manual detaliile mașinii</string>
     <string name="car_try_again">Încercați din nou cu un VIN diferit</string>
 
+    <string name="add_car">Adăugați mașină</string>
     <string name="add_car_11">Adăugați mașină (1/2)</string>
     <string name="add_car_12">Adăugați mașină (2/2)</string>
     <string name="vehicle_subcategory">Subcategoria vehiculului</string>
+    <string name="vehicle_subcategory_">Subcategoria vehiculului<font color='#FB4079'>*</font></string>
     <string name="purpose">Scop</string>
+    <string name="purpose_">Scop<font color='#FB4079'>*</font></string>
     <string name="others">Alții</string>
     <string name="car_vin">VIN nr.</string>
+    <string name="car_vin_">VIN nr.<font color='#FB4079'>*</font></string>
     <string name="leasing">Leasing</string>
+    <string name="leasing_">Leasing<font color='#FB4079'>*</font></string>
     <string name="select_leasing">Selectați compania de leasing</string>
     <string name="leasing_ques">Mașina are în prezent un contract de leasing \nvalabil?</string>
     <string name="confirmation">Confirm că informațiile furnizate aici sunt corecte</string>
     <string name="save">salva</string>
     <string name="next">Următorul</string>
+    <string name="star"><font color='#FB4079'>*</font></string>
     <string name="confirm_details">Vă rugăm să confirmați că informațiile furnizate sunt corecte</string>
     <string name="status_expires">Expiră</string>
     <string name="new_car_details_cta_next">Următorul</string>
@@ -319,7 +334,7 @@
     <string name="maps">Hărți</string>
     <string name="bottombar_settings">Setări</string>
     <string name="insurance">Asigurare</string>
-    <string name="bridge_tax">Taxa de punte</string>
+    <string name="bridge_tax">Taxă de pod</string>
     <string name="rovinieta">Rovinietă</string>
     <string name="user_details">Datele mele</string>
     <string name="user_purchases">Istoric achiziții</string>
@@ -341,6 +356,22 @@
     <string name="new_reminder_location">Locație</string>
     <string name="err_no_title">Introduceți un titlu pentru a continua</string>
     <string name="err_no_duedatetime">Vă rugăm să introduceți data și ora limită pentru a continua</string>
+    <string name="err_notification_after_duedate">Data notificării trebuie să fie înaintea datei limită. Vă rugăm selectați o perioadă mai scurtă pentru a continua</string>
+    <string name="err_no_repeat">Vă rugăm să selectați opțiunea de repetare pentru a continua</string>
+    <string name="reg_number_cc"><![CDATA[Număr de înregistrare</><font color="#FB4079">*</font>]]></string>
+    <string name="top_services">Servicii</string>
+    <string name="reminder_delete_title">Hei, chiar vrei\nsă ștergi acest memento?</string>
+    <string name="reminder_delete_subtitle">Toate datele asociate acestui reminder vor fi sterse permanent</string>
+    <string name="never">Nu</string>
+    <string name="hourly">Orar</string>
+    <string name="daily">Zilnic</string>
+    <string name="weekdays">Zilele saptamanii</string>
+    <string name="weekly">Săptămânal</string>
+    <string name="fortnightly">Quincenale</string>
+    <string name="monthly">Lunar</string>
+    <string name="months3">La fiecare 3 luni</string>
+    <string name="months6">La fiecare 6 luni</string>
+    <string name="yearly">Anual</string>
 
     <string name="edit_reminder">Editați mementourile</string>
 
@@ -355,6 +386,14 @@
     <string name="car_info">Informații despre mașină</string>
     <string name="country_reg">Țara de înregistrare</string>
     <string name="license_hint">Introduceți numărul plăcuței de înmatriculare</string>
+    <string name="carmodel_cannot_be_empty">CarModel nu poate fi gol</string>
+
+    <string name="invalid_year">Anul nu poate fi gol</string>
+    <string name="invalid_mass">Masa nu se poate goli</string>
+    <string name="invalid_engine_size">Dimensiunea motorului nu se poate goli</string>
+    <string name="invalid_engine_power">Puterea motorului nu se poate goli</string>
+    <string name="invalid_number_of_seats">Numărul de locuri nu poate fi gol</string>
+
     <string name="buy_vignette_cta">Cumpără</string>
     <string name="purchase">Cumpărare</string>
 
@@ -395,7 +434,7 @@
     <string name="rem_of_oil">Memento de schimbare a uleiului</string>
     <string name="rem_of_geo">Notificări geo-push</string>
     <string name="sms">SMS</string>
-    <string name="email">E-MAIL</string>
+    <string name="noti_email">E-MAIL</string>
     <string name="app">APP</string>
     <string name="type_rca">EXPIRY_RCA</string>
     <string name="type_vignette">EXPIRY_VIGNETTE</string>
@@ -407,7 +446,7 @@
     <string name="omv">OMV</string>
     <string name="open">Deschis</string>
     <string name="rca">RCA</string>
-    <string name="add_more">Adăugați mai multe mementouri</string>
+    <string name="add_more">+ Adăugați mai multe mementouri</string>
     <string name="document">Document</string>
     <string name="view">Vedere</string>
     <string name="map">Hartă</string>
@@ -420,7 +459,6 @@
     <string name="verify_email">verifica-ți email-ul</string>
     <string name="confirm_here">Confirmați aici</string>
     <string name="already_verified">Deja verificat?</string>
-    <string name="deep_url">https://carhome.page.link/register</string>
 
     <string name="setup_touch">Doriți să configurați \nTouch ID pentru o conectare rapidă?</string>
     <string name="setup_touchID">Configurați Touch ID</string>
@@ -453,11 +491,12 @@
 
     <string name="hello_name">Bună, %s</string>
     <string name="offers">Oferte interesante</string>
-    <string name="your_cars">Mașinile voastre</string>
+    <string name="your_cars">Mașinile dvs/ tale</string>
     <string name="my_cars">Mașinile mele</string>
-    <string name="view_all">A vedea tot</string>
+    <string name="view_all">Vezi toate</string>
     <string name="upload_doc">Încărcați documentul</string>
     <string name="create_reminder">Creați memento</string>
+    <string name="save_all_details">Salvați toate detaliile</string>
     <string name="make_purchase">Faceți o achiziție</string>
     <string name="car_no_str">Numărul mașinii - %s</string>
     <string name="car_no">Numărul mașinii -</string>
@@ -537,6 +576,9 @@
 
     <string name="mark_all_read">Marcheaza totul ca fiind citit</string>
     <string name="no_notification">Nu aveți nicio notificare astăzi</string>
+    <string name="all_notifications">Toate</string>
+    <string name="read_notifications">Citite</string>
+    <string name="unread_notifications">Necitite</string>
 
     <string name="setting_title">Cum ați dori să fiți notificat?</string>
     <string name="setting_subtitle">Puteți alege care ar fi preferința dvs. pentru a primi notificări.</string>
@@ -564,17 +606,21 @@
 
     <string name="objective">Obiectiv</string>
     <string name="fetesti">Fetesti</string>
-    <string name="no_of_pass">Numărul de treceri<font color='#FB4079'>*</font></string>
+    <string name="no_of_pass">Numar de treceri<font color='#FB4079'>*</font></string>
+    <string name="no_of_pass_">Numar de treceri</string>
 
     <string name="add_legal_person">Adăugați o persoană juridică</string>
     <string name="reg_of_company">Înregistrarea companiei</string>
+    <string name="reg_of_company_cc"><![CDATA[Înregistrarea companiei</><font color="#FB4079">*</font>]]></string>
     <string name="nace_code_c">Codul NACE<font color='#FB4079'>*</font></string>
+    <string name="nace_code_cc"><![CDATA[Codul NACE</><font color="#FB4079">*</font>]]></string>
     <string name="nace_code">Codul NACE</string>
     <string name="search_nace_code">Căutați codul NACE..</string>
     <string name="company_name_c">Numele Companiei<font color='#FB4079'>*</font></string>
+    <string name="company_name_cc"><![CDATA[Numele companiei</><font color="#FB4079">*</font>]]></string>
     <string name="cui_c">CUI<font color='#FB4079'>*</font></string>
-
-
+    <string name="cui_cc"><![CDATA[CUI</><font color="#FB4079">*</font>]]></string>
+    <string name="act_type_cc"><![CDATA[Tip de activitate</><font color="#FB4079">*</font>]]></string>
     <string name="first_name_len">Lungimea prenumelui este cuprinsă între 2 și 50</string>
     <string name="last_name_len">Lungimea numelui de familie între 2 și 50</string>
 
@@ -583,6 +629,7 @@
 
 
     <string name="company_info">Informatiile Companiei</string>
+    <string name="year_info">Selectați anul de fabricație</string>
 
     <string name="delete_name">Ștergeți %s?</string>
     <string name="delete_hint_n">Toate detaliile asociate acestei persoane \n vor fi șterse</string>
@@ -627,7 +674,7 @@
     <string name="invite_your_friends_and_family">invită-ți prietenii și familia</string>
     <string name="need_help_please_reach_out_to_us">Aveți nevoie de ajutor? Vă rugăm să ne contactați</string>
 
-    <string name="no_info">Nicio informație adăugată</string>
+    <string name="no_info">Nicio informație</string>
 
     <string name="purchases_expin_template">Expiră în %s</string>
 
@@ -744,6 +791,7 @@
     <string name="state_provinces_">Stat/Provințe</string>
     <string name="locality_area_">Localitatea/Zona</string>
     <string name="bridge_tax_active_dialog">Mașina selectată are Active Bridge Tax. Mai vrei să cumperi?</string>
+    <string name="insurance_active_dialog">Mașina selectată are Active RCA. Mai vrei să cumperi?</string>
     <string name="car_model">Model de mașină</string>
     <string name="car_plate_">Numar de inmatriculare</string>
     <string name="add_new_">Adăuga nou..</string>
@@ -783,11 +831,95 @@
     <string name="upload_profile_picture">Încărcați poza de profil</string>
     <string name="delete_profile_pictures">Șterge poza de profil</string>
     <string name="choose_img_from">Alegeți Imagine din</string>
-    <string name="purchase_history">Istoricul cumparaturilor</string>
+    <string name="purchase_history">Istoric</string>
     <string name="versionName">Versiunea %s</string>
     <string name="edit_profile">Editeaza-ti profilul</string>
     <string name="added_cars">Mașini adăugate</string>
     <string name="ins_expires">Asigurarea expiră</string>
     <string name="ro_expires">Rovinieta Expiră</string>
     <string name="last_purchased">Ultima achiziție</string>
+
+    <string name="br_charges">Taxe de referință</string>
+    <string name="ro_charges">Rovinieta Acuzatii</string>
+    <string name="accept">Accept</string>
+
+    <string name="car_ins_section">Sectia Asigurari Auto</string>
+    <string name="car_ins_section1">Să vă protejăm mașina cu cele mai bune\n oferte disponibile.</string>
+    <string name="ins_tc">Am citit si sunt de acord cu <font color='#5367FC'><u>Termenii și condițiile</u></font></string>
+    <string name="ins_gdpr">Am citit si sunt de acord cu <font color='#5367FC'><u>GDPR</u></font></string>
+    <string name="lets_begin">Sa incepem</string>
+    <string name="broker_partner">Partener broker</string>
+    <string name="dot">•</string>
+    <string name="add_another_car_">Adauga o alta masina...</string>
+    <string name="civ_serial_no">Nr de serie CIV</string>
+
+    <string name="ins_car_no">Mașina nr.</string>
+    <string name="ins_leasing">Vehiculul face obiectul unui contract de leasing curent.</string>
+    <string name="model_make">Model/Marcă</string>
+    <string name="ins_vin_no">VIN NR.</string>
+    <string name="ins_capacity_power">Capacitate/Putere</string>
+    <string name="ins_matw">MATW(MTA)</string>
+    <string name="ins_bonus">Bonus - Clasa Malus</string>
+    <string name="terms_info">Vă rugăm să acceptați Termenii și condițiile și GDPR pentru a continua cu înregistrarea</string>
+    <string name="consents">Consimțământ</string>
+    <string name="check_info">Vă rugăm să bifați caseta dacă doriți să continuați</string>
+    <string name="save_detail">Salvați detalii</string>
+    <string name="delete_rem">Ștergeți mementoul</string>
+    <string name="invalid_email">Vă rugăm să introduceți o adresă de e-mail validă</string>
+    <string name="no_name">Niciun nume adăugat</string>
+    <string name="date_exceed_limit">Data depășirii limitei</string>
+
+    <string name="name_require">Numele complet este necesar!</string>
+    <string name="address_county_cc"><![CDATA[jud</><font color="#FB4079">*</font>]]></string>
+    <string name="address_city_cc"><![CDATA[Oraș</><font color="#FB4079">*</font>]]></string>
+    <string name="address_number_cc"><![CDATA[Număr</><font color="#FB4079">*</font>]]></string>
+    <string name="last_name_cc"><![CDATA[Numele de familie</><font color="#FB4079">*</font>]]></string>
+    <string name="first_name_cc"><![CDATA[Nume</><font color="#FB4079">*</font>]]></string>
+    <string name="country_cc"><![CDATA[Țară</><font color="#FB4079">*</font>]]></string>
+    <string name="street_name_cc"><![CDATA[Numele strazii</><font color="#FB4079">*</font>]]></string>
+    <string name="state_provinces_cc"><![CDATA[Stat/Provințe</><font color="#FB4079">*</font>]]></string>
+    <string name="locality_area_cc"><![CDATA[Localitatea/Zona</><font color="#FB4079">*</font>]]></string>
+    <string name="ro_active_dialog">Mașina selectată are Active Rovignette. Mai vrei să cumperi?</string>
+
+    <string name="companyName">Numele companiei</string>
+    <string name="phoneCountryCode">Codul de țară al telefonului</string>
+    <string name="caen">Cod NACE</string>
+    <string name="vehicle.engineSize">Marimea motorului</string>
+    <string name="vehicle.enginePower">Putere</string>
+    <string name="profile_cnp_cc"><![CDATA[CNP</><font color="#FB4079">*</font>]]></string>
+    <string name="natural_date_of_birth_cc"><![CDATA[Data de nastere</><font color="#FB4079">*</font>]]></string>
+    <string name="profile_series_cc"><![CDATA[Serie</><font color="#FB4079">*</font>]]></string>
+    <string name="profile_number_cc"><![CDATA[Număr</><font color="#FB4079">*</font>]]></string>
+    <string name="profile_exp_date_cc"><![CDATA[Data expirării ID</><font color="#FB4079">*</font>]]></string>
+    <string name="id_type_cc"><![CDATA[Tip ID</><font color="#FB4079">*</font>]]></string>
+    <string name="d_license_id_cc"><![CDATA[ID permis de conducere</><font color="#FB4079">*</font>]]></string>
+    <string name="d_license_issue_cc"><![CDATA[Data emiterii</><font color="#FB4079">*</font>]]></string>
+    <string name="d_license_exp_cc"><![CDATA[Data expirării</><font color="#FB4079">*</font>]]></string>
+    <string name="d_license_cat_cc"><![CDATA[Categorii permise de conducere</><font color="#FB4079">*</font>]]></string>
+    <string name="phone_num_cc">Număr de telefon<![CDATA[Phone Number</><font color="#FB4079">*</font>]]></string>
+    <string name="phoneCountryCode_cc"><![CDATA[Codul de țară al telefonului</><font color="#FB4079">*</font>]]></string>
+    <string name="email_hint_cc"><![CDATA[E-mail</><font color="#FB4079">*</font>]]></string>
+    <string name="street_type_cc"><![CDATA[Tip de stradă</><font color="#FB4079">*</font>]]></string>
+    <string name="address_street_name_cc"><![CDATA[Numele strazii</><font color="#FB4079">*</font>]]></string>
+    <string name="block_cc"><![CDATA[bloc</><font color="#FB4079">*</font>]]></string>
+    <string name="entrance_cc"><![CDATA[Intrare</><font color="#FB4079">*</font>]]></string>
+    <string name="floor_cc"><![CDATA[Podea</><font color="#FB4079">*</font>]]></string>
+    <string name="apartment_cc"><![CDATA[Apartment</><font color="#FB4079">*</font>]]></string>
+    <string name="zip_code_cc"><![CDATA[Cod postal</><font color="#FB4079">*</font>]]></string>
+    <string name="license_no_cc"><![CDATA[Numărul de licență</><font color="#FB4079">*</font>]]></string>
+    <string name="cu_file_info">Solicitarea poate conține până la 5 fișiere atașate</string>
+    <string name="img_">Imagine_</string>
+    <string name="share_text">Vă puteți invita prietenii și colegii să ni se alăture.\nApreciem referințele dvs.</string>
+    <string name="insta">Instagram</string>
+    <string name="fb">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="utube">Youtube</string>
+    <string name="network_text1">Hopa! Rețeaua este deconectată</string>
+    <string name="network_text2">Verificați problema de internet și încercați din nou</string>
+    <string name="network_retry">Reîncercați</string>
+    <string name="romanian">Română</string>
+    <string name="bio_login_title">Conectare biometrică</string>
+    <string name="server_unreachable">Hopa! Serverul este inaccesibil</string>
+    <string name="you">Tu</string>
+    <string name="data_missing">Date lipsesc</string>
 </resources>

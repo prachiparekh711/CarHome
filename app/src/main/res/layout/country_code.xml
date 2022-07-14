@@ -26,8 +26,8 @@
             android:id="@+id/flag_imv"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_25sdp"
-            android:layout_marginHorizontal="@dimen/_3sdp"
             android:gravity="center"
+            android:layout_marginHorizontal="@dimen/_3sdp"
             android:textColor="@color/white"
             android:textSize="@dimen/_12sdp" />
 

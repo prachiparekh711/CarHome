@@ -1,16 +1,20 @@
 package ro.westaco.carhome.presentation.screens.data.person_natural.details
 
+import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -23,6 +27,14 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.karumi.dexter.listener.single.PermissionListener
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,12 +47,16 @@ import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.databinding.DialogDeleteNaturalPersonBinding
 import ro.westaco.carhome.databinding.LogoOptionLayoutBinding
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DeleteDialogFragment
 import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.common.DeleteDialogFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
 import ro.westaco.carhome.presentation.screens.main.MainActivity
-import ro.westaco.carhome.utils.*
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
+import ro.westaco.carhome.utils.CatalogUtils
+import ro.westaco.carhome.utils.CountryCityUtils
+import ro.westaco.carhome.utils.FileUtil
+import ro.westaco.carhome.utils.ViewUtils
+import ro.westaco.carhome.views.Progressbar
 import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -49,7 +65,7 @@ import java.util.*
 //C- Rebuilt Section
 @AndroidEntryPoint
 class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>(),
-    BaseActivity.OnProfileLogoChangeListner {
+    BaseActivity.OnProfileLogoChangeListener {
     private var naturalPerson: NaturalPerson? = null
     lateinit var bottomSheet: BottomSheetDialog
     private var menuOpen = false
@@ -62,19 +78,19 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
     var streetTypeList: ArrayList<CatalogItem> = ArrayList()
     var licenseCatList: ArrayList<CatalogItem> = ArrayList()
     lateinit var dialog: Dialog
-
+    var argMenuVisible = true
 
     companion object {
         const val ARG_NATURAL_PERSON = "arg_natural_person"
+        const val ARG_MENU = "arg_menu"
     }
 
     override fun getContentView() = R.layout.fragment_natural_person_details
     var dlAttachment: Attachments? = null
-    var idAttachment: Attachments? = null
+    private var idAttachment: Attachments? = null
     var naturalItem: NaturalPersonDetails? = null
     var lottieAnimationView: LottieAnimationView? = null
     var progressbar: Progressbar? = null
-
 
     override fun getStatusBarColor() = ContextCompat.getColor(requireContext(), R.color.white)
 
@@ -83,6 +99,8 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
         arguments?.let {
             naturalPerson = it.getSerializable(ARG_NATURAL_PERSON) as? NaturalPerson?
             viewModel.onReceivedPerson(naturalPerson?.id?.toInt())
+
+            argMenuVisible = it.getBoolean(ARG_MENU)
         }
     }
 
@@ -90,8 +108,7 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
         bottomSheet = BottomSheetDialog(requireContext())
         progressbar = Progressbar(requireContext())
 
-        progressbar?.showPopup()
-
+        mMenu.isVisible = argMenuVisible
         lottieAnimationView = lottieAnimation
         lottieAnimationView?.visibility = View.VISIBLE
         back.setOnClickListener {
@@ -134,21 +151,86 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
         }
 
         llUploadCertificate.setOnClickListener {
-            val result = FileUtil.checkPermission(requireContext())
-            if (result) {
-                callFileManagerForLicense()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Dexter.withContext(requireActivity())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            report?.let {
+                                if (report.areAllPermissionsGranted()) {
+                                    callFileManagerForLicense()
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+                    }).withErrorListener {}
+
+                    .check()
             } else {
-                FileUtil.requestPermission(requireActivity())
+                if (permissionUpload()) {
+                    callFileManagerForLicense()
+                }
             }
 
         }
 
         llUploadId.setOnClickListener {
-            val result = FileUtil.checkPermission(requireContext())
-            if (result) {
-                callFileManagerForID()
+
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Dexter.withContext(requireActivity())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            report?.let {
+                                if (report.areAllPermissionsGranted()) {
+                                    callFileManagerForID()
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+                    }).withErrorListener {}
+
+                    .check()
             } else {
-                FileUtil.requestPermission(requireActivity())
+                if (permissionUpload()) {
+                    callFileManagerForID()
+                }
             }
         }
 
@@ -281,6 +363,10 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
             menuVisible()
         }
 
+        blankRl.setOnClickListener {
+            menuVisible()
+        }
+
     }
 
     private fun logoOperationDialog() {
@@ -303,12 +389,27 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
         selectorBinding.delete.isVisible = naturalItem?.logoHref?.isNotEmpty() == true
         selectorBinding.upload.setOnClickListener {
             BaseActivity.profileLogoListner = this
-            val result = FileUtil.checkCameraPermission(requireContext())
-            if (result) {
-                openCamera()
+
+            /* val result = FileUtil.checkCameraPermission(requireContext())
+             if (result) {
+                 openCamera()
+             } else {
+                 FileUtil.requestCamerasPermission(requireActivity())
+             }*/
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                onCameraPermission()
             } else {
-                FileUtil.requestCamerasPermission(requireActivity())
+
+                if (permission()) {
+                    openCamera()
+                }
             }
+
             bottomSheetDialog.dismiss()
         }
         selectorBinding.delete.setOnClickListener {
@@ -330,19 +431,27 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
         if (menuOpen5) {
             menuOpen5 = !menuOpen5
             ViewUtils.collapse(mLinear)
+            blankRl.isVisible = false
             mMenu.setImageResource(R.drawable.ic_more_new)
         } else {
             menuOpen5 = !menuOpen5
             ViewUtils.expand(mLinear)
+            blankRl.isVisible = true
             mMenu.setImageResource(R.drawable.ic_more_new_done)
         }
     }
 
     override fun setObservers() {
         viewModel.naturalPersDetailsLiveData.observe(viewLifecycleOwner) { naturalItem ->
-            progressbar?.dismissPopup()
+
             if (naturalItem != null) {
                 this.naturalItem = naturalItem
+
+                if (naturalItem.id == MainActivity.activeId) {
+                    mCall.isVisible = false
+                    mEmail.isVisible = false
+                }
+
                 val address = naturalItem.address
 
                 if (naturalItem.logoHref?.isNotEmpty() == true) {
@@ -486,9 +595,7 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
                     localityAreaText.setText(address?.locality)
                 }
             }
-
         }
-
 
         viewModel.countryData.observe(viewLifecycleOwner) { countryData ->
             if (countryData != null) {
@@ -657,9 +764,13 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
                 }
                 if (selectedFile != null) {
                     lblCertificate.visibility = View.VISIBLE
+                    lblCertificate.text = requireContext().resources.getString(R.string.uploading_)
                     btnDeleteCertificate.visibility = View.VISIBLE
                     val dlFile = File(selectedFile)
-                    naturalItem?.id?.let { viewModel.onAttach(it, "DRIVING_LICENSE", dlFile) }
+                    progressbar?.showPopup()
+                    naturalItem?.id?.let {
+                        viewModel.onAttach(it, "DRIVING_LICENSE", dlFile)
+                    }
                 }
             }
         }
@@ -677,35 +788,19 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
                 }
                 if (selectedFile != null) {
                     lblId.visibility = View.VISIBLE
+                    lblId.text = requireContext().resources.getString(R.string.uploading_)
                     btnDeleteId.visibility = View.VISIBLE
                     val idFile = File(selectedFile)
-                    naturalItem?.id?.let { viewModel.onAttach(it, "IDENTITY_DOCUMENT", idFile) }
+
+                    progressbar?.showPopup()
+
+                    naturalItem?.id?.let {
+                        viewModel.onAttach(it, "IDENTITY_DOCUMENT", idFile)
+                    }
                 }
             }
         }
 
-        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
-            callFileManagerForLicense()
-        }
-
-        if (requestCode == 1002 && resultCode == Activity.RESULT_OK) {
-            callFileManagerForID()
-        }
-
-        if (requestCode == 2296) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callFileManagerForID()
-                }
-            }
-        }
-        if (requestCode == 2297) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callFileManagerForLicense()
-                }
-            }
-        }
 
     }
 
@@ -722,6 +817,9 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
     }
 
     private fun onUploadSuccess(attachType: String, attachments: Attachments) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            progressbar?.dismissPopup()
+        }, 800)
         if (attachType == "DRIVING_LICENSE") {
             lblCertificate.visibility = View.VISIBLE
             btnDeleteCertificate.visibility = View.VISIBLE
@@ -737,7 +835,6 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
 
     override fun onResume() {
         super.onResume()
-        progressbar?.dismissPopup()
         arguments?.let {
             naturalPerson = it.getSerializable(ARG_NATURAL_PERSON) as? NaturalPerson?
             viewModel.onReceivedPerson(naturalPerson?.id?.toInt())
@@ -762,5 +859,50 @@ class NaturalPersonDetailsFragment : BaseFragment<NaturalPersonDetailsViewModel>
                 }
             }
         }
+    }
+
+    private fun onCameraPermission() {
+
+        Dexter.withContext(requireContext())
+            .withPermission(Manifest.permission.CAMERA)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+                    openCamera()
+                }
+
+                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {}
+
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: PermissionRequest?,
+                    p1: PermissionToken?,
+                ) {
+                    p1?.continuePermissionRequest()
+                }
+            }).withErrorListener {}
+
+            .check()
+    }
+
+
+    private fun permission(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+
+    }
+
+    private fun permissionUpload(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+
     }
 }

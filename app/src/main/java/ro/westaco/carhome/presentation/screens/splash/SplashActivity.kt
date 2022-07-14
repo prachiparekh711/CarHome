@@ -22,7 +22,8 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
     override fun attachBaseContext(newBase: Context) {
 
         if (AppPreferencesDelegates.get().language.isEmpty()) {
-            AppPreferencesDelegates.get().language = "en-US"
+            AppPreferencesDelegates.get().language =
+                if (Locale.getDefault().language == "ro") "en-RO" else "en-US"
         }
 
         val newLocale: Locale = if (AppPreferencesDelegates.get().language == "en-US") {

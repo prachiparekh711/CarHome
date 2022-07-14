@@ -10,17 +10,14 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.Vehicle
 import ro.westaco.carhome.di.ApiModule
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
-import ro.westaco.carhome.utils.MarginItemDecoration
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
+import ro.westaco.carhome.views.MarginItemDecoration
 
 //C- Design
 @AndroidEntryPoint
 class CarsFragment : BaseFragment<CarsViewModel>() {
 
     private lateinit var adapter: DataCarAdapter
-    private var progressbar: Progressbar? = null
 
     override fun getContentView() = R.layout.fragment_data_cars
 
@@ -28,8 +25,6 @@ class CarsFragment : BaseFragment<CarsViewModel>() {
 
 
     override fun initUi() {
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
         fab.setOnClickListener {
             viewModel.onAddNew()
         }
@@ -37,11 +32,18 @@ class CarsFragment : BaseFragment<CarsViewModel>() {
         cta.setOnClickListener {
             viewModel.onAddNew()
         }
+
+        list.addItemDecoration(
+            MarginItemDecoration(20, orientation = LinearLayoutManager.VERTICAL)
+        )
     }
 
     override fun setObservers() {
+
         viewModel.carsLivedata.observe(viewLifecycleOwner) { cars ->
+
             if (cars.isNullOrEmpty()) {
+
                 normalState.visibility = View.GONE
                 emptyState.visibility = View.VISIBLE
             } else {
@@ -89,6 +91,10 @@ class CarsFragment : BaseFragment<CarsViewModel>() {
                         }
                     }
 
+                    override fun onNotificationClick(item: Vehicle) {
+                        viewModel.onNotificationClick(item)
+                    }
+
                 }
                 adapter = DataCarAdapter(
                     requireContext(),
@@ -98,18 +104,10 @@ class CarsFragment : BaseFragment<CarsViewModel>() {
                 )
                 list.adapter = adapter
                 adapter.setItems(cars)
-                list.addItemDecoration(
-                    MarginItemDecoration(20, orientation = LinearLayoutManager.VERTICAL)
-                )
+
             }
-            progressbar?.dismissPopup()
         }
 
-        viewModel.stateStream.observe(viewLifecycleOwner) { state ->
-            if (state == CarsViewModel.STATE.DOCUMENT_NOT_FOUND) {
-                showErrorInfo(requireContext(), getString(R.string.doc_not_found))
-            }
-        }
     }
 
 }

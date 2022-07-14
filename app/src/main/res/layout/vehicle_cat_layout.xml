@@ -9,154 +9,102 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <RelativeLayout
-            android:id="@+id/mConstraint"
+
+        <View
+            android:id="@+id/indicator"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:layout_height="5dp"
+            android:background="@color/splashScreenBgColor"
+            android:visibility="visible" />
 
-            <View
-                android:id="@+id/indicator"
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:background="@color/splashScreenBgColor"
-                android:visibility="visible" />
+        <RelativeLayout
+            android:id="@+id/rv_"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="20dp">
 
-            <RelativeLayout
-                android:id="@+id/rv_"
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semibold_600"
+                android:text="@string/vehicle_cats"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/_15sdp" />
+
+
+            <ImageView
+                android:id="@+id/mClose"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="3dp"
+                android:src="@drawable/ic_close" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mainRL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rv_"
+            android:fillViewport="true">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_semibold_600"
-                    android:text="@string/vehicle_cats"
-                    android:textColor="@color/textOnWhite"
-                    android:textSize="@dimen/_15sdp" />
-
-
-                <ImageView
-                    android:id="@+id/mClose"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:padding="3dp"
-                    android:src="@drawable/ic_close" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/mLinear"
-                android:layout_below="@id/rv_"
-                android:fillViewport="true">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/mRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_8sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:layout_marginBottom="@dimen/_8sdp"
-                    tools:listitem="@layout/service_vehicle_category_item" />
-
-            </RelativeLayout>
-
-
-            <LinearLayout
-                android:id="@+id/mLinear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/_10sdp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/cancel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_weight="1.58"
-                    android:fontFamily="@font/manrope_semibold_600"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_5sdp"
-                    android:text="@string/cancel"
-                    android:textColor="@color/textOnWhiteAccentGray"
-                    android:textSize="@dimen/_11sdp" />
-
-                <TextView
-                    android:id="@+id/mContinue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_weight="1"
-                    android:background="@drawable/save_background"
-                    android:fontFamily="@font/manrope_semibold_600"
-                    android:gravity="center"
-                    android:paddingVertical="@dimen/_12sdp"
-                    android:text="@string/continue_txt"
-                    android:textColor="@color/textOnSolid"
-                    android:textSize="@dimen/_11sdp" />
-
-            </LinearLayout>
-
-            <!-- <androidx.recyclerview.widget.RecyclerView
-                 android:id="@+id/mRecycler"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_margin="@dimen/_8sdp"
-                 tools:listitem="@layout/service_vehicle_category_item" />
-
-             <LinearLayout
-                 android:id="@+id/mLinear"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginBottom="@dimen/_15sdp"
-                 android:gravity="center"
-                 android:orientation="horizontal">
-
-                 <TextView
-                     android:id="@+id/cancel"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginHorizontal="@dimen/_15sdp"
-                     android:layout_weight="1.58"
-                     android:fontFamily="@font/manrope_semibold_600"
-                     android:gravity="center"
-                     android:paddingVertical="@dimen/_5sdp"
-                     android:text="@string/cancel"
-                     android:textColor="@color/textOnWhiteAccentGray"
-                     android:textSize="@dimen/_11sdp" />
-
-                 <TextView
-                     android:id="@+id/mContinue"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginHorizontal="@dimen/_15sdp"
-                     android:layout_weight="1"
-                     android:background="@drawable/save_background"
-                     android:fontFamily="@font/manrope_semibold_600"
-                     android:gravity="center"
-                     android:paddingVertical="@dimen/_12sdp"
-                     android:text="@string/continue_txt"
-                     android:textColor="@color/textOnSolid"
-                     android:textSize="@dimen/_11sdp" />
-
-             </LinearLayout>-->
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
+                tools:listitem="@layout/service_vehicle_category_item" />
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/mLinear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mainRL"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_weight="1.58"
+                android:fontFamily="@font/manrope_semibold_600"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_5sdp"
+                android:text="@string/cancel"
+                android:textColor="@color/textOnWhiteAccentGray"
+                android:textSize="@dimen/_11sdp" />
+
+            <TextView
+                android:id="@+id/mContinue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_weight="1"
+                android:background="@drawable/save_background"
+                android:fontFamily="@font/manrope_semibold_600"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_12sdp"
+                android:text="@string/continue_txt"
+                android:textColor="@color/textOnSolid"
+                android:textSize="@dimen/_11sdp" />
+
+        </LinearLayout>
 
 
     </RelativeLayout>

@@ -8,13 +8,12 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.responses.models.Categories
+import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.utils.DateTimeUtils
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File
@@ -28,17 +27,21 @@ class ContactViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     var reasonLiveData: MutableLiveData<ArrayList<Categories>>? = MutableLiveData()
+
     override fun onFragmentCreated() {
         super.onFragmentCreated()
         fetchReasonsData()
     }
 
+    val actionStream: SingleLiveEvent<ACTION> = SingleLiveEvent()
+
+    sealed class ACTION {
+        object OnSubmit : ACTION()
+    }
+
 
     private fun fetchReasonsData() {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
+
         api.getContactReasons()
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -68,7 +71,8 @@ class ContactViewModel @Inject constructor(
         attachmentFileList: ArrayList<File>?
     ) {
 
-        val attachmentBodyList: ArrayList<MultipartBody.Part>? = ArrayList()
+
+        val attachmentBodyList: ArrayList<MultipartBody.Part> = ArrayList()
         if (attachmentFileList != null) {
 
             for (i in 0 until attachmentFileList.size) {
@@ -82,7 +86,7 @@ class ContactViewModel @Inject constructor(
                         requestList
                     )
 
-                attachmentBodyList?.add(attachmentBody)
+                attachmentBodyList.add(attachmentBody)
             }
 
         }
@@ -95,12 +99,10 @@ class ContactViewModel @Inject constructor(
         api.submitForm(reasonBody, messageBody, attachmentBodyList)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.submit_success_msg)
-                uiEventStream.value = UiEvent.GoToMain
+                actionStream.value = ACTION.OnSubmit
 
             }, {
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 

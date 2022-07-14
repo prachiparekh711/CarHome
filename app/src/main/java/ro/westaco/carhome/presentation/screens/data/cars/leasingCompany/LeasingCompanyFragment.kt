@@ -4,19 +4,17 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.LeasingCompany
-import ro.westaco.carhome.presentation.screens.data.cars.add_new.AddNewCarViewModel
 
 //C- Leasing Company data for CarDetails
 class LeasingCompanyFragment : BottomSheetDialogFragment(),
     LeasingCompanyAdapter.OnItemInteractionListener {
-    lateinit var viewModel: AddNewCarViewModel
     var listener: OnDialogInteractionListener? = null
+    var leasingList: ArrayList<LeasingCompany> = ArrayList()
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
@@ -31,11 +29,6 @@ class LeasingCompanyFragment : BottomSheetDialogFragment(),
 
     companion object {
         const val TAG = "OccupationDialog"
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireParentFragment()).get(AddNewCarViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -59,7 +52,7 @@ class LeasingCompanyFragment : BottomSheetDialogFragment(),
         categories.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         val adapter = LeasingCompanyAdapter(
             requireContext(),
-            viewModel.leasingCompaniesData,
+            leasingList,
             this
         )
         categories.adapter = adapter

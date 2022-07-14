@@ -1,25 +1,34 @@
 package ro.westaco.carhome.presentation.screens.reminder.add_new
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -27,6 +36,15 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.internal.LinkedTreeMap
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add_new_reminder.*
 import ro.westaco.carhome.R
@@ -34,8 +52,10 @@ import ro.westaco.carhome.data.sources.remote.requests.ReminderNotification
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.LocationV2Item
 import ro.westaco.carhome.data.sources.remote.responses.models.Reminder
+import ro.westaco.carhome.databinding.DialogLocationBinding
 import ro.westaco.carhome.databinding.DirectionPopupBinding
 import ro.westaco.carhome.databinding.LocationSelectorBinding
+import ro.westaco.carhome.dialog.DeleteDialogFragment
 import ro.westaco.carhome.presentation.base.BaseFragment
 import java.text.SimpleDateFormat
 import java.util.*
@@ -49,6 +69,7 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
 
     private var isEdit = false
     private var reminder: Reminder? = null
+    private var selectedTags: ArrayList<CatalogItem>? = null
     var repeatPos = 0
     var tagPos = 0
     var repeatList: ArrayList<CatalogItem> = ArrayList()
@@ -56,8 +77,11 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
     private var allFilterList: ArrayList<CatalogItem> = ArrayList()
     private var tagsAdapter: ReminderTagsAdapter? = null
     protected val REQUEST_CHECK_SETTINGS = 0x1
+    private var dialog: Dialog? = null
+    lateinit var selectBinding: DialogLocationBinding
     var duration: Int = 0
     var durationUnit: Int = 0
+    var durationUnitReminderId: Long = 0
 
     private var locationReceiver: LocationReceiver? = null
     override fun getContentView() = R.layout.fragment_add_new_reminder
@@ -68,7 +92,8 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
         super.onCreate(savedInstanceState)
         arguments?.let { it ->
             isEdit = it.getBoolean(ARG_IS_EDIT)
-            reminder = it.getSerializable(ARG_REMINDER) as Reminder
+            reminder = it.getSerializable(ARG_REMINDER) as Reminder?
+            selectedTags = it.getSerializable(ARG_SELECTED_TAGS) as ArrayList<CatalogItem>?
 
             reminder?.id.let {
                 if (it != null) {
@@ -87,6 +112,7 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
         distance = mKm
         mRelative1 = mRelative
         mContext = requireContext()
+        dialog = Dialog(requireActivity())
 
 
 
@@ -141,7 +167,21 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
 
             if (isChecked) {
                 displayLocationSettingsRequest(requireActivity())
-                openBottomMapFragment(fragment)
+                if (ActivityCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    locationPermissionDialog()
+                } else {
+                    if (permission()) {
+                        openBottomMapFragment(fragment)
+                    }
+                }
             } else {
                 mRelative.isVisible = false
             }
@@ -153,13 +193,18 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
 
 
         cta.setOnClickListener {
-            val notifications = arrayListOf<ReminderNotification>()
+            val notifications = arrayListOf<NotificationWithUnit>()
             if (notificationCheck.isChecked) {
+                val reminderNotification = ReminderNotification(
+                    duration.toLong(),
+                    durationList[durationUnit].id,
+                )
+                val notificationWithUnit = NotificationWithUnit(
+                    reminderNotification,
+                    durationList[durationUnit].name
+                )
                 notifications.add(
-                    ReminderNotification(
-                        duration.toLong(),
-                        durationList[durationUnit].id
-                    )
+                    notificationWithUnit
                 )
             }
 
@@ -184,7 +229,7 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
     private fun showDatePicker(dateInMillis: Long) {
         val c = Calendar.getInstance().apply {
             timeInMillis = if (isEdit && reminder != null)
-                reminder?.dueDate?.let { dateToMilis(it) }!!
+                reminder?.dueDate?.let { it.time }!!
             else
                 dateInMillis
         }
@@ -259,7 +304,11 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
             if (tagsList != null) {
                 allFilterList = tagsList
 
-                tags.layoutManager = GridLayoutManager(context, ReminderTagsAdapter.COLUMNS)
+                val layoutManager = FlexboxLayoutManager(requireContext())
+                layoutManager.flexDirection = FlexDirection.ROW
+                layoutManager.justifyContent = JustifyContent.FLEX_START
+                layoutManager.alignItems = AlignItems.FLEX_START
+                tags.layoutManager = layoutManager
 
                 if (isEdit && reminder != null) {
                     for (i in allFilterList.indices) {
@@ -269,7 +318,12 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
                 } else {
                     tagPos = allFilterList.size - 1
                 }
-                tagsAdapter = ReminderTagsAdapter(requireContext())
+                tagsAdapter = if (selectedTags != null) {
+                    ReminderTagsAdapter(requireContext(), selectedTags!!)
+                } else {
+                    ReminderTagsAdapter(requireContext(), ArrayList<CatalogItem>())
+                }
+
                 tagsAdapter?.setItems(allFilterList)
                 if (reminder != null) {
                     reminder?.tags?.let { tagsAdapter?.setSelected(it) }
@@ -284,25 +338,39 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
                 reminder = reminderItem
                 toolbar.title = getString(R.string.edit_reminder)
                 cta.text = getString(R.string.save_changes)
+                deleteTextView.visibility = View.VISIBLE
+                deleteTextView.setOnClickListener {
+                    val deleteReminder = DeleteDialogFragment()
+                    deleteReminder.layoutResId = R.layout.dialog_delete_reminder
+                    deleteReminder.listener =
+                        object : DeleteDialogFragment.OnDialogInteractionListener {
+                            override fun onPosClicked() {
+                                viewModel.onDelete(reminderItem)
+                                viewModel.onBack()
+                                deleteReminder.dismiss()
+                            }
+                        }
+
+                    deleteReminder.show(childFragmentManager, DeleteDialogFragment.TAG)
+
+                }
 
                 title.setText(reminderItem.title)
                 notes.setText(reminderItem.notes)
-                val sdf = SimpleDateFormat(getString(R.string.server_date_format_template))
-                val mDate = sdf.parse(reminderItem.dueDate)
 
-                reminderItem.dueDate.let { mDate.time }.let { viewModel.onDueDatePicked(it) }
-                reminderItem.dueTime.let {
-                    if (it != null) {
-                        viewModel.onDueTimePicked(timeToMilis(it))
-                    }
+                reminderItem.dueDate?.let { it.time }.let { viewModel.onDueDatePicked(it!!) }
+                reminderItem.dueTime?.let {
+                    viewModel.onDueTimePicked(timeToMilis(it))
                 }
                 if (reminderItem.notifications != null) {
                     notificationCheck.isChecked = reminderItem.notifications.isNotEmpty()
+                    mNumberPicker.value =
+                        (reminderItem.notifications[0] as LinkedTreeMap<String, Double>)["duration"]!!.toInt()
+                    duration = mNumberPicker.value
+                    durationUnitReminderId =
+                        (reminderItem.notifications[0] as LinkedTreeMap<String, Double>)["durationUnit"]!!.toLong()
                 }
-
-
             } else {
-
                 repeatPos = 0
             }
 
@@ -357,23 +425,23 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
 
                         mContinue.setOnClickListener {
                             repeat.text = repeatList[repeatPos].toString()
-                        dialog.dismiss()
-                    }
-                    dialog.setCancelable(false)
-                    dialog.setContentView(view)
-                    dialog.setOnShowListener {
-                        val bottomSheetDialog = it as BottomSheetDialog
-                        val parentLayout =
-                            bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-                        parentLayout?.let { it ->
-                            val behaviour = BottomSheetBehavior.from(it)
-                            behaviour.state = BottomSheetBehavior.STATE_EXPANDED
+                            dialog.dismiss()
                         }
+                        dialog.setCancelable(false)
+                        dialog.setContentView(view)
+                        dialog.setOnShowListener {
+                            val bottomSheetDialog = it as BottomSheetDialog
+                            val parentLayout =
+                                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                            parentLayout?.let { it ->
+                                val behaviour = BottomSheetBehavior.from(it)
+                                behaviour.state = BottomSheetBehavior.STATE_EXPANDED
+                            }
+                        }
+                        dialog.show()
+                        mBack.setOnClickListener { dialog.dismiss() }
                     }
-                    dialog.show()
-                    mBack.setOnClickListener { dialog.dismiss() }
                 }
-            }
 //      *Repeat Recycler in Bottomsheet(R5)
             }
         }
@@ -390,6 +458,15 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
                 mDurationPicker.maxValue = durationList.size - 1
                 mDurationPicker.displayedValues = typeList
                 mDurationPicker.wrapSelectorWheel = false
+                if (isEdit) {
+                    var durationUnitItem: CatalogItem? = null
+                    durationList.forEach {
+                        if (it.id == durationUnitReminderId)
+                            durationUnitItem = it
+                    }
+                    mDurationPicker.value = durationList.indexOf(durationUnitItem)
+                    durationUnit = durationList.indexOf(durationUnitItem)
+                }
                 mDurationPicker.setOnValueChangedListener { picker, oldVal, newVal ->
                     durationUnit = newVal
                 }
@@ -442,6 +519,7 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
         var currentLocation: LocationV2Item? = null
         const val ARG_IS_EDIT = "arg_is_edit"
         const val ARG_REMINDER = "arg_reminder"
+        const val ARG_SELECTED_TAGS = "selected_tags"
 
 
         @SuppressLint("SetTextI18n")
@@ -559,13 +637,6 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
         }
     }
 
-    private fun dateToMilis(str: String): Long {
-        val sdf = SimpleDateFormat(getString(R.string.server_date_format_template))
-
-        val mDate = sdf.parse(str)
-        return mDate.time
-
-    }
 
     @SuppressLint("SimpleDateFormat")
     fun timeToMilis(str: String): Long {
@@ -591,15 +662,11 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
             val status = result.status
 
             when (status.statusCode) {
-                LocationSettingsStatusCodes.SUCCESS ->
-                    Log.e(ContentValues.TAG, "All location settings are satisfied.")
+//                LocationSettingsStatusCodes.SUCCESS ->
+//                    Log.e(ContentValues.TAG, "All location settings are satisfied.")
 
                 LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
 
-                    Log.e(
-                        ContentValues.TAG,
-                        "Location settings are not satisfied. Show the user a dialog to upgrade location settings "
-                    )
                     try {
                         // Show the dialog by calling startResolutionForResult(), and check the result
                         // in onActivityResult().
@@ -609,7 +676,6 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
                         )
 //                        Toast.makeText(mActivity, "All location settings are satisfied.", Toast.LENGTH_SHORT).show()
                     } catch (e: IntentSender.SendIntentException) {
-                        Log.e(ContentValues.TAG, "PendingIntent unable to execute request.")
                     }
                 }
                 LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> Log.i(
@@ -618,6 +684,80 @@ class AddNewReminderFragment : BaseFragment<AddNewReminderViewModel>() {
                 )
             }
         }
+    }
+
+    private fun locationPermission() {
+        Dexter.withContext(requireActivity())
+            .withPermissions(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            .withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    report?.let {
+                        if (report.areAllPermissionsGranted()) {
+                            openBottomMapFragment(fragment)
+                        }
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?,
+                ) {
+                    token?.continuePermissionRequest()
+                }
+            }).withErrorListener {}
+
+            .check()
+    }
+
+    private fun permission(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+
+    }
+
+    private fun locationPermissionDialog() {
+
+        selectBinding = DialogLocationBinding.inflate(LayoutInflater.from(requireActivity()))
+
+        dialog?.setContentView(selectBinding.root)
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.show()
+
+        selectBinding.location.setOnClickListener {
+            Dexter.withContext(requireContext())
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(object : PermissionListener {
+
+                    override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse) {
+                        openBottomMapFragment(fragment)
+                    }
+
+                    override fun onPermissionDenied(permissionDeniedResponse: PermissionDeniedResponse) {}
+
+                    override fun onPermissionRationaleShouldBeShown(
+                        permissionRequest: PermissionRequest?,
+                        permissionToken: PermissionToken,
+                    ) {
+                        permissionToken.continuePermissionRequest()
+                    }
+                }).check()
+            dialog?.dismiss()
+        }
+
     }
 
 }

@@ -4,17 +4,20 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.AlertDialog
 import android.os.Build
+import android.view.KeyEvent
 import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
@@ -26,9 +29,12 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DialogUtils
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.main.MainActivity.Companion.profileItem
-import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.adapter.SummaryDriverAdapter
+import ro.westaco.carhome.presentation.screens.service.insurance.init.InsuranceFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.ins_person.SelectUserFragment
 import ro.westaco.carhome.utils.ViewUtils
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,14 +46,16 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
 
     var rcaOfferDetail: RcaOfferDetails? = null
     var ds = false
-    var dsList = false
-    private lateinit var adapterDriver: DriverAdapter
-
+    private lateinit var adapterDriver: SummaryDriverAdapter
     lateinit var invoicePersonGuid: String
+    var bottomSheet: SelectUserFragment? = null
+    var firstPaymentDone: Boolean = false
+    var rcaInitResponse: RcaInitResponse? = null
 
     companion object {
         const val ARG_OFFERDETAIL = "arg_offerdetail"
         const val ARG_DS = "arg_ds"
+        var addNew = false
     }
 
     override fun getContentView(): Int {
@@ -56,6 +64,16 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
 
     @SuppressLint("SetTextI18n")
     override fun initUi() {
+        InsuranceFragment.IS_PERSON_EDITABLE = false
+        requireView().isFocusableInTouchMode = true
+        requireView().requestFocus()
+        requireView().setOnKeyListener { v, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                addNew = false
+                viewModel.onBack()
+                true
+            } else false
+        }
 
         arguments?.let {
 
@@ -63,7 +81,14 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
 
             ds = it.getBoolean(ARG_DS)
 
-            rcaOfferDetail?.vehicle?.brandLogo?.let { it1 -> setImage(it1, carLogo) }
+            rcaOfferDetail?.vehicle?.brandLogo?.let { it1 ->
+                setImage(
+                    logoHref = it1,
+                    view = carLogo,
+                    tv = null,
+                    singlechar = null
+                )
+            }
 
             carName.text = rcaOfferDetail?.vehicle?.brandName
             et_start_date.setText(viewModel.convertFromServerDate(rcaOfferDetail?.beginDate))
@@ -71,56 +96,79 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
             if (rcaOfferDetail?.leasing == true) {
                 invoicePersonGuid = if (rcaOfferDetail?.vehicleUserLegalPerson != null) {
                     mOwnerName.setText(rcaOfferDetail?.vehicleUserLegalPerson?.companyName)
-                    mBillToName.setText("${profileItem?.firstName} ${profileItem?.lastName}")
-                    rcaOfferDetail?.vehicleUserLegalPerson?.logoHref?.let { it1 ->
-                        setImage(
-                            it1,
-                            mSelectOwnerImage
-                        )
-                    }
-                    profileItem?.logoHref?.let { it1 -> setImage(it1, mSelect_bill_Image) }
+
+                    setImage(
+                        rcaOfferDetail?.vehicleUserLegalPerson?.logoHref,
+                        "${rcaOfferDetail?.vehicleUserLegalPerson?.companyName}",
+                        mSelectOwnerImage,
+                        textLogoOwner
+                    )
+
                     rcaOfferDetail?.vehicleUserLegalPerson?.guid.toString()
                 } else {
                     mOwnerName.setText("${rcaOfferDetail?.vehicleUserNaturalPerson?.firstName} ${rcaOfferDetail?.vehicleUserNaturalPerson?.lastName}")
-                    mBillToName.setText("${profileItem?.firstName} ${profileItem?.lastName}")
-                    rcaOfferDetail?.vehicleUserNaturalPerson?.logoHref?.let { it1 ->
-                        setImage(
-                            it1,
-                            mSelectOwnerImage
-                        )
-                    }
-                    profileItem?.logoHref?.let { it1 -> setImage(it1, mSelect_bill_Image) }
+
+                    setImage(
+                        rcaOfferDetail?.vehicleUserNaturalPerson?.logoHref,
+                        "${rcaOfferDetail?.vehicleUserNaturalPerson?.firstName} ${rcaOfferDetail?.vehicleUserNaturalPerson?.lastName}",
+                        mSelectOwnerImage,
+                        textLogoOwner
+                    )
                     rcaOfferDetail?.vehicleUserNaturalPerson?.guid.toString()
                 }
             } else {
                 invoicePersonGuid = if (rcaOfferDetail?.vehicleOwnerLegalPerson != null) {
-                    mOwnerName.setText(rcaOfferDetail?.vehicleOwnerLegalPerson?.companyName)
-                    mBillToName.setText("${profileItem?.firstName} ${profileItem?.lastName}")
-                    rcaOfferDetail?.vehicleOwnerLegalPerson?.logoHref?.let { it1 ->
-                        setImage(
-                            it1,
-                            mSelectOwnerImage
-                        )
-                    }
-                    profileItem?.logoHref?.let { it1 -> setImage(it1, mSelect_bill_Image) }
+                    mOwnerName.setText(
+                        rcaOfferDetail?.vehicleOwnerLegalPerson?.companyName.toString()
+                            .ifBlank { "" })
+
+                    setImage(
+                        rcaOfferDetail?.vehicleOwnerLegalPerson?.logoHref,
+                        "${rcaOfferDetail?.vehicleOwnerLegalPerson?.companyName}",
+                        mSelectOwnerImage,
+                        textLogoOwner
+                    )
+
                     rcaOfferDetail?.vehicleOwnerLegalPerson?.guid.toString()
                 } else {
-                    mOwnerName.setText("${rcaOfferDetail?.vehicleOwnerNaturalPerson?.firstName} ${rcaOfferDetail?.vehicleOwnerNaturalPerson?.lastName}")
-                    mBillToName.setText("${profileItem?.firstName} ${profileItem?.lastName}")
-                    rcaOfferDetail?.vehicleOwnerNaturalPerson?.logoHref?.let { it1 ->
-                        setImage(
-                            it1,
-                            mSelectOwnerImage
-                        )
-                    }
+                    mOwnerName.setText("${
+                        rcaOfferDetail?.vehicleOwnerNaturalPerson?.firstName.toString()
+                            .ifBlank { "" }
+                    } " +
+                            rcaOfferDetail?.vehicleOwnerNaturalPerson?.lastName.toString()
+                                .ifBlank { "" })
 
-                    profileItem?.logoHref?.let { it1 -> setImage(it1, mSelect_bill_Image) }
+
+                    setImage(
+                        rcaOfferDetail?.vehicleOwnerNaturalPerson?.logoHref,
+                        "${rcaOfferDetail?.vehicleOwnerNaturalPerson?.firstName} ${rcaOfferDetail?.vehicleOwnerNaturalPerson?.lastName}",
+                        mSelectOwnerImage,
+                        textLogoOwner
+                    )
+
                     rcaOfferDetail?.vehicleOwnerNaturalPerson?.guid.toString()
                 }
             }
 
+            mBillToName.setText(
+                "${
+                    profileItem?.firstName.toString().ifBlank { "N/A" }
+                } ${profileItem?.lastName.toString().ifBlank { "N/A" }}"
+            )
+
+            setImage(
+                profileItem?.logoHref,
+                "${
+                    profileItem?.firstName.toString()
+                } ${profileItem?.lastName.toString()}",
+                mSelect_bill_Image,
+                textLogoBill
+            )
+
+            profileItem?.id?.toLong()?.let { it1 -> viewModel.getNaturalPerson(it1) }
+
             mRecycle.layoutManager = LinearLayoutManager(context)
-            adapterDriver = DriverAdapter(
+            adapterDriver = SummaryDriverAdapter(
                 requireActivity(),
                 rcaOfferDetail?.drivers as ArrayList<NaturalPersonDetails>
             )
@@ -129,15 +177,21 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
             usageType.setText(rcaOfferDetail?.vehicle?.vehicleUsageTypeName)
 
             mChange.setOnClickListener {
-                val bottomSheet = SelectUserFragment(this, null, null, this, null, "OWNER")
-                bottomSheet.show(requireActivity().supportFragmentManager, null)
+                bottomSheet = SelectUserFragment(this, null, null, this, null, "OWNER")
+                bottomSheet?.show(requireActivity().supportFragmentManager, null)
             }
 
-            rcaOfferDetail?.offer?.insurerLogoHref?.let { it1 -> setImage(it1, insurerImage) }
+            rcaOfferDetail?.offer?.insurerLogoHref?.let { it1 ->
+                setImage(
+                    it1,
+                    null,
+                    insurerImage,
+                    null
+                )
+            }
 
             mOfferTitle.text = rcaOfferDetail?.offer?.insurerNameLong
             description.text = rcaOfferDetail?.offer?.description
-
 
             if (ds) {
                 typeTitle.text = requireContext().resources.getString(R.string.rca_plus_ds)
@@ -145,14 +199,12 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
                     "${rcaOfferDetail?.offer?.priceDs ?: ""} ${rcaOfferDetail?.offer?.currency}"
                 mRcaPrice.text =
                     "${rcaOfferDetail?.offer?.priceDs ?: ""} ${rcaOfferDetail?.offer?.currency}"
-                dsList = false
             } else {
                 typeTitle.text = requireContext().resources.getString(R.string.rca)
                 price.text =
                     "${rcaOfferDetail?.offer?.price ?: ""} ${rcaOfferDetail?.offer?.currency}"
                 mRcaPrice.text =
                     "${rcaOfferDetail?.offer?.price ?: ""} ${rcaOfferDetail?.offer?.currency}"
-                dsList = true
             }
 
             val spf = SimpleDateFormat("yyyy-MM-dd")
@@ -164,16 +216,38 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
         }
 
         toolbar.setNavigationOnClickListener {
+            addNew = false
             viewModel.onBack()
         }
 
+
         cta.setOnClickListener {
 
-            rcaOfferDetail?.offer?.let { it1 -> viewModel.onCtaItems(it1, check.isChecked, dsList) }
 
+            if (check.isChecked) {
+                addNew = false
+
+                if (firstPaymentDone) {
+                    rcaInitResponse?.guid?.let {
+                        viewModel.paymentRetry(it)
+                    }
+                } else {
+                    rcaOfferDetail?.offer?.let { it1 ->
+                        viewModel.onCtaItems(
+                            it1,
+                            ds
+                        )
+                    }
+                }
+            } else {
+                DialogUtils.showErrorInfo(requireContext(), getString(R.string.check_info))
+            }
         }
 
-        cancel.setOnClickListener { viewModel.onBack() }
+        cancel.setOnClickListener {
+            addNew = false
+            viewModel.onBack()
+        }
     }
 
     override fun setObservers() {
@@ -188,8 +262,14 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
         }
 
         viewModel.rcaInitData.observe(viewLifecycleOwner)
-        { offerList ->
-            offerList.guid?.let { viewModel.paymentStart(it, invoicePersonGuid) }
+        { rcaInitresponse ->
+
+            this.rcaInitResponse = rcaInitresponse
+            rcaInitresponse.guid?.let {
+                firstPaymentDone = true
+                viewModel.paymentStart(it, invoicePersonGuid)
+            }
+
         }
 
         viewModel.initTransactionDataItems.observe(viewLifecycleOwner)
@@ -260,6 +340,7 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
                 }
             }
         }
+
     }
 
     private var purchaseDialog: AlertDialog? = null
@@ -290,52 +371,93 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
         return -1
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun setImage(href: String, view: ImageView) {
-        val url = "${ApiModule.BASE_URL_RESOURCES}${href}"
-        val glideUrl = GlideUrl(
-            url,
-            LazyHeaders.Builder()
-                .addHeader("Authorization", "Bearer ${AppPreferencesDelegates.get().token}")
-                .build()
-        )
-        val options = RequestOptions()
-        view.clipToOutline = true
-        Glide.with(requireContext())
-            .load(glideUrl)
-            .error(requireContext().resources.getDrawable(R.drawable.ic_profile_picture))
-            .apply(
-                options
-                    .skipMemoryCache(true)
-                    .priority(Priority.HIGH)
-                    .format(DecodeFormat.PREFER_ARGB_8888)
+    private fun setImage(logoHref: String?, singlechar: String?, view: ImageView, tv: TextView?) {
+
+        if (logoHref != null) {
+
+            val url = "${ApiModule.BASE_URL_RESOURCES}${logoHref}"
+            val glideUrl = GlideUrl(
+                url,
+                LazyHeaders.Builder()
+                    .addHeader("Authorization", "Bearer ${AppPreferencesDelegates.get().token}")
+                    .build()
             )
-            .into(view)
+
+            tv?.isVisible = false
+            view.isVisible = true
+            val options = RequestOptions()
+            view.clipToOutline = true
+
+            Glide.with(requireContext())
+                .load(glideUrl)
+                .apply(
+                    options.centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .priority(Priority.HIGH)
+                        .format(DecodeFormat.PREFER_ARGB_8888)
+                )
+                .into(view)
+        } else {
+            tv?.isVisible = true
+            view.isVisible = false
+
+            tv?.text = singlechar?.replace(
+                "^\\s*([a-zA-Z]).*\\s+([a-zA-Z])\\S+$".toRegex(),
+                "$1$2"
+            )?.uppercase(Locale.getDefault())
+        }
     }
 
     @SuppressLint("SetTextI18n")
     override fun onContinueOwner(ownerNaturalItem: NaturalPerson?, ownerLegalItem: LegalPerson?) {
         when {
             ownerNaturalItem != null -> {
-                ownerNaturalItem.logoHref?.let { it1 -> setImage(it1, mSelect_bill_Image) }
-                mBillToName.setText("${ownerNaturalItem.firstName} ${ownerNaturalItem.lastName}")
-                invoicePersonGuid = ownerNaturalItem.id.toString()
+                setImage(
+                    ownerNaturalItem.logoHref,
+                    "${ownerNaturalItem.firstName} ${ownerNaturalItem.lastName}",
+                    mSelect_bill_Image,
+                    textLogoBill
+                )
+                mBillToName.setText(
+                    "${
+                        ownerNaturalItem.firstName.toString().ifBlank { "N/A" }
+                    } ${ownerNaturalItem.lastName.toString().ifBlank { "N/A" }}"
+                )
+                invoicePersonGuid = ownerNaturalItem.guid.toString()
             }
             ownerLegalItem != null -> {
-                ownerLegalItem.logoHref?.let { it1 -> setImage(it1, mSelect_bill_Image) }
-                mBillToName.setText(ownerLegalItem.companyName)
-                invoicePersonGuid = ownerLegalItem.id.toString()
+                setImage(
+                    ownerLegalItem.logoHref,
+                    ownerLegalItem.companyName,
+                    mSelect_bill_Image,
+                    textLogoBill
+                )
+                mBillToName.setText(ownerLegalItem.companyName.toString().ifBlank { "N/A" })
+                invoicePersonGuid = ownerLegalItem.guid.toString()
             }
         }
     }
 
     override fun openNewUser(type: String?) {
-
+        if (type != null) {
+            addNew = true
+            bottomSheet?.dismiss()
+        }
     }
 
-    override fun openEditUser(type: String?) {
+    override fun onResume() {
 
+        super.onResume()
+        if (addNew) {
+            bottomSheet = SelectUserFragment(
+                this, null, null, this, null,
+                "OWNER"
+            )
+            bottomSheet?.show(requireActivity().supportFragmentManager, null)
+        }
     }
+
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun showPurchaseBottomSheetDialog(itemList: PaymentResponse) {
@@ -400,7 +522,6 @@ class SummaryFragment : BaseFragment<SummaryViewModel>(),
         }
 
         bottomSheetDialog.show()
-
     }
 
 }

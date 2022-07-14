@@ -25,7 +25,7 @@ import ro.westaco.carhome.data.sources.remote.responses.models.RcaDurationItem
 import ro.westaco.carhome.data.sources.remote.responses.models.RcaOfferDetails
 import ro.westaco.carhome.di.ApiModule
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
 import ro.westaco.carhome.utils.CatalogUtils
 import ro.westaco.carhome.utils.ViewUtils
 import java.text.SimpleDateFormat
@@ -104,24 +104,36 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
                  */
                 rcaOfferDetail?.vehicle?.brandLogo?.let { it1 -> setImage(it1, mVehicleLogo) }
 
-                mCarRoadStar.text = rcaOfferDetail?.vehicle?.brandName
+                mCarRoadStar.text = rcaOfferDetail?.vehicle?.brandName.toString().ifBlank { "N/A" }
                 mCarCountry.text = rcaOfferDetail?.vehicle?.registrationCountryCode
-                mCarNumber.text = rcaOfferDetail?.vehicle?.licensePlate
-                mCarModel.text = rcaOfferDetail?.vehicle?.model
-                mCarVIN.text = rcaOfferDetail?.vehicle?.vehicleIdentificationNumber
-                mCarSerialNumber.text = rcaOfferDetail?.vehicle?.vehicleIdentityCard
+                mCarNumber.text = rcaOfferDetail?.vehicle?.licensePlate.toString().ifBlank { "N/A" }
+                mCarModel.text = rcaOfferDetail?.vehicle?.model.toString().ifBlank { "N/A" }
+                mCarVIN.text = rcaOfferDetail?.vehicle?.vehicleIdentificationNumber.toString()
+                    .ifBlank { "N/A" }
+                mCarSerialNumber.text =
+                    rcaOfferDetail?.vehicle?.vehicleIdentityCard.toString().ifBlank { "N/A" }
                 mCarPower.text =
                     rcaOfferDetail?.vehicle?.enginePower.toString() + " " + getString(R.string.hp)
                 mCarSeat.text =
                     rcaOfferDetail?.vehicle?.noOfSeats.toString() + " " + getString(R.string.seat)
-                mCarMatw.text = rcaOfferDetail?.vehicle?.maxAllowableMass.toString()
+                mCarMatw.text =
+                    rcaOfferDetail?.vehicle?.maxAllowableMass.toString().ifBlank { "N/A" }
 
                 /**
                  * Offer Validity
                  */
 
-                et_start_date.setText(rcaOfferDetail?.beginDate)
-                et_end_date.setText(rcaOfferDetail?.endDate)
+                val bDate = rcaOfferDetail?.beginDate
+                val eDate = rcaOfferDetail?.endDate
+                var spf =
+                    SimpleDateFormat(requireContext().resources.getString(R.string.server_date_format_template))
+                val newBDate = spf.parse(bDate)
+                val newEDate = spf.parse(eDate)
+                spf =
+                    SimpleDateFormat(requireContext().resources.getString(R.string.date_format_template))
+
+                et_start_date.setText(spf.format(newBDate))
+                et_end_date.setText(spf.format(newEDate))
 
                 /**
                  * OwnerData
@@ -358,9 +370,8 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
         view.clipToOutline = true
         Glide.with(requireContext())
             .load(glideUrl)
-            .error(requireContext().resources.getDrawable(R.drawable.ic_profile_picture))
             .apply(
-                options.centerCrop()
+                options.fitCenter()
                     .skipMemoryCache(true)
                     .priority(Priority.HIGH)
                     .format(DecodeFormat.PREFER_ARGB_8888)
@@ -377,7 +388,7 @@ class InsOfferDetailsFragment : BaseFragment<InsOffersDetailsViewModel>() {
                 val pos = rcaOfferDetail?.rcaDurationId?.let { findPosById(durationList, it) }
                 if (pos != null) {
                     priceDuration = pos
-                    mDurationItem.setText(durationList[pos].name)
+                    mDurationItem.setText("${durationList[pos].unitCount}  ${durationList[pos].unit}")
 
                 }
             }

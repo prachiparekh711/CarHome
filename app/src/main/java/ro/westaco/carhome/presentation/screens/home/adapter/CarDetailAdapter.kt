@@ -67,7 +67,10 @@ class CarDetailAdapter(
 
         fun bind(position: Int) {
             val item = cars[position]
-            makeAndModel.text = "${item.vehicleBrand ?: ""} ${item.model ?: ""}"
+            if (item.vehicleBrand.isNullOrEmpty() && item.model.isNullOrEmpty())
+                makeAndModel.text = "N/A"
+            else
+                makeAndModel.text = "${item.vehicleBrand ?: ""} ${item.model ?: ""}"
             carNo.text = item.licensePlate
 
             itemView.setOnClickListener {
@@ -89,7 +92,15 @@ class CarDetailAdapter(
 
             if (!item.vignetteExpirationDate.isNullOrEmpty()) {
 
-                val serverDate = originalFormat.parse(item.vignetteExpirationDate)
+                var serverDate: Date = try {
+                    originalFormatList.parse(item.vignetteExpirationDate) as Date
+                } catch (e: Exception) {
+                    val originalFormat = SimpleDateFormat(
+                        context.getString(R.string.server_standard_datetime_format_template1),
+                        Locale.US
+                    )
+                    originalFormat.parse(item.vignetteExpirationDate) as Date
+                }
 
                 val timeLeftMillis = serverDate.time - Date().time
                 val timeLeftMillisPos =
@@ -156,7 +167,6 @@ class CarDetailAdapter(
                 } else {
                     rostatus.setBackgroundResource(R.drawable.inactive_status_back)
                     rostatus.text = context.getString(R.string.purchases_exp_inactive)
-
                 }
 
 
@@ -179,7 +189,7 @@ class CarDetailAdapter(
     }
 
 
-    val originalFormat = SimpleDateFormat(
+    var originalFormatList = SimpleDateFormat(
         context.getString(R.string.server_standard_datetime_format_template),
         Locale.US
     )

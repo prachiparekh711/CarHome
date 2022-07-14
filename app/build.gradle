@@ -17,9 +17,8 @@ android {
         applicationId "ro.westaco.carhome"
         minSdk 21
         targetSdk 31
-        versionCode 11
-        versionName "1.0.10"
-
+        versionCode 13
+        versionName "1.0.12"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "CarHome" + "-v" + versionCode + "(" + versionName + ")")
         signingConfig signingConfigs.debug
@@ -29,16 +28,16 @@ android {
     productFlavors {
         CarHome_Beta {
             applicationId 'ro.westaco.carhome'
-            versionCode 11
-            versionName "1.0.10"
+            versionCode 13
+            versionName "1.0.12"
             dimension "content"
             setProperty("archivesBaseName", "CarHome-Beta" + "-v" + versionCode + "(" + versionName + ")")
         }
 
         CarHome_Build {
             applicationId 'ro.westaco.carhome'
-            versionCode 11
-            versionName "1.0.10"
+            versionCode 13
+            versionName "1.0.12"
             dimension "content"
             setProperty("archivesBaseName", "CarHome-Build" + "-v" + versionCode + "(" + versionName + ")")
         }
@@ -105,17 +104,17 @@ dependencies {
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
+    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.9.1'
 
     /**
      * Android Support
      */
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.6.0'
-    implementation 'androidx.activity:activity-ktx:1.4.0'
-    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.activity:activity-ktx:1.5.0'
+    implementation 'androidx.fragment:fragment-ktx:1.5.0'
     implementation 'androidx.work:work-runtime:2.7.1' // required by plot sdk
     implementation 'androidx.work:work-gcm:2.7.1' // required by plot sdk
     implementation 'com.google.android.gms:play-services-nearby:18.2.0' // required by plot sdk
@@ -125,17 +124,17 @@ dependencies {
      * Firebase
      */
 //    implementation platform('com.google.firebase:firebase-bom:29.0.0')
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.10'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
     implementation 'com.google.firebase:firebase-analytics:21.0.0'
-    implementation 'com.google.firebase:firebase-auth:21.0.4'
-    implementation 'com.google.firebase:firebase-messaging:23.0.5'
+    implementation 'com.google.firebase:firebase-auth:21.0.6'
+    implementation 'com.google.firebase:firebase-messaging:23.0.6'
     implementation "com.firebaseui:firebase-ui-storage:3.2.1"
     /**
      * Social Auth
      */
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
-    implementation 'com.facebook.android:facebook-login:13.2.0'
-    implementation 'com.facebook.android:facebook-android-sdk:13.2.0'
+    implementation 'com.facebook.android:facebook-login:14.0.0'
+    implementation 'com.facebook.android:facebook-android-sdk:14.0.0'
 
     /**
      * Api
@@ -177,7 +176,7 @@ dependencies {
      */
     //googleMap
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
-    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
     //Maps SDK
     implementation 'com.google.maps.android:android-maps-utils:2.3.0'
     implementation 'com.google.maps.android:maps-utils-ktx:3.3.0'
@@ -198,8 +197,8 @@ dependencies {
     implementation 'androidx.biometric:biometric:1.1.0'
 
 //  Glide
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 
 //  Loader
     implementation "com.airbnb.android:lottie:4.2.0"
@@ -217,5 +216,8 @@ dependencies {
 
 //  Image crop
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+
+    //Rootbeer
+    implementation 'com.scottyab:rootbeer-lib:0.1.0'
 
 }

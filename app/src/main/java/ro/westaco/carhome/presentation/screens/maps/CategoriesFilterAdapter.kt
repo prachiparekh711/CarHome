@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import ro.westaco.carhome.data.sources.remote.responses.models.LocationFilterItem
 import ro.westaco.carhome.data.sources.remote.responses.models.SectionModel
 import ro.westaco.carhome.databinding.SectionItemBinding
 import ro.westaco.carhome.navigation.SingleLiveEvent
@@ -32,7 +33,16 @@ class CategoriesFilterAdapter(
 
     fun initIntermediateWithSelectedItems() {
         intermediateSelectedItems.clear()
-        intermediateSelectedItems.addAll(selectedItems)
+        selectedItems.forEach { sectionModel ->
+            val filters: ArrayList<LocationFilterItem> = ArrayList()
+            filters.addAll(sectionModel.filters)
+            intermediateSelectedItems.add(
+                SectionModel(
+                    sectionModel.category,
+                    filters
+                )
+            )
+        }
     }
 
 
@@ -66,13 +76,20 @@ class CategoriesFilterAdapter(
 
         mapFilterBottomSheetAdapter?.getSelectedItems()
             ?.observe(viewLifecycleOwner) { selectedFilters ->
-                val categoryForSelectedItems = intermediateSelectedItems.find {
-                    item.category == it.category
-                }
-                categoryForSelectedItems?.filters?.clear()
-                categoryForSelectedItems?.filters?.addAll(selectedFilters)
-                selectedItemsLiveData.value = intermediateSelectedItems
+                returnIntermediateSelectedItems(item, selectedFilters)
             }
+    }
+
+    private fun returnIntermediateSelectedItems(
+        item: SectionModel,
+        selectedFilters: ArrayList<LocationFilterItem>
+    ) {
+        val categoryForSelectedItems = intermediateSelectedItems.find {
+            item.category == it.category
+        }
+        categoryForSelectedItems?.filters?.clear()
+        categoryForSelectedItems?.filters?.addAll(selectedFilters)
+        selectedItemsLiveData.value = intermediateSelectedItems
     }
 
     fun getIntermediateSelectedItems(): SingleLiveEvent<ArrayList<SectionModel>> {

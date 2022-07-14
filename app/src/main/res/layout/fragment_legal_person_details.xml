@@ -67,7 +67,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior=".utils.OverScrollBounceBehavior">
+                app:layout_behavior=".views.OverScrollBounceBehavior">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -185,6 +185,7 @@
                                 android:weightSum="2">
 
                                 <com.google.android.material.textfield.TextInputLayout
+                                    app:hintTextAppearance="@style/TextLabel"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/_2sdp"
@@ -221,6 +222,7 @@
                                 </com.google.android.material.textfield.TextInputLayout>
 
                                 <com.google.android.material.textfield.TextInputLayout
+                                    app:hintTextAppearance="@style/TextLabel"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/_2sdp"
@@ -261,6 +263,7 @@
                             </LinearLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
+                                app:hintTextAppearance="@style/TextLabel"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_2sdp"
@@ -298,6 +301,7 @@
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
+                                app:hintTextAppearance="@style/TextLabel"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_2sdp"
@@ -402,6 +406,7 @@
                                 android:orientation="horizontal">
 
                                 <com.google.android.material.textfield.TextInputLayout
+                                    app:hintTextAppearance="@style/TextLabel"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/_2sdp"
@@ -440,6 +445,7 @@
 
 
                             <com.google.android.material.textfield.TextInputLayout
+                                app:hintTextAppearance="@style/TextLabel"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_2sdp"
@@ -598,7 +604,6 @@
                                             android:layout_width="@dimen/_15sdp"
                                             android:layout_height="@dimen/_15sdp"
                                             android:layout_marginEnd="@dimen/_13sdp"
-                                            android:src="@drawable/ic_arrow_down_id"
                                             app:layout_constraintBottom_toBottomOf="parent"
                                             app:layout_constraintRight_toRightOf="parent"
                                             app:layout_constraintTop_toTopOf="parent" />
@@ -610,6 +615,7 @@
                                         android:layout_height="wrap_content">
 
                                         <com.google.android.material.textfield.TextInputLayout
+                                            app:hintTextAppearance="@style/TextLabel"
                                             android:id="@+id/spinnerCounty"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
@@ -626,8 +632,6 @@
                                             app:boxCornerRadiusTopStart="0dp"
                                             app:boxStrokeColor="#FFF"
                                             app:boxStrokeWidth="0dp"
-                                            app:endIconDrawable="@drawable/ic_arrow_down_id"
-                                            app:endIconMode="custom"
                                             app:hintTextColor="#162651"
                                             tools:ignore="RtlSymmetry,TooManyViews">
 
@@ -650,6 +654,7 @@
                                         </com.google.android.material.textfield.TextInputLayout>
 
                                         <com.google.android.material.textfield.TextInputLayout
+                                            app:hintTextAppearance="@style/TextLabel"
                                             android:id="@+id/stateProvinceLabel"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
@@ -667,8 +672,6 @@
                                             app:boxCornerRadiusTopStart="0dp"
                                             app:boxStrokeColor="#FFF"
                                             app:boxStrokeWidth="0dp"
-                                            app:endIconDrawable="@drawable/ic_arrow_down_id"
-                                            app:endIconMode="custom"
                                             app:hintTextColor="#162651"
                                             tools:ignore="RtlSymmetry,TooManyViews">
 
@@ -690,6 +693,7 @@
                                         android:layout_height="wrap_content">
 
                                         <com.google.android.material.textfield.TextInputLayout
+                                            app:hintTextAppearance="@style/TextLabel"
                                             android:id="@+id/spinnerLocality"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
@@ -706,8 +710,6 @@
                                             app:boxCornerRadiusTopStart="0dp"
                                             app:boxStrokeColor="#FFF"
                                             app:boxStrokeWidth="0dp"
-                                            app:endIconDrawable="@drawable/ic_arrow_down_id"
-                                            app:endIconMode="custom"
                                             app:hintTextColor="#162651"
                                             tools:ignore="RtlSymmetry,TooManyViews">
 
@@ -730,6 +732,7 @@
                                         </com.google.android.material.textfield.TextInputLayout>
 
                                         <com.google.android.material.textfield.TextInputLayout
+                                            app:hintTextAppearance="@style/TextLabel"
                                             android:id="@+id/localityAreaLabel"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
@@ -777,6 +780,7 @@
 
 
                                             <com.google.android.material.textfield.TextInputLayout
+                                                app:hintTextAppearance="@style/TextLabel"
                                                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                                                 android:layout_width="0dp"
                                                 android:layout_height="match_parent"
@@ -811,6 +815,7 @@
 
 
                                             <com.google.android.material.textfield.TextInputLayout
+                                                app:hintTextAppearance="@style/TextLabel"
                                                 android:layout_width="0dp"
                                                 android:layout_height="match_parent"
                                                 android:layout_marginEnd="@dimen/_2sdp"
@@ -855,6 +860,7 @@
                                             android:orientation="horizontal">
 
                                             <com.google.android.material.textfield.TextInputLayout
+                                                app:hintTextAppearance="@style/TextLabel"
                                                 android:layout_width="0dp"
                                                 android:layout_height="match_parent"
                                                 android:layout_marginEnd="@dimen/_2sdp"
@@ -890,6 +896,7 @@
                                             </com.google.android.material.textfield.TextInputLayout>
 
                                             <com.google.android.material.textfield.TextInputLayout
+                                                app:hintTextAppearance="@style/TextLabel"
                                                 android:layout_width="0dp"
                                                 android:layout_height="match_parent"
                                                 android:layout_marginEnd="@dimen/_2sdp"
@@ -934,12 +941,13 @@
                                             android:orientation="horizontal">
 
                                             <com.google.android.material.textfield.TextInputLayout
+                                                android:hint="@string/entrance"
                                                 android:layout_width="0dp"
                                                 android:layout_height="match_parent"
                                                 android:layout_marginEnd="@dimen/_2sdp"
                                                 android:layout_weight="1"
                                                 android:background="@android:color/transparent"
-                                                android:hint="@string/address_entrance"
+                                                app:hintTextAppearance="@style/TextLabel"
                                                 android:textColor="@color/textOnWhite"
                                                 android:theme="@style/TextInputLayoutAppearance"
                                                 app:boxBackgroundColor="@android:color/transparent"
@@ -969,12 +977,13 @@
                                             </com.google.android.material.textfield.TextInputLayout>
 
                                             <com.google.android.material.textfield.TextInputLayout
+                                                android:hint="@string/apartment"
                                                 android:layout_width="0dp"
                                                 android:layout_height="match_parent"
                                                 android:layout_marginEnd="@dimen/_2sdp"
                                                 android:layout_weight="1"
                                                 android:background="@android:color/transparent"
-                                                android:hint="@string/address_apartment"
+                                                app:hintTextAppearance="@style/TextLabel"
                                                 android:textColor="@color/textOnWhite"
                                                 android:theme="@style/TextInputLayoutAppearance"
                                                 app:boxBackgroundColor="@android:color/transparent"
@@ -1004,12 +1013,13 @@
                                             </com.google.android.material.textfield.TextInputLayout>
 
                                             <com.google.android.material.textfield.TextInputLayout
+                                                android:hint="@string/floor"
                                                 android:layout_width="0dp"
                                                 android:layout_height="match_parent"
                                                 android:layout_marginEnd="@dimen/_2sdp"
                                                 android:layout_weight="1"
                                                 android:background="@android:color/transparent"
-                                                android:hint="@string/address_floor"
+                                                app:hintTextAppearance="@style/TextLabel"
                                                 android:textColor="@color/textOnWhite"
                                                 android:theme="@style/TextInputLayoutAppearance"
                                                 app:boxBackgroundColor="@android:color/transparent"
@@ -1041,6 +1051,7 @@
                                         </LinearLayout>
 
                                         <com.google.android.material.textfield.TextInputLayout
+                                            app:hintTextAppearance="@style/TextLabel"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
                                             android:layout_marginTop="@dimen/_2sdp"
@@ -1151,6 +1162,15 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/blankRl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/mAppBar"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

@@ -59,49 +59,56 @@ class CarDetailsReminderAdapter(
             }
 
             val originalFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val serverDate = originalFormat.parse(item.nextDate)
 
-            val timeLeftMillis = serverDate.time - Date().time
-            val timeLeftMillisPos = if (timeLeftMillis < 0) -timeLeftMillis else timeLeftMillis
-            val daysLeft = TimeUnit.MILLISECONDS.toDays(timeLeftMillisPos)
-            val hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeftMillisPos)
-            val minutesLeft = TimeUnit.MILLISECONDS.toMinutes(timeLeftMillisPos)
+            try {
 
-            var formattedTimeLeft = ""
-            if (daysLeft > 0) {
-                formattedTimeLeft = context.getString(R.string.days_template, daysLeft)
-            } else if (hoursLeft > 0) {
-                formattedTimeLeft = context.getString(R.string.hours_template, hoursLeft)
-            } else if (minutesLeft > 0) {
-                formattedTimeLeft = context.getString(R.string.minutes_template, minutesLeft)
-            }
+                val serverDate = originalFormat.parse(item.nextDate)
 
-            if (daysLeft <= 20) {
-                if (timeLeftMillis < 0) {
-                    formattedTimeLeft =
-                        context.getString(R.string.duetime_in_past, formattedTimeLeft)
-                    nextDueDate.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.tag_orange
-                        )
-                    )
-                } else {
-                    formattedTimeLeft =
-                        context.getString(R.string.duetime_in_future, formattedTimeLeft)
-                    nextDueDate.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.orangeExpired
-                        )
-                    )
+                val timeLeftMillis = serverDate.time - Date().time
+                val timeLeftMillisPos = if (timeLeftMillis < 0) -timeLeftMillis else timeLeftMillis
+                val daysLeft = TimeUnit.MILLISECONDS.toDays(timeLeftMillisPos)
+                val hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeftMillisPos)
+                val minutesLeft = TimeUnit.MILLISECONDS.toMinutes(timeLeftMillisPos)
+
+                var formattedTimeLeft = ""
+                if (daysLeft > 0) {
+                    formattedTimeLeft = context.getString(R.string.days_template, daysLeft)
+                } else if (hoursLeft > 0) {
+                    formattedTimeLeft = context.getString(R.string.hours_template, hoursLeft)
+                } else if (minutesLeft > 0) {
+                    formattedTimeLeft = context.getString(R.string.minutes_template, minutesLeft)
                 }
-                nextDueDate.text = formattedTimeLeft
-            } else {
-                val parser = SimpleDateFormat("yyyy-MM-dd")
-                val formatter = SimpleDateFormat("dd/MM/yyyy")
 
-                nextDueDate.text = "Next Due " + formatter.format(parser.parse(item.nextDate))
+                if (daysLeft <= 20) {
+                    if (timeLeftMillis < 0) {
+                        formattedTimeLeft =
+                            context.getString(R.string.duetime_in_past, formattedTimeLeft)
+                        nextDueDate.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.tag_orange
+                            )
+                        )
+                    } else {
+                        formattedTimeLeft =
+                            context.getString(R.string.duetime_in_future, formattedTimeLeft)
+                        nextDueDate.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.orangeExpired
+                            )
+                        )
+                    }
+                    nextDueDate.text = formattedTimeLeft
+                } else {
+                    val parser = SimpleDateFormat("yyyy-MM-dd")
+                    val formatter = SimpleDateFormat("dd/MM/yyyy")
+
+                    nextDueDate.text = "Next Due " + formatter.format(parser.parse(item.nextDate))
+                }
+
+            } catch (e: Exception) {
+                nextDueDate.text = "N/A"
             }
 
 

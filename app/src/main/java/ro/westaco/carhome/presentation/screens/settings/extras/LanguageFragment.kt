@@ -25,7 +25,7 @@ class LanguageFragment : BaseFragment<CommenViewModel>() {
     override fun getContentView() = R.layout.fragment_language
 
     override fun getStatusBarColor() =
-        ContextCompat.getColor(requireContext(), R.color.settingsHeaderBg)
+        ContextCompat.getColor(requireContext(), R.color.white)
 
     override fun initUi() {
         back.setOnClickListener {

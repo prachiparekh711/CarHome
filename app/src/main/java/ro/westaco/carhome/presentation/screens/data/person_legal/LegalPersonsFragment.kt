@@ -8,13 +8,11 @@ import kotlinx.android.synthetic.main.fragment_legal_persons.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.LegalPerson
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.utils.Progressbar
 
 //C- Designing & Logo
 @AndroidEntryPoint
 class LegalPersonsFragment : BaseFragment<LegalPersonsViewModel>(),
     LegalPersonsAdapter.OnItemInteractionListener {
-    private var progressbar: Progressbar? = null
 
     private lateinit var adapter: LegalPersonsAdapter
 
@@ -23,8 +21,7 @@ class LegalPersonsFragment : BaseFragment<LegalPersonsViewModel>(),
     override fun getStatusBarColor() = ContextCompat.getColor(requireContext(), R.color.white)
 
     override fun initUi() {
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
+
         fab.setOnClickListener {
             viewModel.onAddNew()
         }
@@ -51,9 +48,7 @@ class LegalPersonsFragment : BaseFragment<LegalPersonsViewModel>(),
 
                 adapter.setItems(legalPersons)
             }
-            progressbar?.dismissPopup()
         }
-
 
     }
 

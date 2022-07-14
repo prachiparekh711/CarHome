@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.screens.service.insurance.car_selection.InsAddCarFragment">
+
+    <include
+        android:id="@+id/enterVinState"
+        layout="@layout/ins_add_car_layout" />
+
+    <include
+        android:id="@+id/generateProfileState"
+        layout="@layout/fragment_fetch_screen"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/successState"
+        layout="@layout/layout_add_car_success"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/errorState"
+        layout="@layout/layout_add_car_error"
+        android:visibility="gone" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

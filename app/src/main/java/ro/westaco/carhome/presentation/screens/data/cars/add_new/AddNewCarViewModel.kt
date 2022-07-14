@@ -23,7 +23,6 @@ import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File
@@ -33,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddNewCarViewModel @Inject constructor(
     private val app: Application,
-    private val api: CarHomeApi
+    private val api: CarHomeApi,
 ) : BaseViewModel() {
     override fun onFragmentCreated() {
         super.onFragmentCreated()
@@ -46,12 +45,10 @@ class AddNewCarViewModel @Inject constructor(
     var vehicleBrandData = MutableLiveData<ArrayList<CatalogItem>?>()
     var fuelTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
     var countryData = MutableLiveData<ArrayList<Country>?>()
-    var leasingCompaniesData = ArrayList<LeasingCompany>()
+    var leasingCompaniesData = MutableLiveData<ArrayList<LeasingCompany>?>()
     val actionStream: SingleLiveEvent<ACTION> = SingleLiveEvent()
 
     sealed class ACTION {
-
-        class SetLeasingCompanyData(val leasingCompaniesData: ArrayList<LeasingCompany>) : ACTION()
         class OnRefresh(val vehicleDetails: VehicleDetails?) : ACTION()
     }
 
@@ -75,67 +72,81 @@ class AddNewCarViewModel @Inject constructor(
         vehicleId: Int?,
         registrationCountryPos: Int,
         licensePlate: String,
-        vehicleCategoryPos: Int,
-        vehicleSubCategoryPos: Int,
-        vehicleUsageType: Int,
-        manufacturerPos: Int,
-        model: String,
-        vin: String,
-        year: String,
-        maxAllowableMass: String,
-        engineSize: String,
-        power: String,
-        fuelTypePos: Int,
-        noSeats: String,
-        civ: String,
+        vehicleCategoryPos: Int?,
+        vehicleSubCategoryPos: Int?,
+        vehicleUsageType: Int?,
+        manufacturerPos: Int?,
+        model: String?,
+        vin: String?,
+        year: String?,
+        maxAllowableMass: String?,
+        engineSize: String?,
+        power: String?,
+        fuelTypePos: Int?,
+        noSeats: String?,
+        civ: String?,
         leasingCompanyID: Int?,
-        vehicleEvents: ArrayList<VehicleEvent>,
-        isEdit: Boolean
-
+        vehicleEvents: ArrayList<VehicleEvent>?,
+        isEdit: Boolean,
     ) {
+
         uiEventStream.value = UiEvent.HideKeyboard
 
-        if (!validateFields(
-                licensePlate,
-                model,
-                vin,
-                year,
-                maxAllowableMass,
-                engineSize,
-                power,
-                noSeats,
-                civ
-            )
-        ) {
+        if (licensePlate.isEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.license_hint)
             return
         }
 
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
+        if (model.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.carmodel_cannot_be_empty)
+            return
+        }
+
+        if (year.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.invalid_year)
+            return
+        }
+
+        if (maxAllowableMass.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.invalid_mass)
+            return
+        }
+
+        if (engineSize.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.invalid_engine_size)
+            return
+        }
+
+        if (engineSize.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.invalid_engine_power)
+            return
+        }
+
+        if (noSeats.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.invalid_number_of_seats)
             return
         }
 
         val addCarRequest = AddVehicleRequest(
             civ,
-            year.toInt(),
+            year.toIntOrNull(),
             vin,
             leasingCompanyID,
-            vehicleUsageData.value?.get(vehicleUsageType)?.id?.toInt(),
-            power.toInt(),
-            vehicleCategoryData.value?.get(vehicleCategoryPos)?.id?.toInt(),
+            vehicleUsageType?.let { vehicleUsageData.value?.get(it)?.id?.toInt() },
+            power?.toIntOrNull(),
+            vehicleCategoryPos?.let { vehicleCategoryData.value?.get(it)?.id?.toInt() },
             countryData.value?.get(registrationCountryPos)?.code,
-            vehicleBrandData.value?.get(manufacturerPos)?.id?.toInt(),
-            maxAllowableMass.toInt(),
+            manufacturerPos?.let { vehicleBrandData.value?.get(it)?.id?.toInt() },
+            maxAllowableMass.toIntOrNull(),
             licensePlate,
-            noSeats.toInt(),
-            fuelTypeData.value?.get(fuelTypePos)?.id?.toInt(),
-            engineSize.toInt(),
-            vehicleSubCategoryData.value?.get(vehicleSubCategoryPos)?.id?.toInt(),
+            noSeats.toIntOrNull(),
+            fuelTypePos?.let { fuelTypeData.value?.get(it)?.id?.toInt() },
+            engineSize.toIntOrNull(),
+            vehicleSubCategoryPos?.let { vehicleSubCategoryData.value?.get(it)?.id?.toInt() },
             model,
             vehicleId,
             vehicleEvents
         )
-
 
         uiEventStream.value = UiEvent.Navigation(
             NavAttribs(
@@ -153,33 +164,9 @@ class AddNewCarViewModel @Inject constructor(
                             )
                         }
                     }
-                }
+                }, false
             )
         )
-    }
-
-    private fun validateFields(
-        licensePlate: String,
-        model: String,
-        vin: String,
-        year: String,
-        maxAllowableMass: String,
-        engineSize: String,
-        power: String,
-        noSeats: String,
-        civ: String
-    ): Boolean {
-        if (licensePlate.isEmpty() || model.isEmpty() || vin.isEmpty() || year.isEmpty() || maxAllowableMass.isEmpty() || engineSize.isEmpty() || power.isEmpty() || noSeats.isEmpty() || civ.isEmpty()) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.fill_all_fields)
-            return false
-        }
-
-        if (vin.length != 17) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.error_vin)
-            return false
-        }
-
-        return true
     }
 
     fun fetchVehicleSubCategory(category: Int) {
@@ -243,10 +230,8 @@ class AddNewCarViewModel @Inject constructor(
         api.getLeasingCompanies(countryCode)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
-                resp?.data?.let { leasingCompaniesData.addAll(it) }
-                actionStream.value = ACTION.SetLeasingCompanyData(leasingCompaniesData)
+                leasingCompaniesData.value = resp.data
             }, {
-                leasingCompaniesData.clear()
             })
     }
 
@@ -257,7 +242,6 @@ class AddNewCarViewModel @Inject constructor(
                 .subscribe({
                     onVehicle(vehicleId)
                 }, {
-                    uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
                 })
         }
     }
@@ -278,8 +262,7 @@ class AddNewCarViewModel @Inject constructor(
             .subscribe({
                 onVehicle(vehicleId)
             }, {
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 

@@ -2,6 +2,7 @@ package ro.westaco.carhome.presentation.screens.reminder
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import ro.westaco.carhome.data.sources.remote.responses.models.ListSection
 import ro.westaco.carhome.data.sources.remote.responses.models.Reminder
 import ro.westaco.carhome.presentation.screens.home.HomeViewModel
 import ro.westaco.carhome.utils.CatalogUtils
+import ro.westaco.carhome.utils.DateTimeUtils
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -42,6 +44,7 @@ class DateReminderAdapter(
 
     var swipeInterface: SwipeActions? = null
     private var tagsCatalog: ArrayList<CatalogItem>? = ArrayList()
+    private var invisibleItems: ArrayList<ListItem> = ArrayList()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): RecyclerView.ViewHolder {
         return if (i == DATAVIEW) {
@@ -82,10 +85,84 @@ class DateReminderAdapter(
 
     inner class ViewHolder1(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var title: TextView = itemView.findViewById(R.id.title)
+        private var titleLayout: LinearLayout = itemView.findViewById(R.id.titleLayout)
+        private var dropArrow: ImageView = itemView.findViewById(R.id.drowArrow)
 
         fun bind(pos: Int) {
             val item = listItems[pos] as ListSection
-            title.text = item.title
+            var numberOfElements = getNumberOfElementsAfterSection(item, listItems)
+            if (numberOfElements == 0) {
+                numberOfElements = getNumberOfElementsAfterSection(item, invisibleItems)
+            }
+            title.text = item.title + " (" + numberOfElements + ")"
+            dropArrow.visibility = View.VISIBLE
+            item.isItemVisible?.let {
+                if (it) {
+                    dropArrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
+                } else {
+                    dropArrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_right_24)
+                }
+            }
+            titleLayout.setOnClickListener {
+                item.isItemVisible?.let { visibility ->
+                    changeListItemsWithVisibility(visibility, pos, item)
+                    item.isItemVisible = !visibility
+                    notifyDataSetChanged()
+                }
+
+            }
+        }
+
+        private fun getNumberOfElementsAfterSection(
+            item: ListSection,
+            list: ArrayList<ListItem>
+        ): Int {
+            var numberOfElements = 0
+            var firstItem = list.find {
+                it.sectionName == item.sectionName
+            }
+            var first = list.indexOf(firstItem)
+            var lastItem = list.findLast {
+                it.sectionName == item.sectionName
+            }
+            var last = list.indexOf(lastItem)
+            for (position in first..last) {
+                if (list[position].sectionName == item.sectionName && list[position] !is ListSection)
+                    numberOfElements += 1
+            }
+            return numberOfElements
+        }
+
+        private fun changeListItemsWithVisibility(
+            visibility: Boolean,
+            pos: Int,
+            item: ListSection
+        ) {
+            if (visibility) {
+                var removedItems = 0
+                val clonedListItems = ArrayList<ListItem>()
+                clonedListItems.addAll(listItems)
+                clonedListItems.forEachIndexed { index, listItem ->
+                    if (listItem.sectionName == item.title && listItem !is ListSection) {
+                        invisibleItems.add(listItems[index - removedItems])
+                        listItems.removeAt(index - removedItems)
+                        removedItems += 1
+                    }
+                }
+            } else {
+                var insertedItems = 1
+                var removedItems = 0
+                val clonedListItems = ArrayList<ListItem>()
+                clonedListItems.addAll(invisibleItems)
+                clonedListItems.forEachIndexed { index, invisibleItem ->
+                    if (invisibleItem.sectionName == item.title) {
+                        listItems.add(pos + insertedItems, invisibleItems[index - removedItems])
+                        invisibleItems.removeAt(index - removedItems)
+                        insertedItems += 1
+                        removedItems += 1
+                    }
+                }
+            }
         }
     }
 
@@ -111,9 +188,21 @@ class DateReminderAdapter(
         private var dragItem: ConstraintLayout =
             itemView.findViewById(R.id.drag_item)
         private var hourTextView: TextView = itemView.findViewById(R.id.hourTextView)
+        private var strikeTrough: View = itemView.findViewById(R.id.strikeTrough)
 
         fun bind(pos: Int) {
             val item = listItems[pos] as Reminder
+            item.completed?.let {
+                if (it) {
+                    strikeTrough.visibility = View.VISIBLE
+                    title.setTypeface(null, Typeface.ITALIC)
+                    title.setTextColor(Color.GRAY)
+                } else {
+                    strikeTrough.visibility = View.GONE
+                    title.setTypeface(null, Typeface.BOLD)
+                    title.setTextColor(Color.parseColor("#303065"))
+                }
+            }
             title.text = item.title
             notes.text = item.notes
             if (item.tags?.isNotEmpty() == true) {
@@ -144,28 +233,23 @@ class DateReminderAdapter(
             }
 
 
-            var composedServerDate: String? = null
-            if (!item.dueDate.isNullOrEmpty()) {
+            var composedServerDate: Date? = null
+            if (item.dueDate != null) {
                 composedServerDate = item.dueDate
                 if (!item.dueTime.isNullOrEmpty()) {
-                    composedServerDate += " " + item.dueTime
+                    composedServerDate =
+                        DateTimeUtils.addStringTimeToDate(item.dueDate, item.dueTime)
                 }
             }
             composedServerDate?.let {
                 val ctx = itemView.context
                 try {
-                    val originalFormat = SimpleDateFormat(
-                        ctx.getString(R.string.server_datetime_format_template),
-                        Locale.US
-                    )
-                    val serverDate = originalFormat.parse(it)
+                    day.text = SimpleDateFormat("dd", Locale.US).format(it)
+                    month.text = SimpleDateFormat("MMM", Locale.US).format(it)
+                    year.text = "'${SimpleDateFormat("yy", Locale.US).format(it)}"
+                    hourTextView.text = SimpleDateFormat("HH:mm", Locale.US).format(it)
 
-                    day.text = SimpleDateFormat("dd", Locale.US).format(serverDate)
-                    month.text = SimpleDateFormat("MMM", Locale.US).format(serverDate)
-                    year.text = "'${SimpleDateFormat("yy", Locale.US).format(serverDate)}"
-                    hourTextView.text = SimpleDateFormat("hh:mm", Locale.US).format(serverDate)
-
-                    val timeLeftMillis = serverDate.time - Date().time
+                    val timeLeftMillis = it.time - Date().time
                     val timeLeftMillisPos =
                         if (timeLeftMillis < 0) -timeLeftMillis else timeLeftMillis
                     val daysLeft = TimeUnit.MILLISECONDS.toDays(timeLeftMillisPos)
@@ -220,14 +304,9 @@ class DateReminderAdapter(
                     timeLeftCircle.isVisible = true
 
                 } catch (e: Exception) {
-                    val originalFormat = SimpleDateFormat(
-                        ctx.getString(R.string.server_date_format_template),
-                        Locale.US
-                    )
-                    val serverDate = originalFormat.parse(it)
-                    day.text = SimpleDateFormat("dd", Locale.US).format(serverDate)
-                    month.text = SimpleDateFormat("MMM", Locale.US).format(serverDate)
-                    year.text = "'${SimpleDateFormat("yy", Locale.US).format(serverDate)}"
+                    day.text = SimpleDateFormat("dd", Locale.US).format(it)
+                    month.text = SimpleDateFormat("MMM", Locale.US).format(it)
+                    year.text = "'${SimpleDateFormat("yy", Locale.US).format(it)}"
                     hourTextView.text = "-"
 
                     timeLeft.isVisible = false
@@ -278,7 +357,12 @@ class DateReminderAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setItems(reminders: List<ListItem>?, tags: List<CatalogItem>) {
+    fun setItems(
+        reminders: List<ListItem>?,
+        tags: List<CatalogItem>,
+        invisibleListItems: List<ListItem>?
+    ) {
+        this.invisibleItems = ArrayList(invisibleListItems ?: listOf())
         this.listItems = ArrayList(reminders ?: listOf())
         this.tagsCatalog = ArrayList(tags)
 
@@ -288,6 +372,7 @@ class DateReminderAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun clearAll() {
         this.listItems.clear()
+        this.invisibleItems.clear()
         notifyDataSetChanged()
     }
 

@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_driving_mode.*
 import ro.westaco.carhome.R
-import ro.westaco.carhome.prefrences.SharedPrefrences
+import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.dashboard.DashboardFragment
 
@@ -77,10 +77,9 @@ class DrivingModeFragment : BaseFragment<DrivingModeModel>() {
 
         exit.setOnClickListener {
             DashboardFragment.CAR_MODE = requireContext().resources.getString(R.string.normal)
-            SharedPrefrences.setCarMode(
-                requireContext(),
+            AppPreferencesDelegates.get().carMode =
                 requireContext().resources.getString(R.string.normal)
-            )
+
             val parentFrag: DashboardFragment =
                 this@DrivingModeFragment.parentFragment as DashboardFragment
             val menu: Menu = parentFrag.bottomNavigationView.menu

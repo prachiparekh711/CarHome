@@ -32,12 +32,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
-        android:fontFamily="@font/inter_semibold_600"
         android:layout_marginEnd="@dimen/_12sdp"
-        android:textColor="@color/white"
         android:drawableLeft="@drawable/ic_message_question"
+        android:drawablePadding="@dimen/_5sdp"
+        android:fontFamily="@font/inter_semibold_600"
         android:gravity="center_vertical"
         android:text="@string/need_help"
+        android:textColor="@color/white"
         android:textSize="@dimen/_12sdp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
@@ -111,7 +112,7 @@
             android:layout_height="@dimen/_35sdp"
             android:layout_margin="@dimen/_10sdp"
             android:scaleType="fitCenter"
-            android:background="@drawable/bg_card_item_nostroke"
+            android:src="@drawable/logo_small"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -363,6 +364,26 @@
         </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/retry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:background="@drawable/cta_background"
+        android:fontFamily="@font/manrope_semibold_600"
+        android:gravity="center"
+        android:paddingVertical="@dimen/_12sdp"
+        android:text="Finish the payment"
+        android:textColor="@color/textOnSolid"
+        android:textSize="@dimen/_11sdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_goneMarginTop="@dimen/_20sdp" />
+
 
     <TextView
         android:id="@+id/back"

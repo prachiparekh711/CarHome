@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="@dimen/_5sdp">
+
+    <RelativeLayout
+        android:id="@+id/topRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_10sdp"
+        android:padding="@dimen/_5sdp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/raleway_bold_700"
+            android:gravity="center_horizontal"
+            android:text="@string/terms_tos"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/_16sdp" />
+
+    </RelativeLayout>
+
+    <ro.westaco.carhome.views.TouchEventInterceptorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btnAgree"
+        android:layout_below="@id/topRL">
+
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="WebViewLayout" />
+
+    </ro.westaco.carhome.views.TouchEventInterceptorLayout>
+
+    <TextView
+        android:id="@+id/btnAgree"
+        android:layout_width="@dimen/_130sdp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:background="@drawable/cta_background"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/_7sdp"
+        android:text="@string/agree"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12sdp" />
+</RelativeLayout>

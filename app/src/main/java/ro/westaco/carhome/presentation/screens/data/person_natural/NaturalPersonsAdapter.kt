@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -19,6 +20,7 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.responses.models.NaturalPerson
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.presentation.screens.main.MainActivity
 
 
 class NaturalPersonsAdapter(
@@ -55,9 +57,18 @@ class NaturalPersonsAdapter(
         private var iv_phone: ImageView = itemView.findViewById(R.id.iv_phone)
         private var iv_mail: ImageView = itemView.findViewById(R.id.iv_mail)
         private var fullName: TextView = itemView.findViewById(R.id.fullName)
+        private var youText: TextView = itemView.findViewById(R.id.youText)
 
         fun bind(item: NaturalPerson) {
-            fullName.text = "${item.firstName} ${item.lastName}"
+            fullName.text = "${item.firstName ?: ""} ${item.lastName ?: ""}"
+
+            if (item.id?.toInt() == MainActivity.activeId) {
+                iv_phone.isVisible = false
+                iv_mail.isVisible = false
+                youText.isVisible = true
+            } else {
+                youText.isVisible = false
+            }
 
             if (item.phone.isNullOrEmpty()) {
 

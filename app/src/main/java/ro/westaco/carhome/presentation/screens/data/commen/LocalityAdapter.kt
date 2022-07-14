@@ -25,7 +25,6 @@ class LocalityAdapter(
     private var contactListFiltered: ArrayList<Siruta>? = null
 
     var cityPosition = 0
-
     interface LocalityListClick {
 
         fun localityclick(position: Int, siruta: Siruta)

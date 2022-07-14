@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Intent
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.navigation.SingleLiveEvent
@@ -43,7 +42,6 @@ class EmailVerificationModel @Inject constructor(
                         actionStream.value = ACTION.LoginSuccess
 
                     }, {
-                        uiEventStream.value = UiEvent.ShowToast(R.string.failed_server)
                     })
             }
         }

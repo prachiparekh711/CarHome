@@ -9,7 +9,7 @@ data class InitVignettePurchaseRequest(
 //    @SerializedName("vehicleId") val vehicleId: Int?,
     @SerializedName("registrationCountryCode") val registrationCountryCode: String?,
     @SerializedName("licensePlate") val licensePlate: String?,
-    @SerializedName("vin") val vin: String?,
+    @SerializedName("vin") val vin: String? = null,
     @SerializedName("price") val price: VignettePrice?,
     @SerializedName("startDate") val startDate: String?,
 ) : Serializable

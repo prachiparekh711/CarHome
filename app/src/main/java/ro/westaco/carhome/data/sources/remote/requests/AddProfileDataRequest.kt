@@ -44,4 +44,8 @@ data class AddProfileDataRequest(
 
     @field:SerializedName("email")
     val email: String? = null
-)
+) {
+    override fun toString(): String {
+        return "AddProfileDataRequest(firstName=$firstName, lastName=$lastName, occupationCorIsco08=$occupationCorIsco08, address=$address, identityDocument=$identityDocument, cnp=$cnp, phone=$phone, phoneCountryCode=$phoneCountryCode, drivingLicense=$drivingLicense, employerName=$employerName, dateOfBirth=$dateOfBirth, id=$id, email=$email)"
+    }
+}

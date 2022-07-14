@@ -1,10 +1,15 @@
 package ro.westaco.carhome.presentation.base
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.webkit.WebView
 import android.widget.TextView
@@ -15,12 +20,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.layout_bottom_sheet.*
+import ro.westaco.carhome.CarHomeApplication
+import ro.westaco.carhome.NetworkChangeReceiver
 import ro.westaco.carhome.R
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
+import ro.westaco.carhome.dialog.InternetBottomSheetDialog
 import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
@@ -28,10 +38,12 @@ import ro.westaco.carhome.presentation.screens.dashboard.DashboardFragment
 import ro.westaco.carhome.presentation.screens.dashboard.DashboardFragment.Companion.bnv
 import ro.westaco.carhome.presentation.screens.dashboard.DashboardViewModel.Companion.selectedMenuItem
 import ro.westaco.carhome.presentation.screens.home.HomeFragment
+import ro.westaco.carhome.presentation.screens.onboarding.OnboardingViewModel
+import ro.westaco.carhome.presentation.screens.splash.SplashViewModel
 import ro.westaco.carhome.utils.DeviceUtils
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
 import ro.westaco.carhome.utils.ViewUtils
+import ro.westaco.carhome.views.Progressbar
 import java.lang.reflect.ParameterizedType
 
 
@@ -39,13 +51,18 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
 
     companion object {
         var instance: Context? = null
-        var profileLogoListner: OnProfileLogoChangeListner? = null
+        var profileLogoListner: OnProfileLogoChangeListener? = null
+        var sManager: FragmentManager? = null
+        var isFragmentVisible = false
     }
 
     lateinit var viewModel: VM
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
+    var progressbar1: Progressbar? = null
+    private var mNetworkReceiver: BroadcastReceiver? = null
+    private var networkReceiver: NetworkReceiver? = null
 
-    interface OnProfileLogoChangeListner {
+    interface OnProfileLogoChangeListener {
         fun onChangeLogo(uri: Uri)
     }
 
@@ -53,8 +70,7 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(getContentView())
 
-
-        viewModel = ViewModelProvider(this).get(getViewModelClass())
+        viewModel = ViewModelProvider(this)[getViewModelClass()]
 
         viewModel.uiEventStream.observe(this) { uiEvent -> processUiEvent(uiEvent) }
 
@@ -63,6 +79,53 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this@BaseActivity)
         viewModel.onActivityCreated()
 
+        sManager = supportFragmentManager
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (viewModel is SplashViewModel || viewModel is OnboardingViewModel) {
+                return@postDelayed
+            } else {
+                mNetworkReceiver = NetworkChangeReceiver()
+                registerReceiver(
+                    mNetworkReceiver,
+                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                )
+                networkReceiver = NetworkReceiver()
+                networkReceiver.let {
+                    if (it != null) {
+                        LocalBroadcastManager.getInstance(baseContext).registerReceiver(
+                            it,
+                            IntentFilter("NETWORK")
+                        )
+                    }
+                }
+            }
+        }, 800)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mNetworkReceiver != null)
+            unregisterReceiver(mNetworkReceiver)
+    }
+
+    private class NetworkReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val fragment = InternetBottomSheetDialog()
+            if (!DeviceUtils.isOnline(CarHomeApplication.appInstance)) {
+                if (!isFragmentVisible) {
+                    sManager?.let { fragment.show(it, "no_internet") }
+                    isFragmentVisible = true
+                }
+            } else {
+                isFragmentVisible = false
+//                if (isFragmentVisible) {
+//                    fragment.dismiss()
+//                    isFragmentVisible=false
+//                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -119,6 +182,7 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
                     uiEvent.linkClicked
                 )
             }
+            else -> {}
         }
     }
 
@@ -170,30 +234,50 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
     private fun handleNavigationEvent(navAttribs: NavAttribs) {
         val screen: Screen? = navAttribs.screen
 
-        if (screen != null) {
-            try {
-                screen.fragmentClass.newInstance() as Fragment
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }?.let { newFragment ->
-                navAttribs.args?.let { args ->
-                    newFragment.arguments = args
-                }
+        progressbar1 = Progressbar(this@BaseActivity)
+        progressbar1?.showPopup()
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (screen != null) {
+                try {
+                    screen.fragmentClass.newInstance() as Fragment
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
+                }?.let { newFragment ->
+                    navAttribs.args?.let { args ->
+                        newFragment.arguments = args
+                    }
 
-                supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.content, newFragment, screen.name)
-                    val fragments = supportFragmentManager.fragments
-                    fragments.forEach {
-                        hide(it)
+                    supportFragmentManager.beginTransaction().apply {
+                        /*setCustomAnimations(
+                            R.anim.slide_in,
+                            R.anim.slide_out,
+                            R.anim.slide_in,
+                            R.anim.slide_out
+                        )*/
+                        setCustomAnimations(
+                            R.anim.slide_in,
+                            0,
+                            R.anim.fade_in,
+                            0
+                        )
+                        replace(R.id.content, newFragment, screen.name)
+                        val fragments = supportFragmentManager.fragments
+                        fragments.forEach {
+                            hide(it)
+                        }
+                        if (navAttribs.addToBackStack) {
+                            addToBackStack(screen.name)
+                        }
+                        commitAllowingStateLoss()
                     }
-                    if (navAttribs.addToBackStack) {
-                        addToBackStack(screen.name)
-                    }
-                    commitAllowingStateLoss()
                 }
             }
-        }
+        }, 500)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            progressbar1?.dismissPopup()
+        }, 800)
     }
 
 
@@ -249,8 +333,8 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
     open fun getChildVisibleFragment(fragment: Fragment): Fragment? {
         val fragmentManager: FragmentManager = fragment.childFragmentManager
         val fragments: List<Fragment> = fragmentManager.fragments
-        for (fragment in fragments) {
-            if (fragment.isVisible) return fragment
+        for (fragment1 in fragments) {
+            if (fragment1.isVisible) return fragment1
         }
         return null
     }

@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/expande_colore"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -97,6 +97,7 @@
                         android:orientation="vertical">
 
                         <com.google.android.material.textfield.TextInputLayout
+                            app:hintTextAppearance="@style/TextLabel"
                             android:id="@+id/dateLabel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -113,8 +114,6 @@
                             app:boxCornerRadiusTopStart="0dp"
                             app:boxStrokeColor="#FFF"
                             app:boxStrokeWidth="0dp"
-                            app:endIconDrawable="@drawable/ic_calendar_visible"
-                            app:endIconMode="custom"
                             app:hintTextColor="#162651"
                             tools:ignore="RtlSymmetry">
 
@@ -130,6 +129,7 @@
                                 android:inputType="none"
                                 android:longClickable="false"
                                 android:singleLine="true"
+                                android:drawableRight="@drawable/ic_calendar_visible"
                                 android:textColor="@color/items_color"
                                 android:textSize="@dimen/_11sdp" />
 
@@ -148,7 +148,7 @@
                             android:textSize="@dimen/_10sdp" />
 
                         <TextView
-                            android:id="@+id/dateInfo1"
+                            android:id="@+id/dateError"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_10sdp"
@@ -351,8 +351,8 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:checked="false"
@@ -396,6 +396,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_weight="1.8"
+                android:alpha="0.4"
+                android:enabled="false"
                 android:background="@drawable/save_background"
                 android:fontFamily="@font/manrope_semibold_600"
                 android:gravity="center"

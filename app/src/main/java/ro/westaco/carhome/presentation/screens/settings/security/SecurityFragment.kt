@@ -4,11 +4,11 @@ import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_security.*
 import ro.westaco.carhome.R
-import ro.westaco.carhome.prefrences.SharedPrefrences
+import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.utils.BiometricUtil
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
-import ro.westaco.carhome.utils.SwitchButton
+import ro.westaco.carhome.views.SwitchButton
 
 //C- Redesign
 @AndroidEntryPoint
@@ -18,7 +18,7 @@ class SecurityFragment : BaseFragment<SecurityViewModel>() {
     override fun getStatusBarColor() = ContextCompat.getColor(requireContext(), R.color.white)
 
     override fun initUi() {
-        biometricCheck.isChecked = SharedPrefrences.getBiometricsStatus(requireActivity())
+        biometricCheck.isChecked = AppPreferencesDelegates.get().biometric
 
         back.setOnClickListener {
             viewModel.onBack()
@@ -28,7 +28,7 @@ class SecurityFragment : BaseFragment<SecurityViewModel>() {
             viewModel.onMain()
         }
 
-        changePassword.setOnClickListener {
+        changePasswordTitle.setOnClickListener {
             viewModel.onChangePassword()
         }
 
@@ -49,8 +49,8 @@ class SecurityFragment : BaseFragment<SecurityViewModel>() {
             if (BiometricUtil.isHardwareAvailable(requireContext())) {
                 if (BiometricUtil.hasBiometricEnrolled(requireContext())) {
                     biometricCheck.isChecked = true
-                    SharedPrefrences.setBiometricsStatus(requireActivity(), true)
-                    showErrorInfo(requireContext(), getString(R.string.bio_enable))
+                    AppPreferencesDelegates.get().biometric = true
+//                    showErrorInfo(requireContext(),getString(R.string.bio_enable))
 
                 } else {
                     showErrorInfo(requireContext(), getString(R.string.bio_enroll_fail))
@@ -59,10 +59,10 @@ class SecurityFragment : BaseFragment<SecurityViewModel>() {
                 showErrorInfo(requireContext(), getString(R.string.bio_device_fail))
             }
         } else {
-            showErrorInfo(requireContext(), getString(R.string.bio_disable))
+//            showErrorInfo(requireContext(),getString(R.string.bio_disable))
 
             biometricCheck.isChecked = false
-            SharedPrefrences.setBiometricsStatus(requireActivity(), false)
+            AppPreferencesDelegates.get().biometric = false
         }
     }
 }

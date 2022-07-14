@@ -15,7 +15,10 @@ import ro.westaco.carhome.data.sources.remote.responses.models.SectionModel
 import ro.westaco.carhome.databinding.BottomSheetMapFiltersBinding
 import ro.westaco.carhome.utils.observeOnce
 
-class MapFiltersBottomSheetDialog(var viewModel: LocationViewModel) : BottomSheetDialogFragment() {
+class MapFiltersBottomSheetDialog(
+    var viewModel: LocationViewModel,
+    selectedSectionModel: SectionModel?
+) : BottomSheetDialogFragment() {
     private var bottomSheetMapFiltersBinding: BottomSheetMapFiltersBinding? = null
     private lateinit var categoriesFilterAdapter: CategoriesFilterAdapter
     private var selectedItems: ArrayList<SectionModel> = ArrayList()
@@ -23,9 +26,21 @@ class MapFiltersBottomSheetDialog(var viewModel: LocationViewModel) : BottomShee
     private var allFilterList: ArrayList<SectionModel> = ArrayList()
 
     init {
+        selectedSectionModel?.let {
+            selectedItems.add(it)
+        }
+        viewModel.selectedItemsLiveData.value = selectedItems
         val observer = Observer<List<SectionModel>> {
             it.forEach { section ->
-                selectedItems.add(SectionModel(section.category, ArrayList()))
+                var sect = selectedItems.find {
+                    selectedSectionModel?.let {
+                        section.category == selectedSectionModel.category
+                    }
+                    false
+                }
+                if (sect == null) {
+                    selectedItems.add(SectionModel(section.category, ArrayList()))
+                }
             }
         }
         viewModel.filterDataMaps.observeOnce(this, observer)
@@ -83,8 +98,10 @@ class MapFiltersBottomSheetDialog(var viewModel: LocationViewModel) : BottomShee
         }
         bottomSheetMapFiltersBinding!!.applyButton.setOnClickListener {
             this.dismiss()
-            selectedItems.clear()
-            selectedItems.addAll(intermediateSelectedItems)
+            if (intermediateSelectedItems.size != 0) {
+                selectedItems.clear()
+                selectedItems.addAll(intermediateSelectedItems)
+            }
             viewModel.selectedItemsLiveData.value = selectedItems
         }
     }
@@ -101,12 +118,16 @@ class MapFiltersBottomSheetDialog(var viewModel: LocationViewModel) : BottomShee
         }
         categoriesFilterAdapter.getIntermediateSelectedItems()
             .observe(viewLifecycleOwner) { selectedFilters ->
-                intermediateSelectedItems.clear()
-                intermediateSelectedItems.addAll(selectedFilters)
+                setIntermediateSelectedItems(selectedFilters)
             }
 //        mapFilterBottomSheetAdapter.getSelectedItems().observe(viewLifecycleOwner) { selectedFilters ->
 //            intermediateSelectedItems= selectedFilters
 //        }
+    }
+
+    private fun setIntermediateSelectedItems(selectedFilters: ArrayList<SectionModel>) {
+        intermediateSelectedItems.clear()
+        intermediateSelectedItems.addAll(selectedFilters)
     }
 
 }

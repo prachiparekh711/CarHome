@@ -20,12 +20,10 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.requests.RcaOfferRequest
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.RcaDurationItem
-import ro.westaco.carhome.data.sources.remote.responses.models.Vehicle
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.service.insurance.adapter.DurationAdapter
 import ro.westaco.carhome.utils.CatalogUtils
-import ro.westaco.carhome.utils.DateTimeUtils
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,17 +44,23 @@ class InsuranceStep2Fragment : BaseFragment<InsuranceStep2ViewModel>(),
     var usageDatatype: ArrayList<CatalogItem> = ArrayList()
     var durationItem: RcaDurationItem? = null
     var rcaOfferRequest: RcaOfferRequest? = null
-    var vehicleItem: Vehicle? = null
+    var policyExpirationDate: String? = null
+    lateinit var xStr: String   //    X   =   Start date
+    lateinit var yStr: String   //    Y   =   End date
+    lateinit var x: Date   //    X   =   Start date
+    lateinit var y: Date   //    Y   =   End date
+    var isValidrange = false
 
     override fun getContentView() = R.layout.fragment_insurance_step2
 
     companion object {
         const val ARG_REQUEST = "arg_request"
-        const val ARG_CAR = "arg_car"
+        const val ARG_EXPIRE_STR = "arg_expire_str"
     }
 
     @SuppressLint("SimpleDateFormat")
     override fun initUi() {
+
         cancel.setOnClickListener {
             viewModel.onBack()
         }
@@ -70,7 +74,7 @@ class InsuranceStep2Fragment : BaseFragment<InsuranceStep2ViewModel>(),
         super.onResume()
         arguments?.let {
             rcaOfferRequest = it.getSerializable(ARG_REQUEST) as? RcaOfferRequest?
-            vehicleItem = it.getSerializable(ARG_CAR) as? Vehicle?
+            policyExpirationDate = it.getString(ARG_EXPIRE_STR)
         }
 
         val view = layoutInflater.inflate(R.layout.rca_duration_layout, null)
@@ -114,74 +118,61 @@ class InsuranceStep2Fragment : BaseFragment<InsuranceStep2ViewModel>(),
         }
 
 
-        var pastDateStatus = false
-        var currentDate = ""
-        var dateStr = ""
-        if (vehicleItem?.policyExpirationDate == null) {
-            val calendar = Calendar.getInstance()
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
-            val tomorrow = calendar.time
-            val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
-            dateStr = dateFormat.format(tomorrow)
-            startDate.setText(dateStr)
+        isValidrange = if (policyExpirationDate == null) {
+            dateDefaultCase(isActive = false, policyDate = null)
         } else {
             val dateFormat: DateFormat =
                 SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            val date: Date? =
-                dateFormat.parse(vehicleItem?.policyExpirationDate)
-            val formatter: DateFormat =
-                SimpleDateFormat("dd/MM/yyyy")
-            dateStr =
-                formatter.format(date)
-            val c = Calendar.getInstance()
-            c.time = formatter.parse(dateStr)
+            val policyDate = dateFormat.parse(policyExpirationDate)
 
-            val calendar = Calendar.getInstance()
-            pastDateStatus = DateTimeUtils.isSameDay(calendar, c)
-            if (pastDateStatus) {
-                dateStr = formatter.format(c.time)
-                startDate.setText(dateStr)
-                calendar.add(Calendar.DATE, 1)
-                currentDate = formatter.format(calendar.time)
-                //warning here
-                dateInfo.text = requireContext().resources.getString(R.string.ins_date_error)
-                dateInfo.setTextColor(requireContext().resources.getColor(R.color.delete_dialog_color))
-                startDate.setTextColor(requireContext().resources.getColor(R.color.delete_dialog_color))
-                dateInfo.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-                dateLabel.endIconDrawable =
-                    requireContext().resources.getDrawable(R.drawable.error_icon)
-                dateLabel.setEndIconTintList(
-                    ContextCompat.getColorStateList(
-                        requireContext(),
-                        R.color.delete_dialog_color
-                    )
-                )
-                dateInfo1.isVisible = true
+            if (System.currentTimeMillis() > policyDate.time) {
+                //               Expires
+                dateDefaultCase(isActive = false, policyDate = null)
             } else {
-                c.add(Calendar.DATE, 1)
-                dateStr = formatter.format(c.time)
-                startDate.setText(dateStr)
-                dateInfo1.isVisible = false
-                dateInfo.text = requireContext().resources.getString(R.string.rca_date_info)
-                dateInfo.setTextColor(requireContext().resources.getColor(R.color.appPrimary))
-                dateInfo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_note, 0, 0, 0)
-                dateLabel.endIconDrawable =
-                    requireContext().resources.getDrawable(R.drawable.ic_calendar_visible)
-                dateLabel.setEndIconTintList(
-                    ContextCompat.getColorStateList(
-                        requireContext(),
-                        R.color.appPrimary
-                    )
-                )
+                //               Active
+                dateDefaultCase(isActive = true, policyDate = policyDate)
             }
         }
 
+        checkData()
+
+        if (isValidrange) {
+            dateError.isVisible = false
+            dateInfo.isVisible = true
+            startDate.setTextColor(requireContext().resources.getColor(R.color.appPrimary))
+            startDate.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_calendar_visible,
+                0
+            )
+
+        } else {
+            // ( If active Insurance found in CarHome ) //warning here
+
+            startDate.setTextColor(requireContext().resources.getColor(R.color.delete_dialog_color))
+            startDate.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.error_icon,
+                0
+            )
+            dateError.isVisible = true
+            dateInfo.isVisible = false
+        }
+
         startDate.setOnClickListener {
-            if (pastDateStatus) {
-                viewModel.onDateClicked(it, dateToMilis(currentDate))
-            } else {
-                viewModel.onDateClicked(it, dateToMilis(dateStr))
-            }
+            if (isValidrange)
+                viewModel.onDateClicked(it, dateToMilis(startDate.text.toString()))
+            else
+                showErrorInfo(
+                    requireContext(),
+                    requireContext().resources.getString(R.string.date_exceed_limit)
+                )
+        }
+
+        check.setOnCheckedChangeListener { compoundButton, b ->
+            checkData()
         }
 
         mContinue.setOnClickListener {
@@ -202,7 +193,7 @@ class InsuranceStep2Fragment : BaseFragment<InsuranceStep2ViewModel>(),
                     showErrorInfo(requireContext(), getString(R.string.start_date_info))
                 }
             } else {
-                showErrorInfo(requireContext(), getString(R.string.fill_all_fields))
+                showErrorInfo(requireContext(), getString(R.string.check_info))
             }
 
         }
@@ -210,6 +201,52 @@ class InsuranceStep2Fragment : BaseFragment<InsuranceStep2ViewModel>(),
         back.setOnClickListener {
             viewModel.onBack()
         }
+    }
+
+    private fun checkData() {
+        if (isValidrange && check.isChecked) {
+            mContinue.alpha = 1F
+            mContinue.isEnabled = true
+        } else {
+            mContinue.alpha = 0.4F
+            mContinue.isEnabled = false
+        }
+    }
+
+    private fun dateDefaultCase(isActive: Boolean, policyDate: Date?): Boolean {
+        var isValidRange = false
+        val calendar1 = Calendar.getInstance()
+        calendar1.add(Calendar.DATE, 1)
+        x = calendar1.time
+        val calendar2 = Calendar.getInstance()
+        calendar2.add(Calendar.DATE, 30)
+        y = calendar2.time
+
+        val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+        xStr = dateFormat.format(x)
+        yStr = dateFormat.format(y)
+        // ( when No Active Insurance / Insurance Expired)
+
+        if (isActive && policyDate != null) {
+            // ( when Insurance Active)
+            if (policyDate.after(x) && policyDate.before(y)) {
+                xStr = dateFormat.format(policyDate)
+                val c = Calendar.getInstance()
+                c.time = dateFormat.parse(xStr)
+                c.add(Calendar.DATE, 1)
+                x = c.time
+                isValidRange = true
+            } else {
+                xStr = dateFormat.format(policyDate)
+                isValidRange = false
+                // Condition Not satisfy So user not able to purchase
+            }
+        } else {
+            isValidRange = true
+        }
+
+        startDate.setText(xStr)
+        return isValidRange
     }
 
 
@@ -231,8 +268,6 @@ class InsuranceStep2Fragment : BaseFragment<InsuranceStep2ViewModel>(),
             }
         }
 
-
-
         viewModel.startDateLiveData.observe(viewLifecycleOwner) { datesMap ->
             datesMap?.forEach {
                 (it.key as? TextView)?.text = SimpleDateFormat(
@@ -241,7 +276,7 @@ class InsuranceStep2Fragment : BaseFragment<InsuranceStep2ViewModel>(),
                     Date(it.value)
                 )
             }
-            dateInfo1.isVisible = false
+            dateError.isVisible = false
         }
 
         viewModel.durationData.observe(viewLifecycleOwner) { durationList ->
@@ -310,7 +345,7 @@ class InsuranceStep2Fragment : BaseFragment<InsuranceStep2ViewModel>(),
     }
 
     private var dpd: DatePickerDialog? = null
-    private fun showDatePicker(view: View, dateInMillis: Long) {
+    fun showDatePicker(view: View, dateInMillis: Long) {
         val mCalendar = Calendar.getInstance()
         val c = mCalendar.apply {
             timeInMillis = dateInMillis
@@ -330,9 +365,11 @@ class InsuranceStep2Fragment : BaseFragment<InsuranceStep2ViewModel>(),
             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)
         )
 
-        dpd?.datePicker?.minDate = mCalendar.timeInMillis
-        mCalendar.add(Calendar.DATE, 30 + 1)
-        dpd?.datePicker?.maxDate = mCalendar.timeInMillis
+        val xMillis = dateToMilis(xStr) //    X   =   Start date
+        val yMillis = dateToMilis(yStr) //    Y   =   End date
+
+        dpd?.datePicker?.minDate = xMillis
+        dpd?.datePicker?.maxDate = yMillis
 
         dpd?.show()
     }

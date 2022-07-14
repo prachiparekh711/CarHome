@@ -49,8 +49,8 @@
         android:layout_marginTop="@dimen/_20sdp"
         android:adjustViewBounds="true"
         android:src="@drawable/ic_settings_gdpr"
-        app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <TextView
@@ -62,8 +62,8 @@
         android:text="@string/change_pin"
         android:textColor="@color/textOnWhite"
         android:textSize="@dimen/_11sdp"
-        app:layout_constraintStart_toEndOf="@+id/changePinIc"
         android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/changePinIc"
         app:layout_constraintTop_toTopOf="@+id/changePinIc" />
 
     <TextView
@@ -77,9 +77,9 @@
         android:text="@string/change_pin_title"
         android:textColor="@color/secondaryTextOnWhite"
         android:textSize="@dimen/_10sdp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/changePinTitle"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/changePinTitle" />
 
     <View
@@ -89,110 +89,63 @@
         app:layout_constraintBottom_toBottomOf="@+id/changePinSubtitle"
         app:layout_constraintTop_toTopOf="@+id/changePinIc" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/changePasswordIc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_15sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/ic_security_password"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/changePin" />
 
-    <TextView
-        android:id="@+id/changePasswordTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_5sdp"
-        android:fontFamily="@font/inter_medium_500"
-        android:text="@string/change_pswd"
-        android:textColor="@color/textOnWhite"
-        android:textSize="@dimen/_11sdp"
-        app:layout_constraintStart_toEndOf="@+id/changePasswordIc"
-        app:layout_constraintTop_toTopOf="@+id/changePasswordIc" />
-
-    <TextView
-        android:id="@+id/changePasswordSubtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginEnd="@dimen/_15sdp"
-        android:fontFamily="@font/inter_medium_500"
-        android:gravity="start"
-        android:text="@string/change_pswd_title"
-        android:textColor="@color/secondaryTextOnWhite"
-        android:textSize="@dimen/_10sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/changePasswordTitle"
-        app:layout_constraintTop_toBottomOf="@+id/changePasswordTitle" />
-
-    <View
-        android:id="@+id/changePassword"
+    <RelativeLayout
+        android:id="@+id/mainRL"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/changePasswordSubtitle"
-        app:layout_constraintTop_toTopOf="@+id/changePasswordIc" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/changeBiometricIc"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_15sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:adjustViewBounds="true"
-        android:src="@drawable/ic_security_biometric"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/changePassword" />
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/changePin">
 
-    <TextView
-        android:id="@+id/changeBiometricTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_5sdp"
-        android:fontFamily="@font/inter_medium_500"
-        android:text="@string/enable_biometric"
-        android:textColor="@color/textOnWhite"
-        android:textSize="@dimen/_11sdp"
-        app:layout_constraintStart_toEndOf="@+id/changeBiometricIc"
-        app:layout_constraintTop_toTopOf="@+id/changeBiometricIc" />
+        <TextView
+            android:id="@+id/changePasswordTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:drawableStart="@drawable/ic_security_password"
+            android:drawablePadding="@dimen/_10sdp"
+            android:fontFamily="@font/inter_medium_500"
+            android:padding="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_5sdp"
+            android:text="@string/change_pswd"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/_11sdp" />
 
-    <TextView
-        android:id="@+id/changeBiometricSubtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginEnd="@dimen/_15sdp"
-        android:fontFamily="@font/inter_medium_500"
-        android:gravity="start"
-        android:text="@string/biometric_title"
-        android:textColor="@color/secondaryTextOnWhite"
-        android:textSize="@dimen/_10sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/changeBiometricTitle"
-        app:layout_constraintTop_toBottomOf="@+id/changeBiometricTitle" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/changePasswordTitle"
+            android:orientation="horizontal">
 
-    <View
-        android:id="@+id/changeBiometric"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/changeBiometricSubtitle"
-        app:layout_constraintTop_toTopOf="@+id/changeBiometricIc" />
+            <TextView
+                android:id="@+id/changeBiometricTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:drawableStart="@drawable/ic_security_biometric"
+                android:drawablePadding="@dimen/_10sdp"
+                android:fontFamily="@font/inter_medium_500"
+                android:padding="@dimen/_10sdp"
+                android:text="@string/enable_biometric"
+                android:textColor="@color/textOnWhite"
+                android:textSize="@dimen/_11sdp" />
 
-    <ro.westaco.carhome.utils.SwitchButton
-        android:id="@+id/biometricCheck"
-        android:layout_width="@dimen/_33sdp"
-        android:layout_height="@dimen/_20sdp"
-        android:layout_marginRight="@dimen/_10sdp"
-        app:layout_constraintTop_toTopOf="@+id/changeBiometric"
-        app:sb_background="@color/unselected"
-        app:sb_border_width="@dimen/_2sdp"
-        app:sb_checked_color="@color/ctaBackground"
-        app:sb_checkline_width="0dp"
-        app:sb_show_indicator="false"
-        app:layout_constraintBottom_toBottomOf="@+id/changeBiometric"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:sb_uncheck_color="@color/unselected" />
+            <ro.westaco.carhome.views.SwitchButton
+                android:id="@+id/biometricCheck"
+                android:layout_width="@dimen/_33sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/_10sdp"
+                app:sb_background="@color/unselected"
+                app:sb_border_width="@dimen/_2sdp"
+                app:sb_checked_color="@color/ctaBackground"
+                app:sb_checkline_width="0dp"
+                app:sb_show_indicator="false"
+                app:sb_uncheck_color="@color/unselected" />
+        </RelativeLayout>
+    </RelativeLayout>
+
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/changeFaceIdIc"
@@ -202,9 +155,9 @@
         android:layout_marginTop="@dimen/_15sdp"
         android:adjustViewBounds="true"
         android:src="@drawable/ic_security_face_id"
-        app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/changeBiometric" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainRL" />
 
     <TextView
         android:id="@+id/changeFaceIdTitle"
@@ -215,8 +168,8 @@
         android:text="@string/change_faceid"
         android:textColor="@color/textOnWhite"
         android:textSize="@dimen/_11sdp"
-        app:layout_constraintStart_toEndOf="@+id/changeFaceIdIc"
         android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/changeFaceIdIc"
         app:layout_constraintTop_toTopOf="@+id/changeFaceIdIc" />
 
     <TextView
@@ -230,9 +183,9 @@
         android:text="@string/change_faceid_title"
         android:textColor="@color/secondaryTextOnWhite"
         android:textSize="@dimen/_10sdp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/changeFaceIdTitle"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/changeFaceIdTitle" />
 
     <View
@@ -246,6 +199,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_frame_security"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/indicator" />
 
@@ -255,10 +209,10 @@
         android:layout_height="5dp"
         android:layout_marginBottom="@dimen/_5sdp"
         android:background="@drawable/rounded_rect_100_black"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"
         app:layout_constraintWidth_percent="0.3" />
 
 

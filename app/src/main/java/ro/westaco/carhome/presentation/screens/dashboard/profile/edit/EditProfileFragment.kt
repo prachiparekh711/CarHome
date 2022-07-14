@@ -1,5 +1,6 @@
 package ro.westaco.carhome.presentation.screens.dashboard.profile.edit
 
+import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
@@ -9,9 +10,7 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -19,12 +18,18 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.android.synthetic.main.fragment_edit_profile.apartment
@@ -39,8 +44,9 @@ import ro.westaco.carhome.data.sources.remote.requests.Address
 import ro.westaco.carhome.data.sources.remote.requests.PhoneCodeModel
 import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DeleteDialogFragment
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.common.DeleteDialogFragment
 import ro.westaco.carhome.presentation.interfaceitem.CountyListClick
 import ro.westaco.carhome.presentation.screens.dashboard.profile.occupation.OccupationDialogFragment
 import ro.westaco.carhome.presentation.screens.data.commen.CodeDialog
@@ -48,12 +54,12 @@ import ro.westaco.carhome.presentation.screens.data.commen.CountryCodeDialog
 import ro.westaco.carhome.presentation.screens.data.commen.CountyAdapter
 import ro.westaco.carhome.presentation.screens.data.commen.LocalityAdapter
 import ro.westaco.carhome.presentation.screens.data.person_natural.driving_categories.DrivingCategoriesDialogFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
 import ro.westaco.carhome.utils.*
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.SirutaUtil.Companion.defaultCity
 import ro.westaco.carhome.utils.SirutaUtil.Companion.defaultCounty
 import ro.westaco.carhome.utils.SirutaUtil.Companion.fetchCountyPosition
+import ro.westaco.carhome.views.Progressbar
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -84,7 +90,6 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
     var idTypeList: ArrayList<CatalogItem> = ArrayList()
     var occupationList: ArrayList<CatalogItem> = ArrayList()
     var streetTypeList: ArrayList<CatalogItem> = ArrayList()
-    var sirutaList: ArrayList<Siruta> = ArrayList()
     var progressbar: Progressbar? = null
     var cityList: ArrayList<Siruta> = ArrayList()
     var countryItem: Country? = null
@@ -94,20 +99,15 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
     var localityDialog: BottomSheetDialog? = null
 
 
+    companion object {
+        const val ARG_PROFILE = "arg_profile"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             profileItem = it.getSerializable(ARG_PROFILE) as? ProfileItem?
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        progressbar?.dismissPopup()
-    }
-
-    companion object {
-        const val ARG_PROFILE = "arg_profile"
     }
 
     override fun getContentView() = R.layout.fragment_edit_profile
@@ -116,7 +116,6 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
 
     override fun initUi() {
         progressbar = Progressbar(requireContext())
-
 
         name_lay_.setOnClickListener {
 
@@ -210,57 +209,28 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
             viewModel.onMain()
         }
 
+
         cta.setOnClickListener {
 
-            if (lid.text?.isNotEmpty() == true) {
-
-                when (countryItem?.code) {
-
-                    "ROU" -> {
-                        if (!RegexData.checkNumberPlateROU(lid.text.toString())) {
-                            showErrorInfo(
-                                requireContext(),
-                                getString(R.string.license_error)
-                            )
-                            return@setOnClickListener
-                        }
-                    }
-
-                    "QAT" -> {
-                        if (!RegexData.checkNumberPlateQAT(lid.text.toString())) {
-                            showErrorInfo(
-                                requireContext(),
-                                getString(R.string.license_error)
-                            )
-                            return@setOnClickListener
-                        }
-                    }
-
-                    "UKR" -> {
-                        if (!RegexData.checkNumberPlateUKR(lid.text.toString())) {
-                            showErrorInfo(
-                                requireContext(),
-                                getString(R.string.license_error)
-                            )
-                            return@setOnClickListener
-                        }
-                    }
-
-                    "BGR" -> {
-                        if (!RegexData.checkNumberPlateBGR(lid.text.toString())) {
-                            showErrorInfo(
-                                requireContext(),
-                                getString(R.string.license_error)
-                            )
-                            return@setOnClickListener
-                        }
-                    }
-
-                }
+            if (!check1.isChecked) {
+                showErrorInfo(
+                    requireContext(),
+                    getString(R.string.check_info)
+                )
+                return@setOnClickListener
             }
 
-            if (cnp.text?.isNotEmpty() == true) {
-                RegexData.checkCNPNumberIsValid(cnpNumber = cnp.text.toString())
+            if (email.text?.isNotEmpty() == true && !RegexData.checkEmailRegex(email.text.toString())) {
+                showErrorInfo(
+                    requireContext(),
+                    getString(R.string.invalid_email)
+                )
+                return@setOnClickListener
+            }
+
+            if (cnp.text?.isNotEmpty() == true && !RegexData.checkCNPNumberIsValid(cnpNumber = cnp.text.toString())) {
+                showErrorInfo(requireContext(), getString(R.string.reg_invalid_cnp))
+                return@setOnClickListener
             }
 
             val streetTypeItem =
@@ -275,7 +245,6 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
             var regionStr: String? = null
             var sirutaCode: Int? = null
             var localityStr: String? = null
-
 
             if (countryItem?.code == "ROU") {
                 if (countyPosition != -1 && localityPosition != -1) {
@@ -293,24 +262,23 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
                 localityStr = localityAreaTextItems.text.toString()
             }
 
-
             var addressItem: Address? = null
-            addressItem = Address(
-                zipCode = (zipCode?.text ?: "").toString(),
-                streetType = streetTypeItem,
-                sirutaCode = sirutaCode,
-                locality = localityStr,
-                streetName = (streetName?.text ?: "").toString(),
-                addressDetail = null,
-                buildingNo = (buildingNo?.text ?: "").toString(),
-                countryCode = countryItem?.code,
-                block = (blockName?.text ?: "").toString(),
-                region = regionStr,
-                entrance = (entrance?.text ?: "").toString(),
-                floor = (floor?.text ?: "").toString(),
-                apartment = (apartment?.text ?: "").toString()
-
-            )
+            if (countryItem != null && streetName?.text != null && buildingNo?.text != null) {
+                addressItem = Address(
+                    zipCode = zipCode?.text.toString().ifBlank { null },
+                    streetType = streetTypeItem,
+                    sirutaCode = sirutaCode,
+                    locality = localityStr,
+                    streetName = streetName?.text.toString().ifBlank { null },
+                    buildingNo = buildingNo?.text.toString().ifBlank { null },
+                    countryCode = countryItem?.code,
+                    block = blockName?.text.toString().ifBlank { null },
+                    region = regionStr,
+                    entrance = entrance?.text.toString().ifBlank { null },
+                    floor = floor?.text.toString().ifBlank { null },
+                    apartment = apartment?.text.toString().ifBlank { null }
+                )
+            }
 
             val pos = selectedPhoneCode?.let { it1 ->
                 Country.findPositionForTwoLetterCode(
@@ -323,36 +291,27 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
             if (pos != null)
                 phoneCountryCode = countriesList[pos].code
 
-
-            if (RegexData.checkCNPNumberIsValid(cnp.text.toString())) {
-
-                viewModel.onCta(
-                    lastName.text.toString(),
-                    addressItem,
-                    idTypeSpinner.text.toString(),
-                    typeID,
-                    series.text.toString(),
-                    number.text.toString(),
-                    expdate.text.toString(),
-                    cnp.text.toString(),
-                    "",
-                    dob.text.toString(),
-                    firstname.text.toString(),
-                    occupationItem,
-                    phone.text.toString(),
-                    phoneCountryCode = phoneCountryCode,
-                    lid.text.toString(),
-                    dlIssue.text.toString(),
-                    dlExpiry.text.toString(),
-                    selectedDLCatList,
-                    email.text.toString(),
-                    check1.isChecked
-                )
-
-            } else {
-                showErrorInfo(requireContext(), getString(R.string.reg_invalid_cnp))
-
-            }
+            viewModel.onCta(
+                lastName.text.toString().ifBlank { null },
+                addressItem,
+                idTypeSpinner.text.toString().ifBlank { null },
+                typeID,
+                series.text.toString().ifBlank { null },
+                number.text.toString().ifBlank { null },
+                expdate.text.toString().ifBlank { null },
+                cnp.text.toString().ifBlank { null },
+                employerName = null,
+                dob.text.toString().ifBlank { null },
+                firstname.text.toString().ifBlank { null },
+                occupationItem,
+                phone.text.toString().ifBlank { null },
+                phoneCountryCode = phoneCountryCode,
+                lid.text.toString().ifBlank { null },
+                dlIssue.text.toString().ifBlank { null },
+                dlExpiry.text.toString().ifBlank { null },
+                selectedDLCatList,
+                email.text.toString().ifBlank { null }
+            )
 
 
         }
@@ -445,20 +404,89 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
             occupationItem = profileItem?.occupationCorIsco08
 
             llUploadCertificate.setOnClickListener {
-                val result = FileUtil.checkPermission(requireContext())
-                if (result) {
-                    callFileManagerForLicense()
+
+                if (ActivityCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+
+                    Dexter.withContext(requireActivity())
+                        .withPermissions(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                        .withListener(object : MultiplePermissionsListener {
+                            override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                                report?.let {
+                                    if (report.areAllPermissionsGranted()) {
+                                        callFileManagerForLicense()
+                                    }
+                                }
+                            }
+
+                            override fun onPermissionRationaleShouldBeShown(
+                                permissions: MutableList<PermissionRequest>?,
+                                token: PermissionToken?
+                            ) {
+                                token?.continuePermissionRequest()
+                            }
+                        }).withErrorListener {}
+
+                        .check()
+
                 } else {
-                    FileUtil.requestPermission(requireActivity())
+                    if (permissionUpload()) {
+                        callFileManagerForLicense()
+                    }
                 }
+
             }
 
             llUploadId.setOnClickListener {
-                val result = FileUtil.checkPermission(requireContext())
-                if (result) {
-                    callFileManagerForID()
+
+                if (ActivityCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        requireActivity(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+
+                    Dexter.withContext(requireActivity())
+                        .withPermissions(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                        .withListener(object : MultiplePermissionsListener {
+                            override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                                report?.let {
+                                    if (report.areAllPermissionsGranted()) {
+                                        callFileManagerForID()
+                                    }
+                                }
+                            }
+
+                            override fun onPermissionRationaleShouldBeShown(
+                                permissions: MutableList<PermissionRequest>?,
+                                token: PermissionToken?
+                            ) {
+                                token?.continuePermissionRequest()
+                            }
+                        }).withErrorListener {}
+
+                        .check()
+
                 } else {
-                    FileUtil.requestPermission(requireActivity())
+                    if (permissionUpload()) {
+                        callFileManagerForID()
+                    }
                 }
             }
 
@@ -548,82 +576,8 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
 
         }
 
-        /**
-         * Document
-         */
-        /* llUploadCertificate.setOnClickListener {
-             val result = FileUtil.checkPermission(requireContext())
-             if (result) {
-                 callFileManagerForLicense()
-             } else {
-                 FileUtil.requestPermission(requireActivity())
-             }
-
-         }*/
-        /**
-         * Document
-         */
-        /* llUploadId.setOnClickListener {
-             val result = FileUtil.checkPermission(requireContext())
-             if (result) {
-                 callFileManagerForID()
-             } else {
-                 FileUtil.requestPermission(requireActivity())
-             }
-         }*/
-
-        /**
-         * Document
-         */
-        /* btnDeleteCertificate.setOnClickListener {
-
-             val DrivingLicenseDialog = DeleteDialogFragment()
-             DrivingLicenseDialog.layoutResId = R.layout.n_person_delete_doc
-             DrivingLicenseDialog.listener =
-                 object : DeleteDialogFragment.OnDialogInteractionListener {
-                     override fun onPosClicked() {
-
-                         profileItem?.drivingLicenseAttachment?.id?.let { it1 ->
-                             viewModel.onDeleteAttachment(
-                                 it1,
-                                 requireContext().getString(R.string.attchment_dl)
-                             )
-                         }
-
-                         DrivingLicenseDialog.dismiss()
-                     }
-                 }
-
-             DrivingLicenseDialog.show(childFragmentManager, DeleteDialogFragment.TAG)
-
-
-         }*/
-
-        /*btnDeleteId.setOnClickListener {
-
-            val CNPDialog = DeleteDialogFragment()
-            CNPDialog.layoutResId = R.layout.n_person_delete_doc_id
-            CNPDialog.listener = object : DeleteDialogFragment.OnDialogInteractionListener {
-                override fun onPosClicked() {
-
-                    profileItem?.identityDocumentAttachment?.id?.let { it1 ->
-                        viewModel.onDeleteAttachment(
-                            it1,
-                            requireContext().getString(R.string.attchment_id)
-                        )
-                    }
-
-                    CNPDialog.dismiss()
-                }
-            }
-
-            CNPDialog.show(childFragmentManager, DeleteDialogFragment.TAG)
-
-        }*/
-
         lblCertificate.setOnClickListener {
             dlAttachment?.href?.let { it1 ->
-                progressbar?.showPopup()
                 val url = ApiModule.BASE_URL_RESOURCES + it1
                 val intent = Intent(requireContext(), PdfActivity::class.java)
                 intent.putExtra(PdfActivity.ARG_DATA, url)
@@ -634,7 +588,6 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
 
         lblId.setOnClickListener {
             idAttachment?.href?.let { it1 ->
-                progressbar?.showPopup()
                 val url = ApiModule.BASE_URL_RESOURCES + it1
                 val intent = Intent(requireContext(), PdfActivity::class.java)
                 intent.putExtra(PdfActivity.ARG_DATA, url)
@@ -697,7 +650,7 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
                     countryCodeDialog.show(requireActivity().supportFragmentManager, null)
                 }
 
-                if (profileItem != null) {
+                if (profileItem?.address != null) {
                     val pos = address?.countryCode?.let {
                         Country.findPositionForCode(
                             countriesList,
@@ -735,26 +688,7 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
             }
 
             setPhoneCountryData()
-            progressbar?.dismissPopup()
 
-        }
-
-        viewModel.sirutaData.observe(viewLifecycleOwner) { sirutaData ->
-            if (sirutaData != null) {
-                this.sirutaList = sirutaData
-
-                sirutaList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-                address = profileItem?.address
-
-                val countyList: ArrayList<Siruta> = ArrayList()
-                for (i in sirutaList.indices) {
-                    if (sirutaList[i].parentCode == null)
-                        countyList.add(sirutaList[i])
-                }
-                countyList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-
-            }
-            progressbar?.dismissPopup()
         }
 
         viewModel.occupationData.observe(viewLifecycleOwner) { occupationData ->
@@ -913,6 +847,7 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
             dpd?.datePicker?.minDate = System.currentTimeMillis() + (1000 * 24 * 60 * 60)
         else
             dpd?.datePicker?.maxDate = System.currentTimeMillis()
+
         dpd?.show()
     }
 
@@ -943,6 +878,7 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
                     btnDeleteCertificate.visibility = View.VISIBLE
                     val dlFile = File(selectedFile)
                     profileItem?.id?.let {
+                        progressbar?.showPopup()
                         viewModel.onAttach(
                             it,
                             "DRIVING_LICENSE",
@@ -970,6 +906,7 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
                     btnDeleteId.visibility = View.VISIBLE
                     val idFile = File(selectedFile)
                     profileItem?.id?.let {
+                        progressbar?.showPopup()
                         viewModel.onAttach(
                             it,
                             "IDENTITY_DOCUMENT",
@@ -980,51 +917,8 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
             }
         }
 
-        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
-            callFileManagerForLicense()
-        }
-
-        if (requestCode == 1002 && resultCode == Activity.RESULT_OK) {
-            callFileManagerForID()
-        }
-
-        if (requestCode == 2296) {
-            if (SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callFileManagerForID()
-                }
-            }
-        }
-        if (requestCode == 2297) {
-            if (SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callFileManagerForLicense()
-                }
-            }
-        }
-
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            200 -> if (grantResults.isNotEmpty()) {
-                val readExternalStorage =
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED
-                val writeExternalStorage =
-                    grantResults[1] == PackageManager.PERMISSION_GRANTED
-                if (readExternalStorage && writeExternalStorage) {
-                    // perform action when allow permission success
-                } else {
-                    showErrorInfo(requireContext(), getString(R.string.allow_permission))
-
-                }
-            }
-        }
-    }
 
     private fun setPhoneCountryData() {
 
@@ -1094,6 +988,7 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
 
     private fun onUploadSuccess(attachType: String, attachments: Attachments) {
 
+        progressbar?.dismissPopup()
         if (attachType == "DRIVING_LICENSE") {
             lblCertificate.visibility = View.VISIBLE
             btnDeleteCertificate.visibility = View.VISIBLE
@@ -1276,6 +1171,19 @@ class EditProfileFragment : BaseFragment<EditProfileDetailsViewModel>(),
                 )
             )
         )
+    }
+
+    private fun permissionUpload(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+
     }
 
 }

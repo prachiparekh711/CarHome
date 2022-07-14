@@ -1,6 +1,7 @@
 package ro.westaco.carhome.data.sources.remote.responses.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class VerifyRcaPerson(
 
@@ -23,7 +24,7 @@ data class VerifyRcaPerson(
     val fullAddress: String? = null,
 
     @field:SerializedName("drivingLicenseId")
-    val drivingLicenseId: Any? = null,
+    val drivingLicenseId: String? = null,
 
     @field:SerializedName("guid")
     val guid: String? = null,
@@ -32,8 +33,20 @@ data class VerifyRcaPerson(
     val id: Int? = null,
 
     @field:SerializedName("email")
-    val email: Any? = null
-)
+    val email: String? = null,
+
+    @field:SerializedName("companyName")
+    val companyName: String? = null,
+
+    @field:SerializedName("noRegistration")
+    val noRegistration: String? = null,
+
+
+    ) : Serializable {
+    override fun toString(): String {
+        return "VerifyRcaPerson(firstName=$firstName, validationResult=$validationResult)"
+    }
+}
 
 data class ValidationResult(
 
@@ -42,7 +55,7 @@ data class ValidationResult(
 
     @field:SerializedName("warnings")
     val warnings: List<WarningsItem?>? = null
-) {
+) : Serializable {
     override fun toString(): String {
         return "$warnings"
     }
@@ -55,8 +68,8 @@ data class WarningsItem(
 
     @field:SerializedName("warning")
     val warning: String? = null
-) {
+) : Serializable {
     override fun toString(): String {
-        return "$field $warning"
+        return "$field: $warning\n"
     }
 }

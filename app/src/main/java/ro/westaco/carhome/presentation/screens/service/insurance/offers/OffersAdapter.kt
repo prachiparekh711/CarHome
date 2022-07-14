@@ -82,7 +82,6 @@ class OffersAdapter(val context: Context, val listener: OnItemInteractionListene
             insurerImage.clipToOutline = true
             Glide.with(context)
                 .load(glideUrl)
-                .error(context.resources.getDrawable(R.drawable.ic_profile_picture))
                 .apply(
                     options.fitCenter()
                         .skipMemoryCache(true)
@@ -96,11 +95,9 @@ class OffersAdapter(val context: Context, val listener: OnItemInteractionListene
             description.text = item.description
 
 
-            if (item.price?.toInt() == 0 || item.priceDs?.toInt() == 0) {
-
+            if (item.price?.toInt() == 0 || item.priceDs?.toInt() == 0 || item.enabled == false) {
                 priceLL.isVisible = false
                 offerLL.isVisible = true
-
             } else {
                 price.text = "${item.price} ${item.currency}"
                 priceDs.text = "${item.priceDs} ${item.currency}"
@@ -131,9 +128,7 @@ class OffersAdapter(val context: Context, val listener: OnItemInteractionListene
                     )
                 )
                 messageFromProvider.text = item.messageFromProvider
-
             }
-
 
             tv_view_offer.setOnClickListener {
                 listener?.onOfferClick(item)

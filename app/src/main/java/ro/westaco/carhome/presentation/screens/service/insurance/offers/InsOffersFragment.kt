@@ -14,9 +14,9 @@ import ro.westaco.carhome.data.sources.remote.responses.models.OffersItem
 import ro.westaco.carhome.data.sources.remote.responses.models.RcaDurationItem
 import ro.westaco.carhome.data.sources.remote.responses.models.RcaOfferResponse
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
 import ro.westaco.carhome.presentation.screens.service.insurance.adapter.DurationAdapter
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.views.Progressbar
 
 @AndroidEntryPoint
 class InsOffersFragment : BaseFragment<InsOffersViewModel>(),
@@ -125,6 +125,16 @@ class InsOffersFragment : BaseFragment<InsOffersViewModel>(),
             offerAdapter?.setItems(rcaOfferResponseData.offers as List<OffersItem>)
         }
 
+        viewModel.stateStream.observe(viewLifecycleOwner) { state ->
+
+            when (state) {
+                InsOffersViewModel.STATE.IN_PROGESS -> {
+                    progressbar?.dismissPopup()
+
+                }
+            }
+        }
+
     }
 
     private fun findPosById(list: List<RcaDurationItem>?, id: Int?): Int {
@@ -138,21 +148,27 @@ class InsOffersFragment : BaseFragment<InsOffersViewModel>(),
     }
 
     override fun onOfferClick(item: OffersItem) {
-        item.code?.let { item.insurerCode?.let { it1 -> viewModel.onViewOffer(it, it1) } }
+        if (!item.code.isNullOrEmpty() && !item.insurerCode.isNullOrEmpty()) {
+            progressbar?.showPopup()
+            viewModel.onViewOffer(item.code, item.insurerCode)
+        }
     }
 
     override fun onPIDClick(item: OffersItem) {
-        val intent = Intent(requireContext(), PdfActivity::class.java)
-        intent.putExtra(PdfActivity.ARG_INSURER, item.insurerCode)
-        intent.putExtra(PdfActivity.ARG_SERVICE_TYPE, "RCA")
-        intent.putExtra(PdfActivity.ARG_FROM, "SERVICE")
-        requireContext().startActivity(intent)
+        if (!item.code.isNullOrEmpty() && !item.insurerCode.isNullOrEmpty()) {
+            val intent = Intent(requireContext(), PdfActivity::class.java)
+            intent.putExtra(PdfActivity.ARG_INSURER, item.insurerCode)
+            intent.putExtra(PdfActivity.ARG_SERVICE_TYPE, "RCA")
+            intent.putExtra(PdfActivity.ARG_FROM, "SERVICE")
+            requireContext().startActivity(intent)
+        }
     }
 
     override fun onRCAClick(item: OffersItem) {
         if (durationList.isNotEmpty())
             item.code?.let {
                 item.insurerCode?.let { it1 ->
+                    progressbar?.showPopup()
                     viewModel.onViewSummary(
                         it,
                         it1,

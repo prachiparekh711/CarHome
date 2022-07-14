@@ -7,9 +7,12 @@
         android:id="@+id/logo"
         android:layout_width="@dimen/_35sdp"
         android:layout_height="@dimen/_35sdp"
-        android:layout_margin="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_notification_item_logo" />
+        android:src="@drawable/ic_notification_car" />
 
     <RelativeLayout
         android:layout_width="match_parent"

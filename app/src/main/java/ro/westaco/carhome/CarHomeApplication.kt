@@ -1,6 +1,6 @@
 package ro.westaco.carhome
 
-import android.content.Context
+import android.app.Application
 import android.content.ContextWrapper
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
@@ -14,12 +14,14 @@ import ro.westaco.carhome.di.ApiModule.Companion.BASE_URL_RESOURCES
 @HiltAndroidApp
 class CarHomeApplication : MultiDexApplication() {
 
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
+    companion object {
+        lateinit var appInstance: Application
     }
 
     override fun onCreate() {
         super.onCreate()
+
+        appInstance = this
 
         if (BuildConfig.FLAVOR == "CarHome_BuildBuildVersion") {
             BASE_URL_PRODUCTION = resources.getString(R.string.BASE_URL_PRODUCTION)

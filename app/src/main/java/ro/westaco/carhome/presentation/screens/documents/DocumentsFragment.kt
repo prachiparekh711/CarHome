@@ -14,7 +14,6 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Parcelable
 import android.provider.MediaStore
 import android.text.SpannableString
@@ -27,20 +26,26 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.karumi.dexter.listener.single.PermissionListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_documents.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.Categories
 import ro.westaco.carhome.data.sources.remote.responses.models.RowsItem
-import ro.westaco.carhome.di.ApiModule
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.documents.CopyMoveFragment.Companion.actionParent
 import ro.westaco.carhome.presentation.screens.documents.CopyMoveFragment.Companion.actionParentIDList
 import ro.westaco.carhome.presentation.screens.documents.CopyMoveFragment.Companion.actionPathList
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
 import ro.westaco.carhome.utils.FileUtil
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.views.Progressbar
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -67,11 +72,8 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
     var dialogNewDocument: BottomSheetDialog? = null
     var dialogOptionDocument: BottomSheetDialog? = null
     private val CAMERA_RESULT = 100
-    private val CAMERA_PERMISSION_REQUEST = 2296
     private val GALLERY_RESULT = 101
-    private val GALLERY_PERMISSION_REQUEST = 2297
     private val DOCUMENT_RESULT = 102
-    private val DOCUMENT_PERMISSION_REQUEST = 2298
     var selectedFileList: ArrayList<File> = ArrayList()
     var isImage: Boolean = false
     private var newfragment: NewDocumentFragment? = null
@@ -80,6 +82,7 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
     var documentMainList: ArrayList<RowsItem> = ArrayList()
     var operation: String? = null
     var index = 1
+    var catName: EditText? = null
 
     companion object {
         var selectedList: ArrayList<Int> = ArrayList()
@@ -105,12 +108,12 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
     @SuppressLint("NotifyDataSetChanged")
     override fun initUi() {
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
 
         createFolderDialog()
         createDocumentDialog()
 
         addCategory.setOnClickListener {
+            catName?.setText("")
             dialogCreateCategory?.show()
         }
 
@@ -309,6 +312,7 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
                 } else {
                     documentMainList = documents.rows as ArrayList<RowsItem>
                     docLL.isVisible = true
+
                     docAdapter.setItems(documents.rows)
                 }
             }
@@ -407,11 +411,9 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
     }
 
     override fun onItemClick(item: RowsItem) {
-        progressbar?.showPopup()
-        val url = "${ApiModule.BASE_URL_RESOURCES}${item.href}"
         val intent = Intent(requireContext(), PdfActivity::class.java)
-        intent.putExtra(PdfActivity.ARG_DATA, url)
         intent.putExtra(PdfActivity.ARG_FROM, "DOCUMENT")
+        intent.putExtra(PdfActivity.ARG_ITEM, item)
         requireContext().startActivity(intent)
     }
 
@@ -541,25 +543,32 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
         dialogCreateCategory?.setCancelable(true)
         dialogCreateCategory?.setContentView(view)
         val title = view.findViewById<TextView>(R.id.title)
-        val catName = view.findViewById<EditText>(R.id.catName)
+        catName = view.findViewById(R.id.catName)
         val cancel = view.findViewById<ImageView>(R.id.cancel)
         val done = view.findViewById<ImageView>(R.id.done)
 
         title.text = resources.getString(R.string.create_new_category)
+        catName?.setText("")
 
         cancel.setOnClickListener {
-            catName.setText("")
+            catName?.setText("")
         }
 
         done.setOnClickListener {
-            val result = checkNewNameExist(catName.text.toString())
+            val result = checkNewNameExist(catName?.text.toString())
             if (result) {
                 val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
                 val dialog: AlertDialog = builder.setTitle(resources.getString(R.string.app_name))
                     .setMessage(resources.getString(R.string.folder_exist))
                     .setPositiveButton(resources.getString(R.string.yes)) { dialog, which ->
                         index = 1
-                        changeName(catName.text.toString(), catName.text.toString(), false)
+                        changeName(
+                            catName?.text.toString(),
+                            catName?.text.toString(),
+                            false,
+                            true,
+                            null
+                        )
 
                         progressbar?.showPopup()
                         dialog.dismiss()
@@ -577,10 +586,10 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
                 if (parentIDList.isNotEmpty())
                     viewModel.addCategory(
                         parentIDList[parentIDList.size - 1],
-                        catName.text.toString()
+                        catName?.text.toString()
                     )
                 else
-                    viewModel.addCategory(null, catName.text.toString())
+                    viewModel.addCategory(null, catName?.text.toString())
             }
             dialogCreateCategory?.dismiss()
         }
@@ -597,7 +606,13 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
         return result
     }
 
-    private fun changeName(originalName: String?, newName: String, recursiveCall: Boolean) {
+    private fun changeName(
+        originalName: String?,
+        newName: String,
+        recursiveCall: Boolean,
+        isCreate: Boolean,
+        parentIDForRename: Int?
+    ) {
         var orgName = originalName
         var categoryName = newName
 
@@ -613,17 +628,39 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
         val result = checkNewNameExist(categoryName)
         progressbar?.showPopup()
         if (result) {
-            changeName(originalName, categoryName, true)
+            changeName(originalName, categoryName, true, isCreate, parentIDForRename)
         } else {
-            if (parentIDList.isNotEmpty())
-                viewModel.addCategory(
-                    parentIDList[parentIDList.size - 1],
-                    categoryName
-                )
-            else
-                viewModel.addCategory(null, categoryName)
+            if (isCreate) {
+
+                if (parentIDList.isNotEmpty())
+                    viewModel.addCategory(
+                        parentIDList[parentIDList.size - 1],
+                        categoryName
+                    )
+                else
+                    viewModel.addCategory(null, categoryName)
+            } else {
+                if (parentIDList.size == 0) {
+                    if (parentIDForRename != null) {
+                        viewModel.editCategory(
+                            null,
+                            categoryName,
+                            parentIDForRename
+                        )
+                    }
+                } else {
+                    if (parentIDForRename != null) {
+                        viewModel.editCategory(
+                            parentIDList[parentIDList.size - 1],
+                            categoryName,
+                            parentIDForRename
+                        )
+                    }
+                }
+            }
         }
     }
+
 
     private fun dialogRenameFile(id: Int, name: String, isFile: Boolean) {
         val view = layoutInflater.inflate(R.layout.create_folder_dialog, null)
@@ -654,22 +691,65 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
                     id
                 )
             else {
-                if (parentIDList.size == 0) {
-                    viewModel.editCategory(
-                        null,
-                        catName.text.toString(),
-                        id
-                    )
-                } else {
-                    viewModel.editCategory(
-                        parentIDList[parentIDList.size - 1],
-                        catName.text.toString(),
-                        id
-                    )
-                }
-            }
+                val result = checkNewNameExist(catName?.text.toString())
+                if (result) {
+                    val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+                    val dialog: AlertDialog =
+                        builder.setTitle(resources.getString(R.string.app_name))
+                            .setMessage(resources.getString(R.string.folder_exist))
+                            .setPositiveButton(resources.getString(R.string.yes)) { dialog, which ->
+                                index = 1
+                                changeName(
+                                    catName?.text.toString(),
+                                    catName?.text.toString(),
+                                    false,
+                                    false,
+                                    id
+                                )
 
-            progressbar?.showPopup()
+                                progressbar?.showPopup()
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton(resources.getString(R.string.no)) { dialog, which ->
+                                dialog.dismiss()
+                            }
+                            .create()
+                    dialog.setCancelable(false)
+                    dialog.show()
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLUE)
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.DKGRAY)
+                } else {
+                    progressbar?.showPopup()
+                    if (parentIDList.size == 0) {
+                        viewModel.editCategory(
+                            null,
+                            catName.text.toString(),
+                            id
+                        )
+                    } else {
+                        viewModel.editCategory(
+                            parentIDList[parentIDList.size - 1],
+                            catName.text.toString(),
+                            id
+                        )
+                    }
+                }
+
+                /* if (parentIDList.size == 0) {
+                     viewModel.editCategory(
+                         null,
+                         catName.text.toString(),
+                         id
+                     )
+                 } else {
+                     viewModel.editCategory(
+                         parentIDList[parentIDList.size - 1],
+                         catName.text.toString(),
+                         id
+                     )
+                 }*/
+            }
+//            progressbar?.showPopup()
             dialogRenameFile?.dismiss()
         }
         dialogRenameFile?.show()
@@ -874,38 +954,115 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
         }
 
         mFolder.setOnClickListener {
+            catName?.setText("")
             dialogNewDocument?.dismiss()
             dialogCreateCategory?.show()
         }
 
         mCamera.setOnClickListener {
-            val result = checkPermission()
-            if (result) {
-                callCameraIntent()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                onCameraPermission()
             } else {
-                requestPermission(CAMERA_PERMISSION_REQUEST)
+                if (permission()) {
+                    callCameraIntent()
+                }
             }
 
-
             dialogNewDocument?.dismiss()
+
         }
 
         mPhotos.setOnClickListener {
-            val result = checkPermission()
-            if (result) {
-                callPhotosIntent()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                Dexter.withContext(requireActivity())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            report?.let {
+                                if (report.areAllPermissionsGranted()) {
+                                    callPhotosIntent()
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+                    }).withErrorListener {}
+
+                    .check()
+
             } else {
-                requestPermission(GALLERY_PERMISSION_REQUEST)
+                if (permissionUpload()) {
+                    callPhotosIntent()
+                }
             }
+
             dialogNewDocument?.dismiss()
         }
 
         mDocument.setOnClickListener {
-            val result = checkPermission()
-            if (result) {
-                callDocumentIntent()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                Dexter.withContext(requireActivity())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            report?.let {
+                                if (report.areAllPermissionsGranted()) {
+                                    callDocumentIntent()
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+                    }).withErrorListener {}
+
+                    .check()
+
             } else {
-                requestPermission(DOCUMENT_PERMISSION_REQUEST)
+
+                if (permissionUpload()) {
+                    callDocumentIntent()
+                }
             }
 
             dialogNewDocument?.dismiss()
@@ -938,66 +1095,9 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
         )
     }
 
-    private fun requestPermission(code: Int) {
-
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
-            ),
-            code
-        )
-
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        val WRITE_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED
-        val READ_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED
-        val CAMERA_PERMISSION = grantResults[2] == PackageManager.PERMISSION_GRANTED
-        if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE && CAMERA_PERMISSION) {
-            when (requestCode) {
-                GALLERY_PERMISSION_REQUEST -> callPhotosIntent()
-                CAMERA_PERMISSION_REQUEST -> callCameraIntent()
-                DOCUMENT_PERMISSION_REQUEST -> callDocumentIntent()
-            }
-        } else {
-            showErrorInfo(requireContext(), getString(R.string.allow_permission))
-        }
-
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == GALLERY_PERMISSION_REQUEST) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callPhotosIntent()
-                }
-            }
-        }
-
-        if (requestCode == CAMERA_PERMISSION_REQUEST) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callCameraIntent()
-                }
-            }
-        }
-
-        if (requestCode == DOCUMENT_PERMISSION_REQUEST) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callDocumentIntent()
-                }
-            }
-        }
 
         selectedFileList.clear()
         if (requestCode == CAMERA_RESULT && resultCode == Activity.RESULT_OK) {
@@ -1072,12 +1172,10 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
             if (selectedUri != null) {
                 try {
                     var selectedFile: String? = null
-                    if (selectedUri != null) {
-                        selectedFile = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            FileUtil.getFilePathFor11(requireContext(), selectedUri)
-                        } else {
-                            FileUtil.getPath(selectedUri, requireContext())
-                        }
+                    selectedFile = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        FileUtil.getFilePathFor11(requireContext(), selectedUri)
+                    } else {
+                        FileUtil.getPath(selectedUri, requireContext())
                     }
                     if (selectedFile != null) {
                         selectedFileList.add(File(selectedFile))
@@ -1116,29 +1214,53 @@ class DocumentsFragment : BaseFragment<DocumentsViewModel>(),
         return Uri.parse(path)
     }
 
-    private fun checkPermission(): Boolean {
-
-        val result =
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-        val result1 =
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        val result2 =
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-            )
-
-        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED && result2 == PackageManager.PERMISSION_GRANTED
-    }
-
     override fun onOptionClick(item: RowsItem) {
         createOptionDialog(item)
     }
 
+    private fun onCameraPermission() {
+
+        Dexter.withContext(requireContext())
+            .withPermission(Manifest.permission.CAMERA)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+                    callCameraIntent()
+                }
+
+                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {}
+
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: PermissionRequest?,
+                    p1: PermissionToken?,
+                ) {
+                    p1?.continuePermissionRequest()
+                }
+            }).withErrorListener {}
+
+            .check()
+
+    }
+
+
+    private fun permission(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+
+    }
+
+    private fun permissionUpload(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+
+    }
 }

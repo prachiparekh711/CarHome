@@ -4,7 +4,6 @@ import android.app.Application
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.Reminder
@@ -14,7 +13,6 @@ import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.reminder.add_new.AddNewReminderFragment
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -34,10 +32,6 @@ class ReminderViewModel @Inject constructor(
     }
 
     private fun fetchRemoteData() {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
 
         api.getSimpleCatalog("NOM_REMINDER_TAG")
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -50,7 +44,7 @@ class ReminderViewModel @Inject constructor(
     }
 
     fun fetchReminderList() {
-        api.getReminders()
+        api.getReminders(true)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
                 remindersLiveData.value = resp?.data
@@ -63,8 +57,16 @@ class ReminderViewModel @Inject constructor(
     /*
     ** User Interaction
     */
-    internal fun onFabClicked() {
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.AddReminder, null, true))
+    internal fun onFabClicked(selectedTags: ArrayList<CatalogItem>) {
+        uiEventStream.value =
+            UiEvent.Navigation(NavAttribs(Screen.AddReminder, object : BundleProvider() {
+                override fun onAddArgs(bundle: Bundle?): Bundle {
+                    return Bundle().apply {
+                        putSerializable(AddNewReminderFragment.ARG_IS_EDIT, false)
+                        putSerializable(AddNewReminderFragment.ARG_SELECTED_TAGS, selectedTags)
+                    }
+                }
+            }, true))
     }
 
     internal fun onNotificationsClicked() {
@@ -72,21 +74,26 @@ class ReminderViewModel @Inject constructor(
     }
 
     internal fun onDelete(item: Reminder) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
-
 
         item.id?.let {
             api.deleteReminder(it)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                     fetchReminderList()
                 }, {
                     //   it.printStackTrace()
-                    uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
+                })
+        }
+    }
+
+    internal fun onMarkAsCompleted(item: Reminder) {
+
+        item.id?.let {
+            api.markAsCompleted(it)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    fetchReminderList()
+                }, {
                 })
         }
     }

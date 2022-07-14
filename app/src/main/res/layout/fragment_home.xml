@@ -60,7 +60,7 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -297,7 +297,7 @@
                                 android:id="@+id/offerReminder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="@dimen/_130sdp"
-                                android:layout_marginStart="@dimen/_10sdp"
+                                android:layout_marginHorizontal="@dimen/_10sdp"
                                 android:adjustViewBounds="true"
                                 android:background="@drawable/bg_card_item_nostroke"
                                 android:scaleType="fitXY"
@@ -362,6 +362,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_semibold_600"
                         android:text="@string/services"
+                        android:layout_marginBottom="@dimen/_5sdp"
                         android:textColor="@color/textOnWhite"
                         android:textSize="@dimen/_11sdp" />
 
@@ -404,6 +405,7 @@
                                     android:gravity="center"
                                     android:singleLine="true"
                                     android:text="@string/insurance"
+                                    android:textSize="@dimen/_11sdp"
                                     android:textColor="@color/textOnWhite" />
 
                             </LinearLayout>
@@ -440,6 +442,7 @@
                                     android:gravity="center"
                                     android:singleLine="true"
                                     android:text="@string/rovinieta"
+                                    android:textSize="@dimen/_11sdp"
                                     android:textColor="@color/textOnWhite" />
 
                             </LinearLayout>
@@ -476,6 +479,7 @@
                                     android:gravity="center"
                                     android:singleLine="true"
                                     android:text="@string/bridge_tax"
+                                    android:textSize="@dimen/_11sdp"
                                     android:textColor="@color/textOnWhite" />
 
                             </LinearLayout>
@@ -522,6 +526,7 @@
                                     android:fontFamily="@font/inter_medium_500"
                                     android:gravity="center"
                                     android:singleLine="true"
+                                    android:textSize="@dimen/_11sdp"
                                     android:text="@string/data_tab_cars"
                                     android:textColor="@color/textOnWhite" />
 
@@ -558,6 +563,7 @@
                                     android:fontFamily="@font/inter_medium_500"
                                     android:gravity="center"
                                     android:singleLine="true"
+                                    android:textSize="@dimen/_11sdp"
                                     android:text="@string/persons"
                                     android:textColor="@color/textOnWhite" />
 
@@ -594,6 +600,7 @@
                                     android:fontFamily="@font/inter_medium_500"
                                     android:gravity="center"
                                     android:singleLine="true"
+                                    android:textSize="@dimen/_11sdp"
                                     android:text="@string/companies"
                                     android:textColor="@color/textOnWhite" />
 
@@ -667,7 +674,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
-                        android:background="@drawable/auth_text_input_background"
+                        android:background="@drawable/home_bg"
                         android:nestedScrollingEnabled="false"
                         android:orientation="vertical"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -815,7 +822,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginBottom="@dimen/_10sdp"
-                        android:background="@drawable/auth_text_input_background"
+                        android:background="@drawable/home_bg"
                         android:nestedScrollingEnabled="false"
                         android:orientation="vertical"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />

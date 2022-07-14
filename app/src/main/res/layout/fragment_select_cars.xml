@@ -6,21 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/expande_colore"
-    tools:context=".presentation.screens.service.insurance.selectcar.SelectCarsFragment">
+    tools:context=".presentation.screens.service.insurance.car_selection.SelectCarsFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_12sdp">
+        android:background="@color/white"
+        android:paddingVertical="@dimen/_12sdp">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/back"
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
             android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_12sdp"
             android:adjustViewBounds="true"
             android:padding="@dimen/_2sdp"
             android:src="@drawable/ic_back"
@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/data_tab_cars"
+            android:gravity="center_vertical"
             android:textColor="@color/textOnWhite"
             android:textSize="@dimen/_15sdp"
             app:layout_constraintBottom_toBottomOf="@+id/back"
@@ -42,29 +43,48 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/mAppBar"
-        android:orientation="vertical">
+        android:layout_below="@id/mAppBar">
 
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:fontFamily="@font/inter_semibold_600"
-            android:text="@string/added_cars"
-            android:textColor="#1A1341"
-            android:textSize="@dimen/_11sdp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_cars_list"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/item_in_cars" />
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:fontFamily="@font/inter_semibold_600"
+                android:text="@string/added_cars"
+                android:textColor="#1A1341"
+                android:textSize="@dimen/_11sdp" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_cars_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="false" />
+
+            <TextView
+                android:id="@+id/addNew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_add_circle_person"
+                android:drawablePadding="@dimen/_10sdp"
+                android:fontFamily="@font/inter_medium_500"
+                android:gravity="center_vertical"
+                android:padding="@dimen/_15sdp"
+                android:text="@string/add_another_car_"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13sdp"
+                android:visibility="gone"
+                tools:ignore="RtlSymmetry" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

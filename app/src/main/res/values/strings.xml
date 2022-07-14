@@ -1,21 +1,24 @@
 <resources>
     <string name="app_name">CarHome</string>
+    <string name="app_carhome" translatable="false">CarHome</string>
     <string name="car_home">Car Home</string>
+    <string name="bugsee_token" translatable="false">268187b3-f3b4-4b29-a07d-92ef6f4a9d18</string>
+
+
+    <string name="phone_rooted">Your phone is rooted, the application will close!</string>
+
     <string name="int_not_connect">You don\'t have an active internet connection</string>
     <string name="general_server_error">Server error</string>
     <string name="server_saving_error">Error! Please check the info you submitted and retry</string>
-    <string name="save_success_msg">Saved</string>
-    <string name="edit_success_msg">Edited</string>
     <string name="dlUpload_success">Driving License uploaded successfully!</string>
     <string name="idUpload_success">Identity Document uploaded successfully!</string>
     <string name="logo_success_msg">Logo changed successfully!</string>
-    <string name="delete_success_msg">Deleted</string>
     <string name="date_hint">DD / MM / YYYY</string>
-    <string name="days_template">%d days</string>
-    <string name="hours_template">%d hours</string>
-    <string name="minutes_template">%d min</string>
+    <string name="days_template">%d Days</string>
+    <string name="hours_template">%d Hours</string>
+    <string name="minutes_template">%d Min</string>
     <string name="duetime_in_future">%s left</string>
-    <string name="duetime_in_past">%s ago</string>
+    <string name="duetime_in_past">%s past</string>
     <string name="progress">%d\%% Finished</string>
 
     <!-- Onboarding -->
@@ -28,6 +31,7 @@
     <!-- Auth -->
     <string name="auth_welcome">Welcome back to</string>
     <string name="email_hint">Email</string>
+    <string name="email_hint_cc"><![CDATA[Email</><font color="#FB4079">*</font>]]></string>
     <string name="password_hint">Password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="forgot_password">Forgot Password?</string>
@@ -35,8 +39,6 @@
     <string name="sign_up">Sign up</string>
     <string name="login_with">Or login with</string>
     <string name="sign_up_with">Or sign up with</string>
-    <string name="terms">By tapping \'Login\' and using the Car Home app, you\'re agreeing to Terms of Services and GDPR</string>
-    <string name="sign_up_terms">By tapping \'Sign up\' and using the Car Home app, you\'re agreeing to Terms of Services and GDPR</string>
     <string name="terms_services">Terms of Services</string>
     <string name="switch_to_signup">Don\'t have an account? Sign up</string>
     <string name="switch_to_login">Already have an account? Login</string>
@@ -70,7 +72,8 @@
     <!-- Settings -->
     <string name="english">English</string>
     <string name="english_lan" translatable="false">en-US</string>
-    <string name="romania">Romania</string>
+    <string name="romania">România</string>
+    <string name="romanian">Romanian</string>
     <string name="romania_lan" translatable="false">en-RO</string>
     <string name="profile">Profile</string>
     <string name="delete_act">Delete Account</string>
@@ -99,7 +102,7 @@
     <string name="message">Message</string>
     <string name="submit_success_msg">Submitted successfully!</string>
     <string name="size_msg">File size exceed to limit of 10 MB</string>
-    <string name="type_here">Type Here</string>
+    <string name="type_here">Type here…</string>
     <string name="attach">Attach Screenshot/Image</string>
     <string name="submit">Submit</string>
     <string name="allow_permission">Allow permission for storage access!</string>
@@ -131,36 +134,56 @@
     <string name="retry">Biometric requires to open this app.</string>
     <string name="try_again1">Try again</string>
     <string name="close1">Close App</string>
+    <string name="close">Close</string>
 
 
     <!-- Profile -->
-    <string name="first_name_c">First name<font color='#FB4079'>*</font></string>
-    <string name="first_name">First name</string>
-    <string name="last_name_c">Last name<font color='#FB4079'>*</font></string>
-    <string name="last_name">Last name</string>
+    <string name="first_name_c">First Name<font color='#FB4079'>*</font></string>
+    <string name="first_name_cc"><![CDATA[First Name</><font color="#FB4079">*</font>]]></string>
+    <string name="first_name">First Name</string>
+    <string name="last_name_c">Last Name<font color='#FB4079'>*</font></string>
+    <string name="last_name_cc"><![CDATA[Last Name</><font color="#FB4079">*</font>]]></string>
+    <string name="last_name">Last Name</string>
     <string name="dob">Date Of Birth</string>
     <string name="address">Address</string>
     <string name="address_number">Number<font color='#FB4079'>*</font></string>
+    <string name="address_number_cc"><![CDATA[Number</><font color="#FB4079">*</font>]]></string>
     <string name="address_street_name">Street Name</string>
-    <string name="address_block">Block</string>
-    <string name="address_entrance">Entrance</string>
-    <string name="address_floor">Floor</string>
-    <string name="address_apartment">Apartment</string>
+    <string name="address_street_name_cc"><![CDATA[Street Name</><font color="#FB4079">*</font>]]></string>
+    <string name="block">Block</string>
+    <string name="block_cc"><![CDATA[Block</><font color="#FB4079">*</font>]]></string>
+    <string name="entrance">Entrance</string>
+    <string name="entrance_cc"><![CDATA[Entrance</><font color="#FB4079">*</font>]]></string>
+    <string name="floor">Floor</string>
+    <string name="floor_cc"><![CDATA[Floor</><font color="#FB4079">*</font>]]></string>
+    <string name="apartment">Apartment</string>
+    <string name="apartment_cc"><![CDATA[Apartment</><font color="#FB4079">*</font>]]></string>
     <string name="address_city_c">City<font color='#FB4079'>*</font></string>
+    <string name="address_city_cc"><![CDATA[City</><font color="#FB4079">*</font>]]></string>
     <string name="address_city">City</string>
     <string name="address_county_c">County<font color='#FB4079'>*</font></string>
+    <string name="address_county_cc"><![CDATA[County</><font color="#FB4079">*</font>]]></string>
     <string name="address_county">County</string>
     <string name="address_zipcode">Zipcode</string>
     <string name="id_type">ID Type</string>
+    <string name="id_type_cc"><![CDATA[ID Type</><font color="#FB4079">*</font>]]></string>
     <string name="select_idtype">Select your id type</string>
     <string name="profile_series">Series</string>
+    <string name="profile_series_cc"><![CDATA[Series</><font color="#FB4079">*</font>]]></string>
     <string name="profile_number">Number</string>
+    <string name="profile_number_cc"><![CDATA[Number</><font color="#FB4079">*</font>]]></string>
     <string name="profile_cnp">CNP</string>
+    <string name="profile_cnp_cc"><![CDATA[CNP</><font color="#FB4079">*</font>]]></string>
     <string name="profile_exp_date">ID Expiration Date</string>
+    <string name="profile_exp_date_cc"><![CDATA[ID Expiration Date</><font color="#FB4079">*</font>]]></string>
     <string name="d_license_id">Driving License ID</string>
+    <string name="d_license_id_cc"><![CDATA[Driving License ID</><font color="#FB4079">*</font>]]></string>
     <string name="d_license_cat">Driving License Categories</string>
+    <string name="d_license_cat_cc"><![CDATA[Driving License Categories</><font color="#FB4079">*</font>]]></string>
     <string name="d_license_issue">Driving License Issue Date</string>
+    <string name="d_license_issue_cc"><![CDATA[Issue Date</><font color="#FB4079">*</font>]]></string>
     <string name="d_license_exp">Driving License Expiration Date</string>
+    <string name="d_license_exp_cc"><![CDATA[Expiration Date</><font color="#FB4079">*</font>]]></string>
     <string name="occupation">Occupation</string>
     <string name="upload_license">Upload Your Driving License</string>
     <string name="upload_id">Upload Your ID</string>
@@ -168,6 +191,7 @@
     <string name="attchment_dl">DRIVING_LICENSE</string>
     <string name="attchment_id">IDENTITY_DOCUMENT</string>
     <string name="address_require">Address fields are required !</string>
+    <string name="name_require">Full name is required !</string>
     <!-- Edit Profile -->
     <string name="complete_profile_title">Complete Profile</string>
     <string name="id_doc">Identity Document</string>
@@ -204,16 +228,27 @@
     <string name="vin_number">VIN Number</string>
     <string name="license_plate">License Plate</string>
     <string name="license_no">License Number</string>
+    <string name="license_no_cc"><![CDATA[License Number</><font color="#FB4079">*</font>]]></string>
     <string name="manufacturer">Manufacturer</string>
+    <string name="manufacturer_">Manufacturer<font color='#FB4079'>*</font></string>
     <string name="model">Model</string>
+    <string name="model_">Model<font color='#FB4079'>*</font></string>
     <string name="vehicle_category">Vehicle Category</string>
+    <string name="vehicle_category_">Vehicle Category<font color='#FB4079'>*</font></string>
     <string name="engine_size">Engine Size (cm3)</string>
-    <string name="power">Power (kv)</string>
+    <string name="engine_size_">Engine Size (cm3)<font color='#FB4079'>*</font></string>
+    <string name="power">Power (kW)</string>
+    <string name="power_">Power (kW)<font color='#FB4079'>*</font></string>
     <string name="fuel_type">Fuel Type</string>
+    <string name="fuel_type_">Fuel Type<font color='#FB4079'>*</font></string>
     <string name="no_seats">No. of Seats</string>
+    <string name="no_seats_">No. of Seats<font color='#FB4079'>*</font></string>
     <string name="max_allow_mass">Max. Allowable Mass</string>
+    <string name="max_allow_mass_">Max. Allowable Mass<font color='#FB4079'>*</font></string>
     <string name="year">Year</string>
+    <string name="year_">Year<font color='#FB4079'>*</font></string>
     <string name="civ">CIV</string>
+    <string name="civ_">CIV<font color='#FB4079'>*</font></string>
     <!-- Car - Delete -->
     <string name="car_delete_title">Hey, do you really\nwant to delete this car?</string>
     <string name="go_back">Go Back</string>
@@ -223,7 +258,9 @@
     <string name="add_new_car">Add New Car</string>
     <string name="enter_vin">Enter VIN and\nRegistration Number</string>
     <string name="reg_country">Registration Country</string>
+    <string name="reg_country_">Registration Country<font color='#FB4079'>*</font></string>
     <string name="reg_number">Registration Number</string>
+    <string name="reg_number_cc"><![CDATA[Registration Number</><font color="#FB4079">*</font>]]></string>
     <string name="fill_all_fields">Please fill all fields to continue</string>
     <string name="error_vin">vin needs to have 17 characters</string>
     <string name="no_companies_found">No companies found for this country !</string>
@@ -253,18 +290,24 @@
     <string name="add_car_manually">Add Car Details Manually</string>
     <string name="car_try_again">Try again with different VIN</string>
     <!-- Car - Add New Manually -->
+    <string name="add_car">Add Car</string>
     <string name="add_car_11">Add Car (1/2)</string>
     <string name="add_car_12">Add Car (2/2)</string>
     <string name="vehicle_subcategory">Vehicle Sub Category</string>
+    <string name="vehicle_subcategory_">Vehicle Sub Category<font color='#FB4079'>*</font></string>
     <string name="purpose">Purpose</string>
+    <string name="purpose_">Purpose<font color='#FB4079'>*</font></string>
     <string name="others">Others</string>
     <string name="car_vin">VIN No.</string>
+    <string name="car_vin_">VIN No.<font color='#FB4079'>*</font></string>
     <string name="leasing">Leasing</string>
+    <string name="leasing_">Leasing<font color='#FB4079'>*</font></string>
     <string name="select_leasing">Select leasing company</string>
     <string name="leasing_ques">The car has currently a valid \n leasing contract?</string>
     <string name="confirmation">I confirm that the information provided here is correct</string>
     <string name="save">Save</string>
     <string name="next">Next</string>
+    <string name="star"><font color='#FB4079'>*</font></string>
     <string name="confirm_details">Please confirm that the info you provide is correct</string>
     <string name="status_expires">Expires</string>
 
@@ -275,8 +318,10 @@
     <!-- Natural Person - Add New -->
     <string name="add_natural_pers">Add Natural Person</string>
     <string name="country_c">Country<font color='#FB4079'>*</font></string>
+    <string name="country_cc"><![CDATA[Country</><font color="#FB4079">*</font>]]></string>
     <string name="country">Country</string>
     <string name="zip_code">Zip Code</string>
+    <string name="zip_code_cc"><![CDATA[Zip Code</><font color="#FB4079">*</font>]]></string>
     <!-- Legal Person - Details -->
     <string name="pers_details">Person Details</string>
     <string name="natural_pers_details">Edit Person Details</string>
@@ -293,8 +338,10 @@
     <!-- Legal Person - Add New -->
     <string name="cui">CUI</string>
     <string name="act_type">Activity Type</string>
+    <string name="act_type_cc"><![CDATA[Activity Type</><font color="#FB4079">*</font>]]></string>
 
     <string name="street_name">Street Name<font color='#FB4079'>*</font></string>
+    <string name="street_name_cc"><![CDATA[Street Name</><font color="#FB4079">*</font>]]></string>
     <!-- Legal Person - Edit -->
     <string name="edit_legal_pers">Edit Company Details</string>
     <!-- Legal Person - Details -->
@@ -344,7 +391,21 @@
     <string name="new_reminder_location">Location</string>
     <string name="err_no_title">Please input a title to continue</string>
     <string name="err_no_duedatetime">Please input the due date and time to continue</string>
+    <string name="err_notification_after_duedate">Notification date must be before due date. Please select a shorter period to continue</string>
+    <string name="save_all_details">Save all details</string>
     <!-- Reminder - Delete -->
+    <string name="reminder_delete_title">Hey, do you really\nwant to delete this reminder?</string>
+    <string name="reminder_delete_subtitle">All data from this reminder will be deleted permanently</string>
+    <string name="never">Never</string>
+    <string name="hourly">Hourly</string>
+    <string name="daily">Daily</string>
+    <string name="weekdays">Weekdays</string>
+    <string name="weekly">Weekly</string>
+    <string name="fortnightly">Fortnightly</string>
+    <string name="monthly">Monthly</string>
+    <string name="months3">Every 3 Months</string>
+    <string name="months6">Every 6 Months</string>
+    <string name="yearly">Yearly</string>
     <!-- Reminder - Add New -->
     <string name="edit_reminder">Edit Reminders</string>
 
@@ -360,6 +421,12 @@
     <string name="car_info">Car Information</string>
     <string name="country_reg">Country of Registration</string>
     <string name="license_hint">Enter License Plate Number</string>
+    <string name="carmodel_cannot_be_empty">CarModel cannot be empty</string>
+    <string name="invalid_year">Year can not ne empty</string>
+    <string name="invalid_mass">Mass can not ne empty</string>
+    <string name="invalid_engine_size">Engine size can not ne empty</string>
+    <string name="invalid_engine_power">Engine power can not ne empty</string>
+    <string name="invalid_number_of_seats">Number of seats can not ne empty</string>
     <string name="buy_vignette_cta">Buy</string>
     <string name="purchase">Purchase</string>
 
@@ -388,6 +455,7 @@
     <string name="closed">Closed</string>
     <string name="cancel">Cancel</string>
     <string name="apply">Apply</string>
+    <string name="top_services">Services</string>
 
     <string name="by_ovm_petrom">by OVM Petrom</string>
     <string name="empty_directory">Empty Directory</string>
@@ -406,7 +474,7 @@
     <string name="rem_of_oil">Oil change reminder</string>
     <string name="rem_of_geo">Geo-push Notifications</string>
     <string name="sms">SMS</string>
-    <string name="email">EMAIL</string>
+    <string name="noti_email">EMAIL</string>
     <string name="app">APP</string>
     <string name="type_rca">EXPIRY_RCA</string>
     <string name="type_vignette">EXPIRY_VIGNETTE</string>
@@ -418,7 +486,7 @@
     <string name="omv">OMV</string>
     <string name="open">Open</string>
     <string name="rca">RCA</string>
-    <string name="add_more">+Add More Reminders</string>
+    <string name="add_more">+ Add More Reminders</string>
     <string name="document">Document</string>
     <string name="view">View</string>
     <string name="map">Map</string>
@@ -431,7 +499,7 @@
     <string name="verify_email">Verify your email</string>
     <string name="confirm_here">Confirm here</string>
     <string name="already_verified">Already verified?</string>
-    <string name="deep_url">https://carhome.page.link/register</string>
+
 
     <string name="setup_touch">Do you want to set up \n Touch ID for a Quick login?</string>
     <string name="setup_touchID">Set Up Touch ID</string>
@@ -548,13 +616,16 @@
     <string name="natural_personal_information">Personal Information</string>
     <string name="natural_license_information">License Information</string>
     <string name="natural_date_of_birth">Date Of Birth</string>
+    <string name="natural_date_of_birth_cc"><![CDATA[Date Of Birth</><font color="#FB4079">*</font>]]></string>
 
     <string name="add_folder">Add New Folder</string>
     <string name="new_car_details_cta_next">Next</string>
     <string name="select_duration">Select Duration</string>
     <string name="mark_all_read">Mark all as read</string>
     <string name="no_notification">You don’t have any notification today</string>
-
+    <string name="all_notifications">All</string>
+    <string name="read_notifications">Read</string>
+    <string name="unread_notifications">Unread</string>
 
     <string name="setting_title">How would you like to be notified?</string>
     <string name="setting_subtitle">You can choose what would be your preference for receiving notifications.</string>
@@ -571,6 +642,7 @@
     <string name="identity_info">Identity Information</string>
     <string name="edit">Edit</string>
     <string name="street_type_c">Street Type<font color='#FB4079'>*</font></string>
+    <string name="street_type_cc"><![CDATA[Street Type</><font color="#FB4079">*</font>]]></string>
     <string name="street_type">Street Type</string>
     <string name="block_building">Block/Building</string>
     <string name="driving_License_">Driving License…</string>
@@ -578,20 +650,24 @@
     <string name="cnp_id">CNP ID</string>
     <string name="locality">Locality</string>
     <string name="romania_flag">🇷🇴</string>
-
+    <string name="year_info">Select manufacturing year</string>
 
     <string name="objective">Objective</string>
     <string name="fetesti">Fetesti</string>
     <string name="no_of_pass">Number of passes<font color='#FB4079'>*</font></string>
+    <string name="no_of_pass_">Number of passes</string>
 
     <string name="add_legal_person">Add Legal Person</string>
     <string name="reg_of_company">Registration of Company</string>
-    <string name="nace_code_c">CAEN Code<font color='#FB4079'>*</font></string>
+    <string name="reg_of_company_cc"><![CDATA[Registration of Company</><font color="#FB4079">*</font>]]></string>
+    <string name="nace_code_c">NACE Code<font color='#FB4079'>*</font></string>
+    <string name="nace_code_cc"><![CDATA[NACE Code</><font color="#FB4079">*</font>]]></string>
     <string name="nace_code">NACE Code</string>
     <string name="search_nace_code">Search NACE code..</string>
     <string name="company_name_c">Company Name<font color='#FB4079'>*</font></string>
+    <string name="company_name_cc"><![CDATA[Company Name</><font color="#FB4079">*</font>]]></string>
     <string name="cui_c">CUI<font color='#FB4079'>*</font></string>
-
+    <string name="cui_cc"><![CDATA[CUI</><font color="#FB4079">*</font>]]></string>
 
     <string name="first_name_len">First name length between 2 to 50</string>
     <string name="last_name_len">Last name length between 2 to 50</string>
@@ -600,7 +676,9 @@
     <string name="last_name_r">Last name cannot be empty</string>
 
     <string name="state_provinces">State/Provinces<font color='#FB4079'>*</font></string>
+    <string name="state_provinces_cc"><![CDATA[State/Provinces</><font color="#FB4079">*</font>]]></string>
     <string name="locality_area">Locality/Area<font color='#FB4079'>*</font></string>
+    <string name="locality_area_cc"><![CDATA[Locality/Area</><font color="#FB4079">*</font>]]></string>
 
     <string name="company_info">Company Information</string>
 
@@ -611,6 +689,7 @@
     <string name="search_name">Search name</string>
     <string name="country_code">Country code</string>
     <string name="phone_num">Phone Number</string>
+    <string name="phone_num_cc"><![CDATA[Phone Number</><font color="#FB4079">*</font>]]></string>
     <string name="issue_date">Issue Date</string>
     <string name="exp_date">Expiration Date</string>
     <string name="no_location">No Location</string>
@@ -650,7 +729,7 @@
     <string name="find_us_on_your_favorite_social_media">Find us on your favorite social media</string>
     <string name="invite_your_friends_and_family">Invite your friends and family</string>
     <string name="need_help_please_reach_out_to_us">Need help? Please reach out to us</string>
-    <string name="no_info">No Information added</string>
+    <string name="no_info">No Information</string>
 
     <string name="purchases_expin_template">Expires in %s</string>
     <string name="expires_on">Expires on</string>
@@ -667,7 +746,7 @@
     <string name="doc_not_found">Document not found!</string>
     <string name="ok">Ok</string>
 
-    <string name="insurance_info">Hello, %s We are happy to know that you are eager to use this feature.\nWe are perfecting it just for you.\nHold tight!</string>
+    <string name="insurance_info">Hello, %s \nWe are happy to know that you are eager to use this feature.\nWe are perfecting it just for you.\nHold tight!</string>
 
     <string name="select_rca_details">Select RCA Details</string>
     <string name="car_registered">Car Registered</string>
@@ -754,7 +833,7 @@
     <string name="number_passes_info">Number of passes is required !</string>
     <string name="vin_required">Unable to locate car data, please provide VIN no.</string>
     <string name="vehicle_cats">Vehicle Categories</string>
-    <string name="ins_date_error">You can only purchase from Tomorrow to 30 days in advance. </string>
+    <string name="ins_date_error">You can only purchase from Tomorrow to 30 days in advance.</string>
     <string name="reg_invalid_cnp">Invalid CNP Number !</string>
     <string name="reg_invalid_cui">Invalid CUI Number !</string>
     <string name="reg_invalid_reg_company">Invalid registration of company !</string>
@@ -764,6 +843,8 @@
     <string name="information_items_">Information</string>
 
     <string name="bridge_tax_active_dialog">The selected car has Active Bridge Tax. Do you still want to purchase?</string>
+    <string name="insurance_active_dialog">The selected car has Active RCA. Do you still want to purchase?</string>
+    <string name="ro_active_dialog">The selected car has Active Rovignette. Do you still want to purchase?</string>
 
     <string name="selected_country_code_">Select Country Code</string>
     <string name="selected_country_">Select Country</string>
@@ -806,6 +887,50 @@
     <string name="ins_expires">Insurance Expires</string>
     <string name="last_purchased">Last Purchased</string>
     <string name="ro_expires">Rovinieta Expires</string>
+    <string name="save_detail">Save Details</string>
+    <string name="delete_rem">Delete Reminder</string>
+    <string name="br_charges">Bridge Tax Charges</string>
+    <string name="ro_charges">Rovinieta Charges</string>
+    <string name="accept">Accept</string>
+    <string name="car_ins_section">Car Insurance Section</string>
+    <string name="car_ins_section1">Let’s protect your car with best\n offers available.</string>
+    <string name="ins_tc">I have read and agree to the <font color='#5367FC'><u>Terms and Condition</u></font></string>
+    <string name="ins_gdpr">I have read and agree to the <font color='#5367FC'><u>GDPR</u></font></string>
+    <string name="lets_begin">Let’s Begin</string>
+    <string name="broker_partner">Broker Partner</string>
+    <string name="dot">•</string>
+    <string name="add_another_car_">Add another car..</string>
+    <string name="civ_serial_no">CIV Serial No</string>
+    <string name="ins_car_no">Car No.</string>
+    <string name="ins_leasing">Vehicle is subject to a running leasing contract.</string>
+    <string name="model_make">Model/Make</string>
+    <string name="ins_vin_no">VIN NO.</string>
+    <string name="ins_capacity_power">Capacity/Power</string>
+    <string name="ins_matw">MATW(MTA)</string>
+    <string name="ins_bonus">Bonus - Malus Class</string>
+    <string name="terms_info">Please accept the Terms of Service and GDPR to proceed with Signup</string>
+    <string name="consents">Consents</string>
+
+    <string name="check_info">Please check the box if you want to continue</string>
+    <string name="invalid_email">Please input a valid email address</string>
+    <string name="no_name">No name added</string>
+    <string name="date_exceed_limit">Date Exceed Limit</string>
+    <string name="cu_file_info">The request may contain up to 5 file attachments</string>
+    <string name="err_no_repeat">Please select the repeat option to continue</string>
+    <string name="img_">Image_</string>
+    <string name="insta">Instagram</string>
+    <string name="fb">Facebook</string>
+    <string name="twitter">Twitter</string>
+    <string name="utube">Youtube</string>
+    <string name="share_text">You can invite your friends and colleagues to join us.\nWe appreciate your references.</string>
+    <string name="network_text1">Oops! Network is disconnected</string>
+    <string name="network_text2">Please check your internet problem and try again</string>
+    <string name="network_retry">Retry</string>
+    <string name="bio_login_title">Biometric Login</string>
+    <string name="server_unreachable">Oops! Server is unreachable</string>
+    <string name="you">You</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="data_missing">Data Missing</string>
 
 
 </resources>

@@ -5,6 +5,7 @@ import android.os.Build
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
@@ -25,30 +27,19 @@ import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.requests.RcaOfferRequest
 import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.rovignette_init.BuyVignetteFragment
-import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment
-import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.driverNaturalItem
-import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.ownerLegalItem
-import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.ownerNaturalItem
-import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.userLegalItem
-import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.userNaturalItem
-import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.verifyLegalList
-import ro.westaco.carhome.presentation.screens.service.insurance.SelectUserFragment.Companion.verifyNaturalList
+import ro.westaco.carhome.presentation.screens.main.MainActivity
 import ro.westaco.carhome.presentation.screens.service.insurance.adapter.DriverAdapter
-import ro.westaco.carhome.presentation.screens.service.insurance.leasing_c.LeasingInFragment
-import ro.westaco.carhome.presentation.screens.service.insurance.selectcar.SelectCarsFragment
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.presentation.screens.service.insurance.ins_person.SelectUserFragment
+import ro.westaco.carhome.utils.CountryCityUtils
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 @AndroidEntryPoint
 class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
     LeasingInFragment.OnDialogInteractionListener,
-    SelectCarsFragment.OnCarSelectionSetListener,
     DriverAdapter.OnRemoveListener,
     SelectUserFragment.OnOwnerSelectionListener,
     SelectUserFragment.OnUserSelectionListener,
@@ -57,29 +48,33 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
     SelectUserFragment.AddNewUserView {
 
     var mView: View? = null
-    private var selectCarsFragment: SelectCarsFragment? = null
     lateinit var driverAdapter: DriverAdapter
-    var driverList = ArrayList<NaturalPersonForOffer>()
+    private var driverList = ArrayList<NaturalPersonForOffer>()
     val itemsDriverList = ArrayList<NaturalPerson>()
     var carList: ArrayList<Vehicle>? = null
     var leasingCompanyList = ArrayList<LeasingCompany>()
-    var selectedVehicle: VehicleDetailsForOffer? = null
-    var vehicleItem: Vehicle? = null
-    var progressbar: Progressbar? = null
-    var vehicleOwnerLegalPerson: LegalPersonDetails? = null
-    var vehicleOwnerNaturalPerson: NaturalPersonForOffer? = null
-    var vehicleUserNaturalPerson: NaturalPersonForOffer? = null
-    var vehicleUserLegalPerson: LegalPersonDetails? = null
+    private var selectedVehicle: VehicleDetailsForOffer? = null
+    var vehicleItem: VehicleDetails? = null
+    private var vehicleOwnerLegalPerson: LegalPersonDetails? = null
+    private var vehicleOwnerNaturalPerson: NaturalPersonForOffer? = null
+    private var vehicleUserNaturalPerson: NaturalPersonForOffer? = null
+    private var vehicleUserLegalPerson: LegalPersonDetails? = null
     var bottomSheet: SelectUserFragment? = null
-
+    var personTypeToValidate = 0
+    var mainWarningList: HashMap<String, ArrayList<WarningsItem>> = HashMap()
+    var ownerNaturalItem: NaturalPerson? = null
+    var ownerLegalItem: LegalPerson? = null
+    var userNaturalItem: NaturalPerson? = null
+    var userLegalItem: LegalPerson? = null
+    var driverNaturalItem: NaturalPerson? = null
+    var driverNewNaturalItem: NaturalPerson? = null
 
     companion object {
-        const val TAG = "Insurance"
-        const val ARG_CAR = "arg_car"
+        var IS_PERSON_EDITABLE = true
+        const val ARG_CAR_ID = "arg_car_id"
         var addNew = false
         var addNewType = ""
     }
-
 
     override fun getContentView() = R.layout.fragment_insurance
 
@@ -87,17 +82,15 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
     @RequiresApi(Build.VERSION_CODES.M)
     override fun initUi() {
         arguments?.let {
-            vehicleItem = it.getSerializable(BuyVignetteFragment.ARG_CAR) as? Vehicle?
-            setCarDetail(vehicleItem)
-            vehicleItem?.id?.let { it1 -> viewModel.fetchCarDetails(it1) }
+            val vehicleId = it.getInt(ARG_CAR_ID)
+            vehicleId.let { it1 -> viewModel.fetchCarDetails(it1) }
+            vehicleId.let { it1 -> viewModel.fetchCarDetailsForOffer(it1) }
         }
 
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
-
+        MainActivity.activeService = "RO_RCA"
         requireView().isFocusableInTouchMode = true
         requireView().requestFocus()
-        requireView().setOnKeyListener { v, keyCode, event ->
+        requireView().setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 onBackPress()
                 true
@@ -112,28 +105,6 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
             ownerLegalItem = null
             ownerNaturalItem = null
             viewModel.onBack()
-        }
-
-        if (vehicleItem != null) {
-            cars_list.visibility = View.VISIBLE
-            setCarDetail(this.vehicleItem)
-        }
-
-        selectCarLL.setOnClickListener {
-            if (selectedVehicle == null) {
-                if (mFirst.isChecked) {
-                    selectCarsFragment = carList?.let { it1 -> SelectCarsFragment(it1) }
-                    selectCarsFragment.let {
-                        if (it != null) {
-                            childFragmentManager.beginTransaction()
-                                .replace(R.id.selectCarFL, it)
-                                .commit()
-                        }
-                    }
-                } else {
-                    showErrorInfo(requireContext(), getString(R.string.select_car_info))
-                }
-            }
         }
 
         mSelectOwner.setOnClickListener {
@@ -156,57 +127,62 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
             bottomSheet?.show(requireActivity().supportFragmentManager, null)
         }
 
-        setOwner()
-        userCheckBox.isVisible = !leasingCheckbox.isChecked
-        driverCheckBox.isVisible = !leasingCheckbox.isChecked
-        leasingCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            userCheckBox.isVisible = !isChecked
-            driverCheckBox.isVisible = !isChecked
-            if (isChecked) {
-                mSelectLeasing.isVisible = true
-                mSelectOwner.isVisible = false
-                setUserAsBlank()
-                setDriverAsBlank()
-            } else {
-                mSelectLeasing.isVisible = false
-                mSelectOwner.isVisible = true
-                if (userCheckBox.isChecked)
+        setOwner(false)
+        setUser()
+        setDriver()
+
+        leasingCheckbox.setOnCheckedChangeListener { btn, isChecked ->
+            if (btn.isPressed) {
+                userCheckBox.isVisible = !isChecked
+                driverCheckBox.isVisible = !isChecked
+                if (isChecked) {
+                    mSelectLeasing.isVisible = true
+                    mSelectOwner.isVisible = false
+                    setUserAsBlank()
+                    setDriverAsBlank()
+                } else {
+                    mSelectLeasing.isVisible = false
+                    mSelectOwner.isVisible = true
+                    if (userCheckBox.isChecked)
+                        setUserSameAsOwner()
+                    if (driverCheckBox.isChecked)
+                        setDriverSameAsOwner()
+
+                    driverCheckBox.isVisible = ownerNaturalItem != null
+
+                }
+                checkItems()
+            }
+        }
+
+        userCheckBox.setOnCheckedChangeListener { btn, isChecked ->
+            if (btn.isPressed) {
+                if (isChecked) {
                     setUserSameAsOwner()
-                if (driverCheckBox.isChecked)
+                } else {
+                    if (vehicleUserNaturalPerson == null && vehicleUserLegalPerson == null)
+                        setUserAsBlank()
+                }
+                checkItems()
+            }
+        }
+
+        driverCheckBox.setOnCheckedChangeListener { btn, isChecked ->
+            if (btn.isPressed) {
+                if (isChecked) {
                     setDriverSameAsOwner()
-
-//                driverCheckBox.isVisible = ownerNaturalItem != null
-
+                } else {
+                    if (driverNaturalItem == null)
+                        setDriverAsBlank()
+                }
+                checkItems()
             }
-            checkItems()
         }
-
-        userCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                setUserSameAsOwner()
-            } else {
-                setUserAsBlank()
-            }
-            checkItems()
-        }
-
-        driverCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                setDriverSameAsOwner()
-            } else {
-                setDriverAsBlank()
-            }
-
-            checkItems()
-        }
-
 
         driverAdapter = DriverAdapter(requireContext(), this)
 
         mContinue.setOnClickListener {
-
             addNew = false
-
             val request = RcaOfferRequest(
                 leasing = leasingCheckbox.isChecked,
                 vehicleOwnerLegalPerson = vehicleOwnerLegalPerson,
@@ -222,9 +198,19 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
                 vehicle = selectedVehicle
             )
 
-            vehicleItem?.let { it1 -> viewModel.onCta(request, it1) }
-
+            viewModel.onCta(request, vehicleItem?.policyExpirationDate)
         }
+    }
+
+    override fun onResume() {
+
+        super.onResume()
+
+        if (addNew) {
+            bottomSheet = SelectUserFragment(this, null, null, this, null, addNewType)
+            bottomSheet?.show(requireActivity().supportFragmentManager, null)
+        }
+        IS_PERSON_EDITABLE = true
 
     }
 
@@ -235,12 +221,12 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
         userNaturalItem = null
         userLegalItem = null
         driverNaturalItem = null
-        verifyNaturalList = null
-        verifyLegalList = null
         viewModel.onBack()
     }
 
     private fun setUserAsBlank() {
+        vehicleUserNaturalPerson = null
+        vehicleUserLegalPerson = null
         mSelectUserName.text = requireContext().resources.getString(R.string.select_user)
         mSelectUserEmail.isVisible = false
         mSelectUserImage.setImageDrawable(requireContext().resources.getDrawable(R.drawable.ic_profile_picture))
@@ -258,35 +244,6 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
         mSelectDriverImage.setImageDrawable(requireContext().resources.getDrawable(R.drawable.ic_profile_picture))
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setOwner() {
-
-        when {
-            ownerLegalItem != null -> {
-                mSelectOwnerName.text = ownerLegalItem?.companyName
-                mSelectOwnerEmail.isVisible = false
-                ownerLegalItem?.logoHref?.let { setImage(it, mSelectOwnerImage) }
-                ownerLegalItem?.id?.toLong().let {
-                    if (it != null) {
-                        viewModel.getLegalPersonDetails(it, "OWNER")
-                    }
-                }
-            }
-            ownerNaturalItem != null -> {
-                mSelectOwnerName.text =
-                    "${ownerNaturalItem?.firstName} ${ownerNaturalItem?.lastName}"
-                mSelectOwnerEmail.isVisible = true
-                mSelectOwnerEmail.text = ownerNaturalItem?.email
-                ownerNaturalItem?.logoHref?.let { setImage(it, mSelectOwnerImage) }
-                ownerNaturalItem?.id?.let { viewModel.getNaturalPersonDetails(it, "OWNER") }
-            }
-            else -> {
-                mSelectOwnerName.text = requireContext().resources.getString(R.string.select_owner)
-                mSelectOwnerEmail.isVisible = false
-                mSelectOwnerImage.setImageDrawable(requireContext().resources.getDrawable(R.drawable.ic_profile_picture))
-            }
-        }
-    }
 
     private fun setUserSameAsOwner() {
         when {
@@ -294,27 +251,48 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
                 userLegalItem = ownerLegalItem
                 mSelectUserName.text = userLegalItem?.companyName
                 mSelectUserEmail.isVisible = false
-                ownerLegalItem?.logoHref?.let { setImage(it, mSelectUserImage) }
+                if (userLegalItem?.logoHref != null) {
+                    mSelectUserTv.isVisible = false
+                    mSelectUserImage.isVisible = true
+                    userLegalItem?.logoHref?.let { setImage(it, mSelectUserImage) }
+                } else {
+                    mSelectUserTv.isVisible = true
+                    mSelectUserImage.isVisible = false
+                    userLegalItem?.companyName?.let { setText(it, mSelectUserTv, false) }
+                }
+
                 userLegalItem?.id?.toLong().let {
                     if (it != null) {
                         viewModel.getLegalPersonDetails(it, "USER")
                     }
                 }
+                ownerNaturalItem = null
             }
             ownerNaturalItem != null -> {
                 userNaturalItem = ownerNaturalItem
                 mSelectUserName.text = "${userNaturalItem?.firstName} ${userNaturalItem?.lastName}"
                 mSelectUserEmail.isVisible = true
                 mSelectUserEmail.text = userNaturalItem?.email
-                userNaturalItem?.logoHref?.let { setImage(it, mSelectUserImage) }
+                if (userNaturalItem?.logoHref != null) {
+                    mSelectUserTv.isVisible = false
+                    mSelectUserImage.isVisible = true
+                    userNaturalItem?.logoHref?.let { setImage(it, mSelectUserImage) }
+                } else {
+                    mSelectUserTv.isVisible = true
+                    mSelectUserImage.isVisible = false
+                    setText(
+                        "${userNaturalItem?.firstName} ${userNaturalItem?.lastName}",
+                        mSelectUserTv, true
+                    )
+                }
                 userNaturalItem?.id?.let { viewModel.getNaturalPersonDetails(it, "USER") }
+                ownerLegalItem = null
             }
             else -> {
-                mSelectUserName.text = requireContext().resources.getString(R.string.select_user)
-                mSelectUserEmail.isVisible = false
-                mSelectUserImage.setImageDrawable(requireContext().resources.getDrawable(R.drawable.ic_profile_picture))
+                setUserAsBlank()
             }
         }
+
     }
 
     private fun setDriverSameAsOwner() {
@@ -325,7 +303,19 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
                     "${driverNaturalItem?.firstName} ${driverNaturalItem?.lastName}"
                 mSelectDriverEmail.isVisible = true
                 mSelectDriverEmail.text = driverNaturalItem?.email
-                driverNaturalItem?.logoHref?.let { setImage(it, mSelectDriverImage) }
+
+                if (driverNaturalItem?.logoHref != null) {
+                    mSelectDriverTv.isVisible = false
+                    mSelectDriverImage.isVisible = true
+                    driverNaturalItem?.logoHref?.let { setImage(it, mSelectDriverImage) }
+                } else {
+                    mSelectDriverTv.isVisible = true
+                    mSelectDriverImage.isVisible = false
+                    setText(
+                        "${driverNaturalItem?.firstName} ${driverNaturalItem?.lastName}",
+                        mSelectDriverTv, true
+                    )
+                }
                 driverNaturalItem?.id?.let { viewModel.getNaturalPersonDetails(it, "DRIVER") }
             }
             else -> {
@@ -346,17 +336,19 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
 
         viewModel.carsLivedata.observe(viewLifecycleOwner) { cars ->
             this.carList = cars
-            progressbar?.dismissPopup()
         }
 
         viewModel.vehicleDetailsLivedata.observe(viewLifecycleOwner) { car ->
             if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
-                selectCarsFragment?.let {
-                    childFragmentManager.beginTransaction().remove(it).commit()
+                this.vehicleItem = car
+                setCarDetail(car)
+            }
+            checkItems()
+        }
 
-                    cars_list.visibility = View.VISIBLE
-                    this.selectedVehicle = car
-                }
+        viewModel.vehicleForOfferLivedata.observe(viewLifecycleOwner) { car ->
+            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                this.selectedVehicle = car
             }
             checkItems()
         }
@@ -381,115 +373,140 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
             checkItems()
         }
 
-        viewModel.currentRcaData.observe(viewLifecycleOwner) { rca ->
-            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
-                selectCarsFragment?.let {
-                    childFragmentManager.beginTransaction().remove(it).commit()
-
-                    cars_list.visibility = View.VISIBLE
-                    this.selectedVehicle = rca?.vehicle
-
-                    /*  if (rca.vehicleOwnerLegalPerson != null) {
-                          rca.vehicleOwnerLegalPerson.logoHref?.let { it1 ->
-                              setImage(
-                                  it1,
-                                  mSelectOwnerImage
-                              )
-                          }
-                          mSelectOwnerName.text = rca.vehicleOwnerLegalPerson.companyName
-                      }
-
-                      if (rca.vehicleOwnerNaturalPerson != null) {
-                          rca.vehicleOwnerNaturalPerson.logoHref?.let { it1 ->
-                              setImage(
-                                  it1,
-                                  mSelectOwnerImage
-                              )
-                          }
-                          mSelectOwnerName.text =
-                              "${rca.vehicleOwnerNaturalPerson.firstName ?: ""} ${rca.vehicleOwnerNaturalPerson.lastName ?: ""}"
-
-                          if (rca.vehicleOwnerNaturalPerson.email?.isNotEmpty() == true) {
-                              mSelectOwnerEmail.isVisible = true
-                              mSelectOwnerEmail.text = rca.vehicleOwnerNaturalPerson.email
-                          }
-                      }
-
-                      if (rca.vehicleUserLegalPerson != null) {
-                          rca.vehicleUserLegalPerson.logoHref?.let { it1 ->
-                              setImage(
-                                  it1,
-                                  mSelectUserImage
-                              )
-                          }
-                          mSelectOwnerName.text = rca.vehicleUserLegalPerson.companyName
-                      }
-
-                      if (rca.vehicleUserNaturalPerson != null) {
-                          rca.vehicleUserNaturalPerson.logoHref?.let { it1 ->
-                              setImage(
-                                  it1,
-                                  mSelectUserImage
-                              )
-                          }
-                          mSelectOwnerName.text =
-                              "${rca.vehicleUserNaturalPerson.firstName} ${rca.vehicleUserNaturalPerson.lastName}"
-
-                          if (rca.vehicleUserNaturalPerson.email?.isNotEmpty() == true) {
-                              mSelectOwnerEmail.isVisible = true
-                              mSelectOwnerEmail.text = rca.vehicleUserNaturalPerson.email
-                          }
-                      }
-
-                      userCheckBox.isChecked = rca.vehicleUserSameAsOwner == true
-                      driverCheckBox.isChecked = rca.driverSameAsOwner == true
-
-                      driverList = rca.drivers as ArrayList<NaturalPersonForOffer>
-                      if (!driverList.isNullOrEmpty()) {
-                          if (driverList.size > 1) {
-                              driverAdapter.setItems(driverList)
-                          } else {
-                              val driverDetail = driverList[0]
-  //                        driverDetail.logoHref?.let { it1 -> setImage(it1, mSelectDriverImage) }
-                              mSelectDriverName.text =
-                                  "${driverDetail.firstName} ${driverDetail.lastName}"
-                              if (driverDetail.email?.isNotEmpty() == true) {
-                                  mSelectDriverEmail.isVisible = true
-                                  mSelectDriverEmail.text = driverDetail.email
-                              }
-                          }
-                      }*/
-
-                }
-            }
-        }
-
         viewModel.actionStream.observe(viewLifecycleOwner) {
 
             if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
                 when (it) {
                     is InsuranceViewModel.ACTION.OnGetLegalDetails -> {
                         when (it.personType) {
-                            "OWNER" -> vehicleOwnerLegalPerson = it.item
-                            "USER" -> vehicleUserLegalPerson = it.item
+                            "OWNER" -> {
+                                vehicleOwnerNaturalPerson = null
+                                vehicleOwnerLegalPerson = it.item
+                            }
+                            "USER" -> {
+                                vehicleUserNaturalPerson = null
+                                vehicleUserLegalPerson = it.item
+                                userCheckBox.isChecked =
+                                    vehicleUserLegalPerson?.id == ownerLegalItem?.id?.toLong()
+                            }
+
                         }
+                        val driverExist = driverList.find { it1 -> it1.id == it.item.id?.toInt() }
+                        driverCheckBox.isChecked = driverExist != null
+
                         checkItems()
                     }
                     is InsuranceViewModel.ACTION.OnGetNaturalDetails -> {
                         when (it.personType) {
-                            "OWNER" -> vehicleOwnerNaturalPerson = it.item
-                            "USER" -> vehicleUserNaturalPerson = it.item
-                            "DRIVER" -> driverList.add(it.item)
+                            "OWNER" -> {
+                                vehicleOwnerLegalPerson = null
+                                vehicleOwnerNaturalPerson = it.item
+                            }
+                            "USER" -> {
+                                vehicleUserLegalPerson = null
+                                vehicleUserNaturalPerson = it.item
+                                userCheckBox.isChecked =
+                                    vehicleUserNaturalPerson?.id?.toLong() == ownerNaturalItem?.id
+                            }
+                            "DRIVER" -> {
+                                if (!driverList.contains(it.item))
+                                    driverList.add(it.item)
+                                driverCheckBox.isChecked =
+                                    it.item.id?.toLong() == ownerNaturalItem?.id
+
+                            }
                         }
+
                         checkItems()
                     }
                 }
             }
         }
 
+        viewModel.verifyUser.observe(viewLifecycleOwner) { validationResult ->
+
+            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (validationResult?.warnings?.isNotEmpty() == true) {
+                    mainWarningList["User"] =
+                        validationResult.warnings as java.util.ArrayList<WarningsItem>
+
+
+                    userCheckBox.isChecked = false
+                    setUserAsBlank()
+                } else {
+
+//                    userCheckBox.isChecked = true
+                    setUserSameAsOwner()
+                }
+                isUserResponseAvailable = true
+                responseDone()
+            }
+        }
+
+        viewModel.verifyDriver.observe(viewLifecycleOwner) { validationResult ->
+            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (validationResult?.warnings?.isNotEmpty() == true) {
+                    mainWarningList["Driver"] =
+                        validationResult.warnings as java.util.ArrayList<WarningsItem>
+                    driverCheckBox.isChecked = false
+                    setDriverAsBlank()
+                } else {
+//                    driverCheckBox.isChecked = true
+                    setDriverSameAsOwner()
+                }
+                isDriverResponseAvailable = true
+                responseDone()
+            }
+        }
     }
 
-    private fun setImage(href: String, view: ImageView) {
+    private var isUserResponseAvailable = false
+    private var isDriverResponseAvailable = false
+    private fun responseDone() {
+//        Log.e("mainWarningList", mainWarningList.toString())
+        /*  if (mainWarningList.isNotEmpty()) {
+              if (personTypeToValidate == 10010) {  //Natural person selected
+                  if (isUserResponseAvailable && isDriverResponseAvailable) {
+                      displayUserAndDriverWarning(mainWarningList)
+                  }
+              } else {
+                  if (isUserResponseAvailable)
+                      displayUserAndDriverWarning(mainWarningList)
+              }
+          }*/
+    }
+
+    private fun displayUserAndDriverWarning(mapList: HashMap<String, ArrayList<WarningsItem>>) {
+        var dialogBody = ""
+        if (mapList.isNotEmpty()) {
+
+            for (i in mapList.keys) {
+                var warningStr = ""
+                dialogBody = "$dialogBody\n$i"
+                val warningsItemList = mapList[i]
+                if (!warningsItemList.isNullOrEmpty()) {
+
+                    for (j in warningsItemList.indices) {
+                        val field = requireContext().resources?.getIdentifier(
+                            "${warningsItemList[j].field}",
+                            "string",
+                            requireContext().packageName
+                        )
+                            ?.let { requireContext().resources?.getString(it) }
+                        warningStr =
+                            "$warningStr${field} : ${warningsItemList[j].warning}\n"
+                    }
+                }
+                dialogBody = "$dialogBody\n$warningStr"
+            }
+        }
+        showErrorInfo(
+            requireContext(),
+            dialogBody
+        )
+    }
+
+    private fun setImage(href: String?, view: ImageView) {
         val url = "${ApiModule.BASE_URL_RESOURCES}${href}"
         val glideUrl = GlideUrl(
             url,
@@ -504,11 +521,23 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
             .error(requireContext().resources.getDrawable(R.drawable.ic_profile_picture))
             .apply(
                 options.centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
                     .priority(Priority.HIGH)
                     .format(DecodeFormat.PREFER_ARGB_8888)
             )
             .into(view)
+
+    }
+
+    fun setText(singleChar: String, tv: TextView, isNatural: Boolean) {
+        if (isNatural)
+            tv.text = singleChar.replace(
+                "^\\s*([a-zA-Z]).*\\s+([a-zA-Z])\\S+$".toRegex(),
+                "$1$2"
+            ).uppercase(Locale.getDefault())
+        else
+            tv.text = CountryCityUtils.firstTwo(singleChar.uppercase(Locale.getDefault()))
     }
 
     override fun onCompanyUpdated(company: LeasingCompany) {
@@ -541,21 +570,17 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
             guid = null,
             coverHref = null
         )
+
+        checkItems()
     }
 
-    override fun onCarSelectionSet(item: Vehicle) {
-        vehicleItem = item
-        setCarDetail(item)
-        item.id?.let { viewModel.fetchCarDetails(it) }
-    }
-
-    private fun setCarDetail(item: Vehicle?) {
+    private fun setCarDetail(item: VehicleDetails?) {
 
         if (item != null) {
             val options = RequestOptions()
             cars_list.logo.clipToOutline = true
             Glide.with(requireActivity())
-                .load(ApiModule.BASE_URL_RESOURCES + item.vehicleBrandLogo)
+                .load(ApiModule.BASE_URL_RESOURCES + item.brandLogo)
                 .apply(
                     options.fitCenter()
                         .skipMemoryCache(true)
@@ -565,7 +590,10 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
                 .error(R.drawable.carhome_icon_roviii)
                 .into(cars_list.logo)
 
-            cars_list.makeAndModel.text = "${item.vehicleBrand ?: ""} ${item.model ?: ""}"
+            if (item.brandName.isNullOrEmpty() && item.model.isNullOrEmpty())
+                cars_list.makeAndModel.text = "N/A"
+            else
+                cars_list.makeAndModel.text = "${item.brandName ?: ""} ${item.model ?: ""}"
             cars_list.carNumber.text = item.licensePlate
 
             item.let { v ->
@@ -612,119 +640,178 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
         }
     }
 
-    override fun onBackFromCarList() {
-        selectCarsFragment?.let { childFragmentManager.beginTransaction().remove(it).commit() }
-    }
-
     override fun onRemoveClick(position: Int) {
         driverList.removeAt(position)
         itemsDriverList.removeAt(position)
     }
 
     override fun onContinueOwner(ownerNaturalItem: NaturalPerson?, ownerLegalItem: LegalPerson?) {
+        this.ownerLegalItem = ownerLegalItem
+        this.ownerNaturalItem = ownerNaturalItem
+
+        setOwner(true)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setOwner(toVerify: Boolean) {
 
         when {
             ownerNaturalItem != null -> {
+                if (ownerNaturalItem?.logoHref != null) {
+                    mSelectOwnerTv.isVisible = false
+                    mSelectOwnerImage.isVisible = true
+                    setImage(ownerNaturalItem?.logoHref, mSelectOwnerImage)
+                } else {
+                    mSelectOwnerTv.isVisible = true
+                    mSelectOwnerImage.isVisible = false
+                    setText(
+                        "${ownerNaturalItem?.firstName} ${ownerNaturalItem?.lastName}",
+                        mSelectOwnerTv, true
+                    )
+                }
 
-                ownerNaturalItem.logoHref?.let { it1 -> setImage(it1, mSelectOwnerImage) }
-                mSelectOwnerName.text = "${ownerNaturalItem.firstName} ${ownerNaturalItem.lastName}"
+                mSelectOwnerName.text =
+                    "${ownerNaturalItem?.firstName} ${ownerNaturalItem?.lastName}"
 
-                if (ownerNaturalItem.email?.isNotEmpty() == true) {
+                if (ownerNaturalItem?.email?.isNotEmpty() == true) {
                     mSelectOwnerEmail.isVisible = true
-                    mSelectOwnerEmail.text = ownerNaturalItem.email
+                    mSelectOwnerEmail.text = ownerNaturalItem?.email
                 }
                 driverCheckBox.isVisible = true
-                ownerNaturalItem.id?.let { viewModel.getNaturalPersonDetails(it, "OWNER") }
+                ownerNaturalItem?.id?.let { viewModel.getNaturalPersonDetails(it, "OWNER") }
+
+//                Default selection of user & driver same as owner, but after validationg individual user & driver
+                personTypeToValidate = 10010
+                isUserResponseAvailable = false
+                isDriverResponseAvailable = false
+                if (toVerify) {
+                    ownerNaturalItem?.guid?.let { viewModel.verifyUser(it, personTypeToValidate) }
+                    ownerNaturalItem?.guid?.let { viewModel.verifyDriver(it) }
+                }
+                this.ownerLegalItem = null
             }
             ownerLegalItem != null -> {
 
+                if (ownerLegalItem?.logoHref != null) {
+                    mSelectOwnerTv.isVisible = false
+                    mSelectOwnerImage.isVisible = true
+                    setImage(ownerLegalItem?.logoHref, mSelectOwnerImage)
+                } else {
+                    mSelectOwnerTv.isVisible = true
+                    mSelectOwnerImage.isVisible = false
+                    ownerLegalItem?.companyName?.let { setText(it, mSelectOwnerTv, false) }
+                }
 
-                ownerLegalItem.logoHref?.let { it1 -> setImage(it1, mSelectOwnerImage) }
-                mSelectOwnerName.text = ownerLegalItem.companyName
+                mSelectOwnerName.text = ownerLegalItem?.companyName
                 driverCheckBox.isVisible = false
-                ownerLegalItem.id?.toLong().let {
+                ownerLegalItem?.id?.toLong().let {
                     if (it != null) {
                         viewModel.getLegalPersonDetails(it, "OWNER")
                     }
                 }
+
+//                Default selection of user & driver same as owner, but after validationg individual user & driver
+                personTypeToValidate = 10020
+                isUserResponseAvailable = false
+                isDriverResponseAvailable = false
+                if (toVerify) {
+                    ownerLegalItem?.guid?.let { viewModel.verifyUser(it, personTypeToValidate) }
+                }
+                this.ownerNaturalItem = null
             }
         }
-
-        if (userCheckBox.isChecked)
-            setUserSameAsOwner()
     }
 
-    override fun onContinueUser(userNaturalItem: NaturalPerson?, userLegalItem: LegalPerson?) {
 
+    override fun onContinueUser(userNaturalItem: NaturalPerson?, userLegalItem: LegalPerson?) {
+        this.userLegalItem = userLegalItem
+        this.userNaturalItem = userNaturalItem
+        setUser()
+    }
+
+    private fun setUser() {
         when {
             userNaturalItem != null -> {
+                if (userNaturalItem?.logoHref != null) {
+                    mSelectUserTv.isVisible = false
+                    mSelectUserImage.isVisible = true
+                    setImage(userNaturalItem?.logoHref, mSelectUserImage)
+                } else {
+                    mSelectUserTv.isVisible = true
+                    mSelectUserImage.isVisible = false
+                    setText(
+                        "${userNaturalItem?.firstName} ${userNaturalItem?.lastName}",
+                        mSelectUserTv, true
+                    )
+                }
 
-
-                userNaturalItem.logoHref?.let { it1 -> setImage(it1, mSelectUserImage) }
-                mSelectUserName.text = "${userNaturalItem.firstName} ${userNaturalItem.lastName}"
-                if (userNaturalItem.email != null) {
-                    mSelectUserEmail.text = userNaturalItem.email
+                mSelectUserName.text = "${userNaturalItem?.firstName} ${userNaturalItem?.lastName}"
+                if (userNaturalItem?.email != null) {
+                    mSelectUserEmail.text = userNaturalItem?.email
                     mSelectUserEmail.isVisible = true
                 } else {
                     mSelectUserEmail.isVisible = false
                 }
-                userNaturalItem.id?.let { viewModel.getNaturalPersonDetails(it, "USER") }
-
-
+                userNaturalItem?.id?.let { viewModel.getNaturalPersonDetails(it, "USER") }
+                this.userLegalItem = null
             }
             userLegalItem != null -> {
 
-
-                val singlechar = "${userLegalItem.companyName}"
-
-                if (userLegalItem.logoHref != null) {
-
-                    tv_text.visibility = View.INVISIBLE
-                    mSelectUserImage.visibility = View.VISIBLE
-                    setImage(userLegalItem.logoHref, mSelectUserImage)
+                if (userLegalItem?.logoHref != null) {
+                    mSelectUserTv.isVisible = false
+                    mSelectUserImage.isVisible = true
+                    setImage(userLegalItem?.logoHref, mSelectUserImage)
                 } else {
-                    tv_text.visibility = View.VISIBLE
-                    mSelectUserImage.visibility = View.INVISIBLE
-                    tv_text.text = singlechar.replace(
-                        "^\\s*([a-zA-Z]).*\\s+([a-zA-Z])\\S+$".toRegex(),
-                        "$1$2"
-                    ).uppercase(Locale.getDefault())
+                    mSelectUserTv.isVisible = true
+                    mSelectUserImage.isVisible = false
+                    userLegalItem?.companyName?.let { setText(it, mSelectUserTv, false) }
                 }
-                mSelectUserName.text = userLegalItem.companyName
+                mSelectUserName.text = userLegalItem?.companyName
                 mSelectUserEmail.isVisible = false
-                userLegalItem.id?.toLong().let {
+                userLegalItem?.id?.toLong().let {
                     if (it != null) {
                         viewModel.getLegalPersonDetails(it, "USER")
                     }
                 }
+                this.userNaturalItem = null
             }
         }
     }
 
     override fun onContinueDriver(driverNaturalItem: NaturalPerson?) {
+        this.driverNaturalItem = driverNaturalItem
+        setDriver()
+    }
+
+    private fun setDriver() {
         if (driverNaturalItem != null) {
 
-            driverNaturalItem.logoHref?.let { it1 -> setImage(it1, mSelectDriverImage) }
+            driverList.clear()
+            if (driverNaturalItem?.logoHref != null) {
+                mSelectDriverTv.isVisible = false
+                mSelectDriverImage.isVisible = true
+                setImage(driverNaturalItem?.logoHref, mSelectDriverImage)
+            } else {
+                mSelectDriverTv.isVisible = true
+                mSelectDriverImage.isVisible = false
+                setText(
+                    "${driverNaturalItem?.firstName} ${driverNaturalItem?.lastName}",
+                    mSelectDriverTv, true
+                )
+            }
+
             mSelectDriverName.text =
-                "${driverNaturalItem.firstName} ${driverNaturalItem.lastName}"
+                "${driverNaturalItem?.firstName} ${driverNaturalItem?.lastName}"
             mSelectDriverEmail.isVisible = true
-            if (driverNaturalItem.email != null) {
-                mSelectDriverEmail.text = driverNaturalItem.email
+            if (driverNaturalItem?.email != null) {
+                mSelectDriverEmail.text = driverNaturalItem?.email
             } else {
                 mSelectDriverEmail.isVisible = false
             }
-            driverNaturalItem.id?.let { viewModel.getNaturalPersonDetails(it, "DRIVER") }
+            driverNaturalItem?.id?.let { viewModel.getNaturalPersonDetails(it, "DRIVER") }
         }
     }
 
-    override fun onResume() {
-
-        super.onResume()
-        if (addNew) {
-            bottomSheet = SelectUserFragment(this, null, null, this, null, addNewType)
-            bottomSheet?.show(requireActivity().supportFragmentManager, null)
-        }
-    }
 
     override fun openNewUser(type: String?) {
         if (type != null) {
@@ -734,15 +821,8 @@ class InsuranceFragment : BaseFragment<InsuranceViewModel>(),
         }
     }
 
-    override fun openEditUser(type: String?) {
-        if (type != null) {
-            addNew = true
-            addNewType = type
-            bottomSheet?.dismiss()
-        }
-    }
-
     override fun onContinueDriverNew(driverNewNaturalItem: NaturalPerson?) {
+        this.driverNewNaturalItem = driverNewNaturalItem
         if (driverNewNaturalItem != null) {
             var exist = false
             for (i in driverList.indices) {

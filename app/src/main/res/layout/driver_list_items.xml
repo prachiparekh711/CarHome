@@ -79,8 +79,8 @@
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:fontFamily="@font/inter_semibold_600"
                     android:text="DHWK879"
+                    android:fontFamily="@font/inter_semibold_600"
                     android:textColor="@color/text_color" />
 
 
@@ -137,8 +137,8 @@
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:fontFamily="@font/inter_semibold_600"
                     android:text="DHWK879"
+                    android:fontFamily="@font/inter_semibold_600"
                     android:textColor="@color/text_color" />
 
 

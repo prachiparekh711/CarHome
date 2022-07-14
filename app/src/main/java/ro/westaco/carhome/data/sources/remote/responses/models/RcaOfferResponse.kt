@@ -15,7 +15,6 @@ data class RcaOfferResponse(
 
 data class OffersItem(
 
-
     @field:SerializedName("priceDs")
     val priceDs: Double? = null,
 
@@ -50,6 +49,13 @@ data class OffersItem(
     val enabled: Boolean? = null,
 
     @field:SerializedName("insurerLogoHref")
-    val insurerLogoHref: String? = null
+    val insurerLogoHref: String? = null,
 
-) : Serializable
+    @field:SerializedName("offerDate")
+    val offerDate: String? = null
+
+) : Serializable {
+    override fun toString(): String {
+        return "OffersItem(priceDs=$priceDs, insurerNameShort=$insurerNameShort, insurerNameLong=$insurerNameLong, code=$code, messageFromProvider=$messageFromProvider, price=$price, bmClass=$bmClass, description=$description, currency=$currency, insurerCode=$insurerCode, enabled=$enabled, insurerLogoHref=$insurerLogoHref, offerDate=$offerDate)"
+    }
+}

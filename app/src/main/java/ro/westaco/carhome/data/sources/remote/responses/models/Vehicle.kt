@@ -59,8 +59,14 @@ data class Vehicle(
     @field:SerializedName("notifications")
     val notifications: Any? = null,
 
+    @field:SerializedName("registrationCountryName")
+    val registrationCountryName: String? = null,
 
-) : Serializable {
+    @field:SerializedName("registrationCountryCode")
+    val registrationCountryCode: String? = null,
+
+
+    ) : Serializable {
     override fun toString(): String {
         return "Vehicle(rcaDocumentHref=$rcaDocumentHref, vignetteTicketHref=$vignetteTicketHref, policyExpirationDate=$policyExpirationDate, vehicleBrandLogo=$vehicleBrandLogo, passTaxTransactionGuid=$passTaxTransactionGuid, policyStartDate=$policyStartDate, passTaxDocumentHref=$passTaxDocumentHref, vehicleBrand=$vehicleBrand, licensePlate=$licensePlate, passTaxLastPurchase=$passTaxLastPurchase, vignetteTransactionGuid=$vignetteTransactionGuid, vignetteStartDate=$vignetteStartDate, rcaTransactionGuid=$rcaTransactionGuid, model=$model, vignetteExpirationDate=$vignetteExpirationDate, id=$id, notifications=$notifications)"
     }

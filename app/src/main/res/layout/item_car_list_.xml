@@ -59,7 +59,6 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_medium_500"
                         android:gravity="center_vertical"
-                        android:text="@string/romania"
                         android:textColor="@color/textInputBorderGray"
                         android:textSize="@dimen/_10sdp" />
 

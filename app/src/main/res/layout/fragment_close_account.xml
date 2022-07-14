@@ -74,8 +74,8 @@
         android:fontFamily="@font/inter_medium_500"
         android:text="@string/warn_repurchase"
         android:textColor="@color/textOnWhiteAccentGray"
-        android:gravity="center"
         android:textSize="@dimen/_11sdp"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/warning1" />

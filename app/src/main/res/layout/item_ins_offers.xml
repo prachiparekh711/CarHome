@@ -93,7 +93,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/_10sdp"
+                android:layout_marginVertical="@dimen/_5sdp"
                 android:drawablePadding="@dimen/_5sdp"
                 android:fontFamily="@font/inter_semibold_600"
                 android:text="@string/msg_provider"

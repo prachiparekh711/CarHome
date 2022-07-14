@@ -106,9 +106,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_3sdp"
-            android:fontFamily="@font/inter_bold_700"
             android:text="20:20"
-            android:textColor="@color/gray"
+            android:fontFamily="@font/inter_bold_700"
+            android:textColor="@color/textOnWhite"
             android:textSize="@dimen/_10sdp"
             app:layout_constraintBottom_toTopOf="@+id/view2"
             app:layout_constraintEnd_toEndOf="@+id/monthAndYearGroup"
@@ -119,7 +119,7 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:ellipsize="end"
@@ -130,6 +130,7 @@
             android:textColor="@color/textOnWhite"
             android:textSize="@dimen/_11sdp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/monthAndYearGroup"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Oil change reminder" />
@@ -211,6 +212,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tagIndicator"
             app:layout_constraintTop_toBottomOf="@+id/tagCL" />
+
+        <View
+            android:id="@+id/strikeTrough"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:background="@color/gray"
+            app:layout_constraintBottom_toBottomOf="@+id/title"
+            app:layout_constraintEnd_toEndOf="@+id/title"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintTop_toTopOf="@+id/title"
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.zerobranch.layout.SwipeLayout>

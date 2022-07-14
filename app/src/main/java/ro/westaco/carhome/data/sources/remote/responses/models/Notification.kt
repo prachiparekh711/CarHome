@@ -18,5 +18,9 @@ data class Notification(
     val title: String? = null,
 
     @field:SerializedName("body")
-    val body: String? = null
-) : ListItem(), Serializable
+    val body: String? = null,
+
+    @field:SerializedName("seenAt")
+    val seenAt: String? = null
+
+) : ListItem(null, null), Serializable

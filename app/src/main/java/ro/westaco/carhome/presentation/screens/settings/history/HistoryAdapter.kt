@@ -15,7 +15,6 @@ import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.RequestOptions
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.HistoryItem
-import ro.westaco.carhome.utils.DateTimeUtils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,10 +35,10 @@ class HistoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        val view = if (from == "SETTING")
-            inflater.inflate(R.layout.item_history, parent, false)
-        else
-            inflater.inflate(R.layout.item_history_dm, parent, false)
+//        val view = if (from == "SETTING")
+        val view = inflater.inflate(R.layout.item_history, parent, false)
+//        else
+//            inflater.inflate(R.layout.item_history_dm, parent, false)
         return ViewHolder(view)
     }
 
@@ -54,24 +53,34 @@ class HistoryAdapter(
         private var amount: TextView = itemView.findViewById(R.id.amount)
         private var time: TextView = itemView.findViewById(R.id.time)
         private var mView: View = itemView.findViewById(R.id.mView)
+        private var mView1: View = itemView.findViewById(R.id.mView1)
 
         fun bind(position: Int) {
             val item = historyList[position]
+
             name.text = "${item.serviceName ?: ""}"
-            carLpn.text = "${item.vehicleLpn ?: ""}"
+            if (item.vehicleBrandName != null && item.vehicleLpn != null) {
+                carLpn.text =
+                    "${item.vehicleBrandName} ${context.resources.getString(R.string.dot)} ${item.vehicleLpn}"
+            } else {
+                if (item.vehicleBrandName != null)
+                    carLpn.text = item.vehicleBrandName
+                if (item.vehicleLpn != null)
+                    carLpn.text = item.vehicleLpn
+            }
             amount.text = "${item.amount ?: ""} ${item.currency ?: ""}"
 
             var spf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             val newDate: Date = spf.parse(item.transactionDate)
 
-            if (DateTimeUtils.isSameDay(newDate, Calendar.getInstance().time)) {
-                spf = SimpleDateFormat("HH:mm a")
-                time.text =
-                    "${context.resources.getString(R.string.today)} ${spf.format(newDate) ?: ""}"
-            } else {
-                spf = SimpleDateFormat("EEE HH:mm a")
-                time.text = "${spf.format(newDate) ?: ""}"
-            }
+            /*  if (DateTimeUtils.isSameDay(newDate, Calendar.getInstance().time)) {
+                  spf = SimpleDateFormat("HH:mm a")
+                  time.text =
+                      "${context.resources.getString(R.string.today)} ${spf.format(newDate) ?: ""}"
+              } else {*/
+            spf = SimpleDateFormat("EEE HH:mm a")
+            time.text = "${spf.format(newDate) ?: ""}"
+//            }
 
             val dr = when (item.service) {
                 "RO_VIGNETTE" -> R.drawable.ic_rovinieta_dm
@@ -98,8 +107,19 @@ class HistoryAdapter(
                 listener?.onItemClick(item)
             }
 
-            if (position == historyList.size - 1)
+            if (from == "SETTING") {
+                mView.isVisible = true
+                mView1.isVisible = false
+                if (position == historyList.size - 1)
+                    mView.isVisible = false
+            } else {
                 mView.isVisible = false
+                mView1.isVisible = true
+                if (position == historyList.size - 1)
+                    mView1.isVisible = false
+            }
+
+
         }
     }
 

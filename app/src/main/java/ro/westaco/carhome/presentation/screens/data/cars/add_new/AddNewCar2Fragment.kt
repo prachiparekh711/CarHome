@@ -2,7 +2,6 @@ package ro.westaco.carhome.presentation.screens.data.cars.add_new
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -12,13 +11,11 @@ import kotlinx.android.synthetic.main.fragment_add_new_car2.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.requests.AddVehicleRequest
 import ro.westaco.carhome.data.sources.remote.requests.VehicleEvent
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
-import ro.westaco.carhome.utils.Progressbar
 import java.text.SimpleDateFormat
 import java.util.*
 
-//C- Add CarDetails Reminder of EventType
 @AndroidEntryPoint
 class AddNewCar2Fragment : BaseFragment<AddNewCarView2Model>() {
 
@@ -29,7 +26,6 @@ class AddNewCar2Fragment : BaseFragment<AddNewCarView2Model>() {
     var itpEvent: VehicleEvent? = null
     private var rovignetteEvent: VehicleEvent? = null
     private var maintenanceEvent: VehicleEvent? = null
-    private var progressbar: Progressbar? = null
     var oilEvent: VehicleEvent? = null
     var tyreEvent: VehicleEvent? = null
 
@@ -52,9 +48,6 @@ class AddNewCar2Fragment : BaseFragment<AddNewCarView2Model>() {
 
     override fun initUi() {
 
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
-
         back.setOnClickListener {
             viewModel.onBack()
         }
@@ -66,16 +59,28 @@ class AddNewCar2Fragment : BaseFragment<AddNewCarView2Model>() {
             if (moreInfoLL.isVisible) {
                 moreInfoLL.isVisible = false
                 viewTV.text = requireContext().resources.getString(R.string.view_more)
-                viewTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_arrow, 0)
+//                viewTV.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_view_arrow, 0)
             } else {
                 moreInfoLL.isVisible = true
                 viewTV.text = requireContext().resources.getString(R.string.view_less)
-                viewTV.setCompoundDrawablesWithIntrinsicBounds(
-                    0,
-                    0,
-                    R.drawable.ic_view_less_arrow,
-                    0
-                )
+                /* viewTV.setCompoundDrawablesWithIntrinsicBounds(
+                     0,
+                     0,
+                     R.drawable.ic_view_less_arrow,
+                     0
+                 )*/
+            }
+        }
+
+        check1.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                cta.alpha =
+                    1F
+                cta.isClickable = true
+            } else {
+                cta.alpha =
+                    0.5F
+                cta.isClickable = false
             }
         }
 
@@ -135,13 +140,16 @@ class AddNewCar2Fragment : BaseFragment<AddNewCarView2Model>() {
                 )
                 vehicleEvents.add(rovignetteEvent)
             }
-
+            if (!check1.isChecked) {
+                showErrorInfo(requireContext(), getString(R.string.check_info))
+                return@setOnClickListener
+            }
 
             vehicleItem?.let { it1 ->
 
                 viewModel.onCta(
                     isEdit,
-                    check1.isChecked, it1,
+                    it1,
                     vehicleEvents
                 )
             }
@@ -224,9 +232,6 @@ class AddNewCar2Fragment : BaseFragment<AddNewCarView2Model>() {
         tyreDate.setOnClickListener {
             viewModel.onDateClicked(it, tyreEvent?.nextDate?.let { it1 -> dateToMilis(it1) })
         }
-        Handler().postDelayed({
-            progressbar?.dismissPopup()
-        }, 500)
 
     }
 
@@ -274,7 +279,12 @@ class AddNewCar2Fragment : BaseFragment<AddNewCarView2Model>() {
                 )
             }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)
         )
-        dpd?.datePicker?.minDate = System.currentTimeMillis() + (1000 * 24 * 60 * 60)
+
+        if (view == maintananceDate || view == oilDate) {
+            dpd?.datePicker?.maxDate = System.currentTimeMillis()
+        } else {
+            dpd?.datePicker?.minDate = System.currentTimeMillis() + (1000 * 24 * 60 * 60)
+        }
         dpd?.show()
     }
 

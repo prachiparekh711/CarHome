@@ -10,16 +10,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_d_m_data.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.*
-import ro.westaco.carhome.di.ApiModule
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.home.HomeViewModel
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
 import ro.westaco.carhome.presentation.screens.home.adapter.RecentDocumentAdapter
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
 import ro.westaco.carhome.presentation.screens.reminder.DateReminderAdapter
 import ro.westaco.carhome.presentation.screens.settings.history.HistoryAdapter
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
-import ro.westaco.carhome.utils.Progressbar
-import java.text.SimpleDateFormat
+import ro.westaco.carhome.views.Progressbar
 
 @AndroidEntryPoint
 class DMDataFragment : BaseFragment<HomeViewModel>(),
@@ -79,12 +76,6 @@ class DMDataFragment : BaseFragment<HomeViewModel>(),
         }
 
 
-        viewModel.stateStream.observe(viewLifecycleOwner) { state ->
-            if (state == HomeViewModel.STATE.DOCUMENT_NOT_FOUND) {
-                showErrorInfo(requireContext(), getString(R.string.doc_not_found))
-            }
-        }
-
         viewModel.remindersTabData.observe(viewLifecycleOwner) { tags ->
             if (tags != null)
                 allFilterList = tags
@@ -115,9 +106,7 @@ class DMDataFragment : BaseFragment<HomeViewModel>(),
                 )
                 reminderRv.adapter = reminderAdapter
                 reminderList.sortWith { o1, o2 ->
-                    val date1 = SimpleDateFormat("yyyy-MM-dd").parse(o1.dueDate)
-                    val date2 = SimpleDateFormat("yyyy-MM-dd").parse(o2.dueDate)
-                    date1.compareTo(date2)
+                    o1.dueDate!!.compareTo(o2.dueDate!!)
                 }
                 reminderAdapter.clearAll()
                 if (reminderList.size < 3) {
@@ -127,7 +116,7 @@ class DMDataFragment : BaseFragment<HomeViewModel>(),
                     for (i in 0..2)
                         listItems.add(reminderList[i])
                 }
-                reminderAdapter.setItems(listItems, allFilterList)
+                reminderAdapter.setItems(listItems, allFilterList, null)
             }
         }
 
@@ -160,9 +149,8 @@ class DMDataFragment : BaseFragment<HomeViewModel>(),
     }
 
     override fun onItemClick(item: RowsItem) {
-        val url = ApiModule.BASE_URL_RESOURCES + item.href
         val intent = Intent(requireContext(), PdfActivity::class.java)
-        intent.putExtra(PdfActivity.ARG_DATA, url)
+        intent.putExtra(PdfActivity.ARG_ITEM, item)
         intent.putExtra(PdfActivity.ARG_FROM, "DOCUMENT")
         requireContext().startActivity(intent)
     }

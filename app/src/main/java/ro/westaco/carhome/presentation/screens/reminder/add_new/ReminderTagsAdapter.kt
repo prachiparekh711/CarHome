@@ -13,14 +13,11 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 
 class ReminderTagsAdapter(
-    private val context: Context
+    private val context: Context,
+    private val selectedTags: ArrayList<CatalogItem>
 ) : RecyclerView.Adapter<ReminderTagsAdapter.ViewHolder>() {
-    companion object {
-        const val COLUMNS = 3
-    }
 
     private var tags: ArrayList<CatalogItem> = ArrayList()
-    private var selectedTags: ArrayList<CatalogItem> = ArrayList()
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 

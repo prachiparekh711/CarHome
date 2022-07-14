@@ -173,7 +173,6 @@
                         android:layout_marginBottom="0dp"
                         android:layout_toEndOf="@+id/textView3"
                         android:fontFamily="@font/inter_medium_500"
-                        android:text="TextView"
                         android:textColor="#3B5179"
                         android:textSize="11sp" />
 

@@ -20,7 +20,6 @@ import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.data.person_legal.add_new.AddNewLegalPersonFragment
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File
@@ -81,7 +80,6 @@ class LegalPersonDetailsViewModel @Inject constructor(
             }, {
                 //   it.printStackTrace()
                 legalPersDetailsLiveData?.value = null
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
 
     }
@@ -102,19 +100,14 @@ class LegalPersonDetailsViewModel @Inject constructor(
     }
 
     internal fun onDelete(id: Long) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
+
 
         api.deleteLegalPerson(id)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                 uiEventStream.value = UiEvent.NavBack
             }, {
                 //   it.printStackTrace()
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 
@@ -134,8 +127,7 @@ class LegalPersonDetailsViewModel @Inject constructor(
                 uiEventStream.value = UiEvent.ShowToast(R.string.logo_success_msg)
                 getLegalPersonDetails(id.toLong())
             }, {
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 
@@ -146,7 +138,6 @@ class LegalPersonDetailsViewModel @Inject constructor(
                 actionStream.value = ACTION.OnDeleteLogo
                 getLegalPersonDetails(id.toLong())
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 }

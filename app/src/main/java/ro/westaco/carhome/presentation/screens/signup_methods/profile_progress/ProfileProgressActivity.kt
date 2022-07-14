@@ -9,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_profile_progress.*
 import ro.westaco.carhome.R
+import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.responses.models.VehicleProgressItem
-import ro.westaco.carhome.prefrences.SharedPrefrences
 import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.screens.home.adapter.CarProgressAdapter
 import ro.westaco.carhome.presentation.screens.main.MainActivity
+import ro.westaco.carhome.views.MarginItemDecoration
 
 //C- Profile Progress Section
 @AndroidEntryPoint
@@ -25,7 +26,7 @@ class ProfileProgressActivity : BaseActivity<ProfileProgressModel>(),
 
     override fun setupUi() {
 
-        SharedPrefrences.setBiometricsSetup(this, true)
+        AppPreferencesDelegates.get().biometricSetUp = true
 
         mProfileRL.setOnClickListener {
             val intent = Intent(this@ProfileProgressActivity, MainActivity::class.java)
@@ -58,7 +59,8 @@ class ProfileProgressActivity : BaseActivity<ProfileProgressModel>(),
             if (progressItem != null) {
                 val profileItem = progressItem.profileProgress
                 if (profileItem != null) {
-                    firstNameHint.text = profileItem.description ?: " "
+                    firstNameHint.text = profileItem.description.toString()
+                        .ifBlank { resources.getString(R.string.no_name) }
 
                     if (profileItem.completionPercent != null) {
                         if (profileItem.completionPercent == 100) {
@@ -78,30 +80,38 @@ class ProfileProgressActivity : BaseActivity<ProfileProgressModel>(),
                 }
 
                 val vehicleList = progressItem.vehicleProgress
+
                 val car100: ArrayList<VehicleProgressItem> = ArrayList()
                 if (vehicleList.isNullOrEmpty()) {
                     noCarRL.isVisible = true
                     carProgressRV.isVisible = false
                 } else {
-                    noCarRL.isVisible = false
-                    carProgressRV.isVisible = true
                     for (i in vehicleList.indices) {
-                        if (vehicleList[i].completionPercent == 100) {
+                        if (vehicleList[i].id != null) {
                             car100.add(vehicleList[i])
                         }
                     }
+
+                    carProgressRV.isVisible = car100.isNotEmpty()
+                    noCarRL.isVisible = car100.isEmpty()
+
                     carProgressRV.layoutManager =
                         LinearLayoutManager(baseContext, RecyclerView.HORIZONTAL, false)
                     carAdapter = CarProgressAdapter(baseContext, car100, this)
                     carProgressRV.adapter = carAdapter
+                    carProgressRV.addItemDecoration(
+                        MarginItemDecoration(20, orientation = LinearLayoutManager.HORIZONTAL)
+                    )
                     carAdapter.setItems(car100)
                 }
-                if (profileItem?.completionPercent == 100 && car100.isNullOrEmpty()) {
+                if (profileItem?.completionPercent == 100 && car100.isEmpty()) {
                     indicator1.isVisible = true
                     navigateToMain()
                 } else {
                     indicator1.isVisible = false
                 }
+            } else {
+                navigateToMain()
             }
         }
     }

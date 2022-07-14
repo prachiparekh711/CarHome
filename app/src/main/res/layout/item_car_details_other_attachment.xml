@@ -6,6 +6,7 @@
     android:background="@drawable/certificate_upload_background"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/_8sdp"
     android:padding="@dimen/_5sdp">
 
     <TextView

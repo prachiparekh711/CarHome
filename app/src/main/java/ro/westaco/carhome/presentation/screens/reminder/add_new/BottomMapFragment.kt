@@ -4,10 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
@@ -44,18 +43,18 @@ import ro.westaco.carhome.databinding.DialogLocationBinding
 import ro.westaco.carhome.databinding.DirectionPopupBinding
 import ro.westaco.carhome.databinding.FragmentBottomMapBinding
 import ro.westaco.carhome.databinding.LocationSelectorBinding
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.main.MainActivity
 import ro.westaco.carhome.presentation.screens.maps.LocationViewModel
 import ro.westaco.carhome.presentation.screens.maps.MapFilterAdapter
 import ro.westaco.carhome.presentation.screens.maps.MapFiltersBottomSheetDialog
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import java.io.IOException
 import java.util.*
 
 @AndroidEntryPoint
 class BottomMapFragment : BaseFragment<LocationViewModel>() {
-    private lateinit var mActivity: Activity
+    private var mActivity: Activity? = null
     private var dialog: Dialog? = null
     private var dialog2: Dialog? = null
     private var adapter: MapAdapter? = null
@@ -77,6 +76,13 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
         var lon: Double = 0.0
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is Activity) {
+            mActivity = context
+        }
+    }
+
     companion object {
         const val TAG = "BottomMapFragment"
     }
@@ -85,22 +91,17 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
 
     override fun getStatusBarColor() = ContextCompat.getColor(requireContext(), R.color.white)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mActivity = requireActivity()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentBottomMapBinding.inflate(inflater, container, false)
 
         dialog = Dialog(requireActivity())
         dialog2 = Dialog(requireActivity())
 
-        client = LocationServices.getFusedLocationProviderClient(mActivity)
+        client = mActivity?.let { LocationServices.getFusedLocationProviderClient(it) }
 
         startLocation()
 
@@ -122,7 +123,7 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
     }
 
     override fun setObservers() {
-        fragment = MapFiltersBottomSheetDialog(viewModel)
+        fragment = MapFiltersBottomSheetDialog(viewModel, null)
         viewModel.nearbyLocationsFiltered.observe(viewLifecycleOwner) { filteredLocations ->
             if (filteredLocations != null) {
                 setAdapter(filteredLocations)
@@ -263,14 +264,16 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
 
         val anInterface = object : MapAdapter.ClickLocationItem {
             override fun click(pos: Int, openMap: Boolean) {
-                val sheetDialog = BottomSheetDialog(
-                    mActivity,
-                    R.style.BottomSheetStyle
-                )
+                val sheetDialog = mActivity?.let {
+                    BottomSheetDialog(
+                        it,
+                        R.style.BottomSheetStyle
+                    )
+                }
                 val dialogBinding = DirectionPopupBinding.inflate(
                     LayoutInflater.from(mActivity)
                 )
-                sheetDialog.setContentView(dialogBinding.root)
+                sheetDialog?.setContentView(dialogBinding.root)
                 nearbyLocationList[pos].id?.let {
                     viewModel.getCurrentLocationData(
                         it
@@ -317,33 +320,35 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
                     }
                 }
                 dialogBinding.mapButton.setOnClickListener {
-                    sheetDialog.dismiss()
+                    sheetDialog?.dismiss()
                     openMapDialog()
                 }
                 if (openMap) {
                     openMapDialog()
                 } else {
-                    sheetDialog.show()
+                    sheetDialog?.show()
                 }
             }
 
         }
 
-        adapter = MapAdapter(
-            mActivity,
-            nearbyLocationList,
-            anInterface
-        ) { pos ->
+        adapter = mActivity?.let {
+            MapAdapter(
+                it,
+                nearbyLocationList,
+                anInterface
+            ) { pos ->
 
-            nearbyLocationList[pos].id?.let {
-                viewModel.getCurrentLocationData(
-                    it
-                ).observe(requireActivity()) { currentLocation ->
-                    val lbm1 = context?.let { LocalBroadcastManager.getInstance(it) }
-                    val localIn1 = Intent("LOCATION")
-                    localIn1.putExtra("locationData", nearbyLocationList[pos])
-                    localIn1.putExtra("currentLocation", currentLocation)
-                    lbm1?.sendBroadcast(localIn1)
+                nearbyLocationList[pos].id?.let {
+                    viewModel.getCurrentLocationData(
+                        it
+                    ).observe(requireActivity()) { currentLocation ->
+                        val lbm1 = context?.let { LocalBroadcastManager.getInstance(it) }
+                        val localIn1 = Intent("LOCATION")
+                        localIn1.putExtra("locationData", nearbyLocationList[pos])
+                        localIn1.putExtra("currentLocation", currentLocation)
+                        lbm1?.sendBroadcast(localIn1)
+                    }
                 }
             }
         }
@@ -357,6 +362,10 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 searchViewText = newText
+                if (newText.isEmpty())
+                    searchImageView.visibility = View.VISIBLE
+                else
+                    searchImageView.visibility = View.INVISIBLE
                 adapter?.filter?.filter(newText)
                 return true
             }
@@ -367,22 +376,24 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
         val isAppInstalled =
             appInstalledOrNot("com.waze")
         val bottomSheetDialog =
-            BottomSheetDialog(
-                mActivity,
-                R.style.BottomSheetStyle
-            )
+            mActivity?.let {
+                BottomSheetDialog(
+                    it,
+                    R.style.BottomSheetStyle
+                )
+            }
         val selectorBinding =
             LocationSelectorBinding.inflate(
                 LayoutInflater.from(
                     mActivity
                 )
             )
-        bottomSheetDialog.setContentView(
+        bottomSheetDialog?.setContentView(
             selectorBinding.root
         )
-        bottomSheetDialog.show()
+        bottomSheetDialog?.show()
         selectorBinding.google.setOnClickListener {
-            bottomSheetDialog.dismiss()
+            bottomSheetDialog?.dismiss()
             val gmmIntentUri =
                 Uri.parse("google.navigation:q=$latitude,$longitude")
             val mapIntent =
@@ -395,7 +406,7 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
         }
 
         selectorBinding.Waze.setOnClickListener {
-            bottomSheetDialog.dismiss()
+            bottomSheetDialog?.dismiss()
             if (isAppInstalled) {
                 val p = String.format(
                     Locale.ENGLISH,
@@ -413,37 +424,41 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
                 openPlayStoreApplication("https://play.google.com/store/apps/details?id=com.waze")
             }
         }
-        selectorBinding.Cancel.setOnClickListener { bottomSheetDialog.dismiss() }
+        selectorBinding.Cancel.setOnClickListener { bottomSheetDialog?.dismiss() }
     }
 
     private fun startLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                mActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                mActivity, Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+        if (mActivity?.let {
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            } != PackageManager.PERMISSION_GRANTED && mActivity?.let {
+                ActivityCompat.checkSelfPermission(
+                    it, Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            } != PackageManager.PERMISSION_GRANTED
         ) {
-            selectBinding = DialogLocationBinding.inflate(LayoutInflater.from(mActivity))
+//            selectBinding = DialogLocationBinding.inflate(LayoutInflater.from(mActivity))
+//
+//            dialog?.setContentView(selectBinding.root)
+//            dialog?.window?.setLayout(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT
+//            )
+//            dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//            dialog?.show()
+//            selectBinding.location.setOnClickListener {
+            Dexter.withContext(requireContext())
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(object : PermissionListener {
 
-            dialog?.setContentView(selectBinding.root)
-            dialog?.window?.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog?.show()
-            selectBinding.location.setOnClickListener {
-                Dexter.withContext(requireContext())
-                    .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                    .withListener(object : PermissionListener {
+                    override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse) {
+                        binding.listLocation.visibility = View.VISIBLE
+                        locationFilter()
+                    }
 
-                        override fun onPermissionGranted(permissionGrantedResponse: PermissionGrantedResponse) {
-                            binding.listLocation.visibility = View.VISIBLE
-                            locationFilter()
-                        }
-
-                        override fun onPermissionDenied(permissionDeniedResponse: PermissionDeniedResponse) {
+                    override fun onPermissionDenied(permissionDeniedResponse: PermissionDeniedResponse) {
                             binding.mLinear.visibility = View.VISIBLE
                             binding.location.setOnClickListener {
                                 Dexter.withContext(requireContext())
@@ -458,7 +473,7 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
                                         override fun onPermissionDenied(permissionDeniedResponse: PermissionDeniedResponse) {}
                                         override fun onPermissionRationaleShouldBeShown(
                                             permissionRequest: PermissionRequest?,
-                                            permissionToken: PermissionToken
+                                            permissionToken: PermissionToken,
                                         ) {
                                             permissionToken.continuePermissionRequest()
                                         }
@@ -468,13 +483,13 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
 
                         override fun onPermissionRationaleShouldBeShown(
                             permissionRequest: PermissionRequest?,
-                            permissionToken: PermissionToken
+                            permissionToken: PermissionToken,
                         ) {
                             permissionToken.continuePermissionRequest()
                         }
                     }).check()
                 dialog?.dismiss()
-            }
+//            }
         } else {
             dialog?.dismiss()
             binding.listLocation.visibility = View.VISIBLE
@@ -496,12 +511,16 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
 
     private fun locationFilter() {
         binding.mRelative.visibility = View.VISIBLE
-        if (ActivityCompat.checkSelfPermission(
-                mActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                mActivity, Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
+        if (mActivity?.let {
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            } != PackageManager.PERMISSION_GRANTED && mActivity?.let {
+                ActivityCompat.checkSelfPermission(
+                    it, Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            } != PackageManager.PERMISSION_GRANTED
         ) {
             return
         }
@@ -509,7 +528,7 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
             val location = task.result
             if (location != null) {
                 try {
-                    val geocoder = Geocoder(requireActivity(), Locale.getDefault())
+                    val geocoder = Geocoder(mActivity, Locale.getDefault())
                     val addresses =
                         geocoder.getFromLocation(location.latitude, location.longitude, 1)
                     currentLocation.lat = location.latitude
@@ -521,7 +540,7 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
 
                     }
 
-                    viewModel.getLocationFilter()
+                    viewModel.fetchLocationFilter()
 //                    viewModel.getLocationData(location.latitude.toString(), location.longitude.toString())
 //                    Static data for location
                     viewModel.getLocationData(
@@ -536,11 +555,10 @@ class BottomMapFragment : BaseFragment<LocationViewModel>() {
 
     }
 
-
     private fun appInstalledOrNot(uri: String): Boolean {
-        val pm = mActivity.packageManager
+        val pm = mActivity?.packageManager
         try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES)
+            pm?.getPackageInfo(uri, PackageManager.GET_ACTIVITIES)
             return true
         } catch (e: PackageManager.NameNotFoundException) {
         }

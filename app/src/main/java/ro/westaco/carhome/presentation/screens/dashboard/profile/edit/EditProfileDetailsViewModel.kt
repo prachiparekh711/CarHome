@@ -17,10 +17,10 @@ import ro.westaco.carhome.data.sources.remote.requests.*
 import ro.westaco.carhome.data.sources.remote.responses.models.Attachments
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.Country
-import ro.westaco.carhome.data.sources.remote.responses.models.Siruta
 import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.presentation.base.BaseViewModel
+import ro.westaco.carhome.presentation.screens.main.MainActivity
 import ro.westaco.carhome.utils.DateTimeUtils
 import ro.westaco.carhome.utils.default
 import rx.android.schedulers.AndroidSchedulers
@@ -31,7 +31,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileDetailsViewModel @Inject constructor(
-
     private val app: Application,
     private val api: CarHomeApi
 ) : BaseViewModel() {
@@ -41,7 +40,6 @@ class EditProfileDetailsViewModel @Inject constructor(
 
     var occupationData = MutableLiveData<ArrayList<CatalogItem>?>()
     var idTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
-    var sirutaData = MutableLiveData<ArrayList<Siruta>?>()
     var countryData = MutableLiveData<ArrayList<Country>?>()
     var licenseCategoryData = MutableLiveData<ArrayList<CatalogItem>?>()
     var streetTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
@@ -82,14 +80,6 @@ class EditProfileDetailsViewModel @Inject constructor(
                 }
             )
 
-        api.getSiruta()
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    sirutaData.value = it.data
-                }, {}
-            )
-
         api.getOccupation()
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
@@ -106,7 +96,6 @@ class EditProfileDetailsViewModel @Inject constructor(
 
                 }
             )
-
 
         api.getSimpleCatalog("NOM_DRIVING_LICENSE_CATEGORY_TYPE")
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -157,34 +146,51 @@ class EditProfileDetailsViewModel @Inject constructor(
         drivLicenseIssueDate: String?,
         drivLicenseExpDate: String?,
         drivingLicenseCateg: ArrayList<Int>?,
-        email: String?,
-        isChecked: Boolean
+        email: String?
     ) {
         uiEventStream.value = UiEvent.HideKeyboard
-        if (!isChecked) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.confirm_details)
+
+
+        if (firstName.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.first_name_r)
             return
         }
-        if (!validateFields(address)
-        ) {
+
+        if (lastname.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.last_name_r)
             return
         }
 
+        if (firstName.length < 2 || firstName.length > 50) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.first_name_len)
+            return
+        }
 
-        val drivingLicense = DrivingLicense(
-            drivLicenseId,
-            DateTimeUtils.convertToServerDate(app, drivLicenseIssueDate),
-            DateTimeUtils.convertToServerDate(app, drivLicenseExpDate),
-            drivingLicenseCateg
-        )
+        if (lastname.length < 2 || lastname.length > 50) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.last_name_len)
+            return
+        }
 
-        val identityDocument =
-            IdentityDocument(
-                number,
-                DocumentType(docType, docID),
-                series,
-                DateTimeUtils.convertToServerDate(app, expirationDate)
+        var drivingLicense: DrivingLicense? = null
+        if (drivLicenseId != null) {
+            drivingLicense = DrivingLicense(
+                drivLicenseId,
+                DateTimeUtils.convertToServerDate(app, drivLicenseIssueDate),
+                DateTimeUtils.convertToServerDate(app, drivLicenseExpDate),
+                drivingLicenseCateg
             )
+        }
+
+        var identityDocument: IdentityDocument? = null
+        if (docType != null) {
+            identityDocument =
+                IdentityDocument(
+                    number,
+                    DocumentType(docType, docID),
+                    series,
+                    DateTimeUtils.convertToServerDate(app, expirationDate)
+                )
+        }
 
         val addProfileDataRequest = AddProfileDataRequest(
             firstName,
@@ -205,12 +211,11 @@ class EditProfileDetailsViewModel @Inject constructor(
         api.editProfile(addProfileDataRequest)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.edit_success_msg)
+
+                getProfileData()
                 uiEventStream.value = UiEvent.NavBack
             }, {
 
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
             })
     }
 
@@ -243,8 +248,7 @@ class EditProfileDetailsViewModel @Inject constructor(
                 }
                 actionStream.value = it.data?.let { it1 -> ACTION.OnUploadSuccess(attachType, it1) }
             }, {
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 
@@ -256,33 +260,32 @@ class EditProfileDetailsViewModel @Inject constructor(
         api.deleteAttachmentToNaturalPerson(id.toLong(), attachID.toLong())
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                 if (attachType == "DRIVING_LICENSE") {
                     actionStream.value = ACTION.OnDeleteSuccess("DRIVING_LICENSE")
                 } else {
                     actionStream.value = ACTION.OnDeleteSuccess("IDENTITY_DOCUMENT")
                 }
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
-    }
-
-    private fun validateFields(
-        address: Address?
-    ): Boolean {
-        if (address?.streetName?.isEmpty() == true ||
-            address?.countryCode?.isEmpty() == true ||
-            address?.region?.isEmpty() == true ||
-            address?.zipCode?.isEmpty() == true
-        ) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.address_require)
-            return false
-        }
-        return true
     }
 
     fun hideKeyboard() {
         uiEventStream.value = UiEvent.HideKeyboard
+    }
+
+    private fun getProfileData() {
+        api.getProfile()
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (it.success && it.data != null) {
+                    MainActivity.profileItem = it.data
+                    MainActivity.activeUser = MainActivity.profileItem?.firstName ?: " "
+                    MainActivity.activeId = MainActivity.profileItem?.id
+                }
+            }, {
+
+            })
+
     }
 
 }

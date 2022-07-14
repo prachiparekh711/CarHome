@@ -24,12 +24,14 @@ class InsuranceViewModel @Inject constructor(
 
     ) : BaseViewModel() {
 
-    val currentRcaData = MutableLiveData<RcaResponse?>()
     val carsLivedata = MutableLiveData<ArrayList<Vehicle>?>()
     val leasingCompaniesData = MutableLiveData<ArrayList<LeasingCompany>?>()
-    val vehicleDetailsLivedata: MutableLiveData<VehicleDetailsForOffer> = MutableLiveData()
+    val vehicleDetailsLivedata: MutableLiveData<VehicleDetails> = MutableLiveData()
+    val vehicleForOfferLivedata: MutableLiveData<VehicleDetailsForOffer> = MutableLiveData()
     var verifyNaturalPerson = MutableLiveData<ArrayList<VerifyRcaPerson>?>()
     var verifyLegalPerson = MutableLiveData<ArrayList<VerifyRcaPerson>?>()
+    var verifyUser = MutableLiveData<ValidationResult?>()
+    var verifyDriver = MutableLiveData<ValidationResult?>()
 
     val actionStream: SingleLiveEvent<ACTION> = SingleLiveEvent()
 
@@ -79,21 +81,8 @@ class InsuranceViewModel @Inject constructor(
             })
     }
 
-
-    fun identifyVehicle(selectedVehicle: Vehicle) {
-
-        selectedVehicle.guid?.let {
-            api.identifyVehicle(it)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ resp ->
-                    currentRcaData.value = resp?.data
-                }, {
-                })
-        }
-    }
-
     fun fetchCarDetails(vehicleId: Int) {
-        api.getVehicleForOffer(vehicleId)
+        api.getVehicle(vehicleId)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
 
@@ -104,19 +93,29 @@ class InsuranceViewModel @Inject constructor(
 
     }
 
+    fun fetchCarDetailsForOffer(vehicleId: Int) {
+        api.getVehicleForOffer(vehicleId)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ resp ->
+
+                vehicleForOfferLivedata.value = resp.data
+            }, {
+                it.printStackTrace()
+            })
+
+    }
+
 
     internal fun onCta(
         request: RcaOfferRequest,
-        vehicle: Vehicle,
+        policyExpirationDate: String?,
     ) {
-
-
         uiEventStream.value =
             UiEvent.Navigation(NavAttribs(Screen.InsuranceStep2, object : BundleProvider() {
                 override fun onAddArgs(bundle: Bundle?): Bundle {
                     return Bundle().apply {
                         putSerializable(InsuranceStep2Fragment.ARG_REQUEST, request)
-                        putSerializable(InsuranceStep2Fragment.ARG_CAR, vehicle)
+                        putSerializable(InsuranceStep2Fragment.ARG_EXPIRE_STR, policyExpirationDate)
                     }
                 }
             }))
@@ -162,6 +161,28 @@ class InsuranceViewModel @Inject constructor(
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ response ->
                 actionStream.value = response.data?.let { ACTION.OnGetLegalDetails(personType, it) }
+            }, {
+                //   it.printStackTrace()
+            })
+    }
+
+    fun verifyUser(userGUID: String, personType: Int) {
+
+        api.verifyUser(userGUID, personType)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ response ->
+                verifyUser.value = response.data
+            }, {
+
+            })
+    }
+
+    fun verifyDriver(driverGuid: String) {
+
+        api.verifyDriver(driverGuid)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ response ->
+                verifyDriver.value = response.data
             }, {
                 //   it.printStackTrace()
             })

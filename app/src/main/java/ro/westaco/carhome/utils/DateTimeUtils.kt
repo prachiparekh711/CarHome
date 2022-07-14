@@ -84,4 +84,53 @@ object DateTimeUtils {
         }
     }
 
+    fun addStringTimeToDate(date: Date, time: String): Date {
+        val serverTime = SimpleDateFormat("HH:mm:ss").parse(time)
+        var calendarTime = Calendar.getInstance()
+        calendarTime.time = serverTime
+        var calendarDate = Calendar.getInstance()
+        calendarDate.time = date
+        calendarDate.set(Calendar.HOUR_OF_DAY, calendarTime.get(Calendar.HOUR_OF_DAY))
+        calendarDate.set(Calendar.MINUTE, calendarTime.get(Calendar.MINUTE))
+        calendarDate.set(Calendar.SECOND, calendarTime.get(Calendar.SECOND))
+        return calendarDate.time
+    }
+
+    fun getNowDate(): Date {
+        val formattedNowDate =
+            SimpleDateFormat("dd/MM/yyyy HH:mm").format(Calendar.getInstance().time)
+        return SimpleDateFormat("dd/MM/yyyy HH:mm").parse(formattedNowDate)
+    }
+
+    fun stringDatetimeToDate(dateTime: String): Date {
+        return SimpleDateFormat("dd/MM/yyyy HH:mm").parse(dateTime)
+    }
+
+    fun addSelectedPeriodToDate(date: Date, unit: Int, unitName: String): Date {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        when (unitName) {
+            "Minutes" -> {
+                calendar.add(Calendar.MINUTE, unit)
+            }
+            "Hours" -> {
+                calendar.add(Calendar.HOUR_OF_DAY, unit)
+            }
+            "Days" -> {
+                calendar.add(Calendar.DAY_OF_MONTH, unit)
+            }
+            "Weeks" -> {
+                calendar.add(Calendar.WEEK_OF_MONTH, unit)
+            }
+            "Months" -> {
+                calendar.add(Calendar.MONTH, unit)
+            }
+        }
+        return calendar.time
+    }
+
+    fun firstDateIsBeforeSecondDate(firstDate: Date, secondDate: Date): Boolean {
+        return firstDate.before(secondDate)
+    }
+
 }

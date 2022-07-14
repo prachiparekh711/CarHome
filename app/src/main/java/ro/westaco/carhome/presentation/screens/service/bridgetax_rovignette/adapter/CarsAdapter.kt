@@ -57,14 +57,19 @@ class CarsAdapter(
         private var status: TextView = itemView.findViewById(R.id.status)
         private var serviceTitle: TextView = itemView.findViewById(R.id.serviceTitle)
         private var statusTitle: TextView = itemView.findViewById(R.id.statusTitle)
+        private var vehicleBrandCar: TextView = itemView.findViewById(R.id.vehicleBrandCar)
 
         @SuppressLint("SetTextI18n")
         fun bind(position: Int) {
 
             val item = cars[position]
-            makeAndModel.text = "${item.vehicleBrand ?: ""} ${item.model ?: ""}"
-            carNumber.text = item.licensePlate
+            if (item.vehicleBrand.isNullOrEmpty() && item.model.isNullOrEmpty())
+                makeAndModel.text = "N/A"
+            else
+                makeAndModel.text = "${item.vehicleBrand ?: ""} ${item.model ?: ""}"
 
+            carNumber.text = item.licensePlate
+            vehicleBrandCar.text = item.registrationCountryName
             val options = RequestOptions()
             logo.clipToOutline = true
             Glide.with(context)
@@ -89,32 +94,40 @@ class CarsAdapter(
                         status.text = "N/A"
                         policyExpiry.setTextColor(context.resources.getColor(R.color.unselected))
                         status.setTextColor(context.resources.getColor(R.color.unselected))
-
                     } else {
-                        val dateFormat: DateFormat =
-                            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                        val date: Date? = dateFormat.parse(item.vignetteExpirationDate)
+                        val date: Date = try {
+                            val dateFormat: DateFormat =
+                                SimpleDateFormat(context.getString(R.string.server_standard_datetime_format_template))
+                            dateFormat.parse(item.vignetteExpirationDate)
+                        } catch (e: Exception) {
+                            val dateFormat: DateFormat =
+                                SimpleDateFormat(context.getString(R.string.server_standard_datetime_format_template1))
+                            dateFormat.parse(item.vignetteExpirationDate)
+                        }
+
                         val formatter: DateFormat =
-                            SimpleDateFormat("dd-MM-yyyy")
+                            SimpleDateFormat("dd/MM/yyyy")
                         val dateStr: String =
                             formatter.format(date)
                         policyExpiry.text = dateStr
                         policyExpiry.setTextColor(context.resources.getColor(R.color.text_color))
 
-                        val sdf = SimpleDateFormat("dd-MM-yyyy")
+                        val sdf = SimpleDateFormat("dd/MM/yyyy")
                         val strDate = sdf.parse(dateStr)
-                        if (System.currentTimeMillis() > strDate.time) {
-                            status.text = context.getString(R.string.status_expires)
-                            status.setTextColor(context.resources.getColor(R.color.redExpiredRovii))
-                        } else {
-                            status.text = context.getString(R.string.status_active)
-                            status.setTextColor(context.resources.getColor(R.color.list_time))
+                        if (strDate != null) {
+                            if (System.currentTimeMillis() > strDate.time) {
+                                status.text = context.getString(R.string.status_expires)
+                                status.setTextColor(context.resources.getColor(R.color.redExpiredRovii))
+                            } else {
+                                status.text = context.getString(R.string.status_active)
+                                status.setTextColor(context.resources.getColor(R.color.list_time))
+                            }
                         }
 
                     }
                 }
                 "RO_PASS_TAX" -> {
-                    if (item.vignetteExpirationDate.isNullOrEmpty()) {
+                    if (item.passTaxLastPurchase.isNullOrEmpty()) {
                         policyExpiry.text = "N/A"
                         policyExpiry.setTextColor(context.resources.getColor(R.color.unselected))
                     } else {
@@ -122,7 +135,7 @@ class CarsAdapter(
                     }
                     statusTitle.isVisible = false
                     status.isVisible = false
-                    serviceTitle.text = context.resources.getString(R.string.last_purchased)
+                    serviceTitle.text = context.resources.getString(R.string.no_of_pass_)
 
                 }
             }
@@ -148,6 +161,12 @@ class CarsAdapter(
     fun setItems(cars: List<Vehicle>?) {
         this.cars = ArrayList(cars ?: listOf())
         notifyDataSetChanged()
+    }
+
+    fun setPosition(i: Int) {
+        val prevSelectedPos = selectedPos
+        selectedPos = i
+        notifyItemChanged(prevSelectedPos)
     }
 
 }

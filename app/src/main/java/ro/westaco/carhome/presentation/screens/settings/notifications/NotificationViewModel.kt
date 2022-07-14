@@ -7,6 +7,7 @@ import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.MarkSeenRequest
 import ro.westaco.carhome.data.sources.remote.responses.models.Notification
 import ro.westaco.carhome.navigation.Screen
+import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
@@ -22,6 +23,13 @@ class NotificationViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     val notificationLivedata: MutableLiveData<ArrayList<Notification>> = MutableLiveData()
+
+    val actionStream: SingleLiveEvent<ACTION> = SingleLiveEvent()
+
+    sealed class ACTION {
+        object OnBackOfSuccess : ACTION()
+    }
+
     override fun onFragmentCreated() {
         fetchRemoteData()
     }
@@ -52,7 +60,10 @@ class NotificationViewModel @Inject constructor(
         api.markAsSeen(req)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
+                actionStream.value = ACTION.OnBackOfSuccess
+                fetchRemoteData()
             }, {
+
             })
     }
 

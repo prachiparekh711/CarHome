@@ -40,7 +40,7 @@
     <color name="textTitle40">#9DB4CB</color>
     <color name="textTitle50">#768DA9</color>
     <color name="map_color">#007AFF</color>
-    <color name="settingsHeaderBg">#F4FAFF</color>
+    <color name="settingsHeaderBg">#EAF3FA</color>
     <color name="deleteRed">#FF7575</color>
     <color name="deleteDisabledRed">#CCFF7575</color>
 
@@ -88,5 +88,8 @@
     <color name="view_color">#E4E8EE</color>
     <color name="error_code_email">#FF9F29</color>
     <color name="magic_star_color">#3BB9FF</color>
+
+    <color name="header_reminder">#F5F5FF</color>
+    <color name="header_reminder_arrow">#919BF0</color>
 
 </resources>

@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ro.westaco.carhome.R
+import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
+import ro.westaco.carhome.data.sources.remote.requests.TermsRequestItem
+import ro.westaco.carhome.data.sources.remote.responses.models.TermsResponseItem
 import ro.westaco.carhome.navigation.BundleProvider
 import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.SingleLiveEvent
@@ -17,20 +20,24 @@ import ro.westaco.carhome.presentation.screens.dashboard.DashboardFragment.Compa
 import ro.westaco.carhome.presentation.screens.data.DataFragment
 import ro.westaco.carhome.presentation.screens.driving_mode.DrivingModeFragment
 import ro.westaco.carhome.presentation.screens.home.HomeFragment
-import ro.westaco.carhome.presentation.screens.maps.MapsFragment
+import ro.westaco.carhome.presentation.screens.maps.TopServicesMapFragment
 import ro.westaco.carhome.presentation.screens.reminder.ReminderFragment
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.select_car.SelectCarFragment
 import ro.westaco.carhome.presentation.screens.settings.SettingsFragment
 import ro.westaco.carhome.utils.default
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import javax.inject.Inject
 
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val app: Application
+    private val app: Application,
+    private val api: CarHomeApi
 ) : BaseViewModel() {
 
     var servicesStateLiveData = MutableLiveData<STATE>().default(STATE.Collapsed)
+    var termsLiveData = MutableLiveData<ArrayList<TermsResponseItem>?>()
 
     sealed class STATE {
         object Collapsed : STATE()
@@ -51,6 +58,7 @@ class DashboardViewModel @Inject constructor(
 
     override fun onFragmentCreated() {
         super.onFragmentCreated()
+        checkTermsForCurrentUser()
 
         if (selectedMenuItem != null) {
             selectedMenuItem.let {
@@ -73,6 +81,56 @@ class DashboardViewModel @Inject constructor(
         } else {
             servicesStateLiveData.value = STATE.Collapsed
         }
+    }
+
+    private fun checkTermsForCurrentUser() {
+        api.getAllTermsForCurrentUserAndScope("USE_APP")
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ resp ->
+                if (resp.data?.size != 0) {
+                    getAPPTerms()
+                }
+            }) {
+            }
+    }
+
+
+    private fun getAPPTerms() {
+        api.getAllTermsForScope("USE_APP")
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ resp ->
+                termsLiveData.value = resp.data
+            }) {
+            }
+    }
+
+    fun saveTerms(termsResponseList: ArrayList<TermsResponseItem>?) {
+
+        if (termsResponseList?.isNotEmpty() == true) {
+            for (i in termsResponseList.indices) {
+                if (!termsResponseList[i].allowed && termsResponseList[i].mandatory == true) {
+                    uiEventStream.value = UiEvent.ShowToast(R.string.terms_info)
+                    return
+                }
+            }
+        }
+
+        val requestList: ArrayList<TermsRequestItem> = ArrayList()
+        for (i in termsResponseList?.indices!!) {
+            val item =
+                TermsRequestItem(
+                    termsResponseList[i].versionId,
+                    termsResponseList[i].allowed
+                )
+            requestList.add(item)
+        }
+
+        api.saveUserTermResolutions(requestList)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+            }, {
+            })
+
     }
 
     internal fun onCollapseServices() {
@@ -113,7 +171,7 @@ class DashboardViewModel @Inject constructor(
 
 
     internal fun onInsurance() {
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Insurance))
+        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.InsuranceRequest))
     }
 
     fun onItemSelected(menuItem: MenuItem) {
@@ -142,7 +200,10 @@ class DashboardViewModel @Inject constructor(
                 }
                 R.id.maps -> {
                     selectedMenuItem = menuItem
-                    actionStream.value = ACTION.OpenChildFragment(MapsFragment(), MapsFragment.TAG)
+                    actionStream.value = ACTION.OpenChildFragment(
+                        TopServicesMapFragment(),
+                        TopServicesMapFragment.TAG
+                    )
                     servicesStateLiveData.value = STATE.Collapsed
                 }
                 R.id.more -> {

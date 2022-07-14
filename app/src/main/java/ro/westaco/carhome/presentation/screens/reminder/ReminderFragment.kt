@@ -14,10 +14,9 @@ import ro.westaco.carhome.data.sources.remote.responses.models.ListItem
 import ro.westaco.carhome.data.sources.remote.responses.models.ListSection
 import ro.westaco.carhome.data.sources.remote.responses.models.Reminder
 import ro.westaco.carhome.presentation.base.BaseFragment
+import ro.westaco.carhome.utils.DateTimeUtils
 import ro.westaco.carhome.utils.DateTimeUtils.getNowSeconds
 import ro.westaco.carhome.utils.DateTimeUtils.getTitleDate
-import ro.westaco.carhome.utils.Progressbar
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -27,10 +26,10 @@ import java.util.*
 class ReminderFragment : BaseFragment<ReminderViewModel>() {
 
     private var adapter: DateReminderAdapter? = null
-    var progressbar: Progressbar? = null
     var reminderList: ArrayList<Reminder> = ArrayList()
     var allFilterList: ArrayList<CatalogItem> = ArrayList()
     var layoutManager: LinearLayoutManager? = null
+    var reminderSelectedTags: ArrayList<CatalogItem> = ArrayList()
 
     companion object {
         const val TAG = "ReminderFragment"
@@ -41,13 +40,12 @@ class ReminderFragment : BaseFragment<ReminderViewModel>() {
     override fun getStatusBarColor() = ContextCompat.getColor(requireContext(), R.color.white)
 
     override fun initUi() {
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
+
         layoutManager = LinearLayoutManager(context)
         list.layoutManager = layoutManager
 
         fab.setOnClickListener {
-            viewModel.onFabClicked()
+            viewModel.onFabClicked(reminderSelectedTags)
         }
 
         notification.setOnClickListener {
@@ -66,7 +64,7 @@ class ReminderFragment : BaseFragment<ReminderViewModel>() {
                 allFilterList = tags
             }
             if (allFilterList.isNotEmpty()) {
-                allFilterList.add(0, CatalogItem(0, "All"))
+                allFilterList.add(0, CatalogItem(0, getString(R.string.all_notifications)))
                 tagAdapter.setItems(allFilterList)
                 recycler.layoutManager = LinearLayoutManager(
                     requireContext(),
@@ -78,6 +76,8 @@ class ReminderFragment : BaseFragment<ReminderViewModel>() {
                 viewModel.fetchReminderList()
             }
             tagAdapter.getSelectedTagsLiveData().observe(this) { selectedTags ->
+                reminderSelectedTags.clear()
+                reminderSelectedTags.addAll(selectedTags)
                 val filteredList: ArrayList<Reminder> = filterList(selectedTags)
                 sortList(filteredList)
             }
@@ -94,7 +94,7 @@ class ReminderFragment : BaseFragment<ReminderViewModel>() {
                         viewModel.onDelete(item)
                     }
                     override fun onUpdate(item: Reminder) {
-                        viewModel.onUpdate(item)
+                        viewModel.onMarkAsCompleted(item)
                     }
                 }
 
@@ -107,9 +107,14 @@ class ReminderFragment : BaseFragment<ReminderViewModel>() {
                 this.reminderList = reminders
                 sortList(reminderList)
             }
-            progressbar?.dismissPopup()
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        reminderSelectedTags.clear()
+    }
+
 
     private fun filterList(
         selectedTags: ArrayList<CatalogItem>
@@ -130,7 +135,7 @@ class ReminderFragment : BaseFragment<ReminderViewModel>() {
 
     private fun getSelectedTagsSize(selectedTags: ArrayList<CatalogItem>): Int {
         val allTag = selectedTags.find {
-            it.name == "All"
+            it.name == getString(R.string.all_notifications)
         }
         return if (allTag != null) {
             selectedTags.size - 1
@@ -139,45 +144,57 @@ class ReminderFragment : BaseFragment<ReminderViewModel>() {
         }
     }
 
-    private val listItems = ArrayList<ListItem>(reminderList.size)
+
+    private val listItems = ArrayList<ListItem>()
+    private val invisibleListItems = ArrayList<ListItem>()
 
     @SuppressLint("SimpleDateFormat")
     private fun sortList(reminderList: ArrayList<Reminder>) {
         reminderList.sortWith { o1, o2 ->
-            if (o1.dueTime != null && o2.dueTime != null) {
-                val date1 =
-                    SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(o1.dueDate + " " + o1.dueTime)
-                val date2 =
-                    SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(o2.dueDate + " " + o2.dueTime)
+            if (o1.dueTime != null && o2.dueTime != null && o1.dueDate != null && o2.dueDate != null) {
+                val date1 = DateTimeUtils.addStringTimeToDate(o1.dueDate, o1.dueTime)
+                val date2 = DateTimeUtils.addStringTimeToDate(o2.dueDate, o2.dueTime)
                 date1.compareTo(date2)
             } else {
-                val date1 = SimpleDateFormat("yyyy-MM-dd").parse(o1.dueDate)
-                val date2 = SimpleDateFormat("yyyy-MM-dd").parse(o2.dueDate)
-                date1.compareTo(date2)
+                o1.dueDate!!.compareTo(o2.dueDate)
             }
 
         }
         if (adapter != null) {
             adapter?.clearAll()
             listItems.clear()
+            invisibleListItems.clear()
             var prevCode = ""
             val now = getNowSeconds()
             val today = getTitleDate(now, requireContext(), true)
+            var reachedCurrentMonth = false
             reminderList.forEach {
-                val date = SimpleDateFormat("yyyy-MM-dd").parse(it.dueDate)
-                val code = getTitleDate(date.time, requireContext(), false)
-                if (code != prevCode) {
-                    val titleItem = getTitleDate(date.time, requireContext(), false)
-                    val day = getTitleDate(date.time, requireContext(), true)
-                    val isToday = day == today
-                    val listSection =
-                        ListSection(titleItem, code, isToday, !isToday && date.time < now)
-                    listItems.add(listSection)
-                    prevCode = code
+                if (it.dueDate != null) {
+                    val date = it.dueDate
+                    val code = getTitleDate(date.time, requireContext(), false)
+                    if (code != prevCode) {
+                        val titleItem = getTitleDate(date.time, requireContext(), false)
+                        val day = getTitleDate(date.time, requireContext(), true)
+                        val isToday = day == today
+                        if (code == "This Month") {
+                            reachedCurrentMonth = true
+                        }
+                        val listSection =
+                            ListSection(titleItem, code, isToday, !isToday && date.time < now)
+                        listSection.isItemVisible = reachedCurrentMonth
+                        listSection.sectionName = code
+                        listItems.add(listSection)
+                        prevCode = code
+                    }
+                    it.sectionName = prevCode
+                    if (!reachedCurrentMonth) {
+                        invisibleListItems.add(it)
+                    } else {
+                        listItems.add(it)
+                    }
                 }
-                listItems.add(it)
             }
-            adapter?.setItems(listItems, allFilterList)
+            adapter?.setItems(listItems, allFilterList, invisibleListItems)
             snapToCurrentReminder()
         }
     }
@@ -192,31 +209,54 @@ class ReminderFragment : BaseFragment<ReminderViewModel>() {
         list.layoutManager?.startSmoothScroll(smoothScroller)
     }
 
+
     private fun getPositionOfTheClosestTimePeriod(): Int {
+//        var position = 0
+//        var minTimePeriod = Long.MAX_VALUE
+//        listItems.forEachIndexed { index, listItem ->
+//            if (listItem is Reminder) {
+//                val reminderDate = SimpleDateFormat("yyyy-MM-dd").parse(listItem.dueDate)
+//                val reminderTime = Calendar.getInstance()
+//                setTimeToZero(reminderTime,reminderDate)
+//                val nowTime = Calendar.getInstance()
+//                setTimeToZero(nowTime,null)
+//                var timeDiff =  reminderTime.timeInMillis - nowTime.timeInMillis
+//                if(timeDiff < 0) {
+//                    timeDiff = 0 - timeDiff
+//                }
+//                if (timeDiff in 0 until minTimePeriod) {
+//                    minTimePeriod = timeDiff
+//                    position = index
+//                }
+//            }
+//        }
+//        if (listItems.size != 0) {
+//            for (iterator in position downTo 0) {
+//                if (listItems[iterator] is ListSection) {
+//                    position = iterator
+//                    break
+//                }
+//            }
+//        }
         var position = 0
-        var minTimePeriod = Long.MAX_VALUE
         listItems.forEachIndexed { index, listItem ->
-            if (listItem is Reminder) {
-                val date = SimpleDateFormat("yyyy-MM-dd").parse(listItem.dueDate)
-                val nowTime = Calendar.getInstance()
-                val neededTime = Calendar.getInstance()
-                neededTime.timeInMillis = date.time
-                val timeDiff = neededTime.timeInMillis - nowTime.timeInMillis
-                if (timeDiff in 0 until minTimePeriod) {
-                    minTimePeriod = timeDiff
-                    position = index
-                }
-            }
-        }
-        if (listItems.size != 0) {
-            for (iterator in position downTo 0) {
-                if (listItems[iterator] is ListSection) {
-                    position = iterator
-                    break
-                }
+            if (listItem is ListSection && listItem.title == "This Month") {
+                position = index
+                return position
             }
         }
         return position
     }
+
+    private fun setTimeToZero(calendar: Calendar, date: Date?) {
+        date?.let {
+            calendar.timeInMillis = it.time
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+    }
+
 
 }

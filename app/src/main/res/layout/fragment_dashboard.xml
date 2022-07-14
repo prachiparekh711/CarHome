@@ -48,7 +48,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/inter_regular_400"
-        android:text="@string/services"
         android:textColor="@color/textcolor"
         android:textSize="@dimen/_10sdp"
         android:visibility="gone"

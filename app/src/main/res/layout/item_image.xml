@@ -13,7 +13,7 @@
         android:adjustViewBounds="true"
         android:background="@drawable/bg_card_item_nostroke"
         android:scaleType="centerCrop"
-        android:src="@drawable/insta1" />
+        android:src="@drawable/insta3" />
 
     <ImageView
         android:id="@+id/mRemove"

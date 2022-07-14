@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -149,6 +149,7 @@
                                 app:boxCornerRadiusTopStart="0dp"
                                 app:boxStrokeColor="#FFF"
                                 app:boxStrokeWidth="0dp"
+                                app:hintTextAppearance="@style/TextLabel"
                                 app:hintTextColor="#162651"
                                 tools:ignore="RtlSymmetry">
 
@@ -180,6 +181,7 @@
                                 app:boxCornerRadiusTopStart="0dp"
                                 app:boxStrokeColor="#FFF"
                                 app:boxStrokeWidth="0dp"
+                                app:hintTextAppearance="@style/TextLabel"
                                 app:hintTextColor="#162651">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -283,6 +285,7 @@
                                 app:boxStrokeColor="#FFF"
                                 app:boxStrokeWidth="0dp"
                                 app:hintTextColor="#162651"
+                                app:hintTextAppearance="@style/TextLabel"
                                 tools:ignore="RtlSymmetry">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -329,10 +332,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/_10sdp"
                                     android:layout_marginTop="@dimen/_3sdp"
-                                    android:fontFamily="@font/inter_regular_400"
+                                    android:fontFamily="@font/inter_medium_500"
                                     android:text="@string/country_code"
-                                    android:textColor="#162651"
-                                    android:textSize="12sp"
+                                    android:textSize="@dimen/_10sdp"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
                                     tools:ignore="RtlSymmetry" />
@@ -341,7 +343,6 @@
                                     android:id="@+id/phoneFlagItems"
                                     android:layout_width="@dimen/_20sdp"
                                     android:layout_height="@dimen/_15sdp"
-                                    android:layout_gravity="center_vertical"
                                     android:layout_marginStart="@dimen/_2sdp"
                                     android:src="@drawable/carhome_icon"
                                     android:textColor="@color/white"
@@ -354,11 +355,8 @@
                                     android:id="@+id/phoneCodeItems"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
                                     android:layout_marginStart="@dimen/_5sdp"
                                     android:fontFamily="@font/inter_medium_500"
-                                    android:gravity="center_vertical"
-                                    android:text="+91"
                                     android:textColor="#162651"
                                     android:textSize="@dimen/_11sdp"
                                     app:layout_constraintBottom_toBottomOf="@id/phoneFlagItems"
@@ -386,7 +384,6 @@
                                 android:layout_weight="1.8"
                                 android:background="@android:color/transparent"
                                 android:hint="@string/phone_num"
-                                android:textColor="@color/textOnWhite"
                                 android:theme="@style/TextInputLayoutAppearance"
                                 app:boxBackgroundColor="@android:color/transparent"
                                 app:boxCornerRadiusBottomEnd="0dp"
@@ -396,6 +393,7 @@
                                 app:boxStrokeColor="#FFF"
                                 app:boxStrokeWidth="0dp"
                                 app:hintTextColor="#162651"
+                                app:hintTextAppearance="@style/TextLabel"
                                 tools:ignore="RtlSymmetry">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -429,6 +427,7 @@
                             app:boxCornerRadiusTopStart="0dp"
                             app:boxStrokeColor="#FFF"
                             app:boxStrokeWidth="0dp"
+                            app:hintTextAppearance="@style/TextLabel"
                             app:hintTextColor="#162651"
                             tools:ignore="RtlSymmetry">
 
@@ -535,6 +534,7 @@
                                     app:endIconDrawable="@drawable/ic_arrow_down_id"
                                     app:endIconMode="custom"
                                     app:hintTextColor="#162651"
+                                    app:hintTextAppearance="@style/TextLabel"
                                     tools:ignore="RtlSymmetry">
 
                                     <com.google.android.material.textfield.TextInputEditText
@@ -577,6 +577,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -608,6 +609,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -648,6 +650,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -679,6 +682,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -805,6 +809,7 @@
                                         app:endIconDrawable="@drawable/ic_arrow_down_id"
                                         app:endIconMode="custom"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -841,6 +846,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -848,7 +854,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:fontFamily="@font/inter_medium_500"
-                                            android:inputType="text"
+                                            android:inputType="textCapCharacters"
                                             android:singleLine="true"
                                             android:textSize="@dimen/_11sdp" />
 
@@ -881,6 +887,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -918,6 +925,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -1028,9 +1036,10 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/_10sdp"
-                                        android:text="@string/country_c"
+                                        android:layout_marginTop="@dimen/_5sdp"
+                                        android:text="@string/country"
                                         android:textColor="#162651"
-                                        android:textSize="11sp"
+                                        android:textSize="@dimen/_10sdp"
                                         app:layout_constraintLeft_toLeftOf="parent"
                                         app:layout_constraintTop_toTopOf="parent"
                                         tools:ignore="RtlSymmetry" />
@@ -1086,7 +1095,7 @@
                                         android:layout_marginTop="@dimen/_2sdp"
                                         android:layout_marginEnd="@dimen/_2sdp"
                                         android:background="@android:color/transparent"
-                                        android:hint="@string/address_county_c"
+                                        android:hint="@string/address_county"
                                         android:textColor="@color/textOnWhite"
                                         android:theme="@style/TextInputLayoutAppearance"
                                         app:boxBackgroundColor="@android:color/transparent"
@@ -1099,6 +1108,7 @@
                                         app:endIconDrawable="@drawable/ic_arrow_down_id"
                                         app:endIconMode="custom"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry,TooManyViews">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -1124,7 +1134,7 @@
                                         android:layout_marginTop="@dimen/_2sdp"
                                         android:layout_marginEnd="@dimen/_2sdp"
                                         android:background="@android:color/transparent"
-                                        android:hint="@string/state_provinces"
+                                        android:hint="@string/state_provinces_"
                                         android:textColor="@color/textOnWhite"
                                         android:theme="@style/TextInputLayoutAppearance"
                                         android:visibility="gone"
@@ -1138,6 +1148,7 @@
                                         app:endIconDrawable="@drawable/ic_arrow_down_id"
                                         app:endIconMode="custom"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry,TooManyViews">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -1164,7 +1175,7 @@
                                         android:layout_marginTop="@dimen/_2sdp"
                                         android:layout_marginEnd="@dimen/_2sdp"
                                         android:background="@android:color/transparent"
-                                        android:hint="@string/address_city_c"
+                                        android:hint="@string/address_city"
                                         android:textColor="@color/textOnWhite"
                                         android:theme="@style/TextInputLayoutAppearance"
                                         app:boxBackgroundColor="@android:color/transparent"
@@ -1177,6 +1188,7 @@
                                         app:endIconDrawable="@drawable/ic_arrow_down_id"
                                         app:endIconMode="custom"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry,TooManyViews">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -1202,7 +1214,7 @@
                                         android:layout_marginTop="@dimen/_2sdp"
                                         android:layout_marginEnd="@dimen/_2sdp"
                                         android:background="@android:color/transparent"
-                                        android:hint="@string/locality_area"
+                                        android:hint="@string/locality_area_"
                                         android:textColor="@color/textOnWhite"
                                         android:theme="@style/TextInputLayoutAppearance"
                                         android:visibility="gone"
@@ -1215,6 +1227,7 @@
                                         app:boxStrokeWidth="0dp"
                                         app:endIconMode="custom"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry,TooManyViews">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -1260,8 +1273,8 @@
                                                     android:layout_height="wrap_content"
                                                     android:layout_marginTop="3dp"
                                                     android:paddingStart="@dimen/_10sdp"
-                                                    android:text="@string/street_type_c"
-                                                    android:textSize="11sp"
+                                                    android:text="@string/street_type"
+                                                    android:textSize="@dimen/_10sdp"
                                                     tools:ignore="RtlSymmetry" />
 
 
@@ -1294,7 +1307,7 @@
                                             android:layout_marginEnd="@dimen/_2sdp"
                                             android:layout_weight="1"
                                             android:background="@android:color/transparent"
-                                            android:hint="@string/street_name"
+                                            android:hint="@string/address_street_name"
                                             android:textColor="@color/textOnWhite"
                                             android:theme="@style/TextInputLayoutAppearance"
                                             app:boxBackgroundColor="@android:color/transparent"
@@ -1306,6 +1319,7 @@
                                             app:boxStrokeWidth="0dp"
                                             app:endIconMode="custom"
                                             app:hintTextColor="#162651"
+                                            app:hintTextAppearance="@style/TextLabel"
                                             tools:ignore="RtlSymmetry">
 
                                             <com.google.android.material.textfield.TextInputEditText
@@ -1334,7 +1348,7 @@
                                             android:layout_marginEnd="@dimen/_2sdp"
                                             android:layout_weight="0.50"
                                             android:background="@android:color/transparent"
-                                            android:hint="@string/address_number"
+                                            android:hint="@string/profile_number"
                                             android:textColor="@color/textOnWhite"
                                             android:theme="@style/TextInputLayoutAppearance"
                                             app:boxBackgroundColor="@android:color/transparent"
@@ -1346,6 +1360,7 @@
                                             app:boxStrokeWidth="0dp"
                                             app:endIconMode="custom"
                                             app:hintTextColor="#162651"
+                                            app:hintTextAppearance="@style/TextLabel"
                                             tools:ignore="RtlSymmetry">
 
                                             <com.google.android.material.textfield.TextInputEditText
@@ -1377,6 +1392,7 @@
                                             app:boxStrokeWidth="0dp"
                                             app:endIconMode="custom"
                                             app:hintTextColor="#162651"
+                                            app:hintTextAppearance="@style/TextLabel"
                                             tools:ignore="RtlSymmetry">
 
                                             <com.google.android.material.textfield.TextInputEditText
@@ -1405,7 +1421,7 @@
                                             android:layout_marginEnd="@dimen/_2sdp"
                                             android:layout_weight="1"
                                             android:background="@android:color/transparent"
-                                            android:hint="@string/address_entrance"
+                                            android:hint="@string/entrance"
                                             android:textColor="@color/textOnWhite"
                                             android:theme="@style/TextInputLayoutAppearance"
                                             app:boxBackgroundColor="@android:color/transparent"
@@ -1417,6 +1433,7 @@
                                             app:boxStrokeWidth="0dp"
                                             app:endIconMode="custom"
                                             app:hintTextColor="#162651"
+                                            app:hintTextAppearance="@style/TextLabel"
                                             tools:ignore="RtlSymmetry">
 
                                             <com.google.android.material.textfield.TextInputEditText
@@ -1436,7 +1453,7 @@
                                             android:layout_marginEnd="@dimen/_2sdp"
                                             android:layout_weight="1"
                                             android:background="@android:color/transparent"
-                                            android:hint="@string/address_apartment"
+                                            android:hint="@string/apartment"
                                             android:textColor="@color/textOnWhite"
                                             android:theme="@style/TextInputLayoutAppearance"
                                             app:boxBackgroundColor="@android:color/transparent"
@@ -1448,6 +1465,7 @@
                                             app:boxStrokeWidth="0dp"
                                             app:endIconMode="custom"
                                             app:hintTextColor="#162651"
+                                            app:hintTextAppearance="@style/TextLabel"
                                             tools:ignore="RtlSymmetry">
 
                                             <com.google.android.material.textfield.TextInputEditText
@@ -1467,7 +1485,7 @@
                                             android:layout_marginEnd="@dimen/_2sdp"
                                             android:layout_weight="1"
                                             android:background="@android:color/transparent"
-                                            android:hint="@string/address_floor"
+                                            android:hint="@string/floor"
                                             android:textColor="@color/textOnWhite"
                                             android:theme="@style/TextInputLayoutAppearance"
                                             app:boxBackgroundColor="@android:color/transparent"
@@ -1479,6 +1497,7 @@
                                             app:boxStrokeWidth="0dp"
                                             app:endIconMode="custom"
                                             app:hintTextColor="#162651"
+                                            app:hintTextAppearance="@style/TextLabel"
                                             tools:ignore="RtlSymmetry">
 
                                             <com.google.android.material.textfield.TextInputEditText
@@ -1486,7 +1505,7 @@
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:fontFamily="@font/inter_medium_500"
-                                                android:inputType="none"
+                                                android:inputType="text"
                                                 android:singleLine="true"
                                                 android:textSize="@dimen/_11sdp" />
 
@@ -1510,8 +1529,8 @@
                                         app:boxCornerRadiusTopStart="0dp"
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
-                                        app:endIconMode="custom"
                                         app:hintTextColor="#162651"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         tools:ignore="RtlSymmetry">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -1519,7 +1538,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:fontFamily="@font/inter_medium_500"
-                                            android:inputType="none"
+                                            android:inputType="text"
                                             android:singleLine="true"
                                             android:textSize="@dimen/_11sdp" />
 
@@ -1644,7 +1663,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/driving_License_"
-                                        android:textSize="11sp" />
+                                        android:textSize="@dimen/_10sdp" />
 
                                     <TextView
                                         android:id="@+id/lblCertificate"
@@ -1653,6 +1672,7 @@
                                         android:ellipsize="end"
                                         android:fontFamily="@font/inter_medium_500"
                                         android:maxLines="1"
+                                        android:textSize="@dimen/_10sdp"
                                         android:text="@string/uploading_"
                                         android:visibility="gone" />
 
@@ -1705,7 +1725,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/cnp_id"
-                                        android:textSize="11sp" />
+                                        android:textSize="@dimen/_10sdp" />
 
                                     <TextView
                                         android:id="@+id/lblId"
@@ -1715,6 +1735,7 @@
                                         android:fontFamily="@font/inter_medium_500"
                                         android:maxLines="1"
                                         android:text="@string/uploading_"
+                                        android:textSize="@dimen/_10sdp"
                                         android:visibility="gone" />
                                 </LinearLayout>
 
@@ -1746,8 +1767,8 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check1"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:checked="false"

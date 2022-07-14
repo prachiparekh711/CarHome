@@ -35,14 +35,6 @@
             android:textColor="@color/textOnWhite"
             android:textSize="@dimen/_15sdp" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/home"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_40sdp"
-            android:adjustViewBounds="true"
-            android:padding="@dimen/_5sdp"
-            android:src="@drawable/ic_account"
-            android:visibility="invisible" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/mMenu"
@@ -79,7 +71,7 @@
             android:layout_marginBottom="@dimen/_10sdp"
             android:fillViewport="true"
             android:paddingVertical="@dimen/_10sdp"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -129,12 +121,13 @@
 
 
                         <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/companyNameLabel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_2sdp"
                             android:layout_marginEnd="@dimen/_2sdp"
                             android:background="@android:color/transparent"
-                            android:hint="@string/company_name_c"
+                            android:hint="@string/companyName"
                             android:textColor="@color/textOnWhite"
                             android:theme="@style/TextInputLayoutAppearance"
                             app:boxBackgroundColor="@android:color/transparent"
@@ -144,6 +137,7 @@
                             app:boxCornerRadiusTopStart="0dp"
                             app:boxStrokeColor="#FFF"
                             app:boxStrokeWidth="0dp"
+                            app:hintTextAppearance="@style/TextLabel"
                             app:hintTextColor="@color/items_color"
                             tools:ignore="RtlSymmetry">
 
@@ -167,13 +161,14 @@
 
 
                             <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/cuiLabel"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_2sdp"
                                 android:layout_marginEnd="@dimen/_2sdp"
                                 android:layout_weight="1"
                                 android:background="@android:color/transparent"
-                                android:hint="@string/cui_c"
+                                android:hint="@string/cui"
                                 android:textColor="@color/textOnWhite"
                                 android:theme="@style/TextInputLayoutAppearance"
                                 app:boxBackgroundColor="@android:color/transparent"
@@ -183,6 +178,7 @@
                                 app:boxCornerRadiusTopStart="0dp"
                                 app:boxStrokeColor="#FFF"
                                 app:boxStrokeWidth="0dp"
+                                app:hintTextAppearance="@style/TextLabel"
                                 app:hintTextColor="@color/items_color"
                                 tools:ignore="RtlSymmetry">
 
@@ -191,7 +187,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/inter_medium_500"
-                                    android:inputType="number"
+                                    android:inputType="textCapCharacters"
                                     android:singleLine="true"
                                     android:textColor="@color/items_color"
                                     android:textSize="@dimen/_11sdp" />
@@ -200,13 +196,14 @@
 
 
                             <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/naceLabel"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_2sdp"
                                 android:layout_marginEnd="@dimen/_2sdp"
                                 android:layout_weight="1"
                                 android:background="@android:color/transparent"
-                                android:hint="@string/nace_code_c"
+                                android:hint="@string/nace_code"
                                 android:textColor="@color/textOnWhite"
                                 android:theme="@style/TextInputLayoutAppearance"
                                 app:boxBackgroundColor="@android:color/transparent"
@@ -218,6 +215,7 @@
                                 app:boxStrokeWidth="0dp"
                                 app:endIconDrawable="@drawable/ic_arrow_down_id"
                                 app:endIconMode="custom"
+                                app:hintTextAppearance="@style/TextLabel"
                                 app:hintTextColor="@color/items_color"
                                 tools:ignore="RtlSymmetry">
 
@@ -227,6 +225,7 @@
                                     android:layout_height="wrap_content"
                                     android:clickable="false"
                                     android:cursorVisible="false"
+                                    android:ellipsize="end"
                                     android:focusable="true"
                                     android:focusableInTouchMode="false"
                                     android:fontFamily="@font/inter_medium_500"
@@ -243,13 +242,14 @@
 
 
                         <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/actTypeLabel"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
                             android:layout_marginTop="@dimen/_2sdp"
                             android:layout_marginEnd="@dimen/_2sdp"
                             android:layout_weight="1"
                             android:background="@android:color/transparent"
-                            android:hint="@string/act_type_"
+                            android:hint="@string/act_type"
                             android:textColor="@color/textOnWhite"
                             android:theme="@style/TextInputLayoutAppearance"
                             app:boxBackgroundColor="@android:color/transparent"
@@ -261,6 +261,7 @@
                             app:boxStrokeWidth="0dp"
                             app:endIconDrawable="@drawable/ic_arrow_down_id"
                             app:endIconMode="custom"
+                            app:hintTextAppearance="@style/TextLabel"
                             app:hintTextColor="@color/items_color"
                             tools:ignore="RtlSymmetry">
 
@@ -282,12 +283,13 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/registrationLabel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_2sdp"
                             android:layout_marginEnd="@dimen/_2sdp"
                             android:background="@android:color/transparent"
-                            android:hint="@string/reg_of_company_"
+                            android:hint="@string/reg_of_company"
                             android:textColor="@color/textOnWhite"
                             android:theme="@style/TextInputLayoutAppearance"
                             app:boxBackgroundColor="@android:color/transparent"
@@ -297,6 +299,7 @@
                             app:boxCornerRadiusTopStart="0dp"
                             app:boxStrokeColor="#FFF"
                             app:boxStrokeWidth="0dp"
+                            app:hintTextAppearance="@style/TextLabel"
                             app:hintTextColor="@color/items_color"
                             tools:ignore="RtlSymmetry">
 
@@ -305,7 +308,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/inter_medium_500"
-                                android:inputType="text"
+                                android:inputType="textCapCharacters"
                                 android:singleLine="true"
                                 android:textColor="@color/items_color"
                                 android:textSize="@dimen/_11sdp" />
@@ -361,7 +364,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <LinearLayout
-                        android:id="@+id/p_hidden_view"
+                        android:id="@+id/personalInfoView2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="#FAFAFB"
@@ -391,7 +394,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:id="@+id/tv_cc"
+                                    android:id="@+id/phoneCountryCodeLabel"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/_10sdp"
@@ -399,22 +402,10 @@
                                     android:fontFamily="@font/inter_medium_500"
                                     android:text="@string/country_code"
                                     android:textColor="@color/items_color"
-                                    android:textSize="12sp"
+                                    android:textSize="@dimen/_9sdp"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
                                     tools:ignore="RtlSymmetry" />
-
-                                <!--                            <ImageView-->
-                                <!--                                android:id="@+id/phoneFlag"-->
-                                <!--                                android:layout_width="@dimen/_20sdp"-->
-                                <!--                                android:layout_height="@dimen/_15sdp"-->
-                                <!--                                android:layout_gravity="center_vertical"-->
-                                <!--                                android:src="@drawable/flag_india"-->
-                                <!--                                android:layout_marginStart="@dimen/_2sdp"-->
-                                <!--                                app:layout_constraintBottom_toBottomOf="parent"-->
-                                <!--                                app:layout_constraintLeft_toLeftOf="@+id/tv_cc"-->
-                                <!--                                app:layout_constraintTop_toBottomOf="@+id/tv_cc"-->
-                                <!--                                tools:ignore="RtlSymmetry" />-->
 
                                 <TextView
                                     android:id="@+id/phoneFlag"
@@ -426,8 +417,8 @@
                                     android:text="@string/romania_flag"
                                     android:textColor="@color/white"
                                     app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintLeft_toLeftOf="@+id/tv_cc"
-                                    app:layout_constraintTop_toBottomOf="@+id/tv_cc"
+                                    app:layout_constraintLeft_toLeftOf="@+id/phoneCountryCodeLabel"
+                                    app:layout_constraintTop_toBottomOf="@+id/phoneCountryCodeLabel"
                                     tools:ignore="RtlSymmetry" />
 
                                 <TextView
@@ -458,6 +449,7 @@
                             </androidx.constraintlayout.widget.ConstraintLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/phoneLabel"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/_2sdp"
@@ -474,6 +466,7 @@
                                 app:boxCornerRadiusTopStart="0dp"
                                 app:boxStrokeColor="#FFF"
                                 app:boxStrokeWidth="0dp"
+                                app:hintTextAppearance="@style/TextLabel"
                                 app:hintTextColor="@color/items_color"
                                 tools:ignore="RtlSymmetry">
 
@@ -494,6 +487,7 @@
 
 
                         <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/emailLabel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_2sdp"
@@ -509,6 +503,7 @@
                             app:boxCornerRadiusTopStart="0dp"
                             app:boxStrokeColor="#FFF"
                             app:boxStrokeWidth="0dp"
+                            app:hintTextAppearance="@style/TextLabel"
                             app:hintTextColor="@color/items_color"
                             tools:ignore="RtlSymmetry">
 
@@ -559,7 +554,7 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:id="@+id/adds_hidden_view"
+                    android:id="@+id/address_hidden_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#FAFAFB"
@@ -590,13 +585,13 @@
                                 android:paddingTop="@dimen/_5sdp">
 
                                 <TextView
-                                    android:id="@+id/cou"
+                                    android:id="@+id/countryCodeLabel"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/_10sdp"
-                                    android:text="@string/country_c"
+                                    android:text="@string/country"
                                     android:textColor="#162651"
-                                    android:textSize="11sp"
+                                    android:textSize="@dimen/_9sdp"
                                     app:layout_constraintLeft_toLeftOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
                                     tools:ignore="RtlSymmetry" />
@@ -610,9 +605,9 @@
                                     android:text="@string/romania_flag"
                                     android:textColor="@color/white"
                                     app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintLeft_toLeftOf="@+id/cou"
-                                    app:layout_constraintRight_toRightOf="@+id/cou"
-                                    app:layout_constraintTop_toBottomOf="@+id/cou"
+                                    app:layout_constraintLeft_toLeftOf="@+id/countryCodeLabel"
+                                    app:layout_constraintRight_toRightOf="@+id/countryCodeLabel"
+                                    app:layout_constraintTop_toBottomOf="@+id/countryCodeLabel"
                                     tools:ignore="RtlSymmetry" />
 
                                 <TextView
@@ -653,7 +648,7 @@
                                     android:layout_marginTop="@dimen/_2sdp"
                                     android:layout_marginEnd="@dimen/_2sdp"
                                     android:background="@android:color/transparent"
-                                    android:hint="@string/address_county_c"
+                                    android:hint="@string/address_county"
                                     android:textColor="@color/textOnWhite"
                                     android:theme="@style/TextInputLayoutAppearance"
                                     app:boxBackgroundColor="@android:color/transparent"
@@ -665,6 +660,7 @@
                                     app:boxStrokeWidth="0dp"
                                     app:endIconDrawable="@drawable/ic_arrow_down_id"
                                     app:endIconMode="custom"
+                                    app:hintTextAppearance="@style/TextLabel"
                                     app:hintTextColor="#162651"
                                     tools:ignore="RtlSymmetry,TooManyViews">
 
@@ -704,6 +700,7 @@
                                     app:boxStrokeWidth="0dp"
                                     app:endIconDrawable="@drawable/ic_arrow_down_id"
                                     app:endIconMode="custom"
+                                    app:hintTextAppearance="@style/TextLabel"
                                     app:hintTextColor="#162651"
                                     tools:ignore="RtlSymmetry,TooManyViews">
 
@@ -731,7 +728,7 @@
                                     android:layout_marginTop="@dimen/_2sdp"
                                     android:layout_marginEnd="@dimen/_2sdp"
                                     android:background="@android:color/transparent"
-                                    android:hint="@string/address_city_c"
+                                    android:hint="@string/address_city"
                                     android:textColor="@color/textOnWhite"
                                     android:theme="@style/TextInputLayoutAppearance"
                                     app:boxBackgroundColor="@android:color/transparent"
@@ -743,6 +740,7 @@
                                     app:boxStrokeWidth="0dp"
                                     app:endIconDrawable="@drawable/ic_arrow_down_id"
                                     app:endIconMode="custom"
+                                    app:hintTextAppearance="@style/TextLabel"
                                     app:hintTextColor="#162651"
                                     tools:ignore="RtlSymmetry,TooManyViews">
 
@@ -781,6 +779,7 @@
                                     app:boxStrokeColor="#FFF"
                                     app:boxStrokeWidth="0dp"
                                     app:endIconMode="custom"
+                                    app:hintTextAppearance="@style/TextLabel"
                                     app:hintTextColor="#162651"
                                     tools:ignore="RtlSymmetry,TooManyViews">
 
@@ -823,12 +822,13 @@
                                             android:layout_height="match_parent">
 
                                             <TextView
+                                                android:id="@+id/streetTypeLabel"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:layout_marginTop="3dp"
                                                 android:paddingStart="@dimen/_10sdp"
                                                 android:text="@string/street_type"
-                                                android:textSize="11sp"
+                                                android:textSize="@dimen/_9sdp"
                                                 tools:ignore="RtlSymmetry" />
 
 
@@ -856,12 +856,13 @@
                                     </LinearLayout>
 
                                     <com.google.android.material.textfield.TextInputLayout
+                                        android:id="@+id/streetNameLabel"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_marginEnd="@dimen/_2sdp"
                                         android:layout_weight="1"
                                         android:background="@android:color/transparent"
-                                        android:hint="@string/street_name"
+                                        android:hint="@string/address_street_name"
                                         android:textColor="@color/textOnWhite"
                                         android:theme="@style/TextInputLayoutAppearance"
                                         app:boxBackgroundColor="@android:color/transparent"
@@ -872,6 +873,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:endIconMode="custom"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         app:hintTextColor="#162651"
                                         tools:ignore="RtlSymmetry">
 
@@ -896,12 +898,13 @@
                                     android:orientation="horizontal">
 
                                     <com.google.android.material.textfield.TextInputLayout
+                                        android:id="@+id/buildingNoLabel"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_marginEnd="@dimen/_2sdp"
                                         android:layout_weight="0.50"
                                         android:background="@android:color/transparent"
-                                        android:hint="@string/address_number"
+                                        android:hint="@string/profile_number"
                                         android:textColor="@color/textOnWhite"
                                         android:theme="@style/TextInputLayoutAppearance"
                                         app:boxBackgroundColor="@android:color/transparent"
@@ -912,6 +915,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:endIconMode="custom"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         app:hintTextColor="#162651"
                                         tools:ignore="RtlSymmetry">
 
@@ -927,6 +931,7 @@
                                     </com.google.android.material.textfield.TextInputLayout>
 
                                     <com.google.android.material.textfield.TextInputLayout
+                                        android:id="@+id/blockLabel"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_marginEnd="@dimen/_2sdp"
@@ -943,6 +948,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:endIconMode="custom"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         app:hintTextColor="#162651"
                                         tools:ignore="RtlSymmetry">
 
@@ -967,12 +973,13 @@
                                     android:orientation="horizontal">
 
                                     <com.google.android.material.textfield.TextInputLayout
+                                        android:id="@+id/entranceLabel"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_marginEnd="@dimen/_2sdp"
                                         android:layout_weight="1"
                                         android:background="@android:color/transparent"
-                                        android:hint="@string/address_entrance"
+                                        android:hint="@string/entrance"
                                         android:textColor="@color/textOnWhite"
                                         android:theme="@style/TextInputLayoutAppearance"
                                         app:boxBackgroundColor="@android:color/transparent"
@@ -983,6 +990,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:endIconMode="custom"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         app:hintTextColor="#162651"
                                         tools:ignore="RtlSymmetry">
 
@@ -998,12 +1006,13 @@
                                     </com.google.android.material.textfield.TextInputLayout>
 
                                     <com.google.android.material.textfield.TextInputLayout
+                                        android:id="@+id/apartmentLabel"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_marginEnd="@dimen/_2sdp"
                                         android:layout_weight="1"
                                         android:background="@android:color/transparent"
-                                        android:hint="@string/address_apartment"
+                                        android:hint="@string/apartment"
                                         android:textColor="@color/textOnWhite"
                                         android:theme="@style/TextInputLayoutAppearance"
                                         app:boxBackgroundColor="@android:color/transparent"
@@ -1014,6 +1023,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:endIconMode="custom"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         app:hintTextColor="#162651"
                                         tools:ignore="RtlSymmetry">
 
@@ -1029,12 +1039,13 @@
                                     </com.google.android.material.textfield.TextInputLayout>
 
                                     <com.google.android.material.textfield.TextInputLayout
+                                        android:id="@+id/floorLabel"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_marginEnd="@dimen/_2sdp"
                                         android:layout_weight="1"
                                         android:background="@android:color/transparent"
-                                        android:hint="@string/address_floor"
+                                        android:hint="@string/floor"
                                         android:textColor="@color/textOnWhite"
                                         android:theme="@style/TextInputLayoutAppearance"
                                         app:boxBackgroundColor="@android:color/transparent"
@@ -1045,6 +1056,7 @@
                                         app:boxStrokeColor="#FFF"
                                         app:boxStrokeWidth="0dp"
                                         app:endIconMode="custom"
+                                        app:hintTextAppearance="@style/TextLabel"
                                         app:hintTextColor="#162651"
                                         tools:ignore="RtlSymmetry">
 
@@ -1062,6 +1074,7 @@
                                 </LinearLayout>
 
                                 <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/zipCodeLabel"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_marginTop="@dimen/_2sdp"
@@ -1078,6 +1091,7 @@
                                     app:boxStrokeColor="#FFF"
                                     app:boxStrokeWidth="0dp"
                                     app:endIconMode="custom"
+                                    app:hintTextAppearance="@style/TextLabel"
                                     app:hintTextColor="#162651"
                                     tools:ignore="RtlSymmetry">
 
@@ -1117,8 +1131,8 @@
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/check"
-            android:layout_width="30dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:checked="false"

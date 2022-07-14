@@ -1,21 +1,25 @@
 package ro.westaco.carhome.presentation.screens.settings.security
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_password_change_success.*
 import ro.westaco.carhome.R
+import ro.westaco.carhome.presentation.base.BaseFragment
+import ro.westaco.carhome.presentation.screens.settings.extras.CommenViewModel
 
-class PasswordChangeSuccessFragment : Fragment() {
+@AndroidEntryPoint
+class PasswordChangeSuccessFragment : BaseFragment<CommenViewModel>() {
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_password_change_success, container, false)
+    override fun getContentView() = R.layout.fragment_password_change_success
+
+    override fun initUi() {
+
+        backToLogin.setOnClickListener {
+
+        }
+    }
+
+    override fun setObservers() {
     }
 
 }

@@ -6,7 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.AddReminderRequest
-import ro.westaco.carhome.data.sources.remote.requests.ReminderNotification
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.LocationV2Item
 import ro.westaco.carhome.data.sources.remote.responses.models.Reminder
@@ -14,7 +13,6 @@ import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.utils.DateTimeUtils
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.util.*
@@ -46,10 +44,7 @@ class AddNewReminderViewModel @Inject constructor(
     }
 
     fun fetchRemoteData(id: Long) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
+
 
         api.getRemindersDetail(id)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -130,7 +125,7 @@ class AddNewReminderViewModel @Inject constructor(
         notes: String,
         dueDate: String,
         dueTime: String,
-        notifications: ArrayList<ReminderNotification>,
+        notifications: ArrayList<NotificationWithUnit>,
         selectedTag: List<CatalogItem>?,
         repeatPos: Int,
         locationItem: LocationV2Item?,
@@ -139,14 +134,10 @@ class AddNewReminderViewModel @Inject constructor(
     ) {
         uiEventStream.value = UiEvent.HideKeyboard
 
-        if (!validateFields(title, dueDate, dueTime)) {
+        if (!validateFields(title, dueDate, dueTime, notifications)) {
             return
         }
 
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
 
         val formattedDueDate = DateTimeUtils.convertToServerDate(app, dueDate)
 
@@ -155,6 +146,7 @@ class AddNewReminderViewModel @Inject constructor(
         }
 
         val repeatId = repeatLiveData.value?.get(repeatPos)?.id
+        val reminderNotifications = notifications.map { it.reminderNotification }
 
         val addReminderRequest =
             AddReminderRequest(
@@ -162,7 +154,7 @@ class AddNewReminderViewModel @Inject constructor(
                 notes,
                 formattedDueDate,
                 dueTime,
-                notifications,
+                reminderNotifications,
                 tagIds,
                 repeatId,
                 locationItem?.guid
@@ -175,12 +167,9 @@ class AddNewReminderViewModel @Inject constructor(
                         api.editReminder(it1, it)
                             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                             .subscribe({
-                                uiEventStream.value = UiEvent.ShowToast(R.string.edit_success_msg)
                                 uiEventStream.value = UiEvent.NavBack
                             }, {
-                                //   it.printStackTrace()
-                                uiEventStream.value =
-                                    UiEvent.ShowToast(R.string.server_saving_error)
+
                             })
                     }
                 }
@@ -188,17 +177,32 @@ class AddNewReminderViewModel @Inject constructor(
             api.createReminder(addReminderRequest)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    uiEventStream.value = UiEvent.ShowToast(R.string.save_success_msg)
                     uiEventStream.value = UiEvent.NavBack
                 }, {
-                    //   it.printStackTrace()
-                    uiEventStream.value =
-                        UiEvent.ShowToast(R.string.server_saving_error)
+
                 })
         }
     }
 
-    private fun validateFields(title: String, dueDate: String, dueTime: String): Boolean {
+
+    internal fun onDelete(item: Reminder) {
+
+        item.id?.let {
+            api.deleteReminder(it)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                }, {
+                    //   it.printStackTrace()
+                })
+        }
+    }
+
+    private fun validateFields(
+        title: String,
+        dueDate: String,
+        dueTime: String,
+        notifications: ArrayList<NotificationWithUnit>
+    ): Boolean {
         if (title.isEmpty()) {
             uiEventStream.value = UiEvent.ShowToast(R.string.err_no_title)
             return false
@@ -206,6 +210,20 @@ class AddNewReminderViewModel @Inject constructor(
         if (dueDate.isEmpty() || dueTime.isEmpty()) {
             uiEventStream.value = UiEvent.ShowToast(R.string.err_no_duedatetime)
             return false
+        }
+        if (notifications.isNotEmpty()) {
+            val notificationWithUnit = notifications.first()
+            val dueDateTime = "$dueDate $dueTime"
+            val nowDate = DateTimeUtils.getNowDate()
+            val dueDateTimeDate = DateTimeUtils.stringDatetimeToDate(dueDateTime)
+            val notificationDate = DateTimeUtils.addSelectedPeriodToDate(
+                nowDate, notificationWithUnit.reminderNotification.duration!!.toInt(),
+                notificationWithUnit.unitName
+            )
+            if (DateTimeUtils.firstDateIsBeforeSecondDate(dueDateTimeDate, notificationDate)) {
+                uiEventStream.value = UiEvent.ShowToast(R.string.err_notification_after_duedate)
+                return false
+            }
         }
         return true
     }

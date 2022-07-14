@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.ProgressItem
@@ -54,14 +53,11 @@ class DrivingModeModel @Inject constructor(
 
 
     private fun fetchRemoteData() {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
+
         api.getSimpleCatalog("NOM_REMINDER_TAG")
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
-                remindersTabData.value = resp?.data
+                remindersTabData.value = resp?.data!!
             }, {
             }
             )
@@ -86,10 +82,10 @@ class DrivingModeModel @Inject constructor(
                 carsLivedata.value = null
             })
 
-        api.getReminders()
+        api.getReminders(false)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
-                remindersLiveData.value = resp?.data
+                remindersLiveData.value = resp?.data!!
             }, {
                 //   it.printStackTrace()
             })
@@ -97,10 +93,7 @@ class DrivingModeModel @Inject constructor(
     }
 
     internal fun onDelete(item: Reminder) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
+
 
         val reminders = remindersLiveData.value
 
@@ -108,13 +101,11 @@ class DrivingModeModel @Inject constructor(
             api.deleteReminder(it)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
 
                     reminders?.remove(item)
-                    remindersLiveData.value = reminders
+                    remindersLiveData.value = reminders!!
                 }, {
                     //   it.printStackTrace()
-                    uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
                 })
         }
     }

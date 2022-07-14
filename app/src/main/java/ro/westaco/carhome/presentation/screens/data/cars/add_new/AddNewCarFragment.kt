@@ -1,5 +1,6 @@
 package ro.westaco.carhome.presentation.screens.data.cars.add_new
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,8 +11,16 @@ import android.provider.DocumentsContract
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.NumberPicker
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add_new_car.*
 import ro.westaco.carhome.R
@@ -21,14 +30,20 @@ import ro.westaco.carhome.data.sources.remote.responses.models.Country
 import ro.westaco.carhome.data.sources.remote.responses.models.LeasingCompany
 import ro.westaco.carhome.data.sources.remote.responses.models.VehicleDetails
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DeleteDialogFragment
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.common.DeleteDialogFragment
 import ro.westaco.carhome.presentation.screens.data.cars.details.CarDetailsOtherAttachmentAdapter
 import ro.westaco.carhome.presentation.screens.data.cars.leasingCompany.LeasingCompanyFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
-import ro.westaco.carhome.utils.*
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
+import ro.westaco.carhome.utils.CatalogUtils
+import ro.westaco.carhome.utils.FileUtil
+import ro.westaco.carhome.utils.LeasingCompanyUtils
+import ro.westaco.carhome.utils.RegexData
+import ro.westaco.carhome.views.Progressbar
+import ro.westaco.carhome.views.SwitchButton
 import java.io.File
+import java.util.*
 
 //C- Add CarDetails
 @AndroidEntryPoint
@@ -47,6 +62,7 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
     var vehicleCategoryList: ArrayList<CatalogItem> = ArrayList()
     var vehicleBrandList: ArrayList<CatalogItem> = ArrayList()
     var fuelTypeList: ArrayList<CatalogItem> = ArrayList()
+    var leasingList: ArrayList<LeasingCompany> = ArrayList()
 
     companion object {
 
@@ -66,20 +82,26 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
         arguments?.let {
             isEdit = it.getBoolean(ARG_IS_EDIT)
             vehicleDetails = it.getSerializable(ARG_CAR) as? VehicleDetails?
+            vin_number = it.getString(ARG_QUERY_VEHICLE).toString()
+            regi_number = it.getString(Regi_Number).toString()
 
-            vin_number = it.get(ARG_QUERY_VEHICLE).toString()
-            regi_number = it.get(Regi_Number).toString()
         }
     }
 
-
     override fun initUi() {
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
-        licensePlate.setText(regi_number)
-        vin.setText(vin_number)
 
-        rcyViewOther.layoutManager = LinearLayoutManager(context)
+        if (regi_number.isNotEmpty()) {
+            licensePlate.setText(regi_number)
+            vin.setText(vin_number)
+        }
+
+        if (vehicleDetails != null) {
+            licensePlate.setText(vehicleDetails?.licensePlate)
+            vin.setText(vehicleDetails?.vehicleIdentificationNumber)
+        }
+
+        rcyViewOther.layoutManager = LinearLayoutManager(requireContext())
         back.setOnClickListener {
             viewModel.onBack()
         }
@@ -92,21 +114,53 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
             viewModel.onRootClicked()
         }
 
+        year.setOnClickListener {
+            val inflater = this.layoutInflater
+            val dialogView: View = inflater.inflate(R.layout.number_picker_dialog, null)
+            val numberPicker =
+                dialogView.findViewById<View>(R.id.dialog_number_picker) as NumberPicker
+            val calendar: Calendar = Calendar.getInstance()
+            numberPicker.maxValue = calendar.get(Calendar.YEAR)
+            numberPicker.minValue = 1950
+            numberPicker.wrapSelectorWheel = false
+
+            val givenYear = vehicleDetails?.manufacturingYear
+            if (givenYear != null)
+                numberPicker.value = givenYear
+            else
+                numberPicker.value = calendar.get(Calendar.YEAR)
+            numberPicker.setOnValueChangedListener { numberPicker, i, i1 ->
+
+            }
+            val builder = MaterialAlertDialogBuilder(
+                requireContext(),
+                R.style.Body_ThemeOverlay_MaterialComponents_MaterialAlertDialog
+            )
+            builder.setTitle(requireContext().getString(R.string.year_info))
+            builder.setView(dialogView)
+            builder.setCancelable(true)
+            builder.setPositiveButton(requireContext().resources.getString(R.string.ok)) { dialogInterface, i ->
+                year.text = numberPicker.value.toString()
+            }
+            builder.setNegativeButton(requireContext().resources.getString(R.string.cancel)) { dialogInterface, i ->
+            }
+            builder.show()
+        }
+
+
         switch_button.setOnCheckedChangeListener(object : SwitchButton.OnCheckedChangeListener {
             override fun onCheckedChanged(view: SwitchButton?, isChecked: Boolean) {
-
-                /* leasingCompany.isVisible = isChecked*/
                 leasingCompany.isEnabled = isChecked
-
             }
         })
 
         leasingCompany.setOnClickListener {
-            if (viewModel.leasingCompaniesData.isEmpty()) {
+            if (leasingList.isEmpty()) {
                 showErrorInfo(requireContext(), getString(R.string.no_companies_found))
             } else {
                 val dialog = LeasingCompanyFragment()
                 dialog.listener = this
+                dialog.leasingList = leasingList
                 dialog.show(childFragmentManager, LeasingCompanyFragment.TAG)
             }
         }
@@ -164,12 +218,12 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
                 manufacturer.selectedItemPosition,
                 model.text.toString(),
                 vin.text.toString(),
-                year.text.toString(),
-                maxAllowableMass.text.toString(),
-                engineSize.text.toString(),
-                power.text.toString(),
+                year.text.toString().ifBlank { null },
+                maxAllowableMass.text.toString().ifBlank { null },
+                engineSize.text.toString().ifBlank { null },
+                power.text.toString().ifBlank { null },
                 fuelType.selectedItemPosition,
-                noSeats.text.toString(),
+                noSeats.text.toString().ifBlank { null },
                 civ.text.toString(),
                 leasingCompanyItem?.id,
                 eventList,
@@ -185,7 +239,7 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
                 licensePlate.setText(it.licensePlate)
                 model.setText(it.model)
                 vin.setText(it.vehicleIdentificationNumber)
-                year.setText((it.manufacturingYear ?: "").toString())
+                year.text = (it.manufacturingYear ?: "").toString()
                 maxAllowableMass.setText((it.maxAllowableMass ?: "").toString())
                 engineSize.setText((it.engineSize ?: "").toString())
                 power.setText((it.enginePower ?: "").toString())
@@ -207,7 +261,6 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
 
                 otherAdapter.onItemClick = { attachments, from ->
                     if (from == "VIEW") {
-                        progressbar?.showPopup()
                         attachments.href?.let { it ->
                             val url = ApiModule.BASE_URL_RESOURCES + it
                             val intent = Intent(requireContext(), PdfActivity::class.java)
@@ -241,12 +294,47 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
         }
 
         llUploadOther.setOnClickListener {
-            val result = FileUtil.checkPermission(requireContext())
-            if (result) {
-                callFileManagerForOther()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                Dexter.withContext(requireActivity())
+                    .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    .withListener(object : MultiplePermissionsListener {
+                        override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                            report?.let {
+                                if (report.areAllPermissionsGranted()) {
+                                    callFileManagerForOther()
+                                }
+                            }
+                        }
+
+                        override fun onPermissionRationaleShouldBeShown(
+                            permissions: MutableList<PermissionRequest>?,
+                            token: PermissionToken?
+                        ) {
+                            token?.continuePermissionRequest()
+                        }
+                    }).withErrorListener {}
+
+                    .check()
+
             } else {
-                FileUtil.requestPermission(requireActivity())
+                if (permissionUpload()) {
+                    callFileManagerForOther()
+                }
             }
+
         }
 
         registrationCountry?.onItemSelectedListener =
@@ -260,7 +348,7 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
                     position: Int,
                     id: Long,
                 ) {
-                    viewModel.leasingCompaniesData.clear()
+                    progressbar?.showPopup()
                     viewModel.fetchLeasingCompanies(countryList[position].code)
                 }
             }
@@ -304,7 +392,6 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
                     )
                 }
             }
-            progressbar?.dismissPopup()
         }
 
         viewModel.vehicleUsageData.observe(viewLifecycleOwner) { usageList ->
@@ -334,7 +421,6 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
                 }
             }
         }
-
 
         viewModel.countryData.observe(viewLifecycleOwner) { countryList ->
             if (countryList != null) {
@@ -438,9 +524,25 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
             }
         }
 
+        viewModel.leasingCompaniesData.observe(viewLifecycleOwner) {
+            if (it != null) {
+                this.leasingList = it
+                if (isEdit && vehicleDetails != null) {
+                    if (switch_button.isChecked) {
+                        leasingCompanyItem =
+                            LeasingCompanyUtils.findById(
+                                it,
+                                vehicleDetails?.leasingCompany
+                            )
+                        leasingCompany.setText(leasingCompanyItem?.name)
+                    }
+                }
+            }
+            progressbar?.dismissPopup()
+        }
+
         viewModel.actionStream.observe(viewLifecycleOwner) {
             when (it) {
-                is AddNewCarViewModel.ACTION.SetLeasingCompanyData -> setLeasingCompanyData(it.leasingCompaniesData)
                 is AddNewCarViewModel.ACTION.OnRefresh -> it.vehicleDetails?.let { it1 ->
                     onSuccess(
                         it1
@@ -454,19 +556,6 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
         this.vehicleDetails = vehicle
         initUi()
         progressbar?.dismissPopup()
-    }
-
-    private fun setLeasingCompanyData(leasingCompaniesData: ArrayList<LeasingCompany>) {
-        if (isEdit && vehicleDetails != null) {
-            if (switch_button.isChecked) {
-                leasingCompanyItem =
-                    LeasingCompanyUtils.findById(
-                        leasingCompaniesData,
-                        vehicleDetails?.leasingCompany
-                    )
-                leasingCompany.setText(leasingCompanyItem?.name)
-            }
-        }
     }
 
     override fun onCompanyUpdated(company: LeasingCompany) {
@@ -499,29 +588,27 @@ class AddNewCarFragment : BaseFragment<AddNewCarViewModel>(),
                 }
                 if (selectedFile != null) {
                     val dlFile = File(selectedFile)
-                    vehicleId?.let { viewModel.onAttach(it, "OTHER", dlFile) }
+                    vehicleId?.let {
+                        progressbar?.showPopup()
+                        viewModel.onAttach(it, "OTHER", dlFile)
+                    }
                 }
             }
         }
 
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray,
-    ) {
-        when (requestCode) {
-            200 -> if (grantResults.isNotEmpty()) {
-                val readExternalStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                val writeExternalStorage = grantResults[1] == PackageManager.PERMISSION_GRANTED
-                if (readExternalStorage && writeExternalStorage) {
-                    callFileManagerForOther()
-                } else {
-                    showErrorInfo(requireContext(), getString(R.string.allow_permission))
 
-                }
-            }
-        }
+    private fun permissionUpload(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+
     }
 }

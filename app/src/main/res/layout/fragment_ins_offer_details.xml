@@ -32,11 +32,10 @@
         android:layout_height="match_parent"
         android:layout_above="@id/li_bottom"
         android:layout_below="@id/toolbar">
-
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,7 +113,6 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:fontFamily="@font/inter_semibold_600"
                     android:paddingHorizontal="@dimen/_10sdp"
-                    android:text="RCA Insurance Offer 9876767"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/_14sdp" />
 
@@ -125,7 +123,6 @@
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:fontFamily="@font/inter_semibold_600"
                     android:paddingHorizontal="@dimen/_10sdp"
-                    android:text="of 20/04/22, 12:67 PM"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/_14sdp" />
 
@@ -140,7 +137,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/inter_medium_500"
-                        android:text="Vehicle is subject to a running leasing contract."
+                        android:text="@string/ins_leasing"
                         android:textColor="@color/text_color" />
 
                     <LinearLayout
@@ -161,7 +158,6 @@
                             android:layout_marginStart="@dimen/_5sdp"
                             android:fontFamily="@font/inter_medium_500"
                             android:gravity="center_vertical"
-                            android:text="@string/yes"
                             android:textColor="@color/text_color" />
 
                     </LinearLayout>
@@ -242,6 +238,7 @@
                                     android:layout_width="@dimen/_40sdp"
                                     android:layout_height="@dimen/_40sdp"
                                     android:padding="@dimen/_4sdp"
+                                    android:scaleType="fitCenter"
                                     android:src="@drawable/carhome_icon" />
 
                                 <LinearLayout
@@ -258,7 +255,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/inter_bold_700"
-                                        android:text="Tesla Roadster"
                                         android:textColor="#303065"
                                         android:textSize="@dimen/_12sdp" />
 
@@ -300,7 +296,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_medium_500"
-                                        android:text="Car No."
+                                        android:text="@string/ins_car_no"
                                         android:textColor="@color/skip" />
 
                                     <TextView
@@ -311,7 +307,6 @@
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_semibold_600"
                                         android:gravity="end"
-                                        android:text="DHWK879"
                                         android:textColor="@color/text_color" />
 
 
@@ -328,7 +323,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_medium_500"
-                                        android:text="Model/Make"
+                                        android:text="@string/model_make"
                                         android:textColor="@color/skip" />
 
                                     <TextView
@@ -339,7 +334,6 @@
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_semibold_600"
                                         android:gravity="end"
-                                        android:text="A6 BMW"
                                         android:textColor="@color/text_color" />
 
 
@@ -356,7 +350,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_medium_500"
-                                        android:text="VIN NO."
+                                        android:text="@string/ins_vin_no"
                                         android:textColor="@color/skip" />
 
                                     <TextView
@@ -367,7 +361,6 @@
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_semibold_600"
                                         android:gravity="end"
-                                        android:text="VIN"
                                         android:textColor="@color/text_color" />
 
 
@@ -384,7 +377,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_medium_500"
-                                        android:text="CIV Serial No"
+                                        android:text="@string/civ_serial_no"
                                         android:textColor="@color/skip" />
 
                                     <TextView
@@ -395,7 +388,6 @@
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_semibold_600"
                                         android:gravity="end"
-                                        android:text="434776357"
                                         android:textColor="@color/text_color" />
 
 
@@ -412,7 +404,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_medium_500"
-                                        android:text="Capacity/Power"
+                                        android:text="@string/ins_capacity_power"
                                         android:textColor="@color/skip" />
 
                                     <TextView
@@ -423,7 +415,6 @@
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_semibold_600"
                                         android:gravity="end"
-                                        android:text="1200 HP"
                                         android:textColor="@color/text_color" />
 
 
@@ -440,7 +431,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_medium_500"
-                                        android:text="No of Seats"
+                                        android:text="@string/no_seats"
                                         android:textColor="@color/skip" />
 
                                     <TextView
@@ -451,7 +442,6 @@
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_semibold_600"
                                         android:gravity="end"
-                                        android:text="5 Seats"
                                         android:textColor="@color/text_color" />
 
 
@@ -468,7 +458,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_medium_500"
-                                        android:text="Fuel Type"
+                                        android:text="@string/fuel_type"
                                         android:textColor="@color/skip" />
 
                                     <TextView
@@ -479,7 +469,6 @@
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_semibold_600"
                                         android:gravity="end"
-                                        android:text="Diesel"
                                         android:textColor="@color/text_color" />
 
 
@@ -496,7 +485,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_medium_500"
-                                        android:text="MATW(MTA)"
+                                        android:text="@string/ins_matw"
                                         android:textColor="@color/skip" />
 
                                     <TextView
@@ -507,7 +496,6 @@
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_semibold_600"
                                         android:gravity="end"
-                                        android:text="Some Data Here"
                                         android:textColor="@color/text_color" />
 
 
@@ -524,7 +512,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_medium_500"
-                                        android:text="Usage Type"
+                                        android:text="@string/rca_usage_type"
                                         android:textColor="@color/skip" />
 
                                     <TextView
@@ -535,7 +523,6 @@
                                         android:layout_weight="1"
                                         android:fontFamily="@font/inter_semibold_600"
                                         android:gravity="end"
-                                        android:text="Personal"
                                         android:textColor="@color/text_color" />
 
                                 </LinearLayout>
@@ -611,6 +598,7 @@
                             android:orientation="horizontal">
 
                             <com.google.android.material.textfield.TextInputLayout
+                                app:hintTextAppearance="@style/TextLabel"
                                 android:id="@+id/start_date"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -648,6 +636,7 @@
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
+                                app:hintTextAppearance="@style/TextLabel"
                                 android:id="@+id/end_date"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -688,6 +677,7 @@
                         </LinearLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            app:hintTextAppearance="@style/TextLabel"
                             android:id="@+id/spinnerCounty"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -856,7 +846,6 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/inter_semibold_600"
                                     android:gravity="end"
-                                    android:text="DHWK879"
                                     android:textColor="@color/text_color" />
 
 
@@ -885,7 +874,6 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/inter_semibold_600"
                                     android:gravity="end"
-                                    android:text="DHWK879"
                                     android:textColor="@color/text_color" />
 
 
@@ -914,7 +902,6 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/inter_semibold_600"
                                     android:gravity="end"
-                                    android:text="DHWK879"
                                     android:textColor="@color/text_color" />
 
 
@@ -943,7 +930,6 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/inter_semibold_600"
                                     android:gravity="end"
-                                    android:text="DHWK879"
                                     android:textColor="@color/text_color" />
 
 
@@ -1066,7 +1052,7 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/inter_medium_500"
                         android:padding="@dimen/_10sdp"
-                        android:text="Bonus - Malus Class"
+                        android:text="@string/ins_bonus"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/_12sdp" />
 
@@ -1078,7 +1064,6 @@
                         android:fontFamily="@font/inter_semibold_600"
                         android:gravity="end"
                         android:paddingEnd="@dimen/_15sdp"
-                        android:text="M1"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/_18sdp" />
 
@@ -1207,7 +1192,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_bold_700"
                 android:textColor="@color/skip"
-                android:text="RCA"
+                android:text="@string/rca"
                 android:textSize="@dimen/_10sdp" />
 
             <LinearLayout
@@ -1229,7 +1214,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_bold_700"
                     android:paddingStart="@dimen/_10sdp"
-                    android:text="230.90 RON"
                     android:textColor="@color/white"
                     tools:ignore="RtlSymmetry" />
 
@@ -1238,7 +1222,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_bold_700"
                     android:paddingStart="@dimen/_10sdp"
-                    android:text="Cumpara"
+                    android:text="@string/buy"
                     android:textColor="@color/white"
                     tools:ignore="RtlSymmetry" />
 
@@ -1264,7 +1248,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_bold_700"
                 android:textColor="@color/skip"
-                android:text="RCA+ Decontare Directa"
+                android:text="@string/rca_plus_ds"
                 android:textSize="@dimen/_10sdp" />
 
             <LinearLayout
@@ -1287,7 +1271,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_bold_700"
                     android:paddingStart="@dimen/_10sdp"
-                    android:text="230.90 RON"
                     android:textColor="@color/white" />
 
                 <TextView
@@ -1295,7 +1278,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_bold_700"
                     android:paddingStart="@dimen/_10sdp"
-                    android:text="Cumpara"
+                    android:text="@string/buy"
                     android:textColor="@color/white" />
 
             </LinearLayout>

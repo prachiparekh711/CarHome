@@ -24,7 +24,6 @@ import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.data.cars.add_new.AddNewCar2Fragment
 import ro.westaco.carhome.presentation.screens.data.cars.add_new.AddNewCarFragment
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File
@@ -139,6 +138,7 @@ class CarDetailsViewModel @Inject constructor(
 
     sealed class ACTION {
         class OnEventsFetched(val eventsTypelist: ArrayList<EventType>) : ACTION()
+        object OnAttachSuccess : ACTION()
     }
 
     internal fun onAttach(vehicleId: Int, attachType: String, attachmentFile: File) {
@@ -157,10 +157,10 @@ class CarDetailsViewModel @Inject constructor(
             .subscribe({
 
                 onVehicle(vehicleId)
+                actionStream.value = ACTION.OnAttachSuccess
             }, {
                 it.printStackTrace()
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 
@@ -172,7 +172,6 @@ class CarDetailsViewModel @Inject constructor(
                     onVehicle(vehicleId)
                 }, {
                     it.printStackTrace()
-                    uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
                 })
         }
     }
@@ -211,40 +210,16 @@ class CarDetailsViewModel @Inject constructor(
     }
 
     internal fun onDelete(id: Long) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
 
         api.deleteVehicle(id)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                 uiEventStream.value = UiEvent.NavBack
             }, {
                 it.printStackTrace()
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 
-    internal fun onEditReminder(vehicleDetails: VehicleDetails?) {
-        /* vehicleDetails?.id.let {
-             if (it != null) {
-                 val request = getCarRequest(vehicleDetails)
-                 api.editVehicle(it, request)
-                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                     .subscribe({
-                         uiEventStream.value =
-                             UiEvent.ShowToast(R.string.edit_success_msg)
-                     }, {
-                         it.printStackTrace()
-
-                         uiEventStream.value =
-                             UiEvent.ShowToast(R.string.server_saving_error)
-                     })
-             }
-         }*/
-    }
 
     internal fun getCarRequest(vehicleDetails: VehicleDetails?): AddVehicleRequest {
         return AddVehicleRequest(
@@ -273,6 +248,8 @@ class CarDetailsViewModel @Inject constructor(
         app.getString(R.string.server_standard_datetime_format_template),
         Locale.US
     )
+
+
 
 
 }

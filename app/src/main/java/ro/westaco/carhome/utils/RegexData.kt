@@ -10,6 +10,12 @@ class RegexData {
             return str.matches(regex)
         }
 
+        fun checkEmailRegex(str: String): Boolean {
+            val regex =
+                Regex("[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")
+            return str.matches(regex)
+        }
+
         fun checkCUIRegex(cuiNumber: String): Boolean {
             val regex =
                 Regex("^[A-Z]{0,2}[0-9]{2,13}")
@@ -20,7 +26,7 @@ class RegexData {
             if (cuiNumber.isEmpty())
                 return true
             val regex =
-                Regex("^[A-Z]{0,2}[0-9]{2,13}")
+                Regex("^[JFC][0-9]{1,2}/[0-9]+/[1-2][0-9]{3}\$")
             return cuiNumber.matches(regex)
         }
 

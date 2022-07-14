@@ -99,6 +99,9 @@ class BuyDurationAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun setItems(priceList: List<VignettePrice>?) {
         this.priceList = ArrayList(priceList ?: listOf())
+        if (priceList != null) {
+            repeatPos = priceList.size - 1
+        }
         notifyDataSetChanged()
     }
 

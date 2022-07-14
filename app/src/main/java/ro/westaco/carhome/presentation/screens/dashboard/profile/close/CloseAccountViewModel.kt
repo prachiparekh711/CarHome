@@ -62,10 +62,6 @@ class CloseAccountViewModel @Inject constructor(
 
     internal fun onCloseAccount(confirmationText: String) {
         uiEventStream.value = UiEvent.HideKeyboard
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
 
         if (isDeletionConfirmed(confirmationText)) {
             api.closeAccount()
@@ -75,8 +71,10 @@ class CloseAccountViewModel @Inject constructor(
                     actionStream.value = ACTION.CloseAccount
                     appPreferences.token = ""
                     firebaseAuth.signOut()
+
+
                     DeviceUtils.restartApp(app)
-                    uiEventStream.value = UiEvent.ShowToast(R.string.success_close_ac)
+//                    uiEventStream.value = UiEvent.ShowToast(R.string.success_close_ac)
                 }, {
                     uiEventStream.value = UiEvent.ShowToast(R.string.close_ac_server)
                 })

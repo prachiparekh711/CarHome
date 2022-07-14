@@ -37,8 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/manrope_extrabold_800"
-        android:src="@drawable/ic_car_home_items"
         android:paddingTop="@dimen/_5sdp"
+        android:src="@drawable/ic_car_home_items"
         app:layout_constraintBottom_toBottomOf="@+id/welcome"
         app:layout_constraintStart_toStartOf="@+id/welcome"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
@@ -49,9 +49,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_12sdp"
         android:fontFamily="@font/inter_medium_500"
+        android:paddingTop="@dimen/_1sdp"
         android:text="@string/by_ovm_petrom"
         android:textColor="@color/gray"
-        android:paddingTop="@dimen/_1sdp"
         android:textSize="@dimen/_10sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appName" />
@@ -69,7 +69,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_15sdp"
+        android:layout_marginVertical="@dimen/_15sdp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/indicator">
 
@@ -77,6 +77,7 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:fontFamily="@font/inter_semibold_600"
             android:text="@string/setup_profile"
             android:textColor="@color/textOnWhite"
@@ -86,6 +87,7 @@
             android:id="@+id/mProfileRL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_marginVertical="@dimen/_10sdp"
             android:background="@drawable/bg_card_yellow"
             android:padding="@dimen/_5sdp">
@@ -184,6 +186,7 @@
             android:id="@+id/noCarRL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:background="@drawable/cta_edit_person_background"
             android:padding="@dimen/_5sdp">
 
@@ -253,6 +256,7 @@
             android:id="@+id/carProgressRV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_5sdp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/car_progress_item" />
@@ -261,6 +265,7 @@
             android:id="@+id/mSkipRL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_marginVertical="@dimen/_10sdp"
             android:background="@drawable/bg_card_item"
             android:padding="@dimen/_5sdp">
@@ -297,10 +302,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="visible"
         app:layout_constraintWidth_percent="0.3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

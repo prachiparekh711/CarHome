@@ -72,6 +72,7 @@
             android:fontFamily="@font/inter_medium_500"
             android:padding="@dimen/_5sdp"
             android:text="@string/english"
+            android:textSize="@dimen/_11sdp"
             android:textColor="@color/textOnWhite" />
 
         <ImageView
@@ -118,8 +119,9 @@
             android:layout_toEndOf="@id/logo2"
             android:fontFamily="@font/inter_medium_500"
             android:padding="@dimen/_5sdp"
-            android:text="@string/romania"
-            android:textColor="@color/textOnWhite" />
+            android:text="@string/romanian"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/_11sdp" />
 
         <ImageView
             android:id="@+id/mSelection2"

@@ -1,5 +1,6 @@
 package ro.westaco.carhome.presentation.screens.data.cars.details
 
+import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -7,29 +8,32 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.RequestOptions
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_car_details.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.requests.VehicleEvent
 import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.di.ApiModule.Companion.BASE_URL_RESOURCES
+import ro.westaco.carhome.dialog.DeleteDialogFragment
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.presentation.common.DeleteDialogFragment
-import ro.westaco.carhome.presentation.screens.home.PdfActivity
+import ro.westaco.carhome.presentation.screens.pdf_viewer.PdfActivity
 import ro.westaco.carhome.utils.CatalogUtils
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.FileUtil
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.views.Progressbar
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,8 +43,8 @@ import java.util.*
 class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
     private var vehicle: Vehicle? = null
     private var vehicleDetails: VehicleDetails? = null
-    private lateinit var adapter: CarDetailsReminderAdapter
-    private lateinit var otherAdapter: CarDetailsOtherAttachmentAdapter
+    var adapter: CarDetailsReminderAdapter? = null
+    var otherAdapter: CarDetailsOtherAttachmentAdapter? = null
 
     var cerAttachment: Attachments? = null
     var vehicleId: Int = 0
@@ -81,7 +85,6 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
     override fun initUi() {
 
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
 
         back.setOnClickListener {
             viewModel.onBack()
@@ -127,40 +130,46 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
                 vehicleSubCategory.text = vehicleDetails.vehicleSubCategoryName ?: ""
                 purpose.text = vehicleDetails.vehicleUsageTypeName ?: ""
                 carNumber.text = vehicleDetails.licensePlate ?: ""
-                policyExpiry.text = (vehicleDetails.policyExpirationDate ?: " ").toString()
-
+//                policyExpiry.text = (vehicleDetails.policyExpirationDate ?: " ").toString()
 
                 /**
                  * rca status
                  */
                 if (!vehicleDetails.policyExpirationDate.isNullOrEmpty()) {
-                    val serverDate =
-                        viewModel.originalFormat.parse(vehicleDetails.policyExpirationDate)
-                    val timeLeftMillis = serverDate.time - Date().time
 
-                    if (timeLeftMillis > 0) {
+                    try {
 
-                        status.setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.greenActive
-                            )
-                        )
-                        status.text = getString(R.string.status_active)
-                    } else {
+                        val serverDate =
+                            viewModel.originalFormat.parse(vehicleDetails.policyExpirationDate)
+                        val timeLeftMillis = serverDate?.time?.minus(Date().time)
 
-                        status.text = getString(R.string.purchases_exp_inactive)
-                        status.setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.redExpired
-                            )
-                        )
+                        if (timeLeftMillis != null) {
+
+                            if (timeLeftMillis > 0) {
+
+                                status.setTextColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.greenActive
+                                    )
+                                )
+                                status.text = getString(R.string.status_active)
+                            } else {
+
+                                status.text = getString(R.string.purchases_exp_inactive)
+                                status.setTextColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.redExpired
+                                    )
+                                )
+                            }
+                        }
+
+                    } catch (e: Exception) {
+                        status.text = "N/A"
                     }
-
-
                 } else {
-
                     status.text = "N/A"
                 }
 
@@ -169,99 +178,105 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
                  */
                 if (!vehicleDetails.vignetteExpirationDate.isNullOrEmpty()) {
 
-                    val serverDate =
-                        viewModel.originalFormat.parse(vehicleDetails.vignetteExpirationDate)
+                    try {
 
-                    val timeLeftMillis = serverDate.time - Date().time
+                        val serverDate =
+                            viewModel.originalFormat.parse(vehicleDetails.vignetteExpirationDate)
 
-                    if (timeLeftMillis > 0) {
+                        val timeLeftMillis = serverDate?.time?.minus(Date().time)
 
+                        if (timeLeftMillis != null) {
 
-                        policyExpiry.setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.greenActive
-                            )
-                        )
-                        policyExpiry.text = requireContext().getString(R.string.status_active)
-                    } else {
-                        policyExpiry.text =
-                            requireContext().getString(R.string.purchases_exp_inactive)
-                        policyExpiry.setTextColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.deleteRed
-                            )
-                        )
-                        imgAlert.visibility = View.VISIBLE
+                            if (timeLeftMillis > 0) {
+
+                                policyExpiry.setTextColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.greenActive
+                                    )
+                                )
+                                policyExpiry.text =
+                                    requireContext().getString(R.string.status_active)
+                            } else {
+                                policyExpiry.text =
+                                    requireContext().getString(R.string.purchases_exp_inactive)
+                                policyExpiry.setTextColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.deleteRed
+                                    )
+                                )
+                                imgAlert.visibility = View.VISIBLE
+                            }
+                        }
+
+                    } catch (e: Exception) {
+
+                        policyExpiry.text = "N/A"
+
                     }
 
-
                 } else {
-
                     policyExpiry.text = "N/A"
-                }
-
-                /**
-                 * document date
-                 */
-                ro_date.text = vehicleDetails.vignetteExpirationDate?.let { setdaymonthFormat(it) }
-                rc_date.text = vehicleDetails.policyExpirationDate?.let { setdaymonthFormat(it) }
-
-                /**
-                 * rovinieta doc open
-                 */
-
-                if (vehicleDetails.vignetteAttachment.isNullOrEmpty()) {
-                    roDocumentLL.visibility = View.GONE
-                } else {
-                    roDocumentLL.visibility = View.VISIBLE
-                }
-
-                tv_ro_btn.setOnClickListener {
-                    val url = BASE_URL_RESOURCES + vehicleDetails.vignetteAttachment
-                    val intent = Intent(requireContext(), PdfActivity::class.java)
-                    intent.putExtra(PdfActivity.ARG_DATA, url)
-                    intent.putExtra(PdfActivity.ARG_FROM, "DOCUMENT")
-                    requireContext().startActivity(intent)
-                }
-
-                if (vehicleDetails.rcaAttachment.isNullOrEmpty()) {
-                    rcaDocumentLL.visibility = View.GONE
-                } else {
-                    rcaDocumentLL.visibility = View.VISIBLE
-                }
-
-                docTitle.isVisible = (roDocumentLL.isVisible || rcaDocumentLL.isVisible)
-
-                tv_rc_btn.setOnClickListener {
-                    val url = BASE_URL_RESOURCES + vehicleDetails.rcaAttachment
-                    val intent = Intent(requireContext(), PdfActivity::class.java)
-                    intent.putExtra(PdfActivity.ARG_DATA, url)
-                    intent.putExtra(PdfActivity.ARG_FROM, "DOCUMENT")
-                    requireContext().startActivity(intent)
                 }
 
                 vin.text = vehicleDetails.vehicleIdentificationNumber ?: ""
                 licensePlate.text = vehicleDetails.licensePlate ?: ""
 
                 model.text = vehicleDetails.model ?: ""
-                vehicleDetails.engineSize.let { engineSize.text = "$it cc" }
-                vehicleDetails.enginePower.let { power.text = "$it HP" }
+                if (vehicleDetails.engineSize != null)
+                    engineSize.text = "${vehicleDetails.engineSize} cc"
+
+                if (vehicleDetails.enginePower != null)
+                    vehicleDetails.enginePower.let { power.text = "$it HP" }
 
                 noSeats.text = (vehicleDetails.noOfSeats ?: " ").toString()
-                vehicleDetails.maxAllowableMass.let { maxAllowableMass.text = "$it kg" }
+                if (vehicleDetails.maxAllowableMass != null)
+                    vehicleDetails.maxAllowableMass.let { maxAllowableMass.text = "$it kg" }
 
                 year.text = (vehicleDetails.manufacturingYear ?: " ").toString()
                 civ.text = vehicleDetails.vehicleIdentityCard ?: ""
 
                 btnRegCertificate.setOnClickListener {
-                    val result = FileUtil.checkPermission(requireContext())
-                    if (result) {
-                        callFileManagerForCertificate()
+
+                    if (ActivityCompat.checkSelfPermission(
+                            requireActivity(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(
+                            requireActivity(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        Dexter.withContext(requireActivity())
+                            .withPermissions(
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            )
+                            .withListener(object : MultiplePermissionsListener {
+                                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                                    report?.let {
+                                        if (report.areAllPermissionsGranted()) {
+                                            callFileManagerForCertificate()
+                                        }
+                                    }
+                                }
+
+                                override fun onPermissionRationaleShouldBeShown(
+                                    permissions: MutableList<PermissionRequest>?,
+                                    token: PermissionToken?
+                                ) {
+                                    token?.continuePermissionRequest()
+                                }
+                            }).withErrorListener {}
+
+                            .check()
                     } else {
-                        FileUtil.requestPermission(requireActivity())
+                        if (permissionUpload()) {
+                            callFileManagerForCertificate()
+                        }
                     }
+
                 }
 
                 cerAttachment = vehicleDetails.certificateAttachment
@@ -303,29 +318,76 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
                 }
 
                 llUploadOther.setOnClickListener {
-                    val result = FileUtil.checkPermission(requireContext())
-                    if (result) {
-                        callFileManagerForOther()
+
+
+                    if (ActivityCompat.checkSelfPermission(
+                            requireActivity(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(
+                            requireActivity(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+
+                        Dexter.withContext(requireActivity())
+                            .withPermissions(
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            )
+                            .withListener(object : MultiplePermissionsListener {
+                                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                                    report?.let {
+                                        if (report.areAllPermissionsGranted()) {
+                                            callFileManagerForOther()
+                                        }
+                                    }
+                                }
+
+                                override fun onPermissionRationaleShouldBeShown(
+                                    permissions: MutableList<PermissionRequest>?,
+                                    token: PermissionToken?
+                                ) {
+                                    token?.continuePermissionRequest()
+                                }
+                            }).withErrorListener {}
+
+                            .check()
+
                     } else {
-                        FileUtil.requestPermission(requireActivity())
+                        if (permissionUpload()) {
+                            callFileManagerForOther()
+                        }
                     }
+
                 }
 
                 if (!vehicleDetails.vehicleEvents.isNullOrEmpty()) {
                     viewModel.getVehicleEventType()
                 }
 
-                otherAdapter = if (vehicleDetails.otherAttachments.isNullOrEmpty()) {
-                    CarDetailsOtherAttachmentAdapter(requireContext(), arrayListOf())
+                if (vehicleDetails.otherAttachments.isNullOrEmpty()) {
+                    otherAdapter = CarDetailsOtherAttachmentAdapter(requireContext(), arrayListOf())
                 } else {
-                    CarDetailsOtherAttachmentAdapter(
+                    otherAdapter = CarDetailsOtherAttachmentAdapter(
                         requireContext(),
-                        vehicleDetails.otherAttachments,
+                        vehicleDetails.otherAttachments
                     )
                 }
+
+                /*  otherAdapter = if (vehicleDetails.otherAttachments.isNullOrEmpty()) {
+                      progressbar?.dismissPopup()
+                      CarDetailsOtherAttachmentAdapter(requireContext(), arrayListOf())
+
+                  } else {
+                      progressbar?.dismissPopup()
+                      CarDetailsOtherAttachmentAdapter(requireContext(), vehicleDetails.otherAttachments)
+
+                  }*/
                 rcyViewOther.adapter = otherAdapter
 
-                otherAdapter.onItemClick = { attachments, from ->
+
+                otherAdapter?.onItemClick = { attachments, from ->
                     if (from == "VIEW") {
                         val url = BASE_URL_RESOURCES + attachments.href
                         val intent = Intent(requireContext(), PdfActivity::class.java)
@@ -344,7 +406,6 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
                                         vehicleDetails.id.toInt(),
                                         attachments.id
                                     )
-
                                     otherCertificateDialog.dismiss()
                                 }
                             }
@@ -375,7 +436,6 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
                 }
 
             }
-            progressbar?.dismissPopup()
         }
 
         viewModel.vehicleUsageData.observe(viewLifecycleOwner) { vehicleUsageData ->
@@ -389,7 +449,6 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
                 }
 
             purpose.text = uasgeStr ?: ""
-            progressbar?.dismissPopup()
         }
 
         viewModel.vehicleCategoryData.observe(viewLifecycleOwner) { vehicleCategoryData ->
@@ -461,6 +520,7 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
             when (it) {
 
                 is CarDetailsViewModel.ACTION.OnEventsFetched -> setReminderAdapter(it.eventsTypelist)
+                is CarDetailsViewModel.ACTION.OnAttachSuccess -> progressbar?.dismissPopup()
             }
         }
     }
@@ -478,25 +538,18 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
             rcyView.visibility = View.VISIBLE
 
             vehicleDetails?.vehicleEvents?.forEach {
-
-
                 if (it.reminder) {
-
                     list.add(it)
-
-                    adapter = CarDetailsReminderAdapter(
-                        requireContext(),
-                        list,
-                        eventTypeList
-                    )
-                    adapter.setItems(list)
                 }
             }
-
-
+            adapter = CarDetailsReminderAdapter(
+                requireContext(),
+                list,
+                eventTypeList
+            )
+            adapter?.setItems(list)
+            rcyView.adapter = adapter
         }
-
-        rcyView.adapter = adapter
 
     }
 
@@ -538,6 +591,7 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
                 }
                 if (selectedFile != null) {
                     val dlFile = File(selectedFile)
+                    progressbar?.showPopup()
                     viewModel.onAttach(vehicleId, "REG_CERTIFICATE", dlFile)
                     lblCertificate.text = "attachment"
                     llUploadCertificate.visibility = View.GONE
@@ -562,39 +616,16 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
                 }
                 if (selectedFile != null) {
                     val dlFile = File(selectedFile)
+                    progressbar?.showPopup()
                     viewModel.onAttach(vehicleId, "OTHER", dlFile)
                 }
             }
         }
 
-        if (requestCode == 2296) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-                    callFileManagerForCertificate()
-                }
-            }
-        }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            200 -> if (grantResults.size > 0) {
-                val READ_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                val WRITE_EXTERNAL_STORAGE = grantResults[1] == PackageManager.PERMISSION_GRANTED
-                if (READ_EXTERNAL_STORAGE && WRITE_EXTERNAL_STORAGE) {
-                    callFileManagerForCertificate()
-                } else {
-                    showErrorInfo(requireContext(), getString(R.string.allow_permission))
-                }
-            }
-        }
-    }
 
-    private fun setdaymonthFormat(unformattedDate: String): String? {
+    private fun setDayMonthFormat(unformattedDate: String): String? {
         return try {
             val dateFormat =
                 SimpleDateFormat("yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'").parse(unformattedDate)
@@ -604,5 +635,17 @@ class CarDetailsFragment : BaseFragment<CarDetailsViewModel>() {
         }
     }
 
+    private fun permissionUpload(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+
+    }
 
 }

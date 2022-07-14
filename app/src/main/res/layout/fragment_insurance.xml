@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainRL"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -50,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/expande_colore"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -62,8 +63,9 @@
                 <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/_8sdp">
+                    android:orientation="horizontal"
+                    android:paddingVertical="@dimen/_8sdp"
+                    android:visibility="gone">
 
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -95,6 +97,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="@dimen/_10sdp"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:fontFamily="@font/inter_semibold_600"
                     android:text="@string/select_car"
@@ -105,53 +108,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:id="@+id/selectCarLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:background="@color/white"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_select_car_icon" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="5dp"
-                            android:layout_marginTop="@dimen/_5sdp"
-                            android:fontFamily="@font/inter_semibold_600"
-                            android:text="@string/select_your_car_to_proceed"
-                            android:textColor="#1A1341"
-                            android:textSize="@dimen/_11sdp" />
-
-
-                    </LinearLayout>
-
                     <include
                         android:id="@+id/cars_list"
-                        layout="@layout/item_in_cars"
-                        android:visibility="gone" />
+                        layout="@layout/item_in_cars" />
 
                 </FrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_10sdp">
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/white"
+                    android:paddingStart="@dimen/_10sdp">
 
                     <CheckBox
                         android:id="@+id/leasingCheckbox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:buttonTint="@color/appPrimary"
-                        android:checked="false"
                         android:paddingStart="@dimen/_5sdp"
+                        android:textSize="@dimen/_11sdp"
                         android:text="@string/car_has_an_ongoing" />
 
                 </LinearLayout>
@@ -160,7 +136,6 @@
                     android:id="@+id/mSelectLeasing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_55sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
                     android:background="@color/white"
                     android:visibility="gone">
 
@@ -241,7 +216,6 @@
                     android:id="@+id/mSelectOwner"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_55sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
                     android:background="@color/white">
 
                     <LinearLayout
@@ -254,19 +228,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-
-                            <TextView
-                                android:id="@+id/tv_owner"
-                                android:layout_width="@dimen/_30sdp"
-                                android:layout_height="@dimen/_30sdp"
-                                android:layout_marginStart="@dimen/_12sdp"
-                                android:background="@drawable/oval_shape"
-                                android:fontFamily="@font/inter_bold_700"
-                                android:gravity="center"
-                                android:orientation="horizontal"
-                                android:textColor="#5367FC"
-                                android:visibility="gone" />
-
                             <ImageView
                                 android:id="@+id/mSelectOwnerImage"
                                 android:layout_width="@dimen/_30sdp"
@@ -274,6 +235,19 @@
                                 android:layout_marginStart="@dimen/_12sdp"
                                 android:background="@drawable/oval_shape"
                                 android:src="@drawable/ic_profile_picture" />
+
+                            <TextView
+                                android:id="@+id/mSelectOwnerTv"
+                                android:layout_width="@dimen/_30sdp"
+                                android:layout_height="@dimen/_30sdp"
+                                android:background="@drawable/oval_shape"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:textColor="#5367FC"
+                                android:layout_marginStart="@dimen/_12sdp"
+                                android:textSize="@dimen/_10sdp"
+                                android:visibility="gone" />
                         </RelativeLayout>
 
 
@@ -328,8 +302,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_5sdp">
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/white"
+                    android:paddingStart="@dimen/_10sdp">
 
                     <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/userCheckBox"
@@ -337,6 +312,9 @@
                         android:layout_height="wrap_content"
                         android:buttonTint="@color/appPrimary"
                         android:paddingStart="@dimen/_5sdp"
+                        android:checked="false"
+                        android:focusable="false"
+                        android:textSize="@dimen/_11sdp"
                         android:text="@string/user_is_the_same" />
 
 
@@ -346,7 +324,6 @@
                     android:id="@+id/mSelectUser"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_55sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
                     android:background="@color/white">
 
                     <LinearLayout
@@ -359,18 +336,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-                            <TextView
-                                android:id="@+id/tv_text"
-                                android:layout_width="@dimen/_30sdp"
-                                android:layout_height="@dimen/_30sdp"
-                                android:layout_marginStart="@dimen/_12sdp"
-                                android:background="@drawable/oval_shape"
-                                android:fontFamily="@font/inter_bold_700"
-                                android:gravity="center"
-                                android:orientation="horizontal"
-                                android:textColor="#5367FC"
-                                android:visibility="gone" />
-
 
                             <ImageView
                                 android:id="@+id/mSelectUserImage"
@@ -379,6 +344,19 @@
                                 android:layout_marginStart="@dimen/_12sdp"
                                 android:background="@drawable/oval_shape"
                                 android:src="@drawable/ic_profile_picture" />
+
+                            <TextView
+                                android:id="@+id/mSelectUserTv"
+                                android:layout_width="@dimen/_30sdp"
+                                android:layout_height="@dimen/_30sdp"
+                                android:background="@drawable/oval_shape"
+                                android:fontFamily="@font/inter_bold_700"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:textColor="#5367FC"
+                                android:textSize="@dimen/_10sdp"
+                                android:layout_marginStart="@dimen/_12sdp"
+                                android:visibility="gone" />
                         </RelativeLayout>
 
 
@@ -432,8 +410,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_5sdp">
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@color/white"
+                    android:paddingStart="@dimen/_10sdp">
 
 
                     <CheckBox
@@ -451,7 +430,6 @@
                     android:id="@+id/mSelectDriver"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_55sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
                     android:background="@color/white">
 
                     <LinearLayout
@@ -467,6 +445,19 @@
                             android:layout_marginStart="@dimen/_12sdp"
                             android:background="@drawable/oval_shape"
                             android:src="@drawable/ic_profile_picture" />
+
+                        <TextView
+                            android:id="@+id/mSelectDriverTv"
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_12sdp"
+                            android:background="@drawable/oval_shape"
+                            android:fontFamily="@font/inter_bold_700"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:textColor="#5367FC"
+                            android:textSize="@dimen/_10sdp"
+                            android:visibility="gone" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -545,6 +536,7 @@
                         android:gravity="center_vertical"
                         android:paddingStart="@dimen/_10sdp"
                         android:text="@string/add_driver_"
+                        android:textSize="@dimen/_11sdp"
                         android:textColor="#000000" />
 
                 </LinearLayout>
@@ -584,9 +576,9 @@
             android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_weight="1.8"
             android:background="@drawable/save_background_invisible"
+            android:enabled="true"
             android:fontFamily="@font/manrope_semibold_600"
             android:gravity="center"
-            android:enabled="true"
             android:paddingVertical="@dimen/_12sdp"
             android:text="@string/continue_txt"
             android:textColor="@color/textOnSolid"

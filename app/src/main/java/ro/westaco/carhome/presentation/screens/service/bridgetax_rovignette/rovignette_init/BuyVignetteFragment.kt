@@ -28,15 +28,15 @@ import ro.westaco.carhome.databinding.BottomSheetDurationBinding
 import ro.westaco.carhome.databinding.DifferentCategoryLayoutBinding
 import ro.westaco.carhome.databinding.VehicleCatLayoutBinding
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.data.commen.CountryCodeDialog
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.adapter.BuyDurationAdapter
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.adapter.CategoryAdapter
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.rovignette_init.BuyVignetteViewModel.ACTION
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
-import ro.westaco.carhome.utils.Progressbar
 import ro.westaco.carhome.utils.RegexData
+import ro.westaco.carhome.views.Progressbar
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -62,13 +62,19 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
     var priceList: ArrayList<VignettePrice> = ArrayList()
     var priceModel: VignettePrice? = null
     var categoryBottomSheet: BottomSheetDialog? = null
-    var progressbar: Progressbar? = null
     var countryItem: Country? = null
     var activeService: String = ""
     var repeatVignettePos = 0
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
     private var vehicleDetail: VehicleDetails? = null
     var dataCompleted = false
+    var progressbar: Progressbar? = null
+    var vignetteExpirationDate: String? = null
+    lateinit var xStr: String   //    X   =   Start date
+    lateinit var yStr: String   //    Y   =   End date
+    lateinit var x: Date   //    X   =   Start date
+    lateinit var y: Date   //    Y   =   End date
+    var isValidRange = false
 
     companion object {
         const val ARG_CAR = "arg_car"
@@ -100,9 +106,7 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
     }
 
     override fun initUi() {
-
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
 
         back.setOnClickListener {
             viewModel.onBack()
@@ -125,17 +129,39 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
 
         priceList.clear()
 
+        vignetteExpirationDate = vehicle?.vignetteExpirationDate
+        isValidRange = if (vignetteExpirationDate == null) {
+            dateDefaultCase(isActive = false, policyDate = null)
+        } else {
+            val dateFormat: DateFormat =
+                SimpleDateFormat(requireContext().getString(R.string.server_standard_datetime_format_template1))
+            val policyDate = dateFormat.parse(vignetteExpirationDate)
 
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_YEAR, 1)
-        val tomorrow = calendar.time
+            if (System.currentTimeMillis() > policyDate.time) {
+                //               Expires
+                dateDefaultCase(isActive = false, policyDate = null)
+            } else {
+                //               Active
+                dateDefaultCase(isActive = true, policyDate = policyDate)
+            }
+        }
 
+        mStartDateText.setOnClickListener {
+            if (isValidRange)
+                viewModel.onDateClicked(dateToMilis(mStartDateText.text.toString()))
 
-        val formatter: DateFormat = SimpleDateFormat("dd/MM/yyyy")
-        val currentDate: String = formatter.format(tomorrow)
-        mStartDateText.setText(currentDate)
-        changeTint(mStartDateText)
-        mStartDateText.setOnClickListener { viewModel.onDateClicked() }
+        }
+
+//        *******
+//        val calendar = Calendar.getInstance()
+//        calendar.add(Calendar.DAY_OF_YEAR, 1)
+//        val tomorrow = calendar.time
+//        val formatter: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+//        val currentDate: String = formatter.format(tomorrow)
+//        mStartDateText.setText(currentDate)
+//        changeTint(mStartDateText)
+//        mStartDateText.setOnClickListener { viewModel.onDateClicked() }
+//        ************
 
         licensePlate.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
@@ -219,15 +245,24 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
                     showErrorInfo(requireContext(), getString(R.string.duration_required))
 
                 }
-
-                var vinStr: String? = null
-                vinStr = if (vinET.text.isNullOrEmpty()) {
+                var vinStr = if (vinET.text.isNullOrEmpty()) {
                     null
                 } else {
                     vinET.text.toString()
                 }
+
+                if (vinET.text?.isNotEmpty() == true) {
+
+                    if (vinET.text?.length != 17) {
+                        showErrorInfo(requireContext(), getString(R.string.error_vin))
+                        return@setOnClickListener
+                    }
+                    vinStr = vinET.text.toString()
+
+                }
                 priceModel?.let { it1 ->
                     countryItem?.code?.let { it2 ->
+                        progressbar?.showPopup()
                         viewModel.onCta(
                             vehicle,
                             rovignette_categories?.text.toString(),
@@ -274,32 +309,35 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
     }
 
     private var dpd: DatePickerDialog? = null
-
-    private fun showDatePicker(dateInMillis: Long) {
-        val c = Calendar.getInstance().apply {
+    fun showDatePicker(dateInMillis: Long) {
+        val mCalendar = Calendar.getInstance()
+        val c = mCalendar.apply {
             timeInMillis = dateInMillis
         }
 
         dpd?.cancel()
         dpd = DatePickerDialog(
-            requireContext(),
-            R.style.DialogTheme,
-            { _, year, monthOfYear, dayOfMonth ->
+            requireContext(), R.style.DialogTheme, { _, year, monthOfYear, dayOfMonth ->
                 viewModel.onDatePicked(
                     Calendar.getInstance().apply {
                         set(Calendar.YEAR, year)
                         set(Calendar.MONTH, monthOfYear)
                         set(Calendar.DAY_OF_MONTH, dayOfMonth)
+//                         set(Calendar.HOUR,get(Calendar.HOUR))
+//                         set(Calendar.MINUTE,get(Calendar.MINUTE))
+//                         set(Calendar.SECOND,get(Calendar.SECOND))
                     }.timeInMillis
                 )
-            },
-            c.get(Calendar.YEAR),
-            c.get(Calendar.MONTH),
-            c.get(Calendar.DAY_OF_MONTH)
+            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)
         )
-        dpd?.datePicker?.minDate = System.currentTimeMillis() + (1000 * 24 * 60 * 60)
-        dpd?.show()
 
+        val xMillis = dateToMilis(xStr) //    X   =   Start date
+        val yMillis = dateToMilis(yStr) //    Y   =   End date
+
+        dpd?.datePicker?.minDate = xMillis
+        dpd?.datePicker?.maxDate = yMillis
+
+        dpd?.show()
     }
 
     override fun setObservers() {
@@ -324,7 +362,6 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
                 countryCodeDialog.show(requireActivity().supportFragmentManager, null)
             }
 
-            progressbar?.dismissPopup()
         }
 
         viewModel.rovignetteCategories.observe(viewLifecycleOwner) { rovignetteCategories ->
@@ -364,32 +401,34 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
         viewModel.vehicleDetailsLivedata.observe(viewLifecycleOwner) { vehicleDetails ->
 
             this.vehicleDetail = vehicleDetails
-            licensePlate.setText(vehicleDetails.licensePlate)
-            mCarNumberText.setText(vehicleDetails.licensePlate)
-            vinET.setText(vehicleDetails.vehicleIdentificationNumber)
+            if (vehicleDetails != null) {
+                licensePlate.setText(vehicleDetails.licensePlate)
 
-            mVINNumberText.setText(vehicleDetails.vehicleIdentificationNumber)
-            vinLabelI.isVisible = true
+                mCarNumberText.setText(vehicleDetails.licensePlate)
+                vinET.setText(vehicleDetails.vehicleIdentificationNumber)
 
-            val options = RequestOptions()
-            carLogo.clipToOutline = true
+                mVINNumberText.setText(vehicleDetails.vehicleIdentificationNumber)
+                vinLabelI.isVisible = true
 
-            Glide.with(requireContext())
-                .load(ApiModule.BASE_URL_RESOURCES + vehicle?.vehicleBrandLogo)
-                .apply(
-                    options.fitCenter()
-                        .skipMemoryCache(true)
-                        .priority(Priority.HIGH)
-                        .format(DecodeFormat.PREFER_ARGB_8888)
-                )
-                .error(R.drawable.carhome_icon_roviii)
-                .into(carLogo)
+                val options = RequestOptions()
+                carLogo.clipToOutline = true
 
-            mCarName.text = vehicle?.vehicleBrand ?: ""
+                Glide.with(requireContext())
+                    .load(ApiModule.BASE_URL_RESOURCES + vehicle?.vehicleBrandLogo)
+                    .apply(
+                        options.fitCenter()
+                            .skipMemoryCache(true)
+                            .priority(Priority.HIGH)
+                            .format(DecodeFormat.PREFER_ARGB_8888)
+                    )
+                    .error(R.drawable.carhome_icon_roviii)
+                    .into(carLogo)
 
-            mCarInformation.isVisible = false
-            mCarSelected.isVisible = true
+                mCarName.text = vehicle?.vehicleBrand ?: ""
 
+                mCarInformation.isVisible = false
+                mCarSelected.isVisible = true
+            }
         }
 
         viewModel.dateLiveData.observe(viewLifecycleOwner) { dateMillis ->
@@ -435,6 +474,9 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
                 BuyVignetteViewModel.STATE.EnterCategory -> {
                     categoryBottomSheet?.show()
                 }
+                BuyVignetteViewModel.STATE.StopProgress -> {
+                    progressbar?.dismissPopup()
+                }
 
             }
         }
@@ -446,23 +488,29 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
                 is ACTION.ShowError -> showErrorInfo(requireContext(), it.error)
 
                 is ACTION.ShowDateError -> {
-                    mStartDateText.setTextColor(requireContext().resources.getColor(R.color.orangeExpired))
-                    TextViewCompat.setCompoundDrawableTintList(
-                        mStartDateText,
-                        ColorStateList.valueOf(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.orangeExpired
-                            )
-                        )
-                    )
-                    mStartDateText.setTextColor(requireContext().resources.getColor(R.color.orangeExpired))
-                    startDateError.isVisible = true
-                    startDateError.text = it.error
+                    showDateError(it.error)
                 }
             }
         }
 
+    }
+
+    private fun showDateError(error: String?) {
+        mStartDateText.setTextColor(requireContext().resources.getColor(R.color.orangeExpired))
+        TextViewCompat.setCompoundDrawableTintList(
+            mStartDateText,
+            ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.orangeExpired
+                )
+            )
+        )
+        mStartDateText.setTextColor(requireContext().resources.getColor(R.color.orangeExpired))
+        if (error != null) {
+            startDateError.isVisible = true
+            startDateError.text = error
+        }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -512,7 +560,26 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
         }
 
         if (priceListNew.isNotEmpty()) {
-            priceModel = priceListNew[0]
+            /*  priceModel = priceListNew[0]
+              for (i in durationList.indices) {
+                  if (durationList[i].code == priceModel?.vignetteDurationCode) {
+                      mDuration?.setText(
+                          "${durationList[i].timeUnitCount} ${durationList[i].timeUnit}" +
+                                  " (${priceModel?.paymentValue} ${priceModel?.paymentCurrency})"
+                      )
+                      changeTint(mDuration)
+                  }
+              }*/
+
+//            priceModel = priceListNew[0]
+
+            for (j in priceListNew.indices) {
+                if (priceListNew[j].vignetteDurationCode == durationList[durationList.size - 1].code &&
+                    priceListNew[j].vignetteCategoryCode == vignetteList[pos].code
+                ) {
+                    priceModel = priceListNew[j]
+                }
+            }
             for (i in durationList.indices) {
                 if (durationList[i].code == priceModel?.vignetteDurationCode) {
                     mDuration?.setText(
@@ -581,7 +648,7 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
             }
 
         } else {
-            if (priceModel != null && check.isChecked) {
+            if (priceModel != null && check.isChecked && isValidRange) {
                 cta.background = requireContext().resources.getDrawable(R.drawable.save_background)
                 dataCompleted = true
             } else {
@@ -615,5 +682,64 @@ class BuyVignetteFragment : BaseFragment<BuyVignetteViewModel>(),
         )
     }
 
+
+    private fun dateDefaultCase(isActive: Boolean, policyDate: Date?): Boolean {
+        var isValidRange = false
+        val calendar1 = Calendar.getInstance()
+        x = calendar1.time
+        val calendar2 = Calendar.getInstance()
+        calendar2.add(Calendar.DATE, 30)
+        y = calendar2.time
+
+        val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy")
+        xStr = dateFormat.format(x)
+
+        yStr = dateFormat.format(y)
+        // ( when No Active Rovignette / Rovignette Expired)
+
+        if (isActive && policyDate != null) {
+            // ( when Rovignette Active)
+            if (policyDate.after(x) && policyDate.before(y)) {
+                xStr = dateFormat.format(policyDate)
+                val c = Calendar.getInstance()
+                c.time = dateFormat.parse(xStr)
+                c.add(Calendar.DATE, 1)
+                x = c.time
+                xStr = dateFormat.format(x)
+
+                val calendar2 = Calendar.getInstance()
+                calendar2.add(Calendar.DATE, 29)
+                y = calendar2.time
+                yStr = dateFormat.format(y)
+
+                isValidRange = y.after(x)
+            } else {
+                xStr = dateFormat.format(policyDate)
+                val c = Calendar.getInstance()
+                c.time = dateFormat.parse(xStr)
+                c.add(Calendar.DATE, 1)
+                x = c.time
+                xStr = dateFormat.format(x)
+                isValidRange = false
+                // Condition Not satisfy So user not able to purchase
+            }
+        } else {
+            isValidRange = true
+        }
+
+        mStartDateText.setText(xStr)
+
+        if (!isValidRange)
+            showDateError(null)
+        return isValidRange
+    }
+
+
+    @SuppressLint("SimpleDateFormat")
+    fun dateToMilis(str: String): Long {
+        val sdf = SimpleDateFormat(getString(R.string.date_format_template))
+        val mDate = sdf.parse(str)
+        return mDate.time
+    }
 
 }

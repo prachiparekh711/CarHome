@@ -21,19 +21,23 @@ import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.brid
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.rovignette_init.BuyVignetteFragment
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.select_car.SelectCarFragment
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.summary.BridgeTaxSummaryFragment
-import ro.westaco.carhome.presentation.screens.service.help.TransactionHelpFragment
-import ro.westaco.carhome.presentation.screens.service.insurance.DirectClaimInfoFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.car_selection.InsAddCarFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.car_selection.InsCarEditFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.car_selection.SelectCarsFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.init.DirectClaimInfoFragment
 import ro.westaco.carhome.presentation.screens.service.insurance.init.InsuranceFragment
 import ro.westaco.carhome.presentation.screens.service.insurance.init.InsuranceStep2Fragment
 import ro.westaco.carhome.presentation.screens.service.insurance.offers.FetchScreenFragment
 import ro.westaco.carhome.presentation.screens.service.insurance.offers.InsOfferDetailsFragment
 import ro.westaco.carhome.presentation.screens.service.insurance.offers.InsOffersFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.request.InsAcceptanceRequestFragment
 import ro.westaco.carhome.presentation.screens.service.insurance.summary.SummaryFragment
-import ro.westaco.carhome.presentation.screens.service.payment_methods.SavedCardsFragment
-import ro.westaco.carhome.presentation.screens.service.payment_methods.add_new.AddNewCardFragment
-import ro.westaco.carhome.presentation.screens.service.person.legal.addlegal.AddBillLegalFragment
-import ro.westaco.carhome.presentation.screens.service.person.natural.addnatural.AddBillNaturalFragment
-import ro.westaco.carhome.presentation.screens.service.transaction_details.TransactionDetailsFragment
+import ro.westaco.carhome.presentation.screens.service.support.help.TransactionHelpFragment
+import ro.westaco.carhome.presentation.screens.service.support.payment_methods.SavedCardsFragment
+import ro.westaco.carhome.presentation.screens.service.support.payment_methods.add_new.AddNewCardFragment
+import ro.westaco.carhome.presentation.screens.service.support.person_add_view.add_legal.AddBillLegalFragment
+import ro.westaco.carhome.presentation.screens.service.support.person_add_view.add_natural.AddBillNaturalFragment
+import ro.westaco.carhome.presentation.screens.service.support.transaction_details.TransactionDetailsFragment
 import ro.westaco.carhome.presentation.screens.settings.contact_us.ContactUsFragment
 import ro.westaco.carhome.presentation.screens.settings.extras.*
 import ro.westaco.carhome.presentation.screens.settings.history.HistoryFragment
@@ -142,8 +146,8 @@ enum class Screen(fragmentClass: Class<out Fragment?>) {
     TermsAndCond(
         TermsAndConFragment::class.java
     ),
-    GDPR(
-        GDPRFragment::class.java
+    Consents(
+        ConsentsFragment::class.java
     ),
     Share(
         ShareTheAppFragment::class.java
@@ -171,6 +175,22 @@ enum class Screen(fragmentClass: Class<out Fragment?>) {
 
     AddBillLegalPerson(
         AddBillLegalFragment::class.java
+    ),
+
+    InsuranceRequest(
+        InsAcceptanceRequestFragment::class.java
+    ),
+
+    SelectInsuranceCar(
+        SelectCarsFragment::class.java
+    ),
+
+    InsuranceEditCar(
+        InsCarEditFragment::class.java
+    ),
+
+    InsuranceAddCar(
+        InsAddCarFragment::class.java
     ),
 
     Insurance(
@@ -207,9 +227,7 @@ enum class Screen(fragmentClass: Class<out Fragment?>) {
 
     TransactionHelp(
         TransactionHelpFragment::class.java
-    ),
-
-    ;
+    );
 
 
     /*

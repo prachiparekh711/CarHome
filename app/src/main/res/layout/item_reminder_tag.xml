@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="@dimen/_2sdp">
 
     <LinearLayout
         android:id="@+id/background"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_rect_4_white_wstroke"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingVertical="@dimen/_5sdp"
-        android:paddingStart="@dimen/_5sdp"
-        android:paddingEnd="@dimen/_2sdp">
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_7sdp">
 
         <ImageView
             android:id="@+id/typeIndicator"
@@ -25,12 +24,12 @@
             android:id="@+id/tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_5sdp"
             android:ellipsize="end"
             android:fontFamily="@font/inter_semibold_600"
             android:maxLines="1"
             android:textColor="@color/textOnWhite"
-            android:textSize="@dimen/_10sdp" />
+            android:textSize="@dimen/_11sdp" />
 
     </LinearLayout>
 

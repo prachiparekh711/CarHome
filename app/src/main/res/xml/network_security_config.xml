@@ -3,6 +3,10 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">mobilpay.ro</domain>
         <domain includeSubdomains="true">carhome.page.link</domain>
-<!--        <domain includeSubdomains="true">westaco.page.link</domain>-->
+        <domain includeSubdomains="true">carhome-build.westaco.com/</domain>
+        <!--        <domain includeSubdomains="true">westaco.page.link</domain>-->
+        <pin-set>
+            <pin digest="SHA-256">HeKt45ACWDGAEzqwdW66nqdnY4xZTmOpGK3vajtJyeY=</pin>
+        </pin-set>
     </domain-config>
 </network-security-config>

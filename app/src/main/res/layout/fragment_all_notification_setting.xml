@@ -51,7 +51,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -111,7 +111,7 @@
                             android:textColor="@color/textOnWhite"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/app_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"
@@ -162,7 +162,7 @@
                             android:textColor="@color/textOnWhite"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/sms_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"
@@ -213,7 +213,7 @@
                             android:textColor="@color/textOnWhite"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/email_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"
@@ -272,7 +272,7 @@
                             android:textColor="@color/textOnWhite"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/geo_app_switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"

@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.Lifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
@@ -32,6 +33,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
         var activeUser: String? = null
         var activeId: Int? = null
         var profileItem: ProfileItem? = null
+        var activeService: String = ""
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -43,6 +45,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
         val context: Context = ContextWrapper.wrap(newBase, newLocale)
         super.attachBaseContext(context)
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,36 +73,42 @@ class MainActivity : BaseActivity<MainViewModel>() {
                 }
             }
         }, 2000)
-
     }
 
-    override fun setupUi() {
 
+    override fun setupUi() {
+        sirutaList.clear()
+        countyList.clear()
+        defaultCounty = null
+        defaultCity = null
     }
 
     override fun setupObservers() {
         viewModel.sirutaData.observe(this) { sirutaData ->
-            if (sirutaData != null) {
-                sirutaList = sirutaData
-                sirutaList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-                for (i in sirutaList.indices) {
-                    if (sirutaList[i].parentCode == null) {
-                        countyList.add(sirutaList[i])
-                    }
-                }
+            if (this.lifecycle.currentState == Lifecycle.State.RESUMED) {
 
-                countyList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-                defaultCounty = countyList[0]
-
-                if (defaultCounty != null) {
-                    val cityList: ArrayList<Siruta> = ArrayList()
+                if (sirutaData != null) {
+                    sirutaList = sirutaData
+                    sirutaList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
                     for (i in sirutaList.indices) {
-                        if (defaultCounty?.code == sirutaList[i].parentCode) {
-                            cityList.add(sirutaData[i])
+                        if (sirutaList[i].parentCode == null && !countyList.contains(sirutaList[i])) {
+                            countyList.add(sirutaList[i])
                         }
                     }
-                    cityList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-                    defaultCity = cityList[0]
+
+                    countyList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                    defaultCounty = countyList[0]
+
+                    if (defaultCounty != null) {
+                        val cityList: ArrayList<Siruta> = ArrayList()
+                        for (i in sirutaList.indices) {
+                            if (defaultCounty?.code == sirutaList[i].parentCode) {
+                                cityList.add(sirutaData[i])
+                            }
+                        }
+                        cityList.sortWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+                        defaultCity = cityList[0]
+                    }
                 }
             }
         }

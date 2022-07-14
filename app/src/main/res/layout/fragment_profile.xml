@@ -54,7 +54,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior=".utils.OverScrollBounceBehavior">
+                app:layout_behavior=".views.OverScrollBounceBehavior">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                                     android:layout_marginBottom="@dimen/_10sdp"
                                     android:fontFamily="@font/inter_medium_500"
                                     android:textColor="@color/gray"
-                                    android:textSize="@dimen/_13sdp" />
+                                    android:textSize="@dimen/_11sdp" />
                             </LinearLayout>
                         </RelativeLayout>
 
@@ -138,6 +138,7 @@
 
                                 </LinearLayout>
 
+
                                 <ImageView
                                     android:id="@+id/avatar"
                                     android:layout_width="@dimen/_70sdp"
@@ -161,16 +162,15 @@
 
                             <ProgressBar
                                 android:id="@+id/progressBar"
-                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="@dimen/_150sdp"
                                 android:layout_height="@dimen/_150sdp"
                                 android:layout_centerInParent="true"
-                                android:background="@drawable/circle_shape"
                                 android:indeterminate="false"
-                                android:max="100"
-                                android:progress="0"
                                 android:progressDrawable="@drawable/circular_progress_bar"
-                                android:visibility="gone" />
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:background="@drawable/circle_shape"
+                                android:max="100"
+                                android:progress="65" />
 
                             <com.airbnb.lottie.LottieAnimationView
                                 android:id="@+id/lottieAnimation"

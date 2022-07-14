@@ -7,10 +7,10 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_email_verification.*
 import ro.westaco.carhome.R
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.utils.BiometricUtil
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.views.Progressbar
 
 //C- Email Verification Section
 @AndroidEntryPoint
@@ -125,10 +125,11 @@ class EmailVerificationActivity : BaseActivity<EmailVerificationModel>() {
     private fun redirectOnSuccess() {
         progress?.dismissPopup()
 
-        if (BiometricUtil.isHardwareAvailable(this@EmailVerificationActivity)) {
-            if (BiometricUtil.hasBiometricEnrolled(this@EmailVerificationActivity)) {
-                viewModel.navigateToBiometric()
-            }
+        if (BiometricUtil.isHardwareAvailable(this@EmailVerificationActivity) && BiometricUtil.hasBiometricEnrolled(
+                this@EmailVerificationActivity
+            )
+        ) {
+            viewModel.navigateToBiometric()
         } else {
             viewModel.navigateToProgress()
         }

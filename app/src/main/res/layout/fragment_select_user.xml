@@ -32,7 +32,7 @@
                 android:gravity="center"
                 android:text="@string/select_owner"
                 android:textColor="@color/textOnWhite"
-                android:textSize="@dimen/_16sdp"
+                android:textSize="@dimen/_14sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

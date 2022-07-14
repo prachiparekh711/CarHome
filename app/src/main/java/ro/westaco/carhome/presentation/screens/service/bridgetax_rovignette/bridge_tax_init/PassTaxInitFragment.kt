@@ -1,12 +1,9 @@
 package ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.bridge_tax_init
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -17,7 +14,6 @@ import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_pass_tax_init.*
@@ -28,14 +24,14 @@ import ro.westaco.carhome.databinding.BottomSheetNumberPassesBinding
 import ro.westaco.carhome.databinding.DifferentCategoryLayoutBinding
 import ro.westaco.carhome.databinding.VehicleCatLayoutBinding
 import ro.westaco.carhome.di.ApiModule
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.data.commen.CountryCodeDialog
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.adapter.CategoryAdapter
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.adapter.PassTaxAdapter
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
-import ro.westaco.carhome.utils.Progressbar
 import ro.westaco.carhome.utils.RegexData
+import ro.westaco.carhome.views.Progressbar
 
 @AndroidEntryPoint
 class PassTaxInitFragment : BaseFragment<BridgeTaxInitViewModel>(),
@@ -176,7 +172,6 @@ class PassTaxInitFragment : BaseFragment<BridgeTaxInitViewModel>(),
             }
 
 
-
             if (dataCompleted) {
                 if (vin_error.isVisible) {
                     vinET.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
@@ -194,18 +189,19 @@ class PassTaxInitFragment : BaseFragment<BridgeTaxInitViewModel>(),
                     vinET.text.toString()
                 }
 
-                if (mVINNumberText.text?.isNotEmpty() == true) {
+                if (vinET.text?.isNotEmpty() == true) {
 
-                    if (mVINNumberText.text?.length != 17) {
+                    if (vinET.text?.length != 17) {
                         showErrorInfo(requireContext(), getString(R.string.error_vin))
                         return@setOnClickListener
                     }
-                    vinStr = mVINNumberText.text.toString()
+                    vinStr = vinET.text.toString()
 
                 }
 
                 countryItem?.let { it2 ->
                     priceModel?.let { it1 ->
+                        progressbar?.showPopup()
                         viewModel.onSave(
                             vehicle = vehicle,
                             registrationCountryCode = it2.code,
@@ -405,11 +401,6 @@ class PassTaxInitFragment : BaseFragment<BridgeTaxInitViewModel>(),
                 }
 
                 BridgeTaxInitViewModel.STATE.EnterVin -> {
-//                    setTextInputLayoutHintColor(mVINNumber,requireContext(),R.color.delete_dialog_color)
-                    mVINNumberText.isClickable = true
-                    mVINNumberText.isCursorVisible = true
-                    mVINNumberText.isFocusable = true
-                    mVINNumberText.isFocusableInTouchMode = true
                     vinLabel.isVisible = true
                 }
 
@@ -421,6 +412,10 @@ class PassTaxInitFragment : BaseFragment<BridgeTaxInitViewModel>(),
 
                 BridgeTaxInitViewModel.STATE.EnterCategory -> {
                     categoryBottomSheet?.show()
+                }
+
+                BridgeTaxInitViewModel.STATE.StopProgress -> {
+                    progressbar?.dismissPopup()
                 }
 
             }
@@ -450,6 +445,7 @@ class PassTaxInitFragment : BaseFragment<BridgeTaxInitViewModel>(),
             LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
         adapter = CategoryAdapter(requireContext(), categoryPos, repeatInterface, categoryList)
         bindingSheet.mRecycler.adapter = adapter
+        bindingSheet.title.text = requireContext().resources.getString(R.string.vignette_category)
         bindingSheet.cancel.setOnClickListener { bottomSheet?.dismiss() }
         bindingSheet.mContinue.setOnClickListener { bottomSheet?.dismiss() }
         bindingSheet.mClose.setOnClickListener { bottomSheet?.dismiss() }
@@ -470,15 +466,6 @@ class PassTaxInitFragment : BaseFragment<BridgeTaxInitViewModel>(),
         countryName.text = item.name
         countryFlag.text = flagDrawableResId
         checkData()
-    }
-
-    private fun setTextInputLayoutHintColor(
-        textInputLayout: TextInputLayout,
-        context: Context,
-        @ColorRes colorIdRes: Int
-    ) {
-        textInputLayout.defaultHintTextColor =
-            ColorStateList.valueOf(ContextCompat.getColor(context, colorIdRes))
     }
 
 }

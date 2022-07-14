@@ -52,7 +52,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -282,104 +282,6 @@
                         android:textColor="@color/secondaryTextOnWhite"
                         android:textSize="@dimen/_11sdp"
                         android:visibility="gone" />
-
-                    <LinearLayout
-                        android:id="@+id/roDocumentLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:background="@drawable/item_ring_box"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/_10sdp"
-                        android:visibility="gone"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/rovinieta"
-                                android:textColor="@color/orangeExpired"
-                                android:textSize="@dimen/_13sdp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/ro_date"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_3sdp"
-                                android:textColor="@color/secondaryTextOnWhite"
-                                android:textSize="@dimen/_10sdp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tv_ro_btn"
-                            android:layout_width="@dimen/_60sdp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/cta_background"
-                            android:gravity="center"
-                            android:padding="@dimen/_6sdp"
-                            android:text="@string/view"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_11sdp"
-                            android:visibility="gone" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/rcaDocumentLL"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:background="@drawable/item_ring_box"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/_10sdp"
-                        android:visibility="gone"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/rca"
-                                android:textColor="@color/activeGreen"
-                                android:textSize="@dimen/_13sdp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/rc_date"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_3sdp"
-                                android:textColor="@color/secondaryTextOnWhite"
-                                android:textSize="@dimen/_10sdp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tv_rc_btn"
-                            android:layout_width="@dimen/_60sdp"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/cta_background"
-                            android:gravity="center"
-                            android:padding="@dimen/_6sdp"
-                            android:text="@string/view"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/_11sdp"
-                            android:visibility="gone" />
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -1038,7 +940,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_40sdp"
-                        android:background="@drawable/item_ring_box"
+                        android:background="@drawable/auth_text_input_background"
                         android:gravity="center"
                         android:padding="@dimen/_13sdp"
                         android:text="@string/edit_car"

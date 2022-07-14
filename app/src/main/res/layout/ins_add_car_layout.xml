@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/mTopRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/inter_semibold_600"
+            android:text="@string/add_new_car"
+            android:textColor="@color/textOnWhite"
+            android:textSize="@dimen/_15sdp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/mMenu"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/_2sdp"
+            android:adjustViewBounds="true"
+            android:padding="@dimen/_9sdp"
+            android:src="@drawable/ic_more_new"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/carInfoBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mTopRL"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@color/expande_colore"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/_8sdp">
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/mFirst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:button="@drawable/radiobutton_drawable"
+                android:checked="true"
+                android:padding="@dimen/_5sdp"
+                android:text="@string/car_registered" />
+
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/mSecond"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:button="@drawable/radiobutton_drawable"
+                android:padding="@dimen/_5sdp"
+                android:src="@drawable/radio_unchecked"
+                android:text="@string/car_underRegistration" />
+
+
+        </RadioGroup>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/li_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_background"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_7sdp">
+
+            <TextView
+                android:id="@+id/cou"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_regular_400"
+                android:text="@string/country_reg"
+                android:textColor="@color/service_text_color"
+                android:textSize="@dimen/_11sdp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/countryFlag"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:gravity="center"
+                android:text="@string/romania_flag"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cou"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/countryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/inter_medium_500"
+                android:gravity="center_vertical"
+                android:text="@string/romania"
+                android:textColor="@color/service_text_color"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintBottom_toBottomOf="@+id/countryFlag"
+                app:layout_constraintStart_toEndOf="@+id/countryFlag"
+                tools:ignore="RtlSymmetry" />
+
+            <ImageView
+                android:id="@+id/adds"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:src="@drawable/ic_arrow_down_id"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/licenseLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:hint="@string/license_plate"
+            android:paddingVertical="@dimen/_5sdp"
+            android:textColor="@color/service_semitext_color"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:boxCornerRadiusBottomEnd="0dp"
+            app:boxCornerRadiusBottomStart="0dp"
+            app:boxCornerRadiusTopEnd="0dp"
+            app:boxCornerRadiusTopStart="0dp"
+            app:boxStrokeColor="#FFF"
+            app:boxStrokeWidth="0dp"
+            app:hintTextAppearance="@style/TextLabel"
+            app:hintTextColor="@color/service_semitext_color"
+            tools:ignore="RtlSymmetry">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/licensePlate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:fontFamily="@font/inter_medium_500"
+                android:inputType="textCapCharacters"
+                android:singleLine="true"
+                android:textColor="@color/service_text_color"
+                android:textSize="@dimen/_12sdp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/number_plate_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawablePadding="@dimen/_10sdp"
+            android:fontFamily="@font/inter_regular_400"
+            android:gravity="center_vertical"
+            android:paddingVertical="@dimen/_5sdp"
+            android:paddingStart="@dimen/_10sdp"
+            android:text="@string/license_error2"
+            android:textColor="@color/delete_dialog_color"
+            android:textSize="@dimen/_11sdp"
+            android:visibility="gone" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/vinLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:background="@color/white"
+            android:hint="@string/vin_number"
+            android:textColor="@color/service_semitext_color"
+            android:theme="@style/TextInputLayoutAppearance"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:boxCornerRadiusBottomEnd="0dp"
+            app:boxCornerRadiusBottomStart="0dp"
+            app:boxCornerRadiusTopEnd="0dp"
+            app:boxCornerRadiusTopStart="0dp"
+            app:boxStrokeColor="#FFF"
+            app:boxStrokeWidth="0dp"
+            app:hintTextAppearance="@style/TextLabel"
+            app:hintTextColor="@color/service_semitext_color"
+            tools:ignore="RtlSymmetry">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/vinET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:focusable="true"
+                android:fontFamily="@font/inter_medium_500"
+                android:inputType="textCapCharacters"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/service_text_color"
+                android:textSize="@dimen/_12sdp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/vin_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawablePadding="@dimen/_10sdp"
+            android:fontFamily="@font/inter_regular_400"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_5sdp"
+            android:text="@string/vin_required"
+            android:textColor="@color/service_error_text_color"
+            android:textSize="@dimen/_9sdp"
+            android:visibility="gone"
+            app:drawableLeftCompat="@drawable/ic_note" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/mBottomRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingVertical="@dimen/_15sdp">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:checked="false"
+            app:buttonTint="@color/appPrimary" />
+
+        <TextView
+            android:id="@+id/confirmation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_toRightOf="@id/check"
+            android:fontFamily="@font/inter_medium_500"
+            android:text="@string/confirmation"
+            android:textColor="@color/textOnWhiteAccentGray"
+            android:textSize="@dimen/_11sdp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/confirmation"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/mDismiss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_weight="1.8"
+                android:fontFamily="@font/manrope_semibold_600"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_5sdp"
+                android:text="@string/cancel"
+                android:textColor="@color/textOnWhiteAccentGray"
+                android:textSize="@dimen/_11sdp" />
+
+            <TextView
+                android:id="@+id/cta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_weight="1"
+                android:background="@drawable/save_background_invisible"
+                android:fontFamily="@font/manrope_semibold_600"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_12sdp"
+                android:text="@string/continue_txt"
+                android:textColor="@color/textOnSolid"
+                android:textSize="@dimen/_11sdp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

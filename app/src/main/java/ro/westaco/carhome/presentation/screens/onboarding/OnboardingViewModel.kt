@@ -2,7 +2,6 @@ package ro.westaco.carhome.presentation.screens.onboarding
 
 import android.app.Application
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ro.westaco.carhome.R
@@ -27,17 +26,21 @@ class OnboardingViewModel @Inject constructor(
     }
 
     override fun onActivityCreated() {
-        Log.e("onboarding", appPreferences.wasOnboardingSeen.toString())
         if (appPreferences.wasOnboardingSeen) {
             onSkip()
         }
     }
 
     private fun getOnboardingItems() = arrayListOf<OnboardingItem>().apply {
-
-        add(OnboardingItem(R.string.onb_title2, R.drawable.onboarding1111))
-        add(OnboardingItem(R.string.onb_title1, R.drawable.onboarding2222))
-        add(OnboardingItem(R.string.onb_title3, R.drawable.onboarding3333))
+        if (AppPreferencesDelegates.get().language == "en-US") {
+            add(OnboardingItem(R.string.onb_title2, R.drawable.ben1))
+            add(OnboardingItem(R.string.onb_title1, R.drawable.ben2))
+            add(OnboardingItem(R.string.onb_title3, R.drawable.ben3))
+        } else {
+            add(OnboardingItem(R.string.onb_title2, R.drawable.bro1))
+            add(OnboardingItem(R.string.onb_title1, R.drawable.bro2))
+            add(OnboardingItem(R.string.onb_title3, R.drawable.bro3))
+        }
     }
 
     /*

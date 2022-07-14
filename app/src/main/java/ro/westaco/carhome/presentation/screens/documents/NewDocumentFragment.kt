@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_new_document.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.utils.FileUtil
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.views.Progressbar
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -60,7 +60,6 @@ class NewDocumentFragment : BaseFragment<DocumentsViewModel>(),
         }
 
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
 
         setSaveDialog()
         setData()
@@ -109,9 +108,10 @@ class NewDocumentFragment : BaseFragment<DocumentsViewModel>(),
 
             val sdf = SimpleDateFormat("yy-MM-dd hh:mm")
             val currentDate = sdf.format(Date())
-            fileName.setText("${resources.getString(R.string.untitled)} ${currentDate}")
+            fileName.setText("${resources.getString(R.string.untitled)} $currentDate")
 
             save.setOnClickListener {
+                progressbar?.showPopup()
                 if (selectedList.size == 1) {
                     catID?.let { it1 ->
                         viewModel.addDocument(
@@ -158,7 +158,7 @@ class NewDocumentFragment : BaseFragment<DocumentsViewModel>(),
                     viewModel.addDocument(
                         it1,
                         fileName.text.toString(),
-                        null,
+                        "PDF",
                         selectedList
                     )
                 }
@@ -290,12 +290,13 @@ class NewDocumentFragment : BaseFragment<DocumentsViewModel>(),
         val single = view.findViewById<LinearLayout>(R.id.single)
 
         close.setOnClickListener {
+            progressbar?.dismissPopup()
             dialogSave?.dismiss()
         }
 
         multiple.setOnClickListener {
             dialogSave?.dismiss()
-
+            progressbar?.showPopup()
             catID?.let { it1 ->
                 viewModel.addDocument(
                     it1,
@@ -304,10 +305,10 @@ class NewDocumentFragment : BaseFragment<DocumentsViewModel>(),
                     selectedList
                 )
             }
-
         }
 
         single.setOnClickListener {
+            progressbar?.showPopup()
             dialogSave?.dismiss()
             catID?.let { it1 ->
                 viewModel.addDocument(

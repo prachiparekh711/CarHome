@@ -80,7 +80,7 @@ class DriverAdapter(
 
             remove.setOnClickListener {
 
-                listener?.onRemoveClick(position)
+            listener?.onRemoveClick(position)
                 list.removeAt(position)
                 notifyItemRemoved(position)
             }

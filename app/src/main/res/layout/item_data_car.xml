@@ -107,6 +107,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/rca_ins"
+                        android:paddingStart="@dimen/_2sdp"
                         android:textColor="@color/textOnWhite"
                         android:fontFamily="@font/inter_bold_700"
                         android:textSize="@dimen/_11sdp" />
@@ -181,6 +182,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/rovinieta"
+                        android:paddingStart="@dimen/_2sdp"
                         android:textColor="@color/textOnWhite"
                         android:fontFamily="@font/inter_bold_700"
                         android:textSize="@dimen/_11sdp" />
@@ -256,6 +258,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/bridge_tax"
+                        android:paddingStart="@dimen/_2sdp"
                         android:textColor="@color/textOnWhite"
                         android:fontFamily="@font/inter_bold_700"
                         android:textSize="@dimen/_11sdp" />

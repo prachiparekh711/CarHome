@@ -11,7 +11,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.PaymentRequest
 import ro.westaco.carhome.data.sources.remote.requests.RcaInitRequest
@@ -21,7 +20,7 @@ import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
-import ro.westaco.carhome.presentation.screens.service.transaction_details.TransactionDetailsFragment
+import ro.westaco.carhome.presentation.screens.service.support.transaction_details.TransactionDetailsFragment
 import ro.westaco.carhome.utils.DateTimeUtils
 import ro.westaco.carhome.utils.DeviceUtils
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
@@ -41,11 +40,13 @@ class SummaryViewModel @Inject constructor(
 
     var durationData = MutableLiveData<ArrayList<RcaDurationItem>>()
     var rcaInitData = MutableLiveData<RcaInitResponse>()
-    var rcaTransaction = MutableLiveData<TransactionData>()
     var initTransactionDataItems = MutableLiveData<PaymentResponse>()
     var mFirebaseAnalytics = FirebaseAnalytics.getInstance(app)
-    var profileLogoData: MutableLiveData<Bitmap>? = MutableLiveData()
+    var profileLogoData: MutableLiveData<Bitmap?>? = MutableLiveData()
     var userLiveData = MutableLiveData<FirebaseUser>()
+    val naturalPersonDetailsLiveDataList: MutableLiveData<NaturalPersonDetails?> = MutableLiveData()
+    var countryData = MutableLiveData<ArrayList<Country>>()
+    var streetTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
 
     init {
         userLiveData.value = FirebaseAuth.getInstance().currentUser
@@ -85,6 +86,25 @@ class SummaryViewModel @Inject constructor(
                 },
                 {}
             )
+
+        api.getCountries()
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { resp ->
+                    countryData.value = resp?.data
+                },
+                {
+
+                }
+            )
+
+
+        api.getSimpleCatalog("NOM_STREET_TYPE")
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { streetTypeData.value = it.data }, {
+
+                })
     }
 
     private fun fetchProfileData() {
@@ -105,14 +125,16 @@ class SummaryViewModel @Inject constructor(
             })
     }
 
+    fun getNaturalPerson(id: Long) {
+        api.getNaturalPerson(id)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                naturalPersonDetailsLiveDataList.value = it?.data
+            }, {})
+    }
+
     @SuppressLint("NullSafeMutableLiveData")
-    internal fun onCtaItems(items: OffersItem, checked: Boolean, ds: Boolean) {
-
-        if (!checked) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.confirm_details)
-            return
-        }
-
+    internal fun onCtaItems(items: OffersItem, ds: Boolean) {
         val params = Bundle()
         mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.PURCHASE_INSURANCE, params)
 
@@ -127,13 +149,22 @@ class SummaryViewModel @Inject constructor(
 
     @SuppressLint("NullSafeMutableLiveData")
     internal fun paymentStart(transactionGuidId: String, invoicePersonGuidId: String) {
-//    internal fun paymentStart(transactionGuidId: String, invoicePersonGuidId: Int) {
-
         val request = PaymentRequest(
             transactionGuid = transactionGuidId,
             invoicePersonGuid = invoicePersonGuidId
         )
         api.initPayment(request)
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (it.success && it.data != null)
+                    initTransactionDataItems.value = it.data
+            }, {})
+
+    }
+
+    @SuppressLint("NullSafeMutableLiveData")
+    internal fun paymentRetry(transactionGuidId: String) {
+        api.retryPayment(transactionGuidId)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (it.success && it.data != null)
@@ -154,5 +185,6 @@ class SummaryViewModel @Inject constructor(
                 }
             }))
     }
+
 
 }

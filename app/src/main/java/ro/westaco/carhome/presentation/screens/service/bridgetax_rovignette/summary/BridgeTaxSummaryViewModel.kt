@@ -6,20 +6,25 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
-import ro.westaco.carhome.data.sources.remote.requests.*
+import ro.westaco.carhome.data.sources.remote.requests.AddLegalPersonRequest
+import ro.westaco.carhome.data.sources.remote.requests.AddNaturalPersonRequest
+import ro.westaco.carhome.data.sources.remote.requests.Address
+import ro.westaco.carhome.data.sources.remote.requests.PaymentRequest
 import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.navigation.BundleProvider
 import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
-import ro.westaco.carhome.presentation.screens.service.transaction_details.TransactionDetailsFragment
+import ro.westaco.carhome.presentation.screens.main.MainActivity
+import ro.westaco.carhome.presentation.screens.service.support.transaction_details.TransactionDetailsFragment
 import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -37,13 +42,12 @@ class BridgeTaxSummaryViewModel @Inject constructor(
     var vehicleCategories = MutableLiveData<ArrayList<ServiceCategory>>()
     var bridgeTaxObjectives = MutableLiveData<ArrayList<ObjectiveItem>>()
     var countryData = MutableLiveData<ArrayList<Country>>()
+    var streetTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
     internal val vehicleDetailsLivedata = MutableLiveData<VehicleDetails>()
     var vignetteDurations = MutableLiveData<java.util.ArrayList<RovignetteDuration>>()
     var profileLogoData: MutableLiveData<Bitmap>? = MutableLiveData()
     val legalPersonDetailsLiveDataList: MutableLiveData<LegalPersonDetails?> = MutableLiveData()
     val naturalPersonDetailsLiveDataList: MutableLiveData<NaturalPersonDetails?> = MutableLiveData()
-    var streetTypeData = MutableLiveData<ArrayList<CatalogItem>?>()
-
 
     internal fun onBack() {
         uiEventStream.value = UiEvent.NavBack
@@ -55,7 +59,10 @@ class BridgeTaxSummaryViewModel @Inject constructor(
 
     override fun onFragmentCreated() {
         super.onFragmentCreated()
-        fetchDefaultData()
+        Handler(Looper.getMainLooper()).postDelayed({
+            fetchDefaultData()
+        }, 500)
+
     }
 
     @SuppressLint("NullSafeMutableLiveData")
@@ -167,124 +174,86 @@ class BridgeTaxSummaryViewModel @Inject constructor(
     internal fun getProfileImage(context: Context, user: FirebaseUser?) =
         DeviceUtils.getProfileImage(context, user)
 
+    fun refreshProfile() {
+        api.getProfile()
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (it.success && it.data != null) {
+                    MainActivity.profileItem = it.data
+                    MainActivity.activeUser = MainActivity.profileItem?.firstName ?: " "
+                    MainActivity.activeId = MainActivity.profileItem?.id
+                }
+            }, {
+
+            })
+    }
+
     internal fun onSaveNaturalPerson(
-        id: Long,
-        firstName: String?,
-        lastname: String?,
+        item: NaturalPersonDetails?,
         address: Address?,
-        cnp: String?,
-        phone: String?,
-        phoneCountryCode: String?,
-        dateOfBirth: String?,
-        email: String?,
-        drivingLicenseCateg: ArrayList<Int>?,
-        drivLicenseId: String?,
-        drivLicenseIssueDate: String?,
-        drivLicenseExpDate: String?,
-        idDoc: IdentityDocument?,
-        guid: String,
+        firstName: String?,
+        lastName: String?,
         personGUID: String,
-        check: Boolean
+        guid: String
     ) {
 
-        /*val drivingLicenseCategory = java.util.ArrayList<Int>()
+        val naturalPersonReq = AddNaturalPersonRequest(
+            firstName,
+            lastName,
+            item?.occupationCorIsco08,
+            address,
+            item?.identityDocument,
+            item?.cnp,
+            item?.phone,
+            item?.phoneCountryCode,
+            item?.drivingLicense,
+            item?.employerName,
+            item?.dateOfBirth,
+            item?.id,
+            item?.email
+        )
 
-        drivingLicenseCateg?.indices?.forEach { i ->
-            drivingLicenseCategory.add(drivingLicenseCateg[i].id.toInt())
-        }*/
-
-        if (!check) {
-
-            uiEventStream.value = UiEvent.ShowToast(R.string.confirm_details)
-            return
-
-        } else {
-
-            val drivingLicense = DrivingLicense(
-                drivLicenseId,
-                drivLicenseIssueDate,
-                drivLicenseExpDate,
-                drivingLicenseCateg
-            )
-
-            val naturalPersonReq = AddNaturalPersonRequest(
-                firstName,
-                lastname,
-                null,
-                address,
-                idDoc,
-                cnp,
-                phone,
-                phoneCountryCode,
-                drivingLicense,
-                null,
-                dateOfBirth,
-                id.toInt(),
-                email,
-
-                )
-
-//        api.editNaturalPerson(id, naturalPersonReq)
-
-//        val request = api.editNaturalPerson(id, naturalPersonReq)
-            val request = api.editNaturalPerson(id, naturalPersonReq)
-//        api.editNaturalPerson(id, naturalPersonReq)
-
-            request.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        item?.id?.toLong()?.let {
+            api.editNaturalPerson(it, naturalPersonReq)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-
-                    uiEventStream.value = UiEvent.ShowToast(R.string.edit_success_msg)
+                    if (item.profile == true) {
+                        refreshProfile()
+                    }
                     onNextClick(guid, personGUID)
 
                 }, {})
-
         }
+
 
     }
 
     internal fun onSaveLegalPerson(
-        noReg: String?,
+        item: LegalPersonDetails?,
         address: Address?,
-        cui: String?,
-        companyName: String?,
-        caen: Caen?,
-        id: Long,
-        activityType: CatalogItem?,
-        phoneId: String?,
-        phoneCountryCodeId: String?,
-        emailId: String?,
-        guid: String,
         personGUID: String,
-        check: Boolean
+        guid: String
     ) {
 
-        if (!check) {
 
-            uiEventStream.value = UiEvent.ShowToast(R.string.confirm_details)
-            return
+        val legalPerson = AddLegalPersonRequest(
+            noRegistration = item?.noRegistration,
+            vatPayer = item?.vatPayer,
+            address = address,
+            cui = item?.cui,
+            companyName = item?.companyName,
+            caen = item?.caen,
+            id = item?.id,
+            activityType = item?.activityType,
+            phone = item?.phone,
+            phoneCountryCode = item?.phoneCountryCode,
+            email = item?.email
+        )
 
-        } else {
-            val vatPayer = cui?.contains("ro", true)
-
-            val legalPerson = AddLegalPersonRequest(
-                noRegistration = noReg,
-                vatPayer = vatPayer,
-                address = address,
-                cui = cui,
-                companyName = companyName,
-                caen = caen,
-                id = id,
-                activityType = activityType,
-                phone = phoneId,
-                phoneCountryCode = phoneCountryCodeId,
-                email = emailId
-            )
-
-            val request = api.editLegalPerson(id, legalPerson)
-
-            request.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        item?.id?.let {
+            api.editLegalPerson(it, legalPerson)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    uiEventStream.value = UiEvent.ShowToast(R.string.edit_success_msg)
                     onNextClick(guid, personGUID)
                 }, {})
         }

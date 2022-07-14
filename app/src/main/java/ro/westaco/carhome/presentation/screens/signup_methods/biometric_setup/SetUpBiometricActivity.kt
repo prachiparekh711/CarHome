@@ -4,7 +4,7 @@ import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_set_up_biometric.*
 import ro.westaco.carhome.R
-import ro.westaco.carhome.prefrences.SharedPrefrences
+import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.presentation.base.BaseActivity
 
 //C- SetUpBiometric Screen
@@ -16,10 +16,10 @@ class SetUpBiometricActivity : BaseActivity<BiometricSetupModel>() {
 //        faceRL.isVisible = false
 
         setupTouch.setOnClickListener {
-            SharedPrefrences.setBiometricsStatus(this, true)
-            SharedPrefrences.setBiometricsMode(this, "TOUCH")
+            AppPreferencesDelegates.get().biometric = true
+            AppPreferencesDelegates.get().biometricMode = "TOUCH"
             touchRL.isVisible = false
-           viewModel.navigateToProgress()
+            viewModel.navigateToProgress()
 //            faceRL.isVisible = true
         }
 
@@ -49,13 +49,13 @@ class SetUpBiometricActivity : BaseActivity<BiometricSetupModel>() {
     override fun setupUi() {
         initUI()
 
-        back.setOnClickListener {
-            onBackPressed()
-        }
+        /* back.setOnClickListener {
+             onBackPressed()
+         }*/
     }
 
     override fun onBackPressed() {
-        finishAffinity()
+//        finishAffinity()
     }
 
     override fun setupObservers() {

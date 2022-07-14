@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="firstName">@string/first_name</string>
+    <string name="lastName">@string/last_name</string>
+    <string name="cnp">@string/profile_cnp</string>
+    <string name="dateOfBirth">@string/natural_date_of_birth</string>
+    <string name="identityDocument.series">@string/profile_series</string>
+    <string name="identityDocument.number">@string/profile_number</string>
+    <string name="identityDocument.expirationDate">@string/profile_exp_date</string>
+    <string name="identityDocument.documentType">@string/id_type</string>
+    <string name="identityDocument.documentType.id">@string/id_type</string>
+    <string name="identityDocument.documentType.name">@string/id_type</string>
+    <string name="drivingLicense.licenseId">@string/license_no</string>
+    <string name="drivingLicense.issueDate">@string/d_license_issue</string>
+    <string name="drivingLicense.expirationDate">@string/exp_date</string>
+    <string name="drivingLicense.vehicleCategories">@string/d_license_cat</string>
+
+    <string name="companyName">Company Name</string>
+    <!-- Available in string file
+      <string name="cui">CUI</string>
+          -->
+    <string name="noRegistration">@string/reg_of_company</string>
+    <string name="phone">@string/phone_num</string>
+    <string name="phoneCountryCode">Phone country code</string>
+    <string name="phoneCountryCode_cc"><![CDATA[Phone country code</><font color="#FB4079">*</font>]]></string>
+    <string name="email">@string/email_hint</string>
+    <string name="caen">@string/nace_code</string>
+    <string name="caen.code">@string/nace_code</string>
+    <string name="caen.name">@string/nace_code</string>
+    <string name="activityType">@string/act_type</string>
+    <string name="activityType.id">@string/act_type</string>
+    <string name="activityType.name">@string/act_type</string>
+
+    <string name="address.countryCode">@string/country</string>
+    <string name="address.region">@string/address_county</string>
+    <string name="address.locality">@string/address_city</string>
+    <string name="address.sirutaCode">@string/address_city</string>
+    <string name="address.streetType">@string/street_type</string>
+    <string name="address.streetType.id">@string/street_type</string>
+    <string name="address.streetType.name">@string/street_type</string>
+    <string name="address.streetName">@string/address_street_name</string>
+    <string name="address.buildingNo">@string/profile_number</string>
+    <string name="address.block">@string/block</string>
+    <string name="address.entrance">@string/entrance</string>
+    <string name="address.floor">@string/floor</string>
+    <string name="address.apartment">@string/apartment</string>
+    <string name="address.addressDetail" translatable="false"></string>
+    <string name="address.zipCode">@string/zip_code</string>
+
+    <string name="vehicle.registrationCountryCode">@string/reg_country</string>
+    <string name="vehicle.licensePlate">@string/license_plate</string>
+    <string name="vehicle.leasingCompany">@string/leasing</string>
+    <string name="vehicle.vehicleCategory">@string/vehicle_category</string>
+    <string name="vehicle.vehicleSubCategory">@string/vehicle_subcategory</string>
+    <string name="vehicle.vehicleUsageType">@string/purpose</string>
+    <string name="vehicle.vehicleBrand">@string/manufacturer</string>
+    <string name="vehicle.model">@string/model</string>
+    <string name="vehicle.vehicleIdentificationNumber">@string/vin_number</string>
+    <string name="vehicle.manufacturingYear">@string/year</string>
+    <string name="vehicle.maxAllowableMass">@string/max_allow_mass</string>
+    <string name="vehicle.engineSize">Engine Size</string>
+    <string name="vehicle.enginePower">Power</string>
+    <string name="vehicle.fuelType">@string/fuel_type</string>
+    <string name="vehicle.noOfSeats">@string/no_seats</string>
+    <string name="vehicle.vehicleIdentityCard">@string/civ</string>
+    <string name="vehicle.vehicleEvents" translatable="false"></string>
+
+</resources>

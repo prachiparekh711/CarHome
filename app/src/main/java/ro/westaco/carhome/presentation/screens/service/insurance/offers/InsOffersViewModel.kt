@@ -12,6 +12,7 @@ import ro.westaco.carhome.data.sources.remote.responses.models.RcaDurationItem
 import ro.westaco.carhome.data.sources.remote.responses.models.RcaOfferResponse
 import ro.westaco.carhome.navigation.BundleProvider
 import ro.westaco.carhome.navigation.Screen
+import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
@@ -31,6 +32,11 @@ class InsOffersViewModel @Inject constructor(
     /*
    ** User Interaction
    */
+    val stateStream: SingleLiveEvent<STATE> = SingleLiveEvent()
+
+    enum class STATE {
+        IN_PROGESS
+    }
 
     var durationData = MutableLiveData<ArrayList<RcaDurationItem>>()
     var rcaOfferResponseData = MutableLiveData<RcaOfferResponse>()
@@ -85,6 +91,7 @@ class InsOffersViewModel @Inject constructor(
         api.getRcaOfferDetails(offerCode, insurerCode)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
+                stateStream.value = STATE.IN_PROGESS
                 uiEventStream.value =
                     UiEvent.Navigation(
                         NavAttribs(
@@ -107,10 +114,10 @@ class InsOffersViewModel @Inject constructor(
         insurerCode: String,
         ds: Boolean,
     ) {
-
         api.getRcaOfferDetails(offerCode, insurerCode)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
+                stateStream.value = STATE.IN_PROGESS
                 uiEventStream.value =
                     UiEvent.Navigation(
                         NavAttribs(

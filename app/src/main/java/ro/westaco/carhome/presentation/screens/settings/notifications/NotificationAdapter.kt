@@ -2,6 +2,8 @@ package ro.westaco.carhome.presentation.screens.settings.notifications
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,6 +78,14 @@ class NotificationAdapter(
         @SuppressLint("NewApi")
         fun bind(position: Int) {
             val item = listItems[position] as Notification
+            title.setTypeface(null, Typeface.BOLD)
+            title.setTextColor(Color.parseColor("#FF303065"))
+            item.seenAt?.let {
+                title.setTypeface(null, Typeface.ITALIC)
+                title.setTextColor(Color.GRAY)
+            }
+
+
             title.text = item.title
             body.text = item.body
 
@@ -86,7 +96,7 @@ class NotificationAdapter(
                         item.scheduleAt,
                         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US),
                         SimpleDateFormat(
-                            "HH:mm a",
+                            "HH:mm",
                             Locale.US
                         )
                     )
@@ -96,7 +106,7 @@ class NotificationAdapter(
                     item.scheduleAt,
                     SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US),
                     SimpleDateFormat(
-                        "dd MMM, HH:mm a",
+                        "dd MMM, HH:mm",
                         Locale.US
                     )
                 )

@@ -3,6 +3,8 @@ package ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.bri
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.GsonBuilder
@@ -15,11 +17,13 @@ import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.PassTaxInitRequest
 import ro.westaco.carhome.data.sources.remote.responses.ApiResponse
 import ro.westaco.carhome.data.sources.remote.responses.models.*
+import ro.westaco.carhome.dialog.NoServerDialog
 import ro.westaco.carhome.navigation.BundleProvider
 import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
+import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.summary.BridgeTaxSummaryFragment.Companion.ARG_CAR
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.summary.BridgeTaxSummaryFragment.Companion.ARG_ENTER_VALUE
@@ -49,7 +53,7 @@ class BridgeTaxInitViewModel @Inject constructor(
     val stateStream: SingleLiveEvent<STATE> = SingleLiveEvent()
 
     enum class STATE {
-        EnterLpn, EnterVin, ErrorVin, EnterCategory
+        EnterLpn, EnterVin, ErrorVin, EnterCategory, StopProgress
     }
 
     @SuppressLint("NullSafeMutableLiveData")
@@ -146,7 +150,7 @@ class BridgeTaxInitViewModel @Inject constructor(
         if (licensePlate?.isNotEmpty() == true) {
             if (!checked) {
                 uiEventStream.value =
-                    UiEvent.ShowToast(R.string.confirm_details)
+                    UiEvent.ShowToast(R.string.check_info)
                 return
             }
         } else {
@@ -169,7 +173,6 @@ class BridgeTaxInitViewModel @Inject constructor(
             price,
             vin,
             vehicleGuid = vehicle?.guid,
-//            vehicleId = vehicle?.id,
             startDate
         )
 
@@ -180,6 +183,7 @@ class BridgeTaxInitViewModel @Inject constructor(
                     call: Call<ApiResponse<PaymentResponse>>,
                     t: Throwable
                 ) {
+                    stateStream.value = STATE.StopProgress
                 }
 
                 override fun onResponse(
@@ -189,11 +193,10 @@ class BridgeTaxInitViewModel @Inject constructor(
                     if (response.isSuccessful) {
 //                        initTransectionData.value = response.body()?.data
                         response.body()?.data?.let {
-
                             onSuccess(request, it, type, vehicle)
-
                         }
                     } else {
+                        stateStream.value = STATE.StopProgress
                         val gson = GsonBuilder().create()
                         try {
                             val pojo = gson.fromJson(
@@ -209,7 +212,16 @@ class BridgeTaxInitViewModel @Inject constructor(
                                 "TRANSACTION_LOWER_CATEGORY_REASON_REQUIRED" -> stateStream.value =
                                     STATE.EnterCategory
                             }
-                        } catch (e: IOException) {
+                        } catch (e: Exception) {
+                            if (e is IOException) {
+                                Handler(Looper.getMainLooper()).post {
+                                    BaseActivity.instance?.let {
+                                        NoServerDialog.showServerErrorInfo(
+                                            it
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -231,6 +243,7 @@ class BridgeTaxInitViewModel @Inject constructor(
             UiEvent.Navigation(NavAttribs(Screen.BridgeTaxSummary, object : BundleProvider() {
                 override fun onAddArgs(bundle: Bundle?): Bundle {
                     return Bundle().apply {
+                        stateStream.value = STATE.StopProgress
                         putSerializable(ARG_PAYMENT_RESPONSE, response)
                         putSerializable(ARG_PASS_TAX_REQUEST, request)
                         putString(ARG_ENTER_VALUE, type)

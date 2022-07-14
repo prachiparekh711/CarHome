@@ -17,7 +17,7 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(getViewModelClass())
+        viewModel = ViewModelProvider(this)[getViewModelClass()]
         viewModel.uiEventStream.observe(this) { uiEvent -> processUiEvent(uiEvent) }
 
     }
@@ -25,7 +25,6 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         activity?.window?.statusBarColor = getStatusBarColor()
     }
 

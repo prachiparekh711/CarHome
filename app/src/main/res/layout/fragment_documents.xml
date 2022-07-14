@@ -43,9 +43,9 @@
                 android:layout_height="@dimen/_30sdp"
                 android:layout_alignParentRight="true"
                 android:layout_marginEnd="@dimen/_12sdp"
-                android:visibility="invisible"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_account" />
+                android:src="@drawable/ic_account"
+                android:visibility="invisible" />
 
         </RelativeLayout>
 

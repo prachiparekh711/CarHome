@@ -48,6 +48,7 @@
         android:layout_toEndOf="@id/newRelative"
         android:fontFamily="@font/inter_semibold_600"
         android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="@color/textOnWhite"
         android:textSize="@dimen/_11sdp" />
 
@@ -75,11 +76,12 @@
 
     </RelativeLayout>
 
+
     <View
         android:id="@+id/mView"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_below="@id/newRelative"
-        android:background="@color/tabUnselected" />
+        android:background="@color/itemBgStroke" />
 
 </RelativeLayout>

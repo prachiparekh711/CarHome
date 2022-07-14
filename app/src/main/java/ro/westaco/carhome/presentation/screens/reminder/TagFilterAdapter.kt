@@ -43,25 +43,25 @@ class TagFilterAdapter(
 
     fun changeSelectionList(item: CatalogItem, holder: MyTopHolder) {
         if (selectedTags.contains(item)) {
-            if (item.name == "All") {
+            if (item.name == context.getString(R.string.all_notifications)) {
                 selectedTags.clear()
             } else {
                 selectedTags.remove(item)
                 val allTag = selectedTags.find {
-                    it.name == "All"
+                    it.name == context.getString(R.string.all_notifications)
                 }
                 if (allTag != null) {
                     selectedTags.remove(allTag)
                 }
             }
         } else {
-            if (item.name == "All") {
+            if (item.name == context.getString(R.string.all_notifications)) {
                 selectedTags.clear()
                 selectedTags.addAll(data)
             } else {
                 selectedTags.add(item)
                 val allTag = selectedTags.find {
-                    it.name == "All"
+                    it.name == context.getString(R.string.all_notifications)
                 }
                 if (allTag == null && selectedTags.size == data.size - 1) {
                     selectedTags.add(data[0])
@@ -88,6 +88,7 @@ class TagFilterAdapter(
                 ContextCompat.getDrawable(context, R.drawable.search_background)
         }
     }
+
 
     fun getSelectedTagsLiveData(): SingleLiveEvent<ArrayList<CatalogItem>> {
         return selectedItemLiveData

@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.responses.models.NaturalPerson
 import ro.westaco.carhome.navigation.BundleProvider
@@ -17,7 +16,6 @@ import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.data.person_natural.add_new.AddNewNaturalPersonFragment
 import ro.westaco.carhome.presentation.screens.data.person_natural.details.NaturalPersonDetailsFragment
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -54,16 +52,13 @@ class NaturalPersonsViewModel @Inject constructor(
                 override fun onAddArgs(bundle: Bundle?): Bundle {
                     return Bundle().apply {
                         putSerializable(NaturalPersonDetailsFragment.ARG_NATURAL_PERSON, item)
+                        putBoolean(NaturalPersonDetailsFragment.ARG_MENU, true)
                     }
                 }
             }))
     }
 
     internal fun onItemEdit(item: NaturalPerson) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
 
         item.id?.let {
             api.getNaturalPerson(it)

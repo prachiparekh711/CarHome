@@ -1,11 +1,14 @@
 package ro.westaco.carhome.presentation.screens.settings.notifications
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_notification.*
 import ro.westaco.carhome.R
+import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.ListItem
 import ro.westaco.carhome.data.sources.remote.responses.models.ListSection
 import ro.westaco.carhome.data.sources.remote.responses.models.Notification
@@ -13,7 +16,7 @@ import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.utils.DateTimeUtils
 import ro.westaco.carhome.utils.DateTimeUtils.getNowSeconds
 import ro.westaco.carhome.utils.DateTimeUtils.getTitleDate
-import ro.westaco.carhome.utils.Progressbar
+import ro.westaco.carhome.views.Progressbar
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,6 +32,7 @@ class NotificationFragment : BaseFragment<NotificationViewModel>(),
     override fun getContentView() = R.layout.fragment_notification
     var progressbar: Progressbar? = null
     var notificationList: ArrayList<Notification> = ArrayList()
+    var notificationFiltersAdapter: NotificationFilterAdapter? = null
 
     companion object {
         const val TAG = "Notification"
@@ -45,10 +49,16 @@ class NotificationFragment : BaseFragment<NotificationViewModel>(),
         }
 
         progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
         mRecycler.layoutManager = LinearLayoutManager(context)
         adapter = NotificationAdapter(requireContext(), arrayListOf(), this)
         mRecycler.adapter = adapter
+
+        notificationFiltersAdapter = NotificationFilterAdapter(requireContext())
+        notificationFiltersAdapter?.data = NotificationType.toCatalogItemArray(requireContext())
+        notificationFiltersAdapter?.setAllSelected()
+        notificationFiltersRV.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        notificationFiltersRV.adapter = notificationFiltersAdapter
     }
 
     override fun setObservers() {
@@ -63,13 +73,48 @@ class NotificationFragment : BaseFragment<NotificationViewModel>(),
                 mRecycler.visibility = View.VISIBLE
                 mark_read.visibility = View.VISIBLE
                 emptyStateGroup.visibility = View.GONE
-
                 sortList(notificationList)
-
-
             }
-            progressbar?.dismissPopup()
         }
+
+        viewModel.actionStream.observe(viewLifecycleOwner) {
+            when (it) {
+                is NotificationViewModel.ACTION.OnBackOfSuccess -> {
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        progressbar?.dismissPopup()
+                    }, 1000)
+                }
+            }
+        }
+        notificationFiltersAdapter?.getSelectedTagsLiveData()
+            ?.observe(viewLifecycleOwner) { selectedTag ->
+                val filteredNotifications = filterNotifications(selectedTag)
+                sortList(filteredNotifications)
+            }
+    }
+
+    private fun filterNotifications(selectedTag: CatalogItem): ArrayList<Notification> {
+        val containsAllTag = selectedTag.name == getString(R.string.all_notifications)
+        if (containsAllTag)
+            return notificationList.toMutableList() as ArrayList
+        val containsReadTag = selectedTag.name == getString(R.string.read_notifications)
+        if (containsReadTag) {
+            val readNotifications = ArrayList<Notification>()
+            notificationList.forEach { notification ->
+                notification.seenAt?.let { seenAt ->
+                    readNotifications.add(notification)
+                }
+            }
+            return readNotifications
+        }
+        val unreadNotifications = ArrayList<Notification>()
+        notificationList.forEach { notification ->
+            if (notification.seenAt == null) {
+                unreadNotifications.add(notification)
+            }
+        }
+        return unreadNotifications
     }
 
     var idList: ArrayList<Int> = arrayListOf()
@@ -80,7 +125,11 @@ class NotificationFragment : BaseFragment<NotificationViewModel>(),
         val allList: ArrayList<Notification> = ArrayList()
         val todayList: ArrayList<Notification> = ArrayList()
         notificationList.forEach {
-            val date = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(it.scheduleAt)
+            val date = it.scheduleAt?.let { it1 ->
+                SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(
+                    it1
+                )
+            }
             if (DateTimeUtils.isSameDay(date, Calendar.getInstance().time)) {
                 todayList.add(it)
             } else {
@@ -102,6 +151,7 @@ class NotificationFragment : BaseFragment<NotificationViewModel>(),
         }
 
         mTodayLL.isVisible = todayList.isEmpty()
+        todayTV.isVisible = todayList.isEmpty()
 
         val newList: ArrayList<Notification> = ArrayList()
         newList.addAll(todayList)
@@ -131,7 +181,9 @@ class NotificationFragment : BaseFragment<NotificationViewModel>(),
         adapter.setItems(listItems)
 
         mark_read.setOnClickListener {
+            progressbar?.showPopup()
             viewModel.markAsSeen(idList)
+            notificationFiltersAdapter?.setAllSelected()
         }
     }
 

@@ -5,7 +5,6 @@ import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.navigation.Screen
 import ro.westaco.carhome.navigation.SingleLiveEvent
@@ -69,7 +68,7 @@ class SettingsViewModel @Inject constructor(
     internal fun onNotificationsClicked() {
         val params = Bundle()
         mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.ACCESS_NOTIFICATIONS, params)
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Notifications))
+        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.AllNotificationSetting))
     }
 
     internal fun onDocumentsClicked() {
@@ -88,16 +87,10 @@ class SettingsViewModel @Inject constructor(
         uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Faq))
     }
 
-    internal fun onTermsClicked() {
+    internal fun onConsentsClicked() {
         val params = Bundle()
         mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.ACCESS_TERMS_AND_CONDITIONS, params)
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.TermsAndCond))
-    }
-
-    internal fun onGdprClicked() {
-        val params = Bundle()
-        mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.ACCESS_GDPR, params)
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.GDPR))
+        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Consents))
     }
 
     internal fun onShareAppClicked() {
@@ -130,7 +123,6 @@ class SettingsViewModel @Inject constructor(
     }
 
     internal fun onLogoutClicked() {
-        uiEventStream.value = UiEvent.ShowToast(R.string.logout_success)
         actionStream.value = ACTION.OnLogout
         DashboardViewModel.selectedMenuItem = null
         appPreferences.token = ""

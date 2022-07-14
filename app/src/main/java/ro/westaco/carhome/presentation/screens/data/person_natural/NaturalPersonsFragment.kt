@@ -8,13 +8,11 @@ import kotlinx.android.synthetic.main.fragment_natural_persons.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.NaturalPerson
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.utils.Progressbar
 
 //C- Redesign & Logo
 @AndroidEntryPoint
 class NaturalPersonsFragment : BaseFragment<NaturalPersonsViewModel>(),
     NaturalPersonsAdapter.OnItemInteractionListener {
-    private var progressbar: Progressbar? = null
 
     private lateinit var adapter: NaturalPersonsAdapter
     override fun getContentView() = R.layout.fragment_natural_persons
@@ -23,8 +21,6 @@ class NaturalPersonsFragment : BaseFragment<NaturalPersonsViewModel>(),
 
     override fun initUi() {
 
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
 
         fab.setOnClickListener {
             viewModel.onAddNew()
@@ -56,7 +52,6 @@ class NaturalPersonsFragment : BaseFragment<NaturalPersonsViewModel>(),
                 adapter.setItems(naturalPersons)
 
             }
-            progressbar?.dismissPopup()
         }
 
     }

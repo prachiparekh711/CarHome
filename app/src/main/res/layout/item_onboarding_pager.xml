@@ -20,6 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/onboarding1111" />
+        android:src="@drawable/ben1" />
 
 </RelativeLayout>

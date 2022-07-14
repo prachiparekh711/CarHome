@@ -87,7 +87,7 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <!--<RelativeLayout
                 android:id="@+id/mSearchRL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,6 +109,66 @@
                     app:iconifiedByDefault="true"
                     app:queryHint="Search for a menu item"
                     app:searchIcon="@drawable/ic_sreach" />
+
+            </RelativeLayout>-->
+
+            <RelativeLayout
+                android:id="@+id/mSearchRL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mRelative_location"
+                android:layout_alignParentBottom="false"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="10dp">
+
+                <ImageView
+                    android:id="@+id/searchImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/mSearch"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="false"
+                    android:layout_marginEnd="10dp"
+                    app:srcCompat="@drawable/ic_sreach" />
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/mSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="rtl"
+                    android:paddingTop="2.5dp"
+                    android:splitMotionEvents="true"
+                    android:theme="@style/ThemeOverlay.SearchView"
+                    app:closeIcon="@drawable/ic_close"
+                    app:iconifiedByDefault="false"
+                    app:queryBackground="@android:color/transparent"
+                    app:queryHint="@string/search_here"
+                    app:searchIcon="@null" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mRelative_location"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/search_background"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:paddingStart="14dp"
+                    android:paddingTop="14dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="16dp"
+                    android:src="@drawable/ic_arrow"
+                    android:visibility="invisible" />
 
             </RelativeLayout>
 
@@ -171,7 +231,7 @@
         android:layout_below="@+id/mAppBar"
         android:background="@drawable/location_item_back">
 
-        <ro.westaco.carhome.utils.TouchEventInterceptorLayout
+        <ro.westaco.carhome.views.TouchEventInterceptorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -179,7 +239,7 @@
                 android:id="@+id/recycler_item"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </ro.westaco.carhome.utils.TouchEventInterceptorLayout>
+        </ro.westaco.carhome.views.TouchEventInterceptorLayout>
 
     </RelativeLayout>
 

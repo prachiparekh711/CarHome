@@ -277,11 +277,7 @@ class FileUtil {
 
         fun checkCameraPermission(context: Context): Boolean {
 
-            val result =
-                ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.CAMERA
-                )
+            val result = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
 
             return result == PackageManager.PERMISSION_GRANTED
         }

@@ -1,6 +1,7 @@
 package ro.westaco.carhome.data.sources.remote.responses.models
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class BridgeTaxPrices(
 
@@ -36,4 +37,4 @@ data class BridgeTaxPrices(
 
     @field:SerializedName("paymentCurrency")
     val paymentCurrency: String? = null
-)
+) : Serializable

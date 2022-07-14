@@ -14,6 +14,22 @@ import rx.Observable
 interface CarHomeApi {
 
     /*
+    * Legal terms
+    * GET /rest/terms
+    * */
+    @GET("carhome/rest/public/terms")
+    fun getAllTermsForScope(@Query("scope") scope: String): Observable<ApiResponse<ArrayList<TermsResponseItem>>>
+
+    @GET("carhome/rest/terms")
+    fun getAllTermsForCurrentUserAndScope(@Query("scope") scope: String): Observable<ApiResponse<ArrayList<TermsResponseItem?>>>
+
+    @GET("carhome/rest/public/terms/{versionId}")
+    fun getTermsContent(@Path("versionId") versionId: Int): Observable<ResponseBody>
+
+    @POST("carhome/rest/terms/resolutions")
+    fun saveUserTermResolutions(@Body request: ArrayList<TermsRequestItem>): Observable<ApiResponse<Nothing>>
+
+    /*
     ** Catalogs
     */
     @GET("carhome/rest/catalogs/{code}")
@@ -79,13 +95,13 @@ interface CarHomeApi {
 
 
     @POST("carhome/rest/vehicles")
-    fun createVehicle(@Body req: AddVehicleRequest): Call<ApiResponse<Long>>
+    fun createVehicle(@Body req: AddVehicleRequest): Observable<ApiResponse<Long>>
 
     @PUT("carhome/rest/vehicles/{id}")
     fun editVehicle(
         @Path("id") id: Long,
         @Body req: AddVehicleRequest
-    ): Call<ApiResponse<Nothing>>
+    ): Observable<ApiResponse<Nothing?>>
 
     @DELETE("carhome/rest/vehicles/{id}")
     fun deleteVehicle(@Path("id") id: Long): Observable<ApiResponse<Nothing>>
@@ -199,7 +215,7 @@ interface CarHomeApi {
     ** Reminders
     */
     @GET("carhome/rest/reminders")
-    fun getReminders(): Observable<ApiResponse<ArrayList<Reminder>?>>
+    fun getReminders(@Query("includeCompleted") includeCompleted: Boolean): Observable<ApiResponse<ArrayList<Reminder>?>>
 
     @GET("carhome/rest/reminders/{id}")
     fun getRemindersDetail(
@@ -219,6 +235,8 @@ interface CarHomeApi {
     @DELETE("carhome/rest/reminders/{id}")
     fun deleteReminder(@Path("id") id: Long): Observable<ApiResponse<Nothing>>
 
+    @POST("carhome/rest/reminders/{id}/mark-as-completed")
+    fun markAsCompleted(@Path("id") id: Long): Observable<ApiResponse<Nothing>>
 
     /*
     ** Locations
@@ -226,10 +244,6 @@ interface CarHomeApi {
     @GET("locations/rest/filters")
     fun locationFilterMaps(
     ): Call<ApiResponse<List<SectionModel>>>
-
-    @GET("locations/rest/getLocationFilter")
-    fun locationFilterReminder(
-    ): Call<ApiResponse<List<LocationFilterItem>>>
 
     @GET("locations/rest/getLocationsV2")
     fun getLocation(
@@ -281,7 +295,6 @@ interface CarHomeApi {
     fun getProfileLogo(): Observable<ResponseBody>
 
 
-    //C - Contact us screen
     /*
     ** Reasons
     */
@@ -360,7 +373,7 @@ interface CarHomeApi {
     fun addDocument(
         @Part("categoryId") categoryId: RequestBody,
         @Part("fileName") fileName: RequestBody,
-        @Part("mergeAs") mergeAs: RequestBody?,
+        @Query("mergeAs") mergeAs: String?,
         @Part attachment: List<MultipartBody.Part>?
     ): Observable<ApiResponse<Nothing>>
 
@@ -422,11 +435,13 @@ interface CarHomeApi {
        Insurance
            */
     /*
-    * //  personType
-//  10010 for natural person, 10020 for legal person.
+
 * */
     @POST("transactions/rest/rca/validate-vehicle/{vehicleGUID}")
-    fun identifyVehicle(@Path("vehicleGUID") vehicleGUID: String): Observable<ApiResponse<RcaResponse>>
+    fun identifyVehicle(@Path("vehicleGUID") vehicleGUID: String): Observable<ApiResponse<RcaCarIdentifyResponse>>
+
+    @POST("transactions/rest/rca/validate-vehicle")
+    fun validateVehicle(@Query("vehicleRegistered") vehicleRegistered: Boolean): Observable<ApiResponse<ValidateVehicle>>
 
     @GET("transactions/rest/rca/persons/natural")
     fun verifyNaturalPersonForRCA(
@@ -437,6 +452,17 @@ interface CarHomeApi {
     fun verifyLegalPersonForRCA(
         @Query("personRole") personRole: String
     ): Observable<ApiResponse<ArrayList<VerifyRcaPerson>>>
+
+    //  personType
+    //  10010 for natural person, 10020 for legal person.
+    @POST("transactions/rest/rca/validate-user/{userGUID}")
+    fun verifyUser(
+        @Path("userGUID") guid: String,
+        @Query("personType") personType: Int
+    ): Observable<ApiResponse<ValidationResult>>
+
+    @POST("transactions/rest/rca/validate-driver/{driverGuid}")
+    fun verifyDriver(@Path("driverGuid") guid: String): Observable<ApiResponse<ValidationResult>>
 
     @POST("transactions/rest/rca/get-offers")
     fun getRcaOffers(
@@ -516,5 +542,6 @@ interface CarHomeApi {
     @POST("transactions/rest/payment")
     fun initPayment(@Body req: PaymentRequest): Observable<ApiResponse<PaymentResponse>>
 
-
+    @POST("transactions/rest/{guid}/retry-payment")
+    fun retryPayment(@Path("guid") guid: String): Observable<ApiResponse<PaymentResponse>>
 }

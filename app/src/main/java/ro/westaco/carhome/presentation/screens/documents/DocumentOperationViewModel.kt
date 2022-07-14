@@ -3,14 +3,11 @@ package ro.westaco.carhome.presentation.screens.documents
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.DocumentCategoryRequest
 import ro.westaco.carhome.data.sources.remote.responses.models.Categories
 import ro.westaco.carhome.navigation.SingleLiveEvent
-import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.presentation.base.BaseViewModel
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import javax.inject.Inject
@@ -36,11 +33,6 @@ class DocumentOperationViewModel @Inject constructor(
     }
 
     fun fetchCategories(parentID: Int?) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
-
 
         api.getDocumentCategories(parentID)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -58,7 +50,6 @@ class DocumentOperationViewModel @Inject constructor(
             .subscribe({
                 fetchCategories(parentId)
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 
@@ -71,7 +62,6 @@ class DocumentOperationViewModel @Inject constructor(
             .subscribe({
                 actionStream.value = ACTION.OnBackOfSuccess
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 
@@ -84,7 +74,6 @@ class DocumentOperationViewModel @Inject constructor(
             .subscribe({
                 actionStream.value = ACTION.OnBackOfSuccess
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 

@@ -132,7 +132,7 @@ class AddNewNaturalPersonViewModel @Inject constructor(
     internal fun onSave(
         id: Long?,
         lastname: String?,
-        address: Address,
+        address: Address?,
         docType: String?,
         docID: Int?,
         series: String?,
@@ -148,12 +148,26 @@ class AddNewNaturalPersonViewModel @Inject constructor(
         drivLicenseExpDate: String?,
         drivingLicenseCateg: ArrayList<CatalogItem>?,
         email: String?,
-        isChecked: Boolean,
         isEdit: Boolean
     ) {
 
-        if (!isChecked) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.confirm_details)
+        if (firstName.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.first_name_r)
+            return
+        }
+
+        if (lastname.isNullOrEmpty()) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.last_name_r)
+            return
+        }
+
+        if (firstName.length < 2 || firstName.length > 50) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.first_name_len)
+            return
+        }
+
+        if (lastname.length < 2 || lastname.length > 50) {
+            uiEventStream.value = UiEvent.ShowToast(R.string.last_name_len)
             return
         }
 
@@ -163,12 +177,15 @@ class AddNewNaturalPersonViewModel @Inject constructor(
             drivingLicenseCategory.add(drivingLicenseCateg[i].id.toInt())
         }
 
-        val drivingLicense = DrivingLicense(
+        var drivingLicense: DrivingLicense? = null
+//        if (drivLicenseId != null) {
+        drivingLicense = DrivingLicense(
             drivLicenseId,
             DateTimeUtils.convertToServerDate(app, drivLicenseIssueDate),
             DateTimeUtils.convertToServerDate(app, drivLicenseExpDate),
             drivingLicenseCategory
         )
+//        }
 
         val doc: DocumentType = if (docType.isNullOrEmpty()) {
             DocumentType(idTypeData.value?.get(0)?.name, idTypeData.value?.get(0)?.id?.toInt())
@@ -176,12 +193,15 @@ class AddNewNaturalPersonViewModel @Inject constructor(
             DocumentType(docType, docID)
         }
 
-        val identityDocument = IdentityDocument(
-            number,
-            doc,
-            series,
-            DateTimeUtils.convertToServerDate(app, expirationDate)
-        )
+        var identityDocument: IdentityDocument? = null
+        if (docType != null) {
+            identityDocument = IdentityDocument(
+                number,
+                doc,
+                series,
+                DateTimeUtils.convertToServerDate(app, expirationDate)
+            )
+        }
 
         val naturalPersonReq = AddNaturalPersonRequest(
             firstName,
@@ -211,18 +231,9 @@ class AddNewNaturalPersonViewModel @Inject constructor(
 
         request?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe({
-                uiEventStream.value = UiEvent.ShowToast(
-                    if (isEdit)
-                        R.string.edit_success_msg
-                    else
-                        R.string.save_success_msg
-                )
-
                 uiEventStream.value = UiEvent.NavBack
             }, {
-                //   it.printStackTrace()
-//                showDialog(app.getString(R.string.server_saving_error))
-                uiEventStream.value = UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 
@@ -254,9 +265,6 @@ class AddNewNaturalPersonViewModel @Inject constructor(
                 }
                 actionStream.value = it.data?.let { it1 -> ACTION.OnUploadSuccess(attachType, it1) }
             }, {
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
-//                showDialog(app.getString(R.string.server_saving_error))
 
             })
     }
@@ -268,10 +276,8 @@ class AddNewNaturalPersonViewModel @Inject constructor(
         api.deleteAttachmentToNaturalPerson(id.toLong(), attachID.toLong())
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                 actionStream.value = ACTION.OnDeleteSuccess(attachType)
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 

@@ -1,13 +1,20 @@
 package ro.westaco.carhome.presentation.screens.dashboard
 
 import android.view.View
+import android.webkit.WebView
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dashboard.*
+import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 import ro.westaco.carhome.R
-import ro.westaco.carhome.prefrences.SharedPrefrences
+import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
+import ro.westaco.carhome.data.sources.remote.responses.models.TermsResponseItem
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.dashboard.DashboardViewModel.Companion.serviceExpanded
 import ro.westaco.carhome.presentation.screens.driving_mode.DrivingModeFragment
@@ -30,7 +37,7 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 //            requireContext().resources.getString(R.string.driving)
 //        )
 
-        CAR_MODE = SharedPrefrences.getCarMode(requireActivity()).toString()
+        CAR_MODE = AppPreferencesDelegates.get().carMode
 
         bnv = bottomNavigationView
         bottomNavigationView.itemIconTintList = null
@@ -38,6 +45,9 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             viewModel.onItemSelected(it)
             true
         }
+
+        if (!serviceExpanded)
+            viewModel.onCollapseServices()
 
         collapseServices.setOnClickListener {
             viewModel.onCollapseServices()
@@ -77,8 +87,20 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
 
     }
 
-
+    var index = 0
     override fun setObservers() {
+        viewModel.termsLiveData.observe(viewLifecycleOwner) { termsList ->
+            if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (!termsList.isNullOrEmpty()) {
+                    val termsList1: ArrayList<TermsResponseItem> = ArrayList()
+                    for (i in termsList.indices) {
+                        if (termsList[i].mandatory == true)
+                            termsList1.add(termsList[i])
+                    }
+                    showBottomSheetDialog(termsList1)
+                }
+            }
+        }
 
         viewModel.servicesStateLiveData.observe(viewLifecycleOwner) { state ->
             servicesExpandedGroup.visibility =
@@ -120,6 +142,36 @@ class DashboardFragment : BaseFragment<DashboardViewModel>() {
             DashboardViewModel.selectedMenuItem = bnv?.menu?.findItem(R.id.home)
             bottomNavigationView.menu.findItem(R.id.home).isChecked = true
         }
+    }
+
+    private fun showBottomSheetDialog(
+        termsList: ArrayList<TermsResponseItem>
+    ) {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(R.layout.home_term_layout)
+        bottomSheetDialog.setCancelable(false)
+        bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetDialog.findViewById<TextView>(R.id.title)?.text = termsList[index].title
+        val webSettings = bottomSheetDialog.webView.settings
+        webSettings.javaScriptEnabled = true
+
+        bottomSheetDialog.webView.loadUrl("https://carhome-build.westaco.com/carhome/rest/public/terms/" + termsList[index].versionId)
+        WebView.setWebContentsDebuggingEnabled(false)
+
+        bottomSheetDialog.findViewById<TextView>(R.id.btnAgree)?.setOnClickListener {
+            termsList[index].allowed = true
+            bottomSheetDialog.dismiss()
+
+            if (termsList.size - 1 > index) {
+                index++
+                showBottomSheetDialog(termsList)
+            } else {
+                index = 0
+                viewModel.saveTerms(termsList)
+            }
+        }
+
+        bottomSheetDialog.show()
     }
 
 }

@@ -65,7 +65,8 @@ class CountryCodeDialog(
 
         recyclerView?.layoutManager =
             LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
-        recyclerView.adapter = CountryPickerAdapter(context, countries,
+        recyclerView.adapter = CountryPickerAdapter(
+            context, countries,
             countryPick = object : CountryPickerAdapter.CountryPick {
                 override fun pick(position: Int) {
 

@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.fragment_service_select_car.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.Vehicle
 import ro.westaco.carhome.presentation.base.BaseFragment
+import ro.westaco.carhome.presentation.screens.dashboard.DashboardViewModel.Companion.serviceExpanded
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.adapter.CarsAdapter
-import ro.westaco.carhome.utils.Progressbar
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,7 +25,6 @@ class SelectCarFragment : BaseFragment<SelectCarViewModel>(),
     private lateinit var adapter: CarsAdapter
     var selectedVehicle: Vehicle? = null
     var activeService: String = ""
-    var progressbar: Progressbar? = null
 
     override fun getContentView() = R.layout.fragment_service_select_car
 
@@ -38,8 +37,6 @@ class SelectCarFragment : BaseFragment<SelectCarViewModel>(),
     @SuppressLint("SimpleDateFormat")
     override fun initUi() {
 
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
 
         arguments?.let {
 
@@ -75,87 +72,17 @@ class SelectCarFragment : BaseFragment<SelectCarViewModel>(),
         list.adapter = adapter
 
         mDismiss.setOnClickListener {
+            serviceExpanded = false
             viewModel.onBack()
         }
 
         cta.setOnClickListener {
 
-            if (activeService == "RO_VIGNETTE") {
-
-                if (selectedVehicle?.vignetteExpirationDate?.isNotEmpty() == true) {
-
-                    val dateFormat: DateFormat =
-                        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                    val date: Date? =
-                        dateFormat.parse(selectedVehicle?.vignetteExpirationDate.toString())
-                    val formatter: DateFormat =
-                        SimpleDateFormat("dd-MM-yyyy")
-                    val dateStr: String =
-                        formatter.format(date)
-
-                    val sdf = SimpleDateFormat("dd-MM-yyyy")
-                    val strDate = sdf.parse(dateStr)
-
-                    if (System.currentTimeMillis() > strDate.time) {
-
-                        if (selectedVehicle != null)
-                            viewModel.onCta(selectedVehicle, activeService)
-                        else
-                            alertDialog()
-
-                    } else {
-                        bridgetaxActiveDialog()
-                    }
-
-                } else {
-
-                    if (selectedVehicle != null)
-                        viewModel.onCta(selectedVehicle, activeService)
-                    else
-                        alertDialog()
-
-                }
-            }
-
-            if (activeService == "RO_PASS_TAX") {
-
-                /*if (selectedVehicle?.policyExpirationDate?.isNotEmpty() == true) {
-
-                    val dateFormat: DateFormat =
-                        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                    val date: Date? = dateFormat.parse(selectedVehicle?.policyExpirationDate.toString())
-                    val formatter: DateFormat =
-                        SimpleDateFormat("dd-MM-yyyy")
-                    val dateStr: String =
-                        formatter.format(date!!)
-
-                    val sdf = SimpleDateFormat("dd-MM-yyyy")
-                    val strDate = sdf.parse(dateStr)
-
-                    if (System.currentTimeMillis() > strDate.time) {
-
-                    } else {
-
-
-                        bridgetaxActiveDialog()
-
-                    }
-
-                } else {
-
-                    if (selectedVehicle != null)
-                        viewModel.onCta(selectedVehicle, activeService)
-                    else
-                        alertDialog()
-
-                }*/
-
-                if (selectedVehicle != null)
-                    viewModel.onCta(selectedVehicle, activeService)
-                else
-                    alertDialog()
-            }
-
+            if (selectedVehicle != null) {
+                viewModel.onCta(selectedVehicle, activeService)
+                selectedVehicle = null
+            } else
+                alertDialog()
         }
 
         li_add.setOnClickListener {
@@ -172,18 +99,57 @@ class SelectCarFragment : BaseFragment<SelectCarViewModel>(),
             if (cars?.isNotEmpty() == true) {
                 cta.visibility = if (cars.size > 0) View.VISIBLE else View.GONE
                 adapter.setItems(cars)
-                li_add.isVisible = true
-                progressbar?.dismissPopup()
-            }
 
+            }
+            li_add.isVisible = true
         }
 
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onItemClick(item: Vehicle) {
-        cta.background = requireContext().resources.getDrawable(R.drawable.save_background)
-        selectedVehicle = item
+        if (activeService == "RO_VIGNETTE") {
+            if (item.vignetteExpirationDate?.isNotEmpty() == true) {
+                var date: Date
+                try {
+                    val dateFormat: DateFormat =
+                        SimpleDateFormat(requireContext().getString(R.string.server_standard_datetime_format_template))
+                    date = dateFormat.parse(item.vignetteExpirationDate)
+                } catch (e: Exception) {
+                    val dateFormat: DateFormat =
+                        SimpleDateFormat(requireContext().getString(R.string.server_standard_datetime_format_template1))
+                    date = dateFormat.parse(item.vignetteExpirationDate)
+                }
+
+                val formatter: DateFormat =
+                    SimpleDateFormat("dd-MM-yyyy")
+                val dateStr: String =
+                    formatter.format(date)
+
+                val sdf = SimpleDateFormat("dd-MM-yyyy")
+                val strDate = sdf.parse(dateStr)
+
+                if (System.currentTimeMillis() > strDate.time) {
+                    cta.background =
+                        requireContext().resources.getDrawable(R.drawable.save_background)
+                    cta.isClickable = true
+                    selectedVehicle = item
+                } else {
+                    selectedVehicle = item
+                    activeDialog()
+                }
+
+            } else {
+                cta.background =
+                    requireContext().resources.getDrawable(R.drawable.save_background)
+                cta.isClickable = true
+                selectedVehicle = item
+            }
+        } else {
+            cta.background = requireContext().resources.getDrawable(R.drawable.save_background)
+            cta.isClickable = true
+            selectedVehicle = item
+        }
     }
 
     private fun alertDialog() {
@@ -199,14 +165,21 @@ class SelectCarFragment : BaseFragment<SelectCarViewModel>(),
     }
 
 
-    private fun bridgetaxActiveDialog() {
+    private fun activeDialog() {
+
+
+        val msg = if (activeService == "RO_PASS_TAX") {
+            requireContext().resources.getString(R.string.bridge_tax_active_dialog)
+        } else {
+            requireContext().resources.getString(R.string.ro_active_dialog)
+        }
 
         MaterialAlertDialogBuilder(
             requireContext(),
             R.style.ThemeOverlay_App_MaterialAlertDialog
         )
             .setTitle("")
-            .setMessage(getString(R.string.bridge_tax_active_dialog))
+            .setMessage(msg)
             .setPositiveButton(getString(R.string.purchase)) { _, _ ->
 
                 if (selectedVehicle != null)
@@ -216,8 +189,7 @@ class SelectCarFragment : BaseFragment<SelectCarViewModel>(),
 
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-
-
+                adapter.setPosition(-1)
             }
             .show()
     }

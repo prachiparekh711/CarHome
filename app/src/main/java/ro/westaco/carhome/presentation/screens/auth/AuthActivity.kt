@@ -3,24 +3,24 @@ package ro.westaco.carhome.presentation.screens.auth
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
 import android.text.SpannableString
 import android.text.Spanned
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.view.View
 import android.webkit.WebView
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -41,18 +41,20 @@ import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.layout_bottom_sheet.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
-import ro.westaco.carhome.prefrences.SharedPrefrences
+import ro.westaco.carhome.data.sources.remote.responses.models.TermsResponseItem
+import ro.westaco.carhome.dialog.DialogUtils
 import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.base.ContextWrapper
 import ro.westaco.carhome.utils.BiometricUtil
+import ro.westaco.carhome.utils.RegexData
 import java.util.*
 import java.util.concurrent.Executor
 
 
 //C - Separate Auth Activity
 @AndroidEntryPoint
-class AuthActivity : BaseActivity<AuthModel>() {
-
+class AuthActivity : BaseActivity<AuthModel>(),
+    TermsAdapter.OnTermsClickListner {
 
     private var firebaseAuth = FirebaseAuth.getInstance()
 
@@ -65,7 +67,6 @@ class AuthActivity : BaseActivity<AuthModel>() {
 
     override fun getContentView() = R.layout.activity_auth
 
-
     companion object {
         var BIOMETRICS: Boolean = false
         var BIOMETRICS_MODE: String = ""
@@ -77,20 +78,21 @@ class AuthActivity : BaseActivity<AuthModel>() {
     var mErrorText: TextView? = null
     var mTryagain: TextView? = null
     var mClose: TextView? = null
-    var termFlag: Boolean = false
-    var gdprFlag: Boolean = false
-
+    var termsAdapter: TermsAdapter? = null
 
     override fun setupUi() {
+
+
         if (firebaseAuth.currentUser != null && firebaseAuth.currentUser?.isEmailVerified == true) {
-            if (!SharedPrefrences.getBiometricsSetup(this)) {
+            if (!AppPreferencesDelegates.get().biometricSetUp) {
                 if (BiometricUtil.isHardwareAvailable(this@AuthActivity) && BiometricUtil.hasBiometricEnrolled(
                         this@AuthActivity
                     )
-                )
+                ) {
                     viewModel.navigateToBiometric()
-                else
+                } else {
                     intiUi()
+                }
             } else {
                 intiUi()
             }
@@ -100,6 +102,9 @@ class AuthActivity : BaseActivity<AuthModel>() {
     }
 
     private fun intiUi() {
+        BIOMETRICS = AppPreferencesDelegates.get().biometric
+        BIOMETRICS_MODE = AppPreferencesDelegates.get().biometricMode
+        BIOMETRICS_SETUP = AppPreferencesDelegates.get().biometricSetUp
 
         val view = layoutInflater.inflate(R.layout.biometric_failure_layout, null)
         dialogError = BottomSheetDialog(this)
@@ -132,39 +137,49 @@ class AuthActivity : BaseActivity<AuthModel>() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         google.setOnClickListener {
-            googleSignInClient.signOut()
-            LoginManager.getInstance().logOut()
-            viewModel.onGoogleAuth()
+            if (viewModel.authStateLiveData.value == AuthModel.STATE.Login) {
+                googleSignInClient.signOut()
+                LoginManager.getInstance().logOut()
+                viewModel.onGoogleAuth()
+            } else {
+                if (checkTerms()) {
+                    email2.text = null
+                    password.text = null
+                    confirmPassword.text = null
+                    googleSignInClient.signOut()
+                    LoginManager.getInstance().logOut()
+                    viewModel.onGoogleAuth()
+                } else {
+                    DialogUtils.showErrorInfo(
+                        this@AuthActivity,
+                        resources.getString(R.string.terms_info)
+                    )
+                }
+            }
         }
 
-
         facebook.setOnClickListener {
-            viewModel.onFacebookAuth()
+            if (viewModel.authStateLiveData.value == AuthModel.STATE.Login) {
+                viewModel.onFacebookAuth()
+            } else {
+                if (checkTerms()) {
+                    email2.text = null
+                    password.text = null
+                    confirmPassword.text = null
+                    viewModel.onFacebookAuth()
+                } else {
+                    DialogUtils.showErrorInfo(
+                        this@AuthActivity,
+                        resources.getString(R.string.terms_info)
+                    )
+                }
+            }
         }
 
         fbCallbackManager = CallbackManager.Factory.create()
 
         forgotPassword.setOnClickListener {
             viewModel.onForgotPassword()
-        }
-
-        termFlag = SharedPrefrences.getTCStatus(this)
-        gdprFlag = SharedPrefrences.getGDPRStatus(this)
-        if (termFlag && gdprFlag) {
-            checkBox.setImageResource(R.drawable.checkbox_background)
-        } else {
-            checkBox.setImageResource(R.drawable.uncheckbox_background)
-        }
-        checkBox.setOnClickListener {
-            termFlag = SharedPrefrences.getTCStatus(this)
-            gdprFlag = SharedPrefrences.getGDPRStatus(this)
-            if (termFlag && gdprFlag) {
-                checkBox.setImageResource(R.drawable.uncheckbox_background)
-                SharedPrefrences.setGDPRStatus(this, false)
-                SharedPrefrences.setTCStatus(this, false)
-            } else {
-                termsCheckBottomSheet()
-            }
         }
 
         switchAuthCta.setOnClickListener {
@@ -179,52 +194,7 @@ class AuthActivity : BaseActivity<AuthModel>() {
             viewModel.onRevealConfirmPasswordClicked()
         }
 
-    }
 
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun termsCheckBottomSheet() {
-        val dialog = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.layout_bottom_sheet, null)
-        dialog.setCancelable(false)
-        dialog.setContentView(view)
-
-        val webSettings = dialog.webView.settings
-        webSettings.javaScriptEnabled = true
-        if (!termFlag) {
-            dialog.title.text = getString(R.string.terms_services)
-            dialog.webView.loadUrl(this.resources.getString(R.string.tc))
-        } else {
-            dialog.title.text = getString(R.string.terms_gdpr)
-            dialog.webView.loadUrl(this.resources.getString(R.string.gdpr))
-        }
-        WebView.setWebContentsDebuggingEnabled(false)
-
-        dialog.btnDisagree.setOnClickListener {
-            if (dialog.title.text == getString(R.string.terms_services)) {
-                dialog.title.text = getString(R.string.terms_gdpr)
-                dialog.webView.loadUrl(this.resources.getString(R.string.gdpr))
-            } else {
-                dialog.dismiss()
-            }
-            checkBox.setImageResource(R.drawable.uncheckbox_background)
-        }
-
-        dialog.btnAgree.setOnClickListener {
-            if (dialog.title.text == getString(R.string.terms_services)) {
-                SharedPrefrences.setTCStatus(this, true)
-                dialog.title.text = getString(R.string.terms_gdpr)
-                dialog.webView.loadUrl(this.resources.getString(R.string.gdpr))
-            } else if (dialog.title.text == getString(R.string.terms_gdpr)) {
-                SharedPrefrences.setGDPRStatus(this, true)
-                checkBox.setImageResource(R.drawable.checkbox_background)
-                dialog.dismiss()
-            }
-        }
-
-        dialog.dismiss.setOnClickListener {
-            dialog.dismiss()
-        }
-        dialog.show()
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -241,9 +211,15 @@ class AuthActivity : BaseActivity<AuthModel>() {
 
     override fun setupObservers() {
 
-        BIOMETRICS = SharedPrefrences.getBiometricsStatus(this)
-        BIOMETRICS_MODE = SharedPrefrences.getBiometricsMode(this).toString()
-        BIOMETRICS_SETUP = SharedPrefrences.getBiometricsSetup(this)
+        viewModel.termsLiveData.observe(this) { termsList ->
+            if (!termsList.isNullOrEmpty()) {
+                termsAdapter = TermsAdapter(this@AuthActivity, termsList, this)
+                termsRV.layoutManager =
+                    LinearLayoutManager(this@AuthActivity, RecyclerView.VERTICAL, false)
+                termsRV.adapter = termsAdapter
+            }
+        }
+
         viewModel.authStateLiveData.observe(this) { state ->
             var switchDescriptionResId = R.string.switch_to_signup
             var switchCtaResId = R.string.sign_up
@@ -252,41 +228,59 @@ class AuthActivity : BaseActivity<AuthModel>() {
                 AuthModel.STATE.Login -> {
                     confirmPasswordGroup2.visibility = View.GONE
                     forgotPassword.visibility = View.VISIBLE
+                    authCta2.alpha = 1F
                     authCta2.text = getString(R.string.login)
+                    authCta2.isEnabled = true
                     or2.text = getString(R.string.login_with)
-                    termsDescription2.visibility = View.GONE
-                    checkBox.visibility = View.GONE
-                    //termsDescription.text = getString(R.string.auth_login_terms_description)
+                    termsRV.isVisible = false
                     switchAuthCta.text = getString(R.string.switch_to_signup)
-                    //termsDescriptionResId = R.string.auth_login_terms_description
                     switchDescriptionResId = R.string.switch_to_signup
                     switchCtaResId = R.string.sign_up
                     authCta2.setOnClickListener {
+                        if (!RegexData.checkEmailRegex(email2.text.toString())) {
+                            DialogUtils.showErrorInfo(
+                                this@AuthActivity,
+                                getString(R.string.invalid_email)
+                            )
+                            return@setOnClickListener
+                        }
                         viewModel.onLogin(email2.text.toString(), password.text.toString())
                     }
                 }
                 AuthModel.STATE.SignUp -> {
                     confirmPasswordGroup2.visibility = View.VISIBLE
                     forgotPassword.visibility = View.GONE
+                    authCta2.alpha = 0.4F
+                    authCta2.isEnabled = false
                     authCta2.text = getString(R.string.sign_up)
                     or2.text = getString(R.string.sign_up_with)
-                    termsDescription2.visibility = View.VISIBLE
-                    checkBox.visibility = View.VISIBLE
-                    termsDescription2.text = getString(R.string.sign_up_terms)
+                    termsRV.isVisible = true
                     switchAuthCta.text = getString(R.string.switch_to_login)
                     switchDescriptionResId = R.string.switch_to_login
                     switchCtaResId = R.string.login
                     authCta2.setOnClickListener {
-                        viewModel.onSignup(
-                            email2.text.toString(),
-                            password.text.toString(),
-                            confirmPassword.text.toString()
-                        )
+                        if (!RegexData.checkEmailRegex(email2.text.toString())) {
+                            DialogUtils.showErrorInfo(
+                                this@AuthActivity,
+                                getString(R.string.invalid_email)
+                            )
+                            return@setOnClickListener
+                        }
+                        val termsList = termsAdapter?.getItems()
+
+                        if (termsList != null) {
+                            viewModel.onSignup(
+                                email2.text.toString(),
+                                password.text.toString(),
+                                confirmPassword.text.toString(),
+                                termsList
+                            )
+                        }
                     }
                 }
             }
 
-            setupSpannables(switchDescriptionResId, switchCtaResId)
+            setupSpannable(switchDescriptionResId, switchCtaResId)
         }
 
         viewModel.actionStream.observe(this) {
@@ -299,28 +293,34 @@ class AuthActivity : BaseActivity<AuthModel>() {
                     createUserWithEmailAndPassword(it.email, it.pass)
                 }
 
-                AuthModel.ACTION.LaunchSignInWithGoogle -> {
+                is AuthModel.ACTION.LaunchSignInWithGoogle -> {
                     launchSignInWithGoogle()
                 }
 
-                AuthModel.ACTION.LaunchSignInWithFacebook -> {
+                is AuthModel.ACTION.LaunchSignInWithFacebook -> {
                     launchSignInWithFacebook()
                 }
 
                 is AuthModel.ACTION.ChangePasswordState -> {
                     password.inputType =
-                        if (it.isHidden)
+                        if (it.isHidden) {
+                            revealPassword.setImageDrawable(resources.getDrawable(R.drawable.ic_eye_slash))
                             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                        else
+                        } else {
+                            revealPassword.setImageDrawable(resources.getDrawable(R.drawable.ic_eye))
                             InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        }
                 }
 
                 is AuthModel.ACTION.ChangeConfirmPasswordState -> {
                     confirmPassword.inputType =
-                        if (it.isHidden)
+                        if (it.isHidden) {
+                            revealConfirmPassword.setImageDrawable(resources.getDrawable(R.drawable.ic_eye_slash))
                             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                        else
+                        } else {
+                            revealConfirmPassword.setImageDrawable(resources.getDrawable(R.drawable.ic_eye))
                             InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        }
                 }
 
 //*             Authenticate via biometrics (S4)
@@ -332,17 +332,24 @@ class AuthActivity : BaseActivity<AuthModel>() {
                     authBackground2.isVisible = false
                 }
 
+                is AuthModel.ACTION.NetworkFailure -> {
+//                    noInternetDialog()
+                }
 
                 is AuthModel.ACTION.UserSuccess -> {
                     authBackground2.isVisible = true
                 }
 
                 is AuthModel.ACTION.SetSharedPrefrences -> {
-                    SharedPrefrences.setBiometricsStatus(this, false)
+                    AppPreferencesDelegates.get().biometric = false
                 }
 
                 is AuthModel.ACTION.UserRetrievalSuccess -> {
                     userRetrievalSuccess()
+                }
+
+                is AuthModel.ACTION.LoginSuceess -> {
+                    viewModel.saveTerms(termsAdapter?.getItems())
                 }
             }
         }
@@ -351,11 +358,8 @@ class AuthActivity : BaseActivity<AuthModel>() {
 
     private fun userRetrievalSuccess() {
         if (BiometricUtil.isHardwareAvailable(this) && BiometricUtil.hasBiometricEnrolled(this)) {
-
             viewModel.navigateToBiometric()
-
         } else {
-
             viewModel.navigateToProgress()
         }
     }
@@ -364,15 +368,16 @@ class AuthActivity : BaseActivity<AuthModel>() {
         val biometricManager = BiometricManager.from(this)
         when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
             BiometricManager.BIOMETRIC_SUCCESS -> {
-                showBiomertricDialog()
+                showBiometricDialog()
             }
         }
     }
 
-    private fun showBiomertricDialog() {
+    private fun showBiometricDialog() {
         authBackground2.isVisible = true
         executor = ContextCompat.getMainExecutor(this)
-        biometricPrompt = BiometricPrompt(this, executor,
+        biometricPrompt = BiometricPrompt(
+            this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
                 @SuppressLint("SwitchIntDef")
                 override fun onAuthenticationError(
@@ -417,15 +422,15 @@ class AuthActivity : BaseActivity<AuthModel>() {
 
         promptInfo = if (BIOMETRICS_MODE == "BOTH") {
             BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric Login")
-                .setNegativeButtonText("Cancel")
+                .setTitle(baseContext.resources.getString(R.string.bio_login_title))
+                .setNegativeButtonText(baseContext.resources.getString(R.string.cancel))
                 .setConfirmationRequired(false)
                 .build()
         } else {
             BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric Login")
+                .setTitle(baseContext.resources.getString(R.string.bio_login_title))
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
-                .setNegativeButtonText("Cancel")
+                .setNegativeButtonText(baseContext.resources.getString(R.string.cancel))
                 .build()
         }
         biometricPrompt.authenticate(promptInfo)
@@ -435,87 +440,10 @@ class AuthActivity : BaseActivity<AuthModel>() {
     private lateinit var biometricPrompt: BiometricPrompt
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
-    private fun setupSpannables(
+    private fun setupSpannable(
         @StringRes switchDescriptionResId: Int,
         @StringRes switchCtaResId: Int
     ) {
-
-
-        val termsDescriptionSpannable =
-            SpannableString(baseContext.resources.getString(R.string.sign_up_terms))
-//        SpannableString(getString(termsDescriptionResId))
-        // apply terms span
-        val termsStr = resources.getString(R.string.terms_services)
-//        getString(R.string.terms_services)
-        val termsStart = termsDescriptionSpannable.indexOf(termsStr)
-
-        if (AppPreferencesDelegates.get().language == resources.getString(R.string.english_lan)) {
-
-
-            termsDescriptionSpannable.setSpan(
-                StyleSpan(Typeface.BOLD),
-                termsStart,
-                termsStart + termsStr.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            termsDescriptionSpannable.setSpan(
-                object : ClickableSpan() {
-                    override fun onClick(textView: View) {
-                        viewModel.onTermsClicked(true)
-                    }
-                },
-                termsStart,
-                termsStart + termsStr.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-        } else {
-
-            termsDescriptionSpannable.setSpan(
-                StyleSpan(Typeface.BOLD),
-                77,
-                99,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-            termsDescriptionSpannable.setSpan(
-                object : ClickableSpan() {
-                    override fun onClick(textView: View) {
-                        viewModel.onTermsClicked(true)
-                    }
-                },
-                77,
-                99,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-
-
-        // apply gdpr span
-        val gdprStr = getString(R.string.terms_gdpr)
-        val gdprStart = termsDescriptionSpannable.indexOf(gdprStr)
-        termsDescriptionSpannable.setSpan(
-            StyleSpan(Typeface.BOLD),
-            gdprStart,
-            gdprStart + gdprStr.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        termsDescriptionSpannable.setSpan(
-            object : ClickableSpan() {
-                override fun onClick(textView: View) {
-                    viewModel.onGdprClicked(true)
-                }
-            },
-            gdprStart,
-            gdprStart + gdprStr.length,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        // set final terms description text
-
-        termsDescription2.movementMethod = LinkMovementMethod.getInstance()
-        termsDescription2.text = termsDescriptionSpannable
-
         val switchDescriptionSpannable = SpannableString(getString(switchDescriptionResId))
         val switchCtaStr = getString(switchCtaResId)
         val switchCtaStart = switchDescriptionSpannable.indexOf(switchCtaStr)
@@ -616,5 +544,62 @@ class AuthActivity : BaseActivity<AuthModel>() {
         }
     }
 
+    override fun onTermsClick(item: TermsResponseItem) {
+        showBottomSheetDialog(item)
+    }
 
+    override fun onChecked() {
+        checkTerms()
+    }
+
+    private fun checkTerms(): Boolean {
+        val termsList = termsAdapter?.getItems()
+        if (termsList != null) {
+            for (i in termsList.indices) {
+                if (termsList[i].mandatory == true) {
+                    if (!termsList[i].allowed) {
+                        authCta2.alpha = 0.4F
+                        authCta2.isEnabled = false
+                    } else {
+                        authCta2.alpha = 1F
+                        authCta2.isEnabled = true
+                    }
+                }
+            }
+        }
+        return authCta2.isEnabled
+    }
+
+    private fun showBottomSheetDialog(
+        item: TermsResponseItem
+    ) {
+        val bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetDialog.setContentView(R.layout.layout_bottom_sheet)
+
+        bottomSheetDialog.findViewById<TextView>(R.id.title)?.text = item.title
+        val webSettings = bottomSheetDialog.webView.settings
+        webSettings.javaScriptEnabled = true
+
+        bottomSheetDialog.webView.loadUrl("https://carhome-build.westaco.com/carhome/rest/public/terms/" + item.versionId)
+        WebView.setWebContentsDebuggingEnabled(false)
+        bottomSheetDialog.findViewById<ImageView>(R.id.dismiss)?.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.findViewById<LinearLayout>(R.id.btnDisagree)?.setOnClickListener {
+            item.allowed = false
+            checkTerms()
+            termsAdapter?.notifyDataSetChanged()
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.findViewById<LinearLayout>(R.id.btnAgree)?.setOnClickListener {
+            item.allowed = true
+            checkTerms()
+            termsAdapter?.notifyDataSetChanged()
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.show()
+    }
 }

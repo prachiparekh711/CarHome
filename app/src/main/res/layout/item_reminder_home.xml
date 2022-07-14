@@ -172,9 +172,10 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginStart="@dimen/_10sdp"
         android:background="@color/itemBgStroke"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tagIndicator"
+        app:layout_constraintStart_toStartOf="@+id/tagCL"
         app:layout_constraintTop_toBottomOf="@+id/tagCL" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

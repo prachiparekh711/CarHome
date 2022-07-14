@@ -55,7 +55,7 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_20sdp"
             android:fillViewport="true"
-            app:layout_behavior=".utils.OverScrollBounceBehavior">
+            app:layout_behavior=".views.OverScrollBounceBehavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,7 +134,7 @@
                         android:background="@drawable/auth_text_input_background"
                         android:fontFamily="@font/inter_medium_500"
                         android:hint="@string/license_hint"
-                        android:inputType="text"
+                        android:inputType="textCapCharacters"
                         android:paddingVertical="@dimen/_10sdp"
                         android:paddingStart="@dimen/_50sdp"
                         android:paddingEnd="@dimen/_12sdp"
@@ -493,7 +493,7 @@
                         android:background="@drawable/auth_text_input_background"
                         android:fontFamily="@font/inter_medium_500"
                         android:hint="@string/car_vin"
-                        android:inputType="text"
+                        android:inputType="textCapCharacters"
                         android:paddingVertical="@dimen/_10sdp"
                         android:paddingStart="@dimen/_50sdp"
                         android:paddingEnd="@dimen/_12sdp"
@@ -545,7 +545,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <EditText
+                    <TextView
                         android:id="@+id/year"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -554,7 +554,6 @@
                         android:background="@drawable/auth_text_input_background"
                         android:fontFamily="@font/inter_medium_500"
                         android:hint="@string/year"
-                        android:inputType="number"
                         android:paddingVertical="@dimen/_10sdp"
                         android:paddingStart="@dimen/_50sdp"
                         android:paddingEnd="@dimen/_12sdp"
@@ -968,7 +967,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_12sdp"
-                    android:background="@drawable/auth_text_input_background"
+                    android:background="@drawable/item_ring_box"
                     android:padding="@dimen/_10sdp">
 
                     <LinearLayout
@@ -987,7 +986,7 @@
                             android:textColor="@color/textOnWhiteAccentGray"
                             android:textSize="@dimen/_11sdp" />
 
-                        <ro.westaco.carhome.utils.SwitchButton
+                        <ro.westaco.carhome.views.SwitchButton
                             android:id="@+id/switch_button"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/_23sdp"
@@ -1006,7 +1005,7 @@
                         android:layout_height="50dp"
                         android:layout_below="@id/leasingLL"
                         android:layout_marginTop="@dimen/_2sdp"
-                        android:background="@drawable/auth_text_input_background"
+                        android:background="@drawable/item_ring_box"
                         android:cursorVisible="false"
                         android:drawableEnd="@drawable/ic_arrow_down_id"
                         android:focusable="true"

@@ -1,8 +1,11 @@
 package ro.westaco.carhome.presentation.screens.data.person_legal.details
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -15,6 +18,12 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,7 +43,6 @@ import ro.westaco.carhome.presentation.base.BaseActivity
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.utils.CountryCityUtils
 import ro.westaco.carhome.utils.FileUtil
-import ro.westaco.carhome.utils.Progressbar
 import ro.westaco.carhome.utils.ViewUtils
 import java.io.File
 import java.util.*
@@ -42,19 +50,20 @@ import java.util.*
 //C- Rebuilt
 @AndroidEntryPoint
 class LegalPersonDetailsFragment : BaseFragment<LegalPersonDetailsViewModel>(),
-    BaseActivity.OnProfileLogoChangeListner {
+    BaseActivity.OnProfileLogoChangeListener {
     private var legalPerson: LegalPerson? = null
     private var legalPersonDetails: LegalPersonDetails? = null
-    var progressbar: Progressbar? = null
     var lottieAnimationView: LottieAnimationView? = null
     private var menuOpen = false
     lateinit var bottomSheet: BottomSheetDialog
     var countriesList: ArrayList<Country> = ArrayList()
     var streetTypeList: ArrayList<CatalogItem> = ArrayList()
     private var menuOpen3 = false
+    private var argMenuVisible = true
 
     companion object {
         const val ARG_LEGAL_PERSON = "arg_legal_person"
+        const val ARG_MENU = "arg_menu"
     }
 
     override fun getContentView() = R.layout.fragment_legal_person_details
@@ -66,16 +75,17 @@ class LegalPersonDetailsFragment : BaseFragment<LegalPersonDetailsViewModel>(),
         arguments?.let {
             legalPerson = it.getSerializable(ARG_LEGAL_PERSON) as? LegalPerson?
             legalPerson?.id?.toLong()?.let { it1 -> viewModel.getLegalPersonDetails(it1) }
+            argMenuVisible = it.getBoolean(ARG_MENU)
         }
     }
 
     override fun initUi() {
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
+
         bottomSheet = BottomSheetDialog(requireContext())
         lottieAnimationView = lottieAnimation
         lottieAnimationView?.visibility = View.VISIBLE
 
+        mMenu.isVisible = argMenuVisible
         back.setOnClickListener {
             viewModel.onBack()
         }
@@ -89,6 +99,10 @@ class LegalPersonDetailsFragment : BaseFragment<LegalPersonDetailsViewModel>(),
         }
 
         mMenu.setOnClickListener {
+            menuVisible()
+        }
+
+        blankRl.setOnClickListener {
             menuVisible()
         }
 
@@ -137,10 +151,12 @@ class LegalPersonDetailsFragment : BaseFragment<LegalPersonDetailsViewModel>(),
         if (menuOpen) {
             menuOpen = !menuOpen
             ViewUtils.collapse(mLinear)
+            blankRl.isVisible = false
             mMenu.setImageResource(R.drawable.ic_more_new)
         } else {
             menuOpen = !menuOpen
             ViewUtils.expand(mLinear)
+            blankRl.isVisible = true
             mMenu.setImageResource(R.drawable.ic_more_new_done)
         }
     }
@@ -164,12 +180,20 @@ class LegalPersonDetailsFragment : BaseFragment<LegalPersonDetailsViewModel>(),
         selectorBinding.delete.isVisible = legalPersonDetails?.logoHref?.isNotEmpty() == true
         selectorBinding.upload.setOnClickListener {
             BaseActivity.profileLogoListner = this
-            val result = FileUtil.checkCameraPermission(requireContext())
-            if (result) {
-                openCamera()
+
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                onCameraPermission()
             } else {
-                FileUtil.requestCamerasPermission(requireActivity())
+
+                if (permission()) {
+                    openCamera()
+                }
             }
+
             bottomSheetDialog.dismiss()
         }
         selectorBinding.delete.setOnClickListener {
@@ -290,7 +314,6 @@ class LegalPersonDetailsFragment : BaseFragment<LegalPersonDetailsViewModel>(),
                     bottomSheet.show()
                 }
             }
-            progressbar?.dismissPopup()
         }
 
         viewModel.countryData.observe(viewLifecycleOwner) { countryData ->
@@ -402,6 +425,38 @@ class LegalPersonDetailsFragment : BaseFragment<LegalPersonDetailsViewModel>(),
                 }
             }
         }
+    }
+
+    private fun onCameraPermission() {
+
+        Dexter.withContext(requireContext())
+            .withPermission(Manifest.permission.CAMERA)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
+                    openCamera()
+                }
+
+                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {}
+
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: PermissionRequest?,
+                    p1: PermissionToken?,
+                ) {
+                    p1?.continuePermissionRequest()
+                }
+            }).withErrorListener {}
+
+            .check()
+
+    }
+
+    private fun permission(): Boolean {
+
+        return ActivityCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+
     }
 
 }

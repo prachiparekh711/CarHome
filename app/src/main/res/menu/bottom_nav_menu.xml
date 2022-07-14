@@ -13,7 +13,6 @@
         android:id="@+id/services"
         android:icon="@drawable/bottombar_services"
         android:menuCategory="secondary"
-
         android:title="@string/services" />
     <item
         android:id="@+id/maps"

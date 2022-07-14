@@ -4,7 +4,12 @@ import android.app.Application
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.viewModelScope
+import com.scottyab.rootbeer.RootBeer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.local.prefs.AppPreferencesDelegates
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.navigation.UiEvent
@@ -26,27 +31,36 @@ class SplashViewModel @Inject constructor(
     }
 
     override fun onActivityCreated() {
-
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (appPreferences.wasOnboardingSeen) {
-                appPreferences.wasOnboardingSeen = true
-
+        val rootBeer = RootBeer(app)
+        if (rootBeer.isRooted) {
+            viewModelScope.launch {
                 uiEventStream.postValue(
-                    UiEvent.OpenIntent(
-                        Intent(app, AuthActivity::class.java),
-                        finishSourceActivity = true
-                    )
+                    UiEvent.ShowToast(R.string.phone_rooted)
                 )
-            } else {
-                appPreferences.language = "en-US"
-                uiEventStream.postValue(
-                    UiEvent.OpenIntent(
-                        Intent(app, OnboardingActivity::class.java),
-                        finishSourceActivity = true
-                    )
-                )
+                delay(3000)
+                android.os.Process.killProcess(android.os.Process.myPid())
             }
-        }, DEFAULT_SPLASH_TIME)
+
+        } else {
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (appPreferences.wasOnboardingSeen) {
+                    appPreferences.wasOnboardingSeen = true
+
+                    uiEventStream.postValue(
+                        UiEvent.OpenIntent(
+                            Intent(app, AuthActivity::class.java),
+                            finishSourceActivity = true
+                        )
+                    )
+                } else {
+                    uiEventStream.postValue(
+                        UiEvent.OpenIntent(
+                            Intent(app, OnboardingActivity::class.java),
+                            finishSourceActivity = true
+                        )
+                    )
+                }
+            }, DEFAULT_SPLASH_TIME)
+        }
     }
 }

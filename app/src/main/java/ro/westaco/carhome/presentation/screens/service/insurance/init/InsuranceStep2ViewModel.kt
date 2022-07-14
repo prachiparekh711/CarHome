@@ -7,7 +7,6 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
 import ro.westaco.carhome.data.sources.remote.requests.RcaOfferRequest
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
@@ -149,8 +148,6 @@ class InsuranceStep2ViewModel @Inject constructor(
                     )
 
             }, {
-
-                uiEventStream.value = UiEvent.ShowToast(R.string.fill_all_fields)
                 onBack()
             })
 

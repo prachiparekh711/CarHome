@@ -39,7 +39,7 @@
 
             />
 
-        <ro.westaco.carhome.utils.TouchEventInterceptorLayout
+        <ro.westaco.carhome.views.TouchEventInterceptorLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -59,7 +59,7 @@
                 android:padding="@dimen/_5sdp"
                 android:scrollbars="vertical"
                 android:textSize="@dimen/_12sdp" />
-        </ro.westaco.carhome.utils.TouchEventInterceptorLayout>
+        </ro.westaco.carhome.views.TouchEventInterceptorLayout>
 
         <TextView
             android:id="@+id/cta"

@@ -32,12 +32,18 @@ class LocationViewModel @Inject constructor(
     val nearbyLocationsFiltered = MutableLiveData<ArrayList<LocationV2Item>>()
     val dialogResultData: MutableLiveData<LocationV2Item> = MutableLiveData<LocationV2Item>()
     val selectedItemsLiveData: SingleLiveEvent<ArrayList<SectionModel>> = SingleLiveEvent()
+    val initFiltersLiveData: SingleLiveEvent<SectionModel> = SingleLiveEvent()
+
+
+    fun getinitFiltersLiveData(): SingleLiveEvent<SectionModel> {
+        return initFiltersLiveData
+    }
 
     fun getSelectedItems(): SingleLiveEvent<ArrayList<SectionModel>> {
         return selectedItemsLiveData
     }
 
-    fun getLocationFilter() {
+    fun fetchLocationFilter() {
         api.locationFilterMaps()
             .enqueue(object : Callback<ApiResponse<List<SectionModel>>> {
                 override fun onFailure(

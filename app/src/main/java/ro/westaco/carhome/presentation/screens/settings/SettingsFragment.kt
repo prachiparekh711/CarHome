@@ -1,6 +1,5 @@
 package ro.westaco.carhome.presentation.screens.settings
 
-import android.os.Handler
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
@@ -12,10 +11,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_settings.*
 import ro.westaco.carhome.R
+import ro.westaco.carhome.dialog.DialogUtils
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.screens.main.MainActivity
-import ro.westaco.carhome.utils.DialogUtils
-import ro.westaco.carhome.utils.Progressbar
 
 
 //C- Redesign
@@ -26,19 +24,16 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
         const val TAG = "SettingsFragment"
     }
 
-    var progressbar: Progressbar? = null
     var dialogLogOut: BottomSheetDialog? = null
     override fun getContentView() = R.layout.fragment_settings
     private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun getStatusBarColor() =
-        ContextCompat.getColor(requireContext(), R.color.white)
+        ContextCompat.getColor(requireContext(), R.color.settingsHeaderBg)
 
     override fun initUi() {
         // Header options
 
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
 
         val info = requireContext().packageManager.getPackageInfo(
             requireContext().packageName, 0
@@ -90,12 +85,8 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
 //            viewModel.onFaqClicked()
         }
 
-        terms.setOnClickListener {
-            viewModel.onTermsClicked()
-        }
-
-        gdpr.setOnClickListener {
-            viewModel.onGdprClicked()
+        consents.setOnClickListener {
+            viewModel.onConsentsClicked()
         }
 
         share.setOnClickListener {
@@ -133,10 +124,6 @@ class SettingsFragment : BaseFragment<SettingsViewModel>() {
                 dialogLogOut?.dismiss()
             }
         }
-
-        Handler().postDelayed({
-            progressbar?.dismissPopup()
-        }, 500)
 
     }
 

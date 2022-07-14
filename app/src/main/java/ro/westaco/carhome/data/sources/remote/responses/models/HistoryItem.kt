@@ -36,5 +36,8 @@ data class HistoryItem(
     val ticketSeries: String? = null,
 
     @field:SerializedName("vehicle")
-    val vehicle: String? = null
+    val vehicle: String? = null,
+
+    @field:SerializedName("status")
+    val status: Int? = null
 ) : Serializable

@@ -10,24 +10,24 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.apis.CarHomeApi
+import ro.westaco.carhome.data.sources.remote.requests.AddVehicleRequest
 import ro.westaco.carhome.data.sources.remote.responses.models.*
 import ro.westaco.carhome.navigation.BundleProvider
 import ro.westaco.carhome.navigation.Screen
-import ro.westaco.carhome.navigation.SingleLiveEvent
 import ro.westaco.carhome.navigation.UiEvent
 import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.dashboard.profile.edit.EditProfileFragment
 import ro.westaco.carhome.presentation.screens.data.DataFragment
+import ro.westaco.carhome.presentation.screens.data.cars.add_new.AddNewCar2Fragment
 import ro.westaco.carhome.presentation.screens.data.cars.details.CarDetailsFragment
 import ro.westaco.carhome.presentation.screens.reminder.add_new.AddNewReminderFragment
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.bridge_tax_init.PassTaxInitFragment
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.rovignette_init.BuyVignetteFragment
 import ro.westaco.carhome.presentation.screens.service.bridgetax_rovignette.select_car.SelectCarFragment
-import ro.westaco.carhome.presentation.screens.service.insurance.init.InsuranceFragment
-import ro.westaco.carhome.presentation.screens.service.transaction_details.TransactionDetailsFragment
+import ro.westaco.carhome.presentation.screens.service.insurance.request.InsAcceptanceRequestFragment
+import ro.westaco.carhome.presentation.screens.service.support.transaction_details.TransactionDetailsFragment
 import ro.westaco.carhome.utils.DeviceUtils
 import ro.westaco.carhome.utils.FirebaseAnalyticsList
 import rx.android.schedulers.AndroidSchedulers
@@ -49,12 +49,6 @@ class HomeViewModel @Inject constructor(
     val remindersTabData = MutableLiveData<ArrayList<CatalogItem>?>()
     var historyLiveData = MutableLiveData<ArrayList<HistoryItem>?>()
     var mFirebaseAnalytics = FirebaseAnalytics.getInstance(app)
-
-    val stateStream: SingleLiveEvent<STATE> = SingleLiveEvent()
-
-    enum class STATE {
-        DOCUMENT_NOT_FOUND
-    }
 
     override fun onFragmentCreated() {
         super.onFragmentCreated()
@@ -96,7 +90,8 @@ class HomeViewModel @Inject constructor(
     internal fun onInsurance() {
         val params = Bundle()
         mFirebaseAnalytics.logEvent(FirebaseAnalyticsList.ACCESS_INSURANCE_HOME, params)
-        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Insurance))
+//        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.Insurance))
+        uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.InsuranceRequest))
     }
 
 
@@ -159,6 +154,69 @@ class HomeViewModel @Inject constructor(
             }))
     }
 
+    internal fun onNotificationClick(item: Vehicle) {
+
+        item.id?.let {
+            api.getVehicle(it)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (it.success && it.data != null) {
+                        it.data.let {
+                            if (it != null) {
+                                onCheck(it)
+                            }
+                        }
+                    }
+                }, {
+                })
+        }
+
+    }
+
+    internal fun onCheck(vehicleDetails: VehicleDetails) {
+
+        val addCarRequest = AddVehicleRequest(
+            vehicleDetails.vehicleIdentityCard,
+            vehicleDetails.manufacturingYear,
+            vehicleDetails.vehicleIdentificationNumber,
+            vehicleDetails.leasingCompany,
+            vehicleDetails.vehicleUsageType?.toInt(),
+            vehicleDetails.enginePower,
+            vehicleDetails.vehicleCategory?.toInt(),
+            vehicleDetails.registrationCountryCode,
+            vehicleDetails.vehicleBrand?.toInt(),
+            vehicleDetails.maxAllowableMass,
+            vehicleDetails.licensePlate,
+            vehicleDetails.noOfSeats,
+            vehicleDetails.fuelTypeId?.toInt(),
+            vehicleDetails.engineSize,
+            vehicleDetails.vehicleSubCategoryId?.toInt(),
+            vehicleDetails.model,
+            vehicleDetails.id.toInt(),
+            vehicleDetails.vehicleEvents
+        )
+
+        uiEventStream.value = UiEvent.Navigation(
+            NavAttribs(
+                Screen.AddCar2,
+                object : BundleProvider() {
+                    override fun onAddArgs(bundle: Bundle?): Bundle {
+                        return Bundle().apply {
+                            putSerializable(
+                                AddNewCar2Fragment.ARG_IS_EDIT,
+                                true
+                            )
+                            putSerializable(
+                                AddNewCar2Fragment.ARG_CAR,
+                                addCarRequest
+                            )
+                        }
+                    }
+                }
+            )
+        )
+    }
+
 
     internal fun onHistoryClicked() {
         uiEventStream.value = UiEvent.Navigation(NavAttribs(Screen.History))
@@ -176,10 +234,7 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchRemoteData() {
 
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
+
         api.getSimpleCatalog("NOM_REMINDER_TAG")
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
@@ -198,15 +253,6 @@ class HomeViewModel @Inject constructor(
             }, {
                 it.printStackTrace()
                 progressData.value = null
-            })
-
-        api.getVehicles()
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ resp ->
-                carsLivedata.value = resp?.data
-            }, {
-                it.printStackTrace()
-                carsLivedata.value = null
             })
 
         api.getRecentDocuments()
@@ -228,8 +274,19 @@ class HomeViewModel @Inject constructor(
             })
     }
 
+    fun fetchVehicles() {
+        api.getVehicles()
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ resp ->
+                carsLivedata.value = resp?.data
+            }, {
+                it.printStackTrace()
+                carsLivedata.value = null
+            })
+    }
+
     private fun fetchReminders() {
-        api.getReminders()
+        api.getReminders(false)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
                 remindersLiveData.value = resp?.data
@@ -237,19 +294,12 @@ class HomeViewModel @Inject constructor(
             })
     }
 
-
     internal fun onDelete(item: Reminder) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
-
 
         item.id?.let {
             api.deleteReminder(it)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                     fetchReminders()
                 }, {
 
@@ -269,6 +319,17 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }))
+    }
+
+    internal fun onMarkAsCompleted(item: Reminder) {
+        item.id?.let {
+            api.markAsCompleted(it)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    fetchReminders()
+                }, {
+                })
+        }
     }
 
     fun fetchProfileData() {
@@ -301,10 +362,10 @@ class HomeViewModel @Inject constructor(
 
     internal fun onBuyInsurance(vehicle: Vehicle) {
         uiEventStream.value =
-            UiEvent.Navigation(NavAttribs(Screen.Insurance, object : BundleProvider() {
+            UiEvent.Navigation(NavAttribs(Screen.InsuranceRequest, object : BundleProvider() {
                 override fun onAddArgs(bundle: Bundle?): Bundle {
                     return Bundle().apply {
-                        putSerializable(InsuranceFragment.ARG_CAR, vehicle)
+                        putSerializable(InsAcceptanceRequestFragment.ARG_CAR, vehicle)
                     }
                 }
             }))

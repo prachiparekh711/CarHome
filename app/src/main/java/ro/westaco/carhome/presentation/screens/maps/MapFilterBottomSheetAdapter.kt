@@ -47,7 +47,10 @@ class MapFilterBottomSheetAdapter(
     }
 
     private fun initSelectedItems(item: LocationFilterItem, holder: MapFilterViewHolder) {
-        if (!selectedItems.contains(item)) {
+        val selectedItem = selectedItems.find {
+            it.nomLSId == item.nomLSId
+        }
+        if (selectedItem == null) {
             changeToNotSelected(holder)
         } else {
             changeToSelected(holder)
@@ -56,6 +59,11 @@ class MapFilterBottomSheetAdapter(
     }
 
     private fun initIcons(item: LocationFilterItem, holder: MapFilterViewHolder) {
+        if (item.logoHref == null && item.iconHref == null) {
+            holder.binding.filtersLinearLayout.visibility = View.VISIBLE
+            holder.binding.logoLinearLayout.visibility = View.GONE
+            holder.binding.smallIcon.visibility = View.GONE
+        }
         if (item.logoHref != null) {
             holder.binding.filtersLinearLayout.visibility = View.GONE
             holder.binding.logoLinearLayout.visibility = View.VISIBLE
@@ -74,20 +82,23 @@ class MapFilterBottomSheetAdapter(
     }
 
     private fun changeIfSelected(item: LocationFilterItem, holder: MapFilterViewHolder) {
-        if (!intermediateSelectedItems.contains(item) && item.nomLSId == 0) {
+        val selectedItem = selectedItems.find {
+            it.nomLSId == item.nomLSId
+        }
+        if (selectedItem == null && item.nomLSId == 0) {
             intermediateSelectedItems.clear()
             intermediateSelectedItems.addAll(dataSource)
             notifyDataSetChanged()
             return
         }
-        if (intermediateSelectedItems.contains(item) && item.nomLSId == 0) {
+        if (selectedItem != null && item.nomLSId == 0) {
             intermediateSelectedItems.clear()
             notifyDataSetChanged()
             return
         }
-        if (intermediateSelectedItems.contains(item)) {
+        if (selectedItem != null) {
             changeToNotSelected(holder)
-            intermediateSelectedItems.remove(item)
+            intermediateSelectedItems.remove(selectedItem)
             selectedItemsLiveData.value = intermediateSelectedItems
         } else {
             changeToSelected(holder)

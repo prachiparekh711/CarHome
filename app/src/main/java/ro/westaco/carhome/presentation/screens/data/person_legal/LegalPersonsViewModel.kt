@@ -50,6 +50,7 @@ class LegalPersonsViewModel @Inject constructor(
                 override fun onAddArgs(bundle: Bundle?): Bundle {
                     return Bundle().apply {
                         putSerializable(LegalPersonDetailsFragment.ARG_LEGAL_PERSON, item)
+                        putBoolean(LegalPersonDetailsFragment.ARG_MENU, true)
                     }
                 }
             }))

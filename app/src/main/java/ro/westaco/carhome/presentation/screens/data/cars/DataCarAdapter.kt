@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +34,7 @@ class DataCarAdapter(
         fun onItemClick(item: Vehicle)
         fun onBuyClick(item: Vehicle, service: String)
         fun onDocClick(item: Vehicle, service: String)
+        fun onNotificationClick(item: Vehicle)
     }
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -88,9 +90,10 @@ class DataCarAdapter(
         private var bridgeLL: LinearLayout = itemView.findViewById(R.id.bridgeLL)
         private var rovinietaLL: LinearLayout = itemView.findViewById(R.id.rovinietaLL)
         private var rcaLL: LinearLayout = itemView.findViewById(R.id.rcaLL)
+        private var noti: AppCompatImageView = itemView.findViewById(R.id.noti)
 
 
-        private val originalFormat = SimpleDateFormat(
+        private var originalFormatDate = SimpleDateFormat(
             context.getString(R.string.server_standard_datetime_format_template),
             Locale.US
         )
@@ -98,7 +101,10 @@ class DataCarAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(position: Int) {
             val item = cars[position]
-            makeAndModel.text = "${item.vehicleBrand ?: ""} ${item.model ?: ""}"
+            if (item.vehicleBrand.isNullOrEmpty() && item.model.isNullOrEmpty())
+                makeAndModel.text = "N/A"
+            else
+                makeAndModel.text = "${item.vehicleBrand ?: ""} ${item.model ?: ""}"
             carNumber.text = item.licensePlate
 
             rcaDetails(item)
@@ -133,15 +139,29 @@ class DataCarAdapter(
             rcaLL.setOnClickListener {
                 listener?.onItemClick(item)
             }
+
+            noti.setOnClickListener {
+                listener?.onNotificationClick(item)
+            }
+
         }
 
         private fun rcaDetails(item: Vehicle) {
 
             if (!item.policyExpirationDate.isNullOrEmpty()) {
-                val serverDate = originalFormat.parse(item.policyExpirationDate)
+                val serverDate: Date = try {
 
+                    originalFormatDate.parse(item.policyExpirationDate) as Date
+                } catch (e: Exception) {
+                    val originalFormat = SimpleDateFormat(
+                        context.getString(R.string.server_standard_datetime_format_template1),
+                        Locale.US
+                    )
+                    originalFormat.parse(item.policyExpirationDate) as Date
+                }
                 val timeLeftMillis = serverDate.time - Date().time
-                val timeLeftMillisPos = if (timeLeftMillis < 0) -timeLeftMillis else timeLeftMillis
+                val timeLeftMillisPos =
+                    if (timeLeftMillis < 0) -timeLeftMillis else timeLeftMillis
                 val daysLeft = TimeUnit.MILLISECONDS.toDays(timeLeftMillisPos)
                 val hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeftMillisPos)
                 val minutesLeft = TimeUnit.MILLISECONDS.toMinutes(timeLeftMillisPos)
@@ -160,6 +180,7 @@ class DataCarAdapter(
 
                     statusRca.setTextColor(ContextCompat.getColor(context, R.color.greenActive))
                     spacerRca.isVisible = true
+                    policyExpiryRca.isVisible = true
                     statusRca.text = context.getString(R.string.status_active)
                     actionRcaTV.background =
                         context.resources.getDrawable(R.drawable.cta_background)
@@ -176,6 +197,7 @@ class DataCarAdapter(
                     }
                 } else {
                     spacerRca.isVisible = false
+                    policyExpiryRca.isVisible = false
                     statusRca.text = context.getString(R.string.purchases_exp_inactive)
                     statusRca.setTextColor(ContextCompat.getColor(context, R.color.redExpired))
                     actionRcaTV.alpha = 1F
@@ -183,11 +205,16 @@ class DataCarAdapter(
                     actionRcaTV.background =
                         context.resources.getDrawable(R.drawable.buy_background)
                     actionRcaTV.text = context.getString(R.string.buy_vignette_cta)
+                    actionRcaTV.setOnClickListener {
+                        listener?.onBuyClick(item, "RO_RCA")
+                    }
                 }
+
             } else {
                 actionRcaTV.alpha = 1F
                 actionRcaTV.isEnabled = true
                 spacerRca.isVisible = false
+                policyExpiryRca.isVisible = false
                 statusRca.text = context.getString(R.string.no_info)
                 statusRca.setTextColor(ContextCompat.getColor(context, R.color.orangeWarning))
                 actionRcaTV.background = context.resources.getDrawable(R.drawable.buy_background)
@@ -203,11 +230,19 @@ class DataCarAdapter(
         private fun roDetails(item: Vehicle) {
 
             if (!item.vignetteExpirationDate.isNullOrEmpty()) {
-
-                val serverDate = originalFormat.parse(item.vignetteExpirationDate)
+                var serverDate: Date = try {
+                    originalFormatDate.parse(item.vignetteExpirationDate) as Date
+                } catch (e: Exception) {
+                    val originalFormat = SimpleDateFormat(
+                        context.getString(R.string.server_standard_datetime_format_template1),
+                        Locale.US
+                    )
+                    originalFormat.parse(item.vignetteExpirationDate) as Date
+                }
 
                 val timeLeftMillis = serverDate.time - Date().time
-                val timeLeftMillisPos = if (timeLeftMillis < 0) -timeLeftMillis else timeLeftMillis
+                val timeLeftMillisPos =
+                    if (timeLeftMillis < 0) -timeLeftMillis else timeLeftMillis
                 val daysLeft = TimeUnit.MILLISECONDS.toDays(timeLeftMillisPos)
                 val hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeftMillisPos)
                 val minutesLeft = TimeUnit.MILLISECONDS.toMinutes(timeLeftMillisPos)
@@ -225,9 +260,11 @@ class DataCarAdapter(
 
                     statusRo.setTextColor(ContextCompat.getColor(context, R.color.greenActive))
                     spacerRo.isVisible = true
+                    policyExpiryRo.isVisible = true
                     statusRo.text = context.getString(R.string.status_active)
 
-                    actionRoTV.background = context.resources.getDrawable(R.drawable.cta_background)
+                    actionRoTV.background =
+                        context.resources.getDrawable(R.drawable.cta_background)
                     actionRoTV.text = context.getString(R.string.document)
                     if (item.vignetteTicketHref == null || timeLeftMillis < 0) {
                         actionRoTV.alpha = 0.5F
@@ -241,19 +278,24 @@ class DataCarAdapter(
                     }
                 } else {
                     spacerRo.isVisible = false
+                    policyExpiryRo.isVisible = false
                     statusRo.text = context.getString(R.string.purchases_exp_inactive)
                     statusRo.setTextColor(ContextCompat.getColor(context, R.color.redExpired))
                     actionRoTV.alpha = 1F
                     actionRoTV.isEnabled = true
-                    actionRoTV.background = context.resources.getDrawable(R.drawable.buy_background)
+                    actionRoTV.background =
+                        context.resources.getDrawable(R.drawable.buy_background)
                     actionRoTV.text = context.getString(R.string.buy_vignette_cta)
+                    actionRoTV.setOnClickListener {
+                        listener?.onBuyClick(item, "RO_VIGNETTE")
+                    }
                 }
-
 
             } else {
                 actionRoTV.alpha = 1F
                 actionRoTV.isEnabled = true
                 spacerRo.isVisible = false
+                policyExpiryRo.isVisible = false
                 statusRo.text = context.getString(R.string.no_info)
                 statusRo.setTextColor(ContextCompat.getColor(context, R.color.orangeWarning))
                 actionRoTV.background = context.resources.getDrawable(R.drawable.buy_background)

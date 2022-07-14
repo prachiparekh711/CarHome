@@ -16,6 +16,7 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.responses.models.CatalogItem
 import ro.westaco.carhome.data.sources.remote.responses.models.Reminder
 import ro.westaco.carhome.utils.CatalogUtils
+import ro.westaco.carhome.utils.DateTimeUtils
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -98,95 +99,80 @@ class ReminderAdapter(
             }
 
 
-            var composedServerDate: String? = null
-            if (!item.dueDate.isNullOrEmpty()) {
+            var composedServerDate: Date? = null
+            if (item.dueDate != null) {
                 composedServerDate = item.dueDate
                 if (!item.dueTime.isNullOrEmpty()) {
-                    composedServerDate += " " + item.dueTime
+                    composedServerDate =
+                        DateTimeUtils.addStringTimeToDate(item.dueDate, item.dueTime)
                 }
             }
             composedServerDate?.let {
                 val ctx = itemView.context
-                try {
-                    val originalFormat = SimpleDateFormat(
-                        ctx.getString(R.string.server_datetime_format_template),
-                        Locale.US
-                    )
-                    val serverDate = originalFormat.parse(it)
 
-                    day.text = SimpleDateFormat("dd", Locale.US).format(serverDate)
-                    month.text = SimpleDateFormat("MMM", Locale.US).format(serverDate)
-                    year.text = "'${SimpleDateFormat("yy", Locale.US).format(serverDate)}"
-                    hourTextView.text = SimpleDateFormat("hh:mm", Locale.US).format(serverDate)
+                day.text = SimpleDateFormat("dd", Locale.US).format(it)
+                month.text = SimpleDateFormat("MMM", Locale.US).format(it)
+                year.text = "'${SimpleDateFormat("yy", Locale.US).format(it)}"
+                hourTextView.text = SimpleDateFormat("HH:mm", Locale.US).format(it)
 
-                    val timeLeftMillis = serverDate.time - Date().time
-                    val timeLeftMillisPos =
-                        if (timeLeftMillis < 0) -timeLeftMillis else timeLeftMillis
-                    val daysLeft = TimeUnit.MILLISECONDS.toDays(timeLeftMillisPos)
-                    val hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeftMillisPos)
-                    val minutesLeft = TimeUnit.MILLISECONDS.toMinutes(timeLeftMillisPos)
+                val timeLeftMillis = it.time - Date().time
+                val timeLeftMillisPos = if (timeLeftMillis < 0) -timeLeftMillis else timeLeftMillis
+                var daysLeft = TimeUnit.MILLISECONDS.toDays(timeLeftMillisPos)
+                val hoursLeft = TimeUnit.MILLISECONDS.toHours(timeLeftMillisPos)
+                val minutesLeft = TimeUnit.MILLISECONDS.toMinutes(timeLeftMillisPos)
 
-                    var formattedTimeLeft = ""
+                var formattedTimeLeft = ""
 
-                    if (daysLeft > 0) {
-                        formattedTimeLeft = ctx.getString(R.string.days_template, daysLeft)
-                    } else if (hoursLeft > 0) {
-                        formattedTimeLeft =
-                            ctx.getString(
-                                R.string.hours_template,
-                                hoursLeft
-                            )
-                    } else if (minutesLeft > 0) {
-                        formattedTimeLeft = ctx.getString(
-                            R.string.minutes_template,
-                            minutesLeft
-                        )
-                    }
-
-                    if (timeLeftMillis < 0) {
-                        formattedTimeLeft =
-                            ctx.getString(
-                                R.string.duetime_in_past,
-                                formattedTimeLeft
-                            )
-                        timeLeft.setTextColor(
-                            ContextCompat.getColor(
-                                ctx,
-                                R.color.tag_pink
-                            )
-                        )
-                    } else {
-                        formattedTimeLeft =
-                            ctx.getString(
-                                R.string.duetime_in_future,
-                                formattedTimeLeft
-                            )
-                        timeLeft.setTextColor(
-                            ContextCompat.getColor(
-                                ctx,
-                                R.color.tag_orange
-                            )
-                        )
-                    }
-
-                    timeLeft.text = formattedTimeLeft
-                    timeLeft.isVisible = true
-                    timeLeftCircle.isVisible = true
-
-                } catch (e: Exception) {
-                    val originalFormat = SimpleDateFormat(
-                        ctx.getString(R.string.server_date_format_template),
-                        Locale.US
-                    )
-                    val serverDate = originalFormat.parse(it)
-                    day.text = SimpleDateFormat("dd", Locale.US).format(serverDate)
-                    month.text = SimpleDateFormat("MMM", Locale.US).format(serverDate)
-                    year.text = "'${SimpleDateFormat("yy", Locale.US).format(serverDate)}"
-                    hourTextView.text = "-"
-
-                    timeLeft.isVisible = false
-                    timeLeftCircle.isVisible = false
+                if (timeLeftMillis > 0 && daysLeft > 0) {
+                    daysLeft += 1
                 }
+
+                if (daysLeft > 0) {
+                    formattedTimeLeft = ctx.getString(R.string.days_template, daysLeft)
+                } else if (hoursLeft > 0) {
+                    formattedTimeLeft =
+                        ctx.getString(
+                            R.string.hours_template,
+                            hoursLeft
+                        )
+                } else if (minutesLeft > 0) {
+                    formattedTimeLeft = ctx.getString(
+                        R.string.minutes_template,
+                        minutesLeft
+                    )
+                }
+
+                if (timeLeftMillis < 0) {
+                    formattedTimeLeft =
+                        ctx.getString(
+                            R.string.duetime_in_past,
+                            formattedTimeLeft
+                        )
+                    timeLeft.setTextColor(
+                        ContextCompat.getColor(
+                            ctx,
+                            R.color.tag_pink
+                        )
+                    )
+                } else {
+                    formattedTimeLeft =
+                        ctx.getString(
+                            R.string.duetime_in_future,
+                            formattedTimeLeft
+                        )
+                    timeLeft.setTextColor(
+                        ContextCompat.getColor(
+                            ctx,
+                            R.color.greenActive
+                        )
+                    )
+                }
+
+                timeLeft.text = formattedTimeLeft
+                timeLeft.isVisible = true
+                timeLeftCircle.isVisible = true
+
+
             }
 
             drag_item.setOnClickListener {

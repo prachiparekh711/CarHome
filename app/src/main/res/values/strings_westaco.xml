@@ -16,10 +16,19 @@
     <string name="server_date_format_template" translatable="false">yyyy-MM-dd</string>
     <string name="server_datetime_format_template" translatable="false">yyyy-MM-dd HH:mm:ss</string>
     <string name="server_standard_datetime_format_template" translatable="false">yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'</string>
+    <string name="server_standard_datetime_format_template1" translatable="false">yyyy-MM-dd\'T\'HH:mm:ss.SSS+HH:mm</string>
 
     <string name="BASE_URL_PRODUCTION" translatable="false">https://build3.westaco.com:8443/</string>
     <string name="BASE_URL_RESOURCES" translatable="false">https://carhome-build.westaco.com</string>
     <string name="TEST_URL_PRODUCTION" translatable="false">https://carhome-test.westaco.com/</string>
     <string name="TEST_URL_RESOURCES" translatable="false">https://carhome-test.westaco.com</string>
+
+    <string name="deep_url" translatable="false">https://carhome.page.link/register</string>
+
+    <string name="facebook_url" translatable="false">https://www.facebook.com/CarHome-by-OMV-Petrom-100577025997269</string>
+    <string name="instagram_url" translatable="false">https://www.instagram.com/carhomeofficial</string>
+    <string name="twitter_url" translatable="false">https://twitter.com/carhomeapp</string>
+    <string name="youtube_url" translatable="false">https://www.youtube.com/channel/UCfLxUKKXUAa6tGmvQkrlbGQ</string>
+
 
 </resources>

@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter_semibold_600"
-            android:text="@string/select_method"
+            android:text="@string/socials"
             android:textColor="@color/textOnWhite"
             android:textSize="@dimen/_15sdp"
             app:layout_constraintBottom_toBottomOf="@+id/back"
@@ -52,53 +52,138 @@
             android:id="@+id/mainLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:orientation="horizontal"
             android:weightSum="2"
             app:layout_constraintTop_toBottomOf="@id/title">
 
-            <ImageView
-                android:id="@+id/mInsta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_weight="1"
-                android:src="@drawable/insta1" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_130sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/mFb"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:src="@drawable/fb1" />
+                <ImageView
+                    android:id="@+id/mInsta"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/insta3" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:src="@drawable/ic_social_arrow" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/inter_bold_700"
+                    android:padding="@dimen/_15sdp"
+                    android:text="@string/insta"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13sdp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_130sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/mFb"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/fb3" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:src="@drawable/ic_social_arrow" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/inter_bold_700"
+                    android:padding="@dimen/_15sdp"
+                    android:text="@string/fb"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13sdp" />
+            </RelativeLayout>
 
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal"
             android:weightSum="2"
             app:layout_constraintTop_toBottomOf="@id/mainLL">
 
-            <ImageView
-                android:id="@+id/mTwitter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_weight="1"
-                android:src="@drawable/twitter1" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_130sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_weight="1">
 
-            <ImageView
-                android:id="@+id/mYoutube"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:src="@drawable/utube" />
+                <ImageView
+                    android:id="@+id/mTwitter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/twitter3" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:src="@drawable/ic_social_arrow" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/inter_bold_700"
+                    android:padding="@dimen/_15sdp"
+                    android:text="@string/twitter"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13sdp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_130sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/mYoutube"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/utube3" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:src="@drawable/ic_social_arrow" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:fontFamily="@font/inter_bold_700"
+                    android:padding="@dimen/_15sdp"
+                    android:text="@string/utube"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13sdp" />
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -107,6 +192,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:src="@drawable/ic_frame_security"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

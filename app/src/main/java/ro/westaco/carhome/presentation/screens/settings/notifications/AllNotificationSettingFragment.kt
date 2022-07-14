@@ -4,7 +4,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_all_notification_setting.*
 import ro.westaco.carhome.R
 import ro.westaco.carhome.presentation.base.BaseFragment
-import ro.westaco.carhome.utils.SwitchButton
+import ro.westaco.carhome.views.SwitchButton
 
 @AndroidEntryPoint
 class AllNotificationSettingFragment : BaseFragment<NotificationSettingModel>() {
@@ -34,7 +34,7 @@ class AllNotificationSettingFragment : BaseFragment<NotificationSettingModel>() 
                     channel = requireContext().resources.getString(R.string.sms)
                 }
                 R.id.email_switch_button -> {
-                    channel = requireContext().resources.getString(R.string.email)
+                    channel = requireContext().resources.getString(R.string.noti_email)
                 }
                 R.id.app_switch_button -> {
                     channel = requireContext().resources.getString(R.string.app)

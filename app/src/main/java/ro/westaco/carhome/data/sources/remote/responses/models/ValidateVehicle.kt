@@ -7,6 +7,6 @@ data class ValidateVehicle(
     @field:SerializedName("valid")
     val valid: Boolean? = null,
 
-    @field:SerializedName("fieldsToBeCollected")
-    val fieldsToBeCollected: List<String?>? = null
+    @field:SerializedName("warnings")
+    val warnings: List<WarningsItem?>? = null
 )

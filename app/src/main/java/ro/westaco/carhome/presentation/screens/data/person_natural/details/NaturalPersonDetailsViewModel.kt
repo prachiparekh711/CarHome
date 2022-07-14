@@ -25,7 +25,6 @@ import ro.westaco.carhome.navigation.events.NavAttribs
 import ro.westaco.carhome.presentation.base.BaseViewModel
 import ro.westaco.carhome.presentation.screens.data.person_natural.add_new.AddNewNaturalPersonFragment
 import ro.westaco.carhome.utils.DateTimeUtils
-import ro.westaco.carhome.utils.DeviceUtils
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File
@@ -48,6 +47,7 @@ class NaturalPersonDetailsViewModel @Inject constructor(
         class OnDeleteSuccess(val attachType: String) : ACTION()
         class OnUploadSuccess(val attachType: String, val attachment: Attachments) : ACTION()
         object OnDeleteLogo : ACTION()
+        object InProgress : ACTION()
     }
 
     internal fun convertFromServerDate(date: String?) =
@@ -124,19 +124,13 @@ class NaturalPersonDetailsViewModel @Inject constructor(
     }
 
     internal fun onDelete(id: Long) {
-        if (!DeviceUtils.isOnline(app)) {
-            uiEventStream.value = UiEvent.ShowToast(R.string.int_not_connect)
-            return
-        }
 
         api.deleteNaturalPerson(id)
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                 uiEventStream.value = UiEvent.NavBack
             }, {
                 //   it.printStackTrace()
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 
@@ -167,8 +161,7 @@ class NaturalPersonDetailsViewModel @Inject constructor(
                 actionStream.value =
                     it.data?.let { it1 -> ACTION.OnUploadSuccess(attachType, it1) }
             }, {
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 
@@ -178,14 +171,12 @@ class NaturalPersonDetailsViewModel @Inject constructor(
         api.deleteAttachmentToNaturalPerson(id.toLong(), attachID.toLong())
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                uiEventStream.value = UiEvent.ShowToast(R.string.delete_success_msg)
                 if (attachType == "DRIVING_LICENSE") {
                     actionStream.value = ACTION.OnDeleteSuccess("DRIVING_LICENSE")
                 } else {
                     actionStream.value = ACTION.OnDeleteSuccess("IDENTITY_DOCUMENT")
                 }
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 
@@ -205,8 +196,7 @@ class NaturalPersonDetailsViewModel @Inject constructor(
                 onReceivedPerson(id)
                 uiEventStream.value = UiEvent.ShowToast(R.string.logo_success_msg)
             }, {
-                uiEventStream.value =
-                    UiEvent.ShowToast(R.string.server_saving_error)
+
             })
     }
 
@@ -217,7 +207,6 @@ class NaturalPersonDetailsViewModel @Inject constructor(
                 actionStream.value = ACTION.OnDeleteLogo
                 onReceivedPerson(id)
             }, {
-                uiEventStream.value = UiEvent.ShowToast(R.string.general_server_error)
             })
     }
 

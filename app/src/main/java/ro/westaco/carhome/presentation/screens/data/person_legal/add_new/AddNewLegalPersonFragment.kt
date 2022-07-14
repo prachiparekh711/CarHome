@@ -1,8 +1,10 @@
 package ro.westaco.carhome.presentation.screens.data.person_legal.add_new
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add_new_legal_person.*
 import kotlinx.android.synthetic.main.fragment_add_new_legal_person.apartment
@@ -28,14 +31,17 @@ import ro.westaco.carhome.R
 import ro.westaco.carhome.data.sources.remote.requests.Address
 import ro.westaco.carhome.data.sources.remote.requests.PhoneCodeModel
 import ro.westaco.carhome.data.sources.remote.responses.models.*
+import ro.westaco.carhome.dialog.DialogUtils.Companion.showErrorInfo
 import ro.westaco.carhome.presentation.base.BaseFragment
 import ro.westaco.carhome.presentation.interfaceitem.CountyListClick
 import ro.westaco.carhome.presentation.screens.data.commen.CodeDialog
 import ro.westaco.carhome.presentation.screens.data.commen.CountryCodeDialog
 import ro.westaco.carhome.presentation.screens.data.commen.CountyAdapter
 import ro.westaco.carhome.presentation.screens.data.commen.LocalityAdapter
-import ro.westaco.carhome.utils.*
-import ro.westaco.carhome.utils.DialogUtils.Companion.showErrorInfo
+import ro.westaco.carhome.utils.CatalogUtils
+import ro.westaco.carhome.utils.CountryCityUtils
+import ro.westaco.carhome.utils.FileUtil
+import ro.westaco.carhome.utils.RegexData
 import ro.westaco.carhome.utils.SirutaUtil.Companion.countyList
 import ro.westaco.carhome.utils.SirutaUtil.Companion.defaultCity
 import ro.westaco.carhome.utils.SirutaUtil.Companion.defaultCounty
@@ -58,8 +64,6 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
     var typePos = 0
     var caendialog: BottomSheetDialog? = null
     var activitydialog: BottomSheetDialog? = null
-    var phoneCountryDialog: BottomSheetDialog? = null
-    var progressbar: Progressbar? = null
 
     private var address: Address? = null
     var selectedPhoneCode: String? = null
@@ -71,9 +75,13 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
     var countyDialog: BottomSheetDialog? = null
     var localityDialog: BottomSheetDialog? = null
 
+    //    verify for validation to edit Insurance person( Owner, User)
+    var verifyLegalItem: VerifyRcaPerson? = null
+
     companion object {
         const val ARG_IS_EDIT = "arg_is_edit"
         const val ARG_LEGAL_PERSON = "arg_legal_person"
+        const val ARG_VERIFY_ITEM = "arg_verify_list"
     }
 
     override fun getContentView() = R.layout.fragment_add_new_legal_person
@@ -85,57 +93,28 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
         arguments?.let {
             isEdit = it.getBoolean(ARG_IS_EDIT)
             legalPersonDetails = it.getSerializable(ARG_LEGAL_PERSON) as? LegalPersonDetails?
+            verifyLegalItem =
+                it.getSerializable(ARG_VERIFY_ITEM) as VerifyRcaPerson?
 
         }
     }
 
     override fun initUi() {
 
-        progressbar = Progressbar(requireContext())
-        progressbar?.showPopup()
-
-
         name_in_lay.setOnClickListener {
-
-            if (cd_hidden_view.visibility == View.VISIBLE) {
-                ViewUtils.collapse(cd_hidden_view)
-                name_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
-                name_in_lay.setBackgroundResource(R.color.white)
-            } else {
-                ViewUtils.expand(cd_hidden_view)
-                name_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
-                name_in_lay.setBackgroundResource(R.color.expande_colore)
-            }
+            cd_hidden_view.isVisible = !cd_hidden_view.isVisible
+            companySection()
         }
 
         personal_info_fixed_layout.setOnClickListener {
-
-            if (p_hidden_view.visibility == View.VISIBLE) {
-                ViewUtils.collapse(p_hidden_view)
-                p_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
-                personal_info_lay.setBackgroundResource(R.color.white)
-            } else {
-                ViewUtils.expand(p_hidden_view)
-                p_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
-                personal_info_lay.setBackgroundResource(R.color.expande_colore)
-            }
-
+            personalInfoView2.isVisible = !personalInfoView2.isVisible
+            personalInfoSection()
         }
 
         address_in_lay.setOnClickListener {
-
-            if (adds_hidden_view.visibility == View.VISIBLE) {
-                ViewUtils.collapse(adds_hidden_view)
-                address_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
-                address_in_lay.setBackgroundResource(R.color.white)
-            } else {
-                ViewUtils.expand(adds_hidden_view)
-                address_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
-                address_in_lay.setBackgroundResource(R.color.expande_colore)
-            }
+            address_hidden_view.isVisible = !address_hidden_view.isVisible
+            addressSection()
         }
-
-
 
         countySpinnerText.setOnClickListener {
             openCountyDialog()
@@ -188,6 +167,38 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
 
         cta.setOnClickListener {
 
+            if (!check.isChecked) {
+                showErrorInfo(requireContext(), getString(R.string.check_info))
+                return@setOnClickListener
+            }
+
+            if (verifyLegalItem != null) {
+                if (!verifyRcaFieldOnComplete()) {
+
+                    val warningsItemList = verifyLegalItem?.validationResult?.warnings
+                    var dialogBody = ""
+                    if (warningsItemList?.isNotEmpty() == true) {
+                        var warningStr = ""
+                        for (i in warningsItemList.indices) {
+                            val field = requireContext().resources?.getIdentifier(
+                                "${warningsItemList[i]?.field}",
+                                "string",
+                                requireContext().packageName
+                            )
+                                ?.let { requireContext().resources?.getString(it) }
+                            warningStr =
+                                "$warningStr${field} : ${warningsItemList.get(i)?.warning}\n"
+                        }
+                        dialogBody = "$dialogBody\n$warningStr"
+                    }
+                    showErrorInfo(
+                        requireContext(),
+                        dialogBody
+                    )
+                    return@setOnClickListener
+                }
+            }
+
             val streetTypeItem =
                 sp_quata?.selectedItemPosition?.let { it1 -> streetTypeList[it1].id }?.let { it2 ->
                     CatalogUtils.findById(
@@ -217,24 +228,21 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
             }
 
             var addressItem: Address? = null
-            if (regionStr != null && localityStr != null) {
+            if (countryItem != null && streetName?.text != null && buildingNo?.text != null) {
                 addressItem = Address(
-                    zipCode = zipCode.text.toString(),
+                    zipCode = zipCode.text.toString().ifBlank { null },
                     streetType = streetTypeItem,
                     sirutaCode = sirutaCode,
                     locality = localityStr,
-                    streetName = streetName.text.toString(),
-                    addressDetail = null,
-                    buildingNo = buildingNo.text.toString(),
+                    streetName = streetName.text.toString().ifBlank { null },
+                    buildingNo = buildingNo.text.toString().ifBlank { null },
                     countryCode = countryItem?.code,
-                    block = blockName.text.toString(),
+                    block = blockName.text.toString().ifBlank { null },
                     region = regionStr,
-                    entrance = entrance.text.toString(),
-                    floor = floor.text.toString(),
-                    apartment = apartment.text.toString()
+                    entrance = entrance.text.toString().ifBlank { null },
+                    floor = floor.text.toString().ifBlank { null },
+                    apartment = apartment.text.toString().ifBlank { null }
                 )
-            } else {
-                showErrorInfo(requireContext(), getString(R.string.address_require))
             }
 
             val phonePos = selectedPhoneCode?.let { it1 ->
@@ -261,78 +269,50 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
                     phoneCodeForCountry = countriesList[phonePosItem].code
             }
 
-            if (RegexData.checkRegCompanyRegex(noReg.text.toString())) {
 
-                if (companyName.text?.isNotEmpty() == true) {
-
-                    if (cui.text?.isNotEmpty() == true) {
-
-                        if (cui.text?.length == 9) {
-
-                            if (typeTV.text?.isNotEmpty() == true) {
-
-                                if (check.isChecked) {
-
-                                    if (DeviceUtils.isOnline(requireActivity().application)) {
-
-                                        if (RegexData.checkCUIRegex(cui.text.toString())) {
-
-                                            viewModel.onSave(
-                                                legalPersonDetails?.id,
-                                                companyName.text.toString(),
-                                                cui.text.toString(),
-                                                noReg.text.toString(),
-                                                addressItem,
-                                                check.isChecked,
-                                                caenItem,
-                                                activityTypeItem,
-                                                isEdit,
-                                                phoneLegal.text.toString(),
-                                                phoneCodeForCountry,
-                                                emailLegal.text.toString(),
-                                                typeTV.text.toString()
-                                            )
-
-                                        } else {
-                                            showErrorInfo(
-                                                requireContext(),
-                                                getString(R.string.reg_invalid_cui)
-                                            )
-                                        }
-
-                                    } else {
-                                        showErrorInfo(
-                                            requireContext(),
-                                            getString(R.string.int_not_connect)
-                                        )
-                                    }
-                                } else {
-                                    showErrorInfo(
-                                        requireContext(),
-                                        getString(R.string.confirm_details)
-                                    )
-                                }
-                            } else {
-                                showErrorInfo(
-                                    requireContext(),
-                                    getString(R.string.Activity_type_empty)
-                                )
-                            }
-                        } else {
-                            showErrorInfo(requireContext(), getString(R.string.invalid_cui))
-                        }
-                    } else {
-                        showErrorInfo(requireContext(), getString(R.string.cui_empty))
-                    }
-
-                } else {
-                    showErrorInfo(requireContext(), getString(R.string.company_empty))
-                }
-
-            } else {
-                showErrorInfo(requireContext(), getString(R.string.reg_invalid_reg_company))
+            if (companyName.text?.isEmpty() == true) {
+                showErrorInfo(requireContext(), getString(R.string.company_empty))
+                return@setOnClickListener
             }
 
+            if (cui.text?.isEmpty() == true) {
+                showErrorInfo(requireContext(), getString(R.string.cui_empty))
+                return@setOnClickListener
+            }
+
+            if (!RegexData.checkCUIRegex(cui.text.toString())) {
+                showErrorInfo(requireContext(), getString(R.string.invalid_cui))
+                return@setOnClickListener
+            }
+
+            if (noReg.text.toString()
+                    .isNotEmpty() && !RegexData.checkRegCompanyRegex(noReg.text.toString())
+            ) {
+                showErrorInfo(requireContext(), getString(R.string.reg_invalid_reg_company))
+                return@setOnClickListener
+            }
+
+            if (emailLegal.text?.isNotEmpty() == true && !RegexData.checkEmailRegex(emailLegal.text.toString())) {
+                showErrorInfo(
+                    requireContext(),
+                    getString(R.string.invalid_email)
+                )
+                return@setOnClickListener
+            }
+
+            viewModel.onSave(
+                legalPersonDetails?.id,
+                companyName.text.toString(),
+                cui.text.toString(),
+                noReg.text.toString(),
+                addressItem,
+                caenItem,
+                activityTypeItem,
+                isEdit,
+                phoneLegal.text.toString(),
+                phoneCodeForCountry,
+                emailLegal.text.toString(),
+            )
         }
 
         if (isEdit && legalPersonDetails != null) {
@@ -379,7 +359,21 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
 
             countyPosition = defaultCounty?.name?.let { fetchCountyPosition(it) }
             localityPosition = defaultCity?.name?.let { fetchCountyPosition(it) }
+        }
 
+        if (verifyLegalItem != null) {
+            verificationForRca()
+        } else {
+            changeHint(companyNameLabel, resources.getString(R.string.company_name_cc))
+            changeHint(cuiLabel, resources.getString(R.string.cui_cc))
+            changeHint(naceLabel, resources.getString(R.string.nace_code_cc))
+            changeHint(actTypeLabel, resources.getString(R.string.act_type_cc))
+            changeHint(registrationLabel, resources.getString(R.string.reg_of_company_cc))
+            countryCodeLabel.text = requireContext().resources.getString(R.string.country_c)
+            changeHint(spinnerCounty, resources.getString(R.string.address_county_cc))
+            changeHint(spinnerLocality, resources.getString(R.string.address_city_cc))
+            changeHint(streetNameLabel, resources.getString(R.string.address_street_name_cc))
+            changeHint(buildingNoLabel, resources.getString(R.string.profile_number_cc))
         }
     }
 
@@ -548,7 +542,6 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
                 }
             }
             setPhoneCountryData()
-            progressbar?.dismissPopup()
         }
 
 
@@ -557,6 +550,18 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
             val arryadapter =
                 ArrayAdapter(requireContext(), R.layout.drop_down_list, streetTypeList)
             sp_quata.adapter = arryadapter
+            if (isEdit && legalPersonDetails != null) {
+                legalPersonDetails?.address?.streetType?.id?.let {
+                    CatalogUtils.findPosById(
+                        streetTypeList,
+                        it
+                    )
+                }?.let {
+                    sp_quata?.setSelection(
+                        it
+                    )
+                }
+            }
         }
 
     }
@@ -766,5 +771,312 @@ class AddNewLegalPersonFragment : BaseFragment<AddNewLegalPersonViewModel>(),
                 ).toString()
             )
     }
+
+    private fun verificationForRca() {
+        val warningsItemList = verifyLegalItem?.validationResult?.warnings
+        if (warningsItemList?.size != 0) {
+            if (!warningsItemList.isNullOrEmpty()) {
+                for (i in warningsItemList.indices) {
+                    when (warningsItemList[i]?.field) {
+                        "companyName" -> {
+                            changeHint(
+                                companyNameLabel,
+                                resources.getString(R.string.company_name_cc)
+                            )
+                            cd_hidden_view.isVisible = true
+                        }
+                        "cui" -> {
+                            changeHint(cuiLabel, resources.getString(R.string.cui_cc))
+                            cd_hidden_view.isVisible = true
+                        }
+                        "noRegistration" -> {
+                            changeHint(
+                                registrationLabel,
+                                resources.getString(R.string.reg_of_company_cc)
+                            )
+                            cd_hidden_view.isVisible = true
+                        }
+                        "caen", "caen.code", "caen.name" -> {
+                            changeHint(
+                                naceLabel,
+                                resources.getString(R.string.nace_code_cc)
+                            )
+                            cd_hidden_view.isVisible = true
+                        }
+                        "activityType", "activityType.id", "activityType.name" -> {
+                            changeHint(actTypeLabel, resources.getString(R.string.act_type_cc))
+                            cd_hidden_view.isVisible = true
+                        }
+                        "phone" -> {
+                            changeHint(phoneLabel, resources.getString(R.string.phone_num_cc))
+                            personalInfoView2.isVisible = true
+                        }
+                        "phoneCountryCode" -> {
+                            phoneCountryCodeLabel.text =
+                                requireContext().resources.getString(R.string.country_cc)
+                            personalInfoView2.isVisible = true
+                        }
+                        "email" -> {
+                            changeHint(emailLabel, resources.getString(R.string.email_hint_cc))
+                            personalInfoView2.isVisible = true
+                        }
+                        "address.countryCode" -> {
+//                            countryCodeLabel.text =
+//                                requireContext().resources.getString(R.string.country_cc)
+                            changeTextViewHint(
+                                countryCodeLabel,
+                                resources.getString(R.string.country_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.region" -> {
+                            changeHint(
+                                spinnerCounty,
+                                resources.getString(R.string.address_county_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.locality", "address.sirutaCode" -> {
+                            changeHint(
+                                spinnerLocality,
+                                resources.getString(R.string.address_city_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.streetType", "address.streetType.id", "address.streetType.name" -> {
+//                            streetTypeLabel.text =
+//                                requireContext().resources.getString(R.string.street_type_c)
+                            changeTextViewHint(
+                                streetTypeLabel,
+                                resources.getString(R.string.street_type_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.streetName" -> {
+                            changeHint(
+                                streetNameLabel,
+                                resources.getString(R.string.address_street_name_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.block" -> {
+                            changeHint(blockLabel, resources.getString(R.string.block_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.entrance" -> {
+                            changeHint(entranceLabel, resources.getString(R.string.entrance_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.floor" -> {
+                            changeHint(floorLabel, resources.getString(R.string.floor_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.apartment" -> {
+                            changeHint(apartmentLabel, resources.getString(R.string.apartment_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.zipCode" -> {
+                            changeHint(zipCodeLabel, resources.getString(R.string.zip_code_cc))
+                            address_hidden_view.isVisible = true
+                        }
+                        "address.buildingNo" -> {
+                            changeHint(
+                                buildingNoLabel,
+                                resources.getString(R.string.profile_number_cc)
+                            )
+                            address_hidden_view.isVisible = true
+                        }
+                    }
+                }
+                companySection()
+                personalInfoSection()
+                addressSection()
+            }
+        }
+    }
+
+    private fun changeHint(tvLayout: TextInputLayout, str: String) {
+        tvLayout.hint = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(
+                str,
+                Html.FROM_HTML_MODE_COMPACT
+            )
+        } else {
+            Html.fromHtml(str)
+        }
+    }
+
+    private fun changeTextViewHint(tvLayout: TextView, str: String) {
+        tvLayout.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(
+                str,
+                Html.FROM_HTML_MODE_COMPACT
+            )
+        } else {
+            Html.fromHtml(str)
+        }
+    }
+
+    private fun companySection() {
+        if (cd_hidden_view.visibility == View.VISIBLE) {
+            name_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
+            name_in_lay.setBackgroundResource(R.color.white)
+        } else {
+            name_in_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
+            name_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
+        }
+    }
+
+    private fun personalInfoSection() {
+        if (personalInfoView2.visibility == View.VISIBLE) {
+            personal_info_lay.setBackgroundColor(resources.getColor(R.color.white))
+            p_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
+        } else {
+            personal_info_lay.setBackgroundColor(resources.getColor(R.color.expande_colore))
+            p_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
+        }
+    }
+
+
+    private fun addressSection() {
+        if (address_hidden_view.visibility == View.VISIBLE) {
+            address_arrow.setImageResource(R.drawable.ic_arrow_circle_down)
+            address_in_lay.setBackgroundResource(R.color.white)
+        } else {
+            address_arrow.setImageResource(R.drawable.ic_arrow_circle_up)
+            address_in_lay.setBackgroundResource(R.color.expande_colore)
+        }
+    }
+
+    private fun verifyRcaFieldOnComplete(): Boolean {
+        var fieldComplete = true
+        val warningsItemList = verifyLegalItem?.validationResult?.warnings
+        if (warningsItemList?.size != 0) {
+            if (!warningsItemList.isNullOrEmpty()) {
+                for (i in warningsItemList.indices) {
+                    when (warningsItemList[i]?.field) {
+                        "companyName" -> {
+                            if (companyName.text.isNullOrEmpty())
+                                fieldComplete = false
+                            cd_hidden_view.isVisible = true
+                        }
+                        "cui" -> {
+                            if (cui.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                cd_hidden_view.isVisible = true
+                            }
+                        }
+                        "noRegistration" -> {
+                            if (noReg.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                cd_hidden_view.isVisible = true
+                            }
+                        }
+                        "caen", "caen.code", "caen.name" -> {
+                            if (naceTV.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                cd_hidden_view.isVisible = true
+                            }
+                        }
+                        "activityType", "activityType.id", "activityType.name" -> {
+                            if (typeTV.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                cd_hidden_view.isVisible = true
+                            }
+                        }
+                        "phone" -> {
+                            if (phoneLegal.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                personalInfoView2.isVisible = true
+                            }
+                        }
+                        "phoneCountryCode" -> {
+                            if (phoneCode.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                personalInfoView2.isVisible = true
+                            }
+                        }
+                        "email" -> {
+                            if (emailLegal.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                personalInfoView2.isVisible = true
+                            }
+                        }
+                        "address.countryCode" -> {
+                            if (countryNameTV.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.region" -> {
+                            if (countySpinnerText.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.locality", "address.sirutaCode" -> {
+                            if (localitySpinnerText.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.streetType", "address.streetType.id", "address.streetType.name" -> {
+                            if (sp_quata.selectedItemPosition < 0) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.streetName" -> {
+                            if (streetName.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.block" -> {
+                            if (blockName.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.entrance" -> {
+                            if (entrance.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.floor" -> {
+                            if (floor.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.apartment" -> {
+                            if (apartment.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.zipCode" -> {
+                            if (zipCode.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                        "address.buildingNo" -> {
+                            if (buildingNo.text.isNullOrEmpty()) {
+                                fieldComplete = false
+                                address_hidden_view.isVisible = true
+                            }
+                        }
+                    }
+                }
+                companySection()
+                personalInfoSection()
+                addressSection()
+            }
+        }
+        return fieldComplete
+    }
+
 
 }
